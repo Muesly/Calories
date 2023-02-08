@@ -5,6 +5,7 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
+import CoreData
 import SwiftUI
 
 @main
@@ -13,8 +14,9 @@ struct CaloriesApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CaloriesView(viewModel: CaloriesViewModel(container: persistenceController.container))
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
+
