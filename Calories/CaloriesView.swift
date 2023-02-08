@@ -10,7 +10,7 @@ import CoreData
 
 struct CaloriesView: View {
     private let viewModel: CaloriesViewModel
-
+    @Environment(\.scenePhase) var scenePhase
     @Environment(\.managedObjectContext) private var viewContext
     @State private var showingAlert = false
     @State private var totalCaloriesConsumed = 0.0
@@ -25,13 +25,19 @@ struct CaloriesView: View {
         self.viewModel = viewModel
     }
 
+    var numberFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.zeroSymbol = ""
+        return formatter
+    }
+
     var body: some View {
         NavigationView {
             VStack {
                 HStack {
                     TextField("Food", text: $foodDescription)
                         .focused($descriptionIsFocused)
-                    TextField("Calories", value: $calories, formatter: NumberFormatter())
+                    TextField("Calories", value: $calories, formatter: numberFormatter)
                         .focused($caloriesIsFocused)
                         .keyboardType(.numberPad)
                 }
@@ -69,9 +75,14 @@ struct CaloriesView: View {
             }
             .padding()
             .navigationTitle("Calories")
-            .onAppear() {
-                Task {
-                    totalCaloriesConsumed = try await viewModel.totalCaloriesConsumed()
+            .onChange(of: scenePhase) { newPhase in
+                if newPhase == .active {
+                    Task {
+                        foodDescription = ""
+                        calories = 0
+                        timeConsumed = Date()
+                        totalCaloriesConsumed = try await viewModel.totalCaloriesConsumed()
+                    }
                 }
             }
             .alert("Failed to access vehicle health",
