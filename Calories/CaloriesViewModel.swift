@@ -32,7 +32,7 @@ struct FoodEntryFactory: FoodEntryFactoryType {
 }
 
 @MainActor
-class CaloriesViewModel {
+class CaloriesViewModel: ObservableObject {
     let healthStore: HealthStore
     let container: NSPersistentContainer
     private var dateForEntries: Date = Date()
@@ -57,7 +57,7 @@ class CaloriesViewModel {
         dateForEntries = date
     }
 
-    func totalCaloriesConsumed() async throws -> Double {
+    func totalCaloriesConsumed() async throws -> Int {
         try await healthStore.totalCaloriesConsumed()
     }
 
@@ -69,12 +69,13 @@ class CaloriesViewModel {
         try await healthStore.authorize()
         try await healthStore.writeFoodEntry(foodEntry)
         try container.viewContext.save()
+        objectWillChange.send()
     }
 }
 
 protocol HealthStore {
     func authorize() async throws
-    func totalCaloriesConsumed() async throws -> Double
+    func totalCaloriesConsumed() async throws -> Int
     func writeFoodEntry(_ foodEntry: FoodEntry) async throws
 }
 
@@ -95,9 +96,9 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func totalCaloriesConsumed() async throws -> Double {
+    func totalCaloriesConsumed() async throws -> Int {
         guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed) else {
-            return 0.0
+            return 0
         }
         let now = Date()
         let startOfDay = Calendar.current.startOfDay(for: now)
@@ -109,10 +110,10 @@ extension HKHealthStore: HealthStore {
                                           options: .cumulativeSum) { _, result, error in
                 guard let result = result,
                       let sum = result.sumQuantity() else {
-                    continuation.resume(returning: 0.0)
+                    continuation.resume(returning: 0)
                     return
                 }
-                continuation.resume(returning: sum.doubleValue(for: HKUnit.kilocalorie()))
+                continuation.resume(returning: Int(sum.doubleValue(for: HKUnit.kilocalorie())))
             }
             execute (query)
         }
