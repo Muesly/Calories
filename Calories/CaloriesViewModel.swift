@@ -39,16 +39,7 @@ class CaloriesViewModel {
         let request = FoodEntry.fetchRequest()
         let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
-
-        do {
-          if let entries = try container.viewContext.fetch(request) as? [FoodEntry] {
-              return entries
-          } else {
-              return []
-          }
-        } catch {
-            return []
-        }
+        return try? container.viewContext.fetch(request) ?? []
     }
 
     init(healthStore: HealthStore = HKHealthStore(),
