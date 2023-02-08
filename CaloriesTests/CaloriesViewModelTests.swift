@@ -64,6 +64,24 @@ final class CaloriesViewModelTests: XCTestCase {
         let total = try await subject.totalCaloriesConsumed()
         XCTAssertEqual(total, 0)
     }
+
+    func testTodaysEntriesReturnedOnly() async throws {
+        let subject = await CaloriesViewModel(healthStore: MockHealthStore(), container: container)
+        var dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let earlyDate = dc.date!
+        try await subject.addFood(foodDescription: "Some food",
+                                  calories: 100,
+                                  timeConsumed: earlyDate)
+        dc.day = 2
+        let lateDate = dc.date!
+        try await subject.addFood(foodDescription: "Some more food",
+                                  calories: 100,
+                                  timeConsumed: lateDate)
+
+        await subject.setDateForEntries(Calendar.current.startOfDay(for: lateDate))
+        let entries = await subject.foodEntries
+        XCTAssertEqual(entries.map { $0.foodDescription }, ["Some more food"])
+    }
 }
 
 class MockHealthStore: HealthStore {

@@ -35,17 +35,26 @@ struct FoodEntryFactory: FoodEntryFactoryType {
 class CaloriesViewModel {
     let healthStore: HealthStore
     let container: NSPersistentContainer
+    private var dateForEntries: Date = Date()
+
     var foodEntries: [FoodEntry] {
         let request = FoodEntry.fetchRequest()
         let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
-        return try? container.viewContext.fetch(request) ?? []
+
+        let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
+        request.predicate = NSPredicate(format: "timeConsumed >= %@", startOfDay as CVarArg)
+        return (try? container.viewContext.fetch(request)) ?? []
     }
 
     init(healthStore: HealthStore = HKHealthStore(),
          container: NSPersistentContainer) {
         self.healthStore = healthStore
         self.container = container
+    }
+
+    func setDateForEntries(_ date: Date) async {
+        dateForEntries = date
     }
 
     func totalCaloriesConsumed() async throws -> Double {
