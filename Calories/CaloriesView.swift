@@ -18,6 +18,8 @@ struct CaloriesView: View {
     @State private var foodDescription: String = ""
     @State private var calories: Int = 0
     @State var timeConsumed: Date = Date()
+    @FocusState private var descriptionIsFocused: Bool
+    @FocusState private var caloriesIsFocused: Bool
 
     init(viewModel: CaloriesViewModel) {
         self.viewModel = viewModel
@@ -28,16 +30,23 @@ struct CaloriesView: View {
             VStack {
                 HStack {
                     TextField("Food", text: $foodDescription)
+                        .focused($descriptionIsFocused)
                     TextField("Calories", value: $calories, formatter: NumberFormatter())
+                        .focused($caloriesIsFocused)
+                        .keyboardType(.numberPad)
                 }
                 DatePicker("Time consumed", selection: $timeConsumed, displayedComponents: .hourAndMinute)
 
                 Button {
                     Task {
                         do {
+                            descriptionIsFocused = false
+                            caloriesIsFocused = false
                             try await viewModel.addFood(foodDescription: foodDescription,
                                                         calories: calories,
                                                         timeConsumed: timeConsumed)
+                            foodDescription = ""
+                            calories = 0
                             totalCaloriesConsumed = try await viewModel.totalCaloriesConsumed()
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
@@ -58,6 +67,7 @@ struct CaloriesView: View {
                     .onDelete(perform: deleteItems)
                 }
             }
+            .padding()
             .navigationTitle("Calories")
             .onAppear() {
                 Task {
