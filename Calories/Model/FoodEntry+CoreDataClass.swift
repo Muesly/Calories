@@ -11,8 +11,8 @@ import CoreData
 
 
 public class FoodEntry: NSManagedObject {
-    convenience init(context: ManagedContext, foodDescription: String, calories: Double, timeConsumed: Date) {
-        self.init(context: context as! NSManagedObjectContext)
+    convenience init(context: NSManagedObjectContext, foodDescription: String, calories: Double, timeConsumed: Date) {
+        self.init(context: context)
         self.foodDescription = foodDescription
         self.calories = calories
         self.timeConsumed = timeConsumed

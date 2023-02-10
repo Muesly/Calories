@@ -9,25 +9,21 @@ import CoreData
 import Foundation
 import HealthKit
 
-protocol FoodEntryType {
+class CalorieStats: ObservableObject {
+    let bmr: Int
+    let exercise: Int
+    var caloriesConsumed: Int
+    let deficitGoal = 500
+    var combinedExpenditure: Int { bmr + exercise }
+    var difference: Int { bmr + exercise - caloriesConsumed }
+    var canEat: Int { bmr + exercise - caloriesConsumed - deficitGoal }
 
-}
-
-extension FoodEntry: FoodEntryType {
-
-}
-
-protocol FoodEntryFactoryType {
-    func makeFoodEntry(foodDescription: String,
-                       calories: Int,
-                       timeConsumed: Date) -> FoodEntry
-}
-
-struct FoodEntryFactory: FoodEntryFactoryType {
-    let context: NSManagedObjectContext
-
-    func makeFoodEntry(foodDescription: String, calories: Int, timeConsumed: Date) -> FoodEntry {
-        FoodEntry(context: context, foodDescription: foodDescription, calories: Double(calories), timeConsumed: timeConsumed)
+    init(bmr: Int = 0,
+         exercise: Int = 0,
+         caloriesConsumed: Int = 0) {
+        self.bmr = bmr
+        self.exercise = exercise
+        self.caloriesConsumed = caloriesConsumed
     }
 }
 
@@ -36,6 +32,7 @@ class CaloriesViewModel: ObservableObject {
     let healthStore: HealthStore
     let container: NSPersistentContainer
     private var dateForEntries: Date = Date()
+    var calorieStats = CalorieStats()
 
     var foodEntries: [FoodEntry] {
         let request = FoodEntry.fetchRequest()
@@ -57,8 +54,15 @@ class CaloriesViewModel: ObservableObject {
         dateForEntries = date
     }
 
-    func totalCaloriesConsumed() async throws -> Int {
-        try await healthStore.totalCaloriesConsumed()
+    func fetchCaloriesConsumed() async throws {
+        calorieStats.caloriesConsumed = try await self.healthStore.caloriesConsumed()
+    }
+
+    func fetchStats() async throws {
+        calorieStats = try await CalorieStats(bmr: self.healthStore.bmr(),
+                                              exercise: self.healthStore.exercise(),
+                                              caloriesConsumed: self.healthStore.caloriesConsumed())
+        objectWillChange.send()
     }
 
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date) async throws {
@@ -67,75 +71,33 @@ class CaloriesViewModel: ObservableObject {
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed)
         try await healthStore.authorize()
-        try await healthStore.writeFoodEntry(foodEntry)
+        try await healthStore.addFoodEntry(foodEntry)
+        try await fetchCaloriesConsumed()
         try container.viewContext.save()
         objectWillChange.send()
     }
-}
 
-protocol HealthStore {
-    func authorize() async throws
-    func totalCaloriesConsumed() async throws -> Int
-    func writeFoodEntry(_ foodEntry: FoodEntry) async throws
-}
-
-enum HealthStoreError: Error {
-    case ErrorNoHealthDataAvailable
-}
-
-extension HKHealthStore: HealthStore {
-    func authorize() async throws {
-        if HKHealthStore.isHealthDataAvailable(),
-           let dietaryEnergyConsumed = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
-           let basalEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.basalEnergyBurned),
-           let activeEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)
-        {
-            try await requestAuthorization(toShare: [dietaryEnergyConsumed], read: [dietaryEnergyConsumed, basalEnergyBurned, activeEnergyBurned])
-        } else {
-            throw HealthStoreError.ErrorNoHealthDataAvailable
-        }
-    }
-
-    func totalCaloriesConsumed() async throws -> Int {
-        guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed) else {
-            return 0
-        }
-        let now = Date()
-        let startOfDay = Calendar.current.startOfDay(for: now)
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: now, options: .strictStartDate)
-
-        return await withCheckedContinuation { continuation in
-            let query = HKStatisticsQuery(quantityType: caloriesConsumedType,
-                                          quantitySamplePredicate: predicate,
-                                          options: .cumulativeSum) { _, result, error in
-                guard let result = result,
-                      let sum = result.sumQuantity() else {
-                    continuation.resume(returning: 0)
-                    return
-                }
-                continuation.resume(returning: Int(sum.doubleValue(for: HKUnit.kilocalorie())))
-            }
-            execute (query)
-        }
-    }
-
-    func writeFoodEntry(_ foodEntry: FoodEntry) async throws {
-        guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed) else {
+    func deleteEntries(offsets: IndexSet) {
+        guard let foodEntry = offsets.map({ foodEntries[$0] }).first else {
             return
         }
-        let quantity = HKQuantity(unit: .largeCalorie(), doubleValue: foodEntry.calories)
-        let timeConsumed = foodEntry.timeConsumed ?? Date()
-        let caloriesConsumed = HKQuantitySample(type: caloriesConsumedType,
-                                                quantity: quantity,
-                                                start: timeConsumed,
-                                                end: timeConsumed,
-                                                metadata: [HKMetadataKeyFoodType: foodEntry.foodDescription])
-        try await save(caloriesConsumed)
+        Task {
+            await deleteFoodEntry(foodEntry)
+        }
+    }
+
+    func deleteFoodEntry(_ foodEntry: FoodEntry) async {
+        do {
+            try await healthStore.deleteFoodEntry(foodEntry)
+        } catch {
+            print("Failed to save delete in Health")
+        }
+        container.viewContext.delete(foodEntry)
+
+        do {
+            try container.viewContext.save()
+        } catch {
+            print("Failed to save delete")
+        }
     }
 }
-
-protocol ManagedContext {
-    func save() throws
-}
-
-extension NSManagedObjectContext: ManagedContext {}
