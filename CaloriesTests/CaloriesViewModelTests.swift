@@ -33,8 +33,9 @@ final class CaloriesViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some food",
                                   calories: 100,
                                   timeConsumed: date)
-        let total = try await subject.totalCaloriesConsumed()
-        XCTAssertEqual(total, 100)
+        try await subject.fetchCaloriesConsumed()
+        let caloriesConsumed = await subject.calorieStats.caloriesConsumed
+        XCTAssertEqual(caloriesConsumed, 100)
 
         let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
@@ -48,7 +49,7 @@ final class CaloriesViewModelTests: XCTestCase {
         XCTAssertEqual(foodEntry.foodDescription, "Some food")
     }
 
-    func testDeniedPermissionGrantedCanAddCalories() async throws {
+    func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
         let mockHealthStore = MockHealthStore()
         mockHealthStore.authorizeError = HealthStoreError.ErrorNoHealthDataAvailable
         let subject = await CaloriesViewModel(healthStore: mockHealthStore, container: container)
@@ -61,8 +62,9 @@ final class CaloriesViewModelTests: XCTestCase {
         } catch {
             // Expected
         }
-        let total = try await subject.totalCaloriesConsumed()
-        XCTAssertEqual(total, 0)
+        try await subject.fetchCaloriesConsumed()
+        let caloriesConsumed = await subject.calorieStats.caloriesConsumed
+        XCTAssertEqual(caloriesConsumed, 0)
     }
 
     func testTodaysEntriesReturnedOnly() async throws {
@@ -82,11 +84,33 @@ final class CaloriesViewModelTests: XCTestCase {
         let entries = await subject.foodEntries
         XCTAssertEqual(entries.map { $0.foodDescription }, ["Some more food"])
     }
+
+    func testCanDeleteFoodEntry() async throws {
+        let subject = await CaloriesViewModel(healthStore: MockHealthStore(), container: container)
+        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let date = dc.date!
+        try await subject.addFood(foodDescription: "Some food",
+                                  calories: 100,
+                                  timeConsumed: date)
+
+        let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
+        let preResult = try? context.fetch(fetchRequest)
+        guard let foodEntry = preResult?.first else {
+            XCTFail("Expected food entry")
+            return
+        }
+        await subject.deleteFoodEntry(foodEntry)
+        let postResult = try? context.fetch(fetchRequest)
+        XCTAssertEqual(postResult?.count, 0)
+    }
 }
 
 class MockHealthStore: HealthStore {
     var authorizeError: Error?
-    var caloriesConsumed: Double = 0
+    var bmr: Int = 0
+    var exercise: Int = 0
+    var caloriesConsumed: Int = 0
 
     func authorize() async throws {
         guard let error = authorizeError else {
@@ -95,11 +119,23 @@ class MockHealthStore: HealthStore {
         throw error
     }
 
-    func totalCaloriesConsumed() async throws -> Double {
-        return caloriesConsumed
+    func bmr() async throws -> Int {
+        bmr
     }
 
-    func writeFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
-        caloriesConsumed += foodEntry.calories
+    func exercise() async throws -> Int {
+        exercise
+    }
+
+    func caloriesConsumed() async throws -> Int {
+        caloriesConsumed
+    }
+
+    func addFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
+        caloriesConsumed += Int(foodEntry.calories)
+    }
+
+    func deleteFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
+        caloriesConsumed -= Int(foodEntry.calories)
     }
 }
