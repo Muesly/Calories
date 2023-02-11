@@ -18,6 +18,10 @@
 		EA2D49042994394900248864 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA2D49032994394900248864 /* Colours.xcassets */; };
 		EA2D490629944E3000248864 /* AddEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490529944E3000248864 /* AddEntryView.swift */; };
 		EA2D490829945C9400248864 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
+		EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490929970B8A00248864 /* HistoryView.swift */; };
+		EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490B2997D60200248864 /* MealItemsView.swift */; };
+		EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490D2997D62000248864 /* MealItemsViewModel.swift */; };
+		EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */; };
 		EA6655A329939B4E000770F6 /* FoodEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */; };
 		EA6655A429939B4E000770F6 /* FoodEntry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
@@ -47,6 +51,10 @@
 		EA2D49032994394900248864 /* Colours.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colours.xcassets; sourceTree = "<group>"; };
 		EA2D490529944E3000248864 /* AddEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryView.swift; sourceTree = "<group>"; };
 		EA2D490729945C9400248864 /* HealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStore.swift; sourceTree = "<group>"; };
+		EA2D490929970B8A00248864 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		EA2D490B2997D60200248864 /* MealItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemsView.swift; sourceTree = "<group>"; };
+		EA2D490D2997D62000248864 /* MealItemsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemsViewModel.swift; sourceTree = "<group>"; };
+		EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemsViewModelTests.swift; sourceTree = "<group>"; };
 		EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -95,6 +103,9 @@
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
 				EA2D490529944E3000248864 /* AddEntryView.swift */,
+				EA2D490B2997D60200248864 /* MealItemsView.swift */,
+				EA2D490D2997D62000248864 /* MealItemsViewModel.swift */,
+				EA2D490929970B8A00248864 /* HistoryView.swift */,
 				EA097DB72991909500735129 /* CaloriesViewModel.swift */,
 				EA2D490729945C9400248864 /* HealthStore.swift */,
 				EA097D8B29918CA000735129 /* Assets.xcassets */,
@@ -116,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
+				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
 			);
 			path = CaloriesTests;
 			sourceTree = "<group>";
@@ -235,10 +247,13 @@
 				EA097D9129918CA000735129 /* Persistence.swift in Sources */,
 				EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */,
 				EA6655A329939B4E000770F6 /* FoodEntry+CoreDataClass.swift in Sources */,
+				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
+				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				EA2D490629944E3000248864 /* AddEntryView.swift in Sources */,
 				EA097DC52993986D00735129 /* Model.xcdatamodeld in Sources */,
 				EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */,
 				EA097DB82991909500735129 /* CaloriesViewModel.swift in Sources */,
+				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
 				EA6655A429939B4E000770F6 /* FoodEntry+CoreDataProperties.swift in Sources */,
 			);
@@ -248,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
