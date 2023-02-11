@@ -104,6 +104,16 @@ final class CaloriesViewModelTests: XCTestCase {
         let postResult = try? context.fetch(fetchRequest)
         XCTAssertEqual(postResult?.count, 0)
     }
+
+    func testClearDownOfInProgressDetailsAfterDay() async {
+        let result = await CaloriesViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-86400))
+        XCTAssertTrue(result)
+    }
+
+    func testNoClearDownOfInProgressDetailsOnSameDay() async {
+        let result = await CaloriesViewModel.shouldClearFields(phase: .active, date: Date())
+        XCTAssertFalse(result)
+    }
 }
 
 class MockHealthStore: HealthStore {

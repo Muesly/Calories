@@ -8,6 +8,7 @@
 import CoreData
 import Foundation
 import HealthKit
+import SwiftUI
 
 class CalorieStats: ObservableObject {
     let bmr: Int
@@ -99,5 +100,15 @@ class CaloriesViewModel: ObservableObject {
         } catch {
             print("Failed to save delete")
         }
+    }
+
+    static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
+        if phase == .active {
+            guard let dayDiff = Calendar.current.dateComponents([.day], from: date, to: Date()).day else {
+                return false
+            }
+            return dayDiff > 0 ? true : false
+        }
+        return false
     }
 }
