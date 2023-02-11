@@ -31,49 +31,75 @@ struct AddEntryView: View {
     }
 
     var body: some View {
-        VStack {
-            HStack {
-                TextField("Food", text: $foodDescription)
-                    .focused($descriptionIsFocused)
-                TextField("Calories", value: $calories, formatter: numberFormatter)
-                    .focused($caloriesIsFocused)
-                    .keyboardType(.numberPad)
-            }
-            DatePicker("Time consumed", selection: $timeConsumed, displayedComponents: .hourAndMinute)
+        NavigationStack {
+            VStack(spacing: 10) {
+                VStack {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
+                            Text("Food")
+                            TextField("Enter food or drink...", text: $foodDescription)
+                                .focused($descriptionIsFocused)
+                                .padding(5)
+                                .background(.white)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Calories")
+                            TextField("", value: $calories, formatter: numberFormatter)
+                                .frame(maxWidth: 60)
+                                .focused($caloriesIsFocused)
+                                .keyboardType(.numberPad)
+                                .padding(5)
+                                .background(.white)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                        }
+                    }
+                    DatePicker("Time consumed", selection: $timeConsumed, displayedComponents: .hourAndMinute)
 
-            Button {
-                Task {
-                    do {
-                        descriptionIsFocused = false
-                        caloriesIsFocused = false
-                        try await viewModel.addFood(foodDescription: foodDescription,
-                                                    calories: calories,
-                                                    timeConsumed: timeConsumed)
-                        foodDescription = ""
-                        calories = 0
-                    } catch {
-                        isShowingFailureToAuthoriseAlert = true
+                    Button {
+                        Task {
+                            do {
+                                descriptionIsFocused = false
+                                caloriesIsFocused = false
+                                try await viewModel.addFood(foodDescription: foodDescription,
+                                                            calories: calories,
+                                                            timeConsumed: timeConsumed)
+                                foodDescription = ""
+                                calories = 0
+                            } catch {
+                                isShowingFailureToAuthoriseAlert = true
+                            }
+                        }
+                    } label: {
+                        Text("Add")
+                            .foregroundColor(.blue)
+                            .padding(10)
                     }
+                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
-            } label: {
-                Text("Add")
-            }
-            .onChange(of: scenePhase) { newPhase in
-                if newPhase == .active {
-                    Task {
-                        foodDescription = ""
-                        calories = 0
-                        timeConsumed = Date()
+                .padding()
+                .background(Color("mintGreen").opacity(0.3))
+                .cornerRadius(10)
+                Spacer()
+                    .onChange(of: scenePhase) { newPhase in
+                        if CaloriesViewModel.shouldClearFields(phase: newPhase, date: timeConsumed) {
+                            Task {
+                                foodDescription = ""
+                                calories = 0
+                                timeConsumed = Date()
+                            }
+                        }
                     }
-                }
+                    .alert("Failed to access vehicle health",
+                           isPresented: $isShowingFailureToAuthoriseAlert) {
+                        Button("OK", role: .cancel) {}
+                    }
             }
-            .alert("Failed to access vehicle health",
-                   isPresented: $isShowingFailureToAuthoriseAlert) {
-                Button("OK", role: .cancel) {}
-            }
+            .padding()
+            .cornerRadius(10)
+            .navigationTitle("Add new food")
         }
-        .padding()
-        .background(Color("mintGreen").opacity(0.3))
-        .cornerRadius(10)
     }
 }

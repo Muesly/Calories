@@ -21,17 +21,15 @@ struct CaloriesView: View {
         NavigationView {
             VStack {
                 HeaderView(calorieStats: viewModel.calorieStats)
-                AddEntryView(viewModel: viewModel, totalCaloriesConsumed: $totalCaloriesConsumed)
-                List {
-                    ForEach(viewModel.foodEntries) { foodEntry in
-                        NavigationLink {
-                            Text("Item at \(foodEntry.timeConsumed!, formatter: itemFormatter)")
-                        } label: {
-                            Text("\(foodEntry.timeConsumed ?? Date(), formatter: itemFormatter) / \(foodEntry.foodDescription) / \(foodEntry.calories)")
-                        }
-                    }
-                    .onDelete(perform: deleteItems)
+                NavigationLink {
+                    AddEntryView(viewModel: viewModel, totalCaloriesConsumed: $totalCaloriesConsumed)
+                } label: {
+                    Text("Add")
+                        .foregroundColor(.blue)
+                        .padding(10)
                 }
+                .background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                HistoryView(viewModel: viewModel)
             }
             .padding()
             .navigationTitle("Calories")
@@ -43,12 +41,6 @@ struct CaloriesView: View {
                     try await viewModel.fetchStats()
                 }
             }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            viewModel.deleteEntries(offsets: offsets)
         }
     }
 }
@@ -80,11 +72,3 @@ struct HeaderView: View {
         .cornerRadius(10)
     }
 }
-
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
