@@ -9,23 +9,22 @@ import Foundation
 import SwiftUI
 
 struct HistoryView: View {
-    @ObservedObject var viewModel: CaloriesViewModel
+    @ObservedObject var calorieStats: CalorieStats
+    private let viewModel: CaloriesViewModel
 
-    init(viewModel: CaloriesViewModel) {
+    init(viewModel: CaloriesViewModel,
+         calorieStats: CalorieStats) {
         self.viewModel = viewModel
+        self.calorieStats = calorieStats
     }
 
     var body: some View {
         List {
             ForEach(viewModel.foodEntries) { foodEntry in
-                NavigationLink {
-                    Text("Item at \(foodEntry.timeConsumed!, formatter: itemFormatter)")
-                } label: {
-                    HStack {
-                        Text("\(foodEntry.timeConsumed!, formatter: itemFormatter)")
-                        Text("\(foodEntry.foodDescription)")
-                        Text("\(Int(foodEntry.calories)) calories")
-                    }
+                HStack {
+                    Text("\(foodEntry.timeConsumed!, formatter: itemFormatter)")
+                    Text("\(foodEntry.foodDescription)")
+                    Text("\(Int(foodEntry.calories)) calories")
                 }
             }
             .onDelete(perform: deleteItems)
@@ -33,8 +32,11 @@ struct HistoryView: View {
     }
 
     private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            viewModel.deleteEntries(offsets: offsets)
+        _ = withAnimation {
+            Task {
+                await viewModel.deleteEntries(offsets: offsets)
+                calorieStats.fetchCaloriesConsumed()
+            }
         }
     }
 }

@@ -44,6 +44,17 @@ enum MealType: String {
         default: return 20..<24
         }
     }
+
+    static func rangeOfPeriod(forDate date: Date) -> (Date, Date) {
+        let mealType = MealType.mealTypeForDate(date)
+        let range = mealType.rangeOfPeriod()
+        var dc = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        dc.hour = range.startIndex
+        let startOfPeriod: Date = Calendar.current.date(from: dc)!
+        dc.hour = range.endIndex
+        let endOfPeriod: Date = Calendar.current.date(from: dc)!
+        return (startOfPeriod, endOfPeriod)
+    }
 }
 
 struct MealItemsViewModel {
@@ -64,13 +75,7 @@ struct MealItemsViewModel {
     }
 
     func getMealFoodEntries(currentDate: Date = Date()) -> [FoodEntry] {
-        let mealType = MealType.mealTypeForDate(currentDate)
-        let range = mealType.rangeOfPeriod()
-        var dc = Calendar.current.dateComponents([.year, .month, .day], from: currentDate)
-        dc.hour = range.startIndex
-        let startOfPeriod: Date = Calendar.current.date(from: dc)!
-        dc.hour = range.endIndex
-        let endOfPeriod: Date = Calendar.current.date(from: dc)!
+        let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: currentDate)
 
         return foodEntries.filter { foodEntry in
             guard let timeConsumed = foodEntry.timeConsumed else { return false }

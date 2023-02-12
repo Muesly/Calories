@@ -9,33 +9,65 @@ import Foundation
 import SwiftUI
 
 struct AddEntryView: View {
-    @ObservedObject private var viewModel: CaloriesViewModel
+    private var viewModel: AddEntryViewModel
+    @State private var searchText = ""
 
-    init(viewModel: CaloriesViewModel, totalCaloriesConsumed: Binding<Int>) {
+    init(viewModel: AddEntryViewModel) {
         self.viewModel = viewModel
     }
 
     var body: some View {
         NavigationStack {
-            AddEntryInputFieldsView(viewModel: viewModel)
+            List{
+                if !searchText.isEmpty {
+                    NavigationLink {
+                        AddEntryInputFieldsView(viewModel: viewModel,
+                                                defFoodDescription: searchText,
+                                                defCalories: viewModel.defCaloriesFor(searchText))
+                    } label: {
+                        Text("Add a new food").bold()
+                    }
+                }
+                ForEach(viewModel.getSuggestions(), id: \.self) { suggestion in
+                    NavigationLink {
+                        AddEntryInputFieldsView(viewModel: viewModel,
+                                                defFoodDescription: suggestion.name,
+                                                defCalories: viewModel.defCaloriesFor(suggestion.name))
+                    } label: {
+                        Text(suggestion.name)
+                    }
+                }
+            }
             MealItemsView(viewModel: MealItemsViewModel(foodEntries: viewModel.foodEntries))
+            Spacer()
             .navigationTitle("Add new food")
-        }
+        }.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Enter food or drink...")
+            .onSubmit(of: .search) {
+                print("Searching")
+            }
     }
 }
 
+
 struct AddEntryInputFieldsView: View {
-    private let viewModel: CaloriesViewModel
+    private let viewModel: AddEntryViewModel
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.dismiss) var dismiss
     @State private var foodDescription: String = ""
     @State private var calories: Int = 0
     @State var timeConsumed: Date = Date()
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
+    private let defFoodDescription: String
+    private let defCalories: Int
 
-    init(viewModel: CaloriesViewModel) {
+    init(viewModel: AddEntryViewModel,
+         defFoodDescription: String,
+         defCalories: Int) {
         self.viewModel = viewModel
+        self.defFoodDescription = defFoodDescription
+        self.defCalories = defCalories
     }
 
     var numberFormatter: NumberFormatter {
@@ -45,8 +77,8 @@ struct AddEntryInputFieldsView: View {
     }
 
     var body: some View {
-        VStack(spacing: 10) {
-            VStack {
+        VStack {
+            VStack(spacing: 20) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading) {
                         Text("Food")
@@ -69,7 +101,11 @@ struct AddEntryInputFieldsView: View {
                             .foregroundColor(.black)
                     }
                 }
-                DatePicker("Time consumed", selection: $timeConsumed, displayedComponents: .hourAndMinute)
+                VStack(alignment: .center) {
+                    Text("Time consumed")
+                    DatePicker("", selection: $timeConsumed, displayedComponents: .hourAndMinute)
+                                .frame(width: 80)
+                }
 
                 Button {
                     Task {
@@ -81,6 +117,8 @@ struct AddEntryInputFieldsView: View {
                                                         timeConsumed: timeConsumed)
                             foodDescription = ""
                             calories = 0
+                            dismiss()
+                            try await viewModel.fetchCaloriesConsumed()
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }
@@ -96,8 +134,12 @@ struct AddEntryInputFieldsView: View {
             .background(Color("mintGreen").opacity(0.3))
             .cornerRadius(10)
             Spacer()
+                .onAppear {
+                    foodDescription = defFoodDescription
+                    calories = defCalories
+                }
                 .onChange(of: scenePhase) { newPhase in
-                    if CaloriesViewModel.shouldClearFields(phase: newPhase, date: timeConsumed) {
+                    if AddEntryViewModel.shouldClearFields(phase: newPhase, date: timeConsumed) {
                         Task {
                             foodDescription = ""
                             calories = 0
