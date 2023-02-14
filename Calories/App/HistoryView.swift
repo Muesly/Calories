@@ -20,15 +20,23 @@ struct HistoryView: View {
 
     var body: some View {
         List {
-            ForEach(viewModel.foodEntries) { foodEntry in
-                HStack {
-                    Text("\(foodEntry.timeConsumed!, formatter: itemFormatter)")
-                    Text("\(foodEntry.foodDescription)")
-                    Text("\(Int(foodEntry.calories)) calories")
+            ForEach(viewModel.daySections) { daySection in
+                Section(header: Text("\(daySection.title)")) {
+                    ForEach(daySection.foodEntries) { foodEntry in
+                        HStack {
+                            Text("\(foodEntry.timeConsumed!, formatter: viewModel.timeConsumedTimeFormatter)").opacity(0.5)
+                            Text("\(foodEntry.foodDescription)")
+                            Spacer()
+                            Text("\(Int(foodEntry.calories)) cals").opacity(0.5)
+                        }
+                        .listRowBackground(Colours.backgroundSecondary)
+                    }
                 }
             }
             .onDelete(perform: deleteItems)
         }
+        .scrollContentBackground(.hidden)
+        .cornerRadius(10)
     }
 
     private func deleteItems(offsets: IndexSet) {
@@ -40,10 +48,3 @@ struct HistoryView: View {
         }
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()

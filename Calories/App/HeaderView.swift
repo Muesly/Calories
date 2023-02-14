@@ -11,14 +11,12 @@ struct HeaderView: View {
     @ObservedObject var calorieStats: CalorieStats
     
     var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading) {
-                Text("BMR: \(calorieStats.bmr)")
-                Text("Exercise: \(calorieStats.exercise)")
-                Text("Combined: \(calorieStats.combinedExpenditure)")
+        VStack(spacing: 10) {
+            HStack {
+                Text("Burnt: \(calorieStats.bmr) + \(calorieStats.exercise) = \(calorieStats.combinedExpenditure)")
+                Text("Consumed: \(calorieStats.caloriesConsumed)")
             }
-            VStack(alignment: .leading) {
-                Text("Consumption: \(calorieStats.caloriesConsumed)")
+            VStack(alignment: .center) {
                 Text("Difference: \(calorieStats.difference)")
                 Text("Deficit goal: \(calorieStats.deficitGoal)")
                 Text("Can eat: \(calorieStats.canEat)")
@@ -26,7 +24,7 @@ struct HeaderView: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color("mintGreen").opacity(0.3))
+        .background(Colours.backgroundSecondary)
         .cornerRadius(10)
     }
 }
