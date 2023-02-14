@@ -27,6 +27,11 @@ struct MealItemsView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(Colours.backgroundSecondary)
+        .cornerRadius(10)
+        .padding()
     }
 }
 

@@ -16,21 +16,20 @@ struct CaloriesView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 20) {
                 HeaderView(calorieStats: calorieStats)
+                    .padding()
                 Button {
                     showingAddEntryView = true
                 } label: {
-                    Text("Add")
-                        .foregroundColor(.black)
+                    Text("Add food or drink")
                         .padding(10)
+                        .bold()
                 }
-                .background(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .foregroundColor(Color("mintGreen"))
+                .buttonStyle(.borderedProminent)
                 HistoryView(viewModel: viewModel, calorieStats: calorieStats)
             }
-            .padding()
-            .navigationTitle("Calories")
+            .navigationTitle("Today's Calories")
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {
                     calorieStats.fetchStats()
@@ -40,7 +39,9 @@ struct CaloriesView: View {
                 AddEntryView(viewModel: AddEntryViewModel(calorieStats: calorieStats),
                              showingAddEntryView: $showingAddEntryView)
             }
+            .background(Colours.backgroundPrimary)
         }
+
     }
 }
 
