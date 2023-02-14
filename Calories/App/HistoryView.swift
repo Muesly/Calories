@@ -35,7 +35,7 @@ struct HistoryView: View {
         _ = withAnimation {
             Task {
                 await viewModel.deleteEntries(offsets: offsets)
-                calorieStats.fetchCaloriesConsumed()
+                await calorieStats.fetchCaloriesConsumed()
             }
         }
     }

@@ -10,15 +10,16 @@ import CoreData
 
 struct CaloriesView: View {
     private let viewModel = CaloriesViewModel()
-    @StateObject var calorieStats = CalorieStats()
+    @StateObject var calorieStats: CalorieStats
     @Environment(\.scenePhase) var scenePhase
+    @State var showingAddEntryView = false
 
     var body: some View {
         NavigationView {
             VStack {
                 HeaderView(calorieStats: calorieStats)
-                NavigationLink {
-                    AddEntryView(viewModel: AddEntryViewModel(calorieStats: calorieStats))
+                Button {
+                    showingAddEntryView = true
                 } label: {
                     Text("Add")
                         .foregroundColor(.black)
@@ -34,6 +35,10 @@ struct CaloriesView: View {
                 if newPhase == .active {
                     calorieStats.fetchStats()
                 }
+            }
+            .sheet(isPresented: $showingAddEntryView) {
+                AddEntryView(viewModel: AddEntryViewModel(calorieStats: calorieStats),
+                             showingAddEntryView: $showingAddEntryView)
             }
         }
     }

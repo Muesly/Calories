@@ -11,9 +11,13 @@ import SwiftUI
 struct AddEntryView: View {
     private var viewModel: AddEntryViewModel
     @State private var searchText = ""
+    @State private var readyToNavigate : Bool = false
+    @Binding var showingAddEntryView: Bool
 
-    init(viewModel: AddEntryViewModel) {
+    init(viewModel: AddEntryViewModel,
+         showingAddEntryView: Binding<Bool>) {
         self.viewModel = viewModel
+        self._showingAddEntryView = showingAddEntryView
     }
 
     var body: some View {
@@ -25,10 +29,10 @@ struct AddEntryView: View {
                                                 defFoodDescription: searchText,
                                                 defCalories: viewModel.defCaloriesFor(searchText))
                     } label: {
-                        Text("Add a new food").bold()
+                        Text("Add \(searchText) as a new food").bold()
                     }
                 }
-                ForEach(viewModel.getSuggestions(), id: \.self) { suggestion in
+                ForEach(viewModel.getSuggestions(searchText: searchText), id: \.self) { suggestion in
                     NavigationLink {
                         AddEntryInputFieldsView(viewModel: viewModel,
                                                 defFoodDescription: suggestion.name,
@@ -41,10 +45,25 @@ struct AddEntryView: View {
             MealItemsView(viewModel: MealItemsViewModel(foodEntries: viewModel.foodEntries))
             Spacer()
             .navigationTitle("Add new food")
-        }.searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Enter food or drink...")
-            .onSubmit(of: .search) {
-                print("Searching")
-            }
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") {
+                        self.showingAddEntryView = false
+                    }
+                }
+            })
+        }.searchable(text: $searchText,
+                     placement:  .navigationBarDrawer(displayMode: .always),
+                     prompt: viewModel.prompt)
+        .onSubmit(of: .search) {
+            print("Searching")
+            readyToNavigate = true
+        }
+        .navigationDestination(isPresented: $readyToNavigate) {
+            AddEntryInputFieldsView(viewModel: viewModel,
+                                    defFoodDescription: searchText,
+                                    defCalories: viewModel.defCaloriesFor(searchText))
+        }
     }
 }
 
@@ -91,14 +110,21 @@ struct AddEntryInputFieldsView: View {
                     }
                     VStack(alignment: .leading) {
                         Text("Calories")
-                        TextField("", value: $calories, formatter: numberFormatter)
-                            .frame(maxWidth: 60)
-                            .focused($caloriesIsFocused)
-                            .keyboardType(.numberPad)
-                            .padding(5)
-                            .background(.white)
-                            .cornerRadius(10)
-                            .foregroundColor(.black)
+                        HStack {
+                            TextField("", value: $calories, formatter: numberFormatter)
+                                .frame(maxWidth: 60)
+                                .focused($caloriesIsFocused)
+                                .keyboardType(.numberPad)
+                                .padding(5)
+                                .background(.white)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                            Button {
+                                UIApplication.shared.open(viewModel.calorieSearchURL(for: foodDescription))
+                            } label: {
+                                Image(systemName: "magnifyingglass")
+                            }
+                        }
                     }
                 }
                 VStack(alignment: .center) {
@@ -118,7 +144,6 @@ struct AddEntryInputFieldsView: View {
                             foodDescription = ""
                             calories = 0
                             dismiss()
-                            try await viewModel.fetchCaloriesConsumed()
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }

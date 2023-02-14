@@ -27,7 +27,7 @@ final class CaloriesViewModelTests: XCTestCase {
     }
 
     func testCanDeleteFoodEntry() async throws {
-        let subject = await CaloriesViewModel(healthStore: MockHealthStore(), container: container)
+        let subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
         let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         let date = dc.date!
 

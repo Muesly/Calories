@@ -12,6 +12,10 @@ import XCTest
 @testable import Calories
 
 final class AddEntryViewModelTests: XCTestCase {
+    var subject: AddEntryViewModel!
+    var mockHealthStore: MockHealthStore!
+    var calorieStats: CalorieStats!
+
     var controller: PersistenceController!
     var container: NSPersistentContainer {
         controller.container
@@ -22,22 +26,30 @@ final class AddEntryViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
         controller = PersistenceController(inMemory: true)
+        mockHealthStore = MockHealthStore()
+        calorieStats = CalorieStats(healthStore: mockHealthStore, dispatchQueue: MockDispatcher())
+        subject = AddEntryViewModel(healthStore: mockHealthStore,
+                                        container: container,
+                                        calorieStats: calorieStats)
     }
 
     override func tearDownWithError() throws {
+        subject = nil
+        mockHealthStore = nil
+        calorieStats = nil
         controller = nil
     }
 
-    func testGivenPermissionGrantedCanAddCalories() async throws {
-        let subject = await AddEntryViewModel(healthStore: MockHealthStore(), container: container)
+    func dateFromComponents() -> Date {
         let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-        let date = dc.date!
+        return dc.date!
+    }
+
+    func testGivenPermissionGrantedCanAddCalories() async throws {
         try await subject.addFood(foodDescription: "Some food",
                                   calories: 100,
-                                  timeConsumed: date)
-//        try await subject.fetchCaloriesConsumed()
-//        let caloriesConsumed = await subject.calorieStats.caloriesConsumed
-//        XCTAssertEqual(caloriesConsumed, 100)
+                                  timeConsumed: dateFromComponents())
+        XCTAssertEqual(calorieStats.caloriesConsumed, 100)
 
         let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
@@ -52,25 +64,18 @@ final class AddEntryViewModelTests: XCTestCase {
     }
 
     func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
-        let mockHealthStore = MockHealthStore()
         mockHealthStore.authorizeError = HealthStoreError.ErrorNoHealthDataAvailable
-        let subject = await AddEntryViewModel(healthStore: mockHealthStore, container: container)
         do {
-            let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-            let date = dc.date!
             try await subject.addFood(foodDescription: "Some food",
                                       calories: 100,
-                                      timeConsumed: date)
-        } catch {
-            // Expected
+                                      timeConsumed: dateFromComponents())
+        } catch let healthStoreError as HealthStoreError {
+            XCTAssertEqual(healthStoreError, HealthStoreError.ErrorNoHealthDataAvailable)
         }
-//        try await subject.fetchCaloriesConsumed()
-//        let caloriesConsumed = await subject.calorieStats.caloriesConsumed
-//        XCTAssertEqual(caloriesConsumed, 0)
+        XCTAssertEqual(calorieStats.caloriesConsumed, 0)
     }
 
     func testTodaysEntriesReturnedOnly() async throws {
-        let subject = await AddEntryViewModel(healthStore: MockHealthStore(), container: container)
         var dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         let earlyDate = dc.date!
         try await subject.addFood(foodDescription: "Some food",
@@ -82,20 +87,69 @@ final class AddEntryViewModelTests: XCTestCase {
                                   calories: 100,
                                   timeConsumed: lateDate)
 
-        await subject.setDateForEntries(Calendar.current.startOfDay(for: lateDate))
-        let entries = await subject.foodEntries
+        subject.setDateForEntries(Calendar.current.startOfDay(for: lateDate))
+        let entries = subject.foodEntries
         XCTAssertEqual(entries.map { $0.foodDescription }, ["Some more food"])
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {
-        let result = await AddEntryViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-86400))
+        let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-86400))
         XCTAssertTrue(result)
     }
 
     func testNoClearDownOfInProgressDetailsOnSameDay() async {
-        let result = await AddEntryViewModel.shouldClearFields(phase: .active, date: Date())
+        let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date())
         XCTAssertFalse(result)
     }
 
+    func testWhenNoSuggestionsShownForAFoodEntryWhenFoodFromToday() async throws {
+        let date = dateFromComponents()
+        subject.setDateForEntries(date)
+        try await subject.addFood(foodDescription: "Some more food",
+                                  calories: 100,
+                                  timeConsumed: date)
+        let suggestions = subject.getSuggestions(currentDate: date)
+        XCTAssertEqual(suggestions, [])
+    }
+
+    func testWhenNoSuggestionsShownForAFoodEntryWhenFoodNotInSameMealTime() async throws {
+        let date = dateFromComponents()
+        subject.setDateForEntries(date)
+        try await subject.addFood(foodDescription: "Some more food",
+                                  calories: 100,
+                                  timeConsumed: date.addingTimeInterval(-86400 - (3 * 3600)))
+        let suggestions = subject.getSuggestions(currentDate: date)
+        XCTAssertEqual(suggestions, [])
+    }
+
+    func testWhenSuggestionsShownForAFoodEntryWhenFoodInSameMealTime() async throws {
+        let date = dateFromComponents()
+        subject.setDateForEntries(date)
+        try await subject.addFood(foodDescription: "Some more food",
+                                  calories: 100,
+                                  timeConsumed: date.addingTimeInterval(-86400))
+        let suggestions = subject.getSuggestions(currentDate: date)
+        XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
+    }
+
+    func testDefaultCaloriesForTwoSimilarFoodEntriesReturnsLatest() async throws {
+        let date = dateFromComponents()
+        subject.setDateForEntries(date)
+        try await subject.addFood(foodDescription: "Cornflakes",
+                                  calories: 100,
+                                  timeConsumed: date.addingTimeInterval(-1800))
+        try await subject.addFood(foodDescription: "Cornflakes",
+                                  calories: 200,
+                                  timeConsumed: date.addingTimeInterval(-3600))
+        let defCalories = subject.defCaloriesFor("Cornflakes")
+
+        XCTAssertEqual(defCalories, 100)
+
+    }
 }
 
+class MockDispatcher: Dispatching {
+    func async(execute work: @escaping @convention(block) () -> Void) {
+        work()
+    }
+}

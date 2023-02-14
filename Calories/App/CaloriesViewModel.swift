@@ -50,11 +50,5 @@ class CaloriesViewModel {
         } catch {
             print("Failed to save delete")
         }
-
-        do {
-//            try await calorieStats.fetchCaloriesConsumed()
-        } catch {
-            print("Failed to update calories consumed")
-        }
     }
 }

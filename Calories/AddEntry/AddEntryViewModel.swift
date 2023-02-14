@@ -14,21 +14,33 @@ struct Suggestion: Hashable {
     let name: String
 }
 
-class AddEntryViewModel: ObservableObject {
-    @ObservedObject var calorieStats: CalorieStats
+class AddEntryViewModel {
+    var calorieStats: CalorieStats
     let container: NSPersistentContainer
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
 
     init(healthStore: HealthStore = HKHealthStore(),
          container: NSPersistentContainer = PersistenceController.shared.container,
-         calorieStats: CalorieStats) {
+         calorieStats: CalorieStats = .init()) {
         self.healthStore = healthStore
         self.container = container
         self.calorieStats = calorieStats
     }
 
-    func setDateForEntries(_ date: Date) async {
+    var prompt: String {
+        let mealType = MealType.mealTypeForDate(Date()).rawValue
+        return "Enter \(mealType) food or drink..."
+    }
+
+    func calorieSearchURL(for foodDescription: String) -> URL {
+        let hostName = "https://www.myfitnesspal.com/nutrition-facts-calories"
+        let foodDescriptionPercentEncoded = foodDescription.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        let combinedString = "\(hostName)/\(foodDescriptionPercentEncoded)"
+        return URL(string: combinedString)!
+    }
+
+    func setDateForEntries(_ date: Date) {
         dateForEntries = date
     }
 
@@ -42,21 +54,37 @@ class AddEntryViewModel: ObservableObject {
         return (try? container.viewContext.fetch(request)) ?? []
     }
 
-    func getSuggestions(currentDate: Date = Date()) -> [Suggestion] {
+    func getSuggestions(searchText: String = "", currentDate: Date = Date()) -> [Suggestion] {
+
         let request = FoodEntry.fetchRequest()
-        let mealType = MealType.mealTypeForDate(currentDate)
-        let range = mealType.rangeOfPeriod()
-        let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
-        request.predicate = NSPredicate(format: "timeConsumed < %@", startOfDay as CVarArg)
-        guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
-            return []
+
+        if searchText.isEmpty { // Show list of suitable suggestions for this time of day
+            let mealType = MealType.mealTypeForDate(currentDate)
+            let range = mealType.rangeOfPeriod()
+            let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
+            request.predicate = NSPredicate(format: "timeConsumed < %@", startOfDay as CVarArg)
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
+            guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
+                return []
+            }
+            let filteredResults = results.filter { foodEntry in
+                guard let date = foodEntry.timeConsumed else { return false }
+                let dc = Calendar.current.dateComponents([.hour], from: date)
+                return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
+            }
+            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
+            return orderedSet.map { $0 as! Suggestion }
+        } else {    // Show fuzzy matched strings for this search text
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
+            guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
+                return []
+            }
+            let filteredResults = results.filter { foodEntry in
+                return foodEntry.foodDescription.fuzzyMatch(searchText)
+            }
+            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
+            return orderedSet.map { $0 as! Suggestion }
         }
-        let filteredResults = results.filter { foodEntry in
-            guard let date = foodEntry.timeConsumed else { return false }
-            let dc = Calendar.current.dateComponents([.hour], from: date)
-            return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
-        }
-        return Array(Set(filteredResults.map { Suggestion(name: $0.foodDescription) }))
     }
 
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date) async throws {
@@ -67,7 +95,7 @@ class AddEntryViewModel: ObservableObject {
         try await healthStore.authorize()
         try await healthStore.addFoodEntry(foodEntry)
         try container.viewContext.save()
-        objectWillChange.send()
+        await calorieStats.fetchCaloriesConsumed()
     }
 
     func defCaloriesFor(_ name: String) -> Int {
@@ -87,8 +115,18 @@ class AddEntryViewModel: ObservableObject {
         }
         return false
     }
+}
 
-    func fetchCaloriesConsumed() async throws {
-        calorieStats.fetchCaloriesConsumed()
+extension String {
+    func fuzzyMatch(_ needle: String) -> Bool {
+        if needle.isEmpty { return true }
+        var remainder = needle.lowercased()[...]
+        for char in self.lowercased() {
+            if char == remainder[remainder.startIndex] {
+                remainder.removeFirst()
+                if remainder.isEmpty { return true }
+            }
+        }
+        return false
     }
 }
