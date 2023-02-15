@@ -132,6 +132,19 @@ final class AddEntryViewModelTests: XCTestCase {
         XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
     }
 
+    func testSuggestionsFuzzyMatched() async throws {
+        let date = dateFromComponents()
+        subject.setDateForEntries(date)
+        try await subject.addFood(foodDescription: "Some more food",
+                                  calories: 100,
+                                  timeConsumed: date.addingTimeInterval(-86400))
+        var suggestions = subject.getSuggestions(searchText: "more", currentDate: date)
+        XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
+
+        suggestions = subject.getSuggestions(searchText: "mxe", currentDate: date)  // Shouldn't return results
+        XCTAssertEqual(suggestions, [])
+    }
+
     func testDefaultCaloriesForTwoSimilarFoodEntriesReturnsLatest() async throws {
         let date = dateFromComponents()
         subject.setDateForEntries(date)
@@ -144,7 +157,15 @@ final class AddEntryViewModelTests: XCTestCase {
         let defCalories = subject.defCaloriesFor("Cornflakes")
 
         XCTAssertEqual(defCalories, 100)
+    }
 
+    func testPrompt() {
+        let date = dateFromComponents()
+        XCTAssertEqual(subject.prompt(for: date), "Enter Morning Snack food or drink...")
+    }
+
+    func testCalorieSearchURL() {
+        XCTAssertEqual(subject.calorieSearchURL(for: "Banana Cake").absoluteString, "https://www.myfitnesspal.com/nutrition-facts-calories/Banana%20Cake")
     }
 }
 

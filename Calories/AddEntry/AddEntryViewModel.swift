@@ -28,8 +28,8 @@ class AddEntryViewModel {
         self.calorieStats = calorieStats
     }
 
-    var prompt: String {
-        let mealType = MealType.mealTypeForDate(Date()).rawValue
+    func prompt(for date: Date = Date()) -> String {
+        let mealType = MealType.mealTypeForDate(date).rawValue
         return "Enter \(mealType) food or drink..."
     }
 

@@ -29,7 +29,7 @@ class Day: Identifiable {
 class CaloriesViewModel {
     let container: NSPersistentContainer
     let healthStore: HealthStore
-    private var dateForEntries: Date = Date()
+    var dateForEntries: Date = Date()
     private var timeFormatter: DateFormatter = DateFormatter()
 
     init(healthStore: HealthStore = HKHealthStore(),

@@ -40,7 +40,7 @@ class CalorieStats: ObservableObject {
 
     func fetchCaloriesConsumed() async {
         do {
-            caloriesConsumed = try await healthStore.caloriesConsumed()
+            caloriesConsumed = try await healthStore.caloriesConsumed(date: nil)
             dispatchQueue.async {
                 self.objectWillChange.send()
             }
@@ -52,9 +52,9 @@ class CalorieStats: ObservableObject {
     func fetchStats() {
         Task {
             do {
-                bmr = try await healthStore.bmr()
-                exercise = try await healthStore.exercise()
-                caloriesConsumed = try await healthStore.caloriesConsumed()
+                bmr = try await healthStore.bmr(date: nil)
+                exercise = try await healthStore.exercise(date: nil)
+                caloriesConsumed = try await healthStore.caloriesConsumed(date: nil)
                 DispatchQueue.main.async {
                     self.objectWillChange.send()
                 }

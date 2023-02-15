@@ -16,19 +16,24 @@ struct CaloriesView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                HeaderView(calorieStats: calorieStats)
-                    .padding()
-                Button {
-                    showingAddEntryView = true
-                } label: {
-                    Text("Add food or drink")
-                        .padding(10)
-                        .bold()
+            List {
+                Section {
+                    VStack(spacing: 40) {
+                        WeeklyChartView(viewModel: .init())
+                        Button {
+                            showingAddEntryView = true
+                        } label: {
+                            Text("Add food or drink").font(.brand)
+                                .padding(10)
+                                .bold()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
                 }
-                .buttonStyle(.borderedProminent)
                 HistoryView(viewModel: viewModel, calorieStats: calorieStats)
             }
+            .scrollContentBackground(.hidden)
+            .cornerRadius(10)
             .navigationTitle("Today's Calories")
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {

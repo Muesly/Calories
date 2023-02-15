@@ -49,6 +49,24 @@ final class CaloriesViewModelTests: XCTestCase {
         XCTAssertEqual(postResult?.count, 0)
     }
 
+    func testFetchingFoodEntriesSortsMostRecentFirst() async throws {
+        let subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
+        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let date = dc.date!
+        subject.dateForEntries = date
+        let entry1 = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Some food",
+                                  calories: Double(100),
+                                  timeConsumed: date)
+        let entry2 = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Some more food",
+                                  calories: Double(200),
+                                  timeConsumed: date.addingTimeInterval(600))
+        try container.viewContext.save()
+
+        let foodEntries = subject.foodEntries
+        XCTAssertEqual(foodEntries, [entry2, entry1])
+    }
 }
 
 class MockHealthStore: HealthStore {
@@ -64,15 +82,15 @@ class MockHealthStore: HealthStore {
         throw error
     }
 
-    func bmr() async throws -> Int {
+    func bmr(date: Date?) async throws -> Int {
         bmr
     }
 
-    func exercise() async throws -> Int {
+    func exercise(date: Date?) async throws -> Int {
         exercise
     }
 
-    func caloriesConsumed() async throws -> Int {
+    func caloriesConsumed(date: Date?) async throws -> Int {
         caloriesConsumed
     }
 
