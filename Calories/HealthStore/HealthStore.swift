@@ -10,9 +10,9 @@ import HealthKit
 
 protocol HealthStore {
     func authorize() async throws
-    func caloriesConsumed() async throws -> Int
-    func bmr() async throws -> Int
-    func exercise() async throws -> Int
+    func caloriesConsumed(date: Date?) async throws -> Int
+    func bmr(date: Date?) async throws -> Int
+    func exercise(date: Date?) async throws -> Int
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
 }
@@ -34,14 +34,14 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    private func countForType(_ typeIdentifier: HKQuantityTypeIdentifier) async throws -> Int {
+    private func countForType(_ typeIdentifier: HKQuantityTypeIdentifier, date: Date? = nil) async throws -> Int {
         guard let type = HKObjectType.quantityType(forIdentifier: typeIdentifier) else {
             return 0
         }
 
-        let now = Date()
-        let startOfDay = Calendar.current.startOfDay(for: now)
-        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: now, options: .strictStartDate)
+        let endOfDay = date ?? Date()
+        let startOfDay = Calendar.current.startOfDay(for: endOfDay)
+        let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
 
         return await withCheckedContinuation { continuation in
             let query = HKStatisticsQuery(quantityType: type,
@@ -58,16 +58,16 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func bmr() async throws -> Int {
-        try await countForType(.basalEnergyBurned)
+    func bmr(date: Date?) async throws -> Int {
+        try await countForType(.basalEnergyBurned, date: date)
     }
 
-    func exercise() async throws -> Int {
-        try await countForType(.activeEnergyBurned)
+    func exercise(date: Date?) async throws -> Int {
+        try await countForType(.activeEnergyBurned, date: date)
     }
 
-    func caloriesConsumed() async throws -> Int {
-        try await countForType(.dietaryEnergyConsumed)
+    func caloriesConsumed(date: Date?) async throws -> Int {
+        try await countForType(.dietaryEnergyConsumed, date: date)
     }
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws {

@@ -61,9 +61,11 @@ struct AddEntryView: View {
                     }
                 }
             })
-        }.searchable(text: $searchText,
+        }
+        .font(.brand)
+        .searchable(text: $searchText,
                      placement:  .navigationBarDrawer(displayMode: .always),
-                     prompt: viewModel.prompt)
+                     prompt: viewModel.prompt())
         .onSubmit(of: .search) {
             readyToNavigateToAddEntryInputFields = true
         }
