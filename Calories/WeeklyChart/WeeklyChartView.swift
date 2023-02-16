@@ -51,12 +51,16 @@ struct WeeklyChartView: View {
                         .padding()
                 }
                 if isCalloutShown {
-                    VStack(alignment: .center) {
-                        Text("Burnt: \(calloutViewDetails.bmr) + \(calloutViewDetails.exercise) = \(calloutViewDetails.burnt)")
-                        Text("Consumed: \(calloutViewDetails.caloriesConsumed)")
-                        Text("Difference: \(calloutViewDetails.difference)")
-                        Text("Deficit goal: \(calloutViewDetails.deficitGoal)")
-                        Text("Can eat: \(calloutViewDetails.canEat)")
+                    HStack {
+                        Spacer()
+                        VStack(alignment: .leading) {
+                            Text("Burnt: \(calloutViewDetails.bmr) + \(calloutViewDetails.exercise) = \(calloutViewDetails.burnt)")
+                            Text("Consumed: \(calloutViewDetails.caloriesConsumed)")
+                            Text("Difference: \(calloutViewDetails.difference)")
+                            Text("Deficit goal: \(calloutViewDetails.deficitGoal)")
+                            Text("Can eat: \(calloutViewDetails.canEat)")
+                        }
+                        Spacer()
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
