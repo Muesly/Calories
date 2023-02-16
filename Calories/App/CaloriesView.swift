@@ -10,16 +10,17 @@ import CoreData
 
 struct CaloriesView: View {
     private let viewModel = CaloriesViewModel()
-    @StateObject var calorieStats: CalorieStats
     @Environment(\.scenePhase) var scenePhase
     @State var showingAddEntryView = false
+    private let weeklyChartViewModel = WeeklyChartViewModel()
+    @State var entryDeleted = false
 
     var body: some View {
         NavigationView {
             List {
                 Section {
                     VStack(spacing: 40) {
-                        WeeklyChartView(viewModel: .init())
+                        WeeklyChartView(viewModel: weeklyChartViewModel)
                         Button {
                             showingAddEntryView = true
                         } label: {
@@ -30,23 +31,41 @@ struct CaloriesView: View {
                         .buttonStyle(.borderedProminent)
                     }
                 }
-                HistoryView(viewModel: viewModel, calorieStats: calorieStats)
+                HistoryView(viewModel: viewModel, entryDeleted: $entryDeleted)
             }
             .scrollContentBackground(.hidden)
             .cornerRadius(10)
             .navigationTitle("Today's Calories")
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {
-                    calorieStats.fetchStats()
+                    refresh()
+                }
+            }
+            .onChange(of: entryDeleted) { isDeleted in
+                if isDeleted == true {
+                    refresh()
+                }
+                entryDeleted = false
+            }
+            .onChange(of: showingAddEntryView) { isBeingShown in
+                if !isBeingShown {
+                    refresh()
                 }
             }
             .sheet(isPresented: $showingAddEntryView) {
-                AddEntryView(viewModel: AddEntryViewModel(calorieStats: calorieStats),
+                AddEntryView(viewModel: AddEntryViewModel(),
                              showingAddEntryView: $showingAddEntryView)
             }
             .background(Colours.backgroundPrimary)
         }
 
+    }
+
+    private func refresh() {
+        Task {
+            await weeklyChartViewModel.fetchDaysCalorieData()
+            await viewModel.fetchDaySections()
+        }
     }
 }
 

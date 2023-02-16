@@ -22,8 +22,11 @@ struct CalorieDataPointsType: Identifiable {
     let dataPoints: [CalorieDataPoint]
 }
 
-class ContentViewModel {
+class ContentViewModel: ObservableObject {
     let healthStore: HealthStore
+    @Published var daysCaloriesData: [CalorieDataPointsType] = []
+    @Published var weeklyProgress: Double = 0.0
+    let deficitGoal: Int = -500
 
     init(healthStore: HealthStore = HKHealthStore()) {
         self.healthStore = healthStore
@@ -34,8 +37,16 @@ class ContentViewModel {
         return Calendar.current.shortWeekdaySymbols[weekday]
     }
 
-    func getDaysCalorieData() async -> ([CalorieDataPointsType], Double) {
+    var firstDayStr: String {
+        daysCaloriesData.first?.dataPoints.first?.weekdayStr ?? ""
+    }
 
+    var lastDayStr: String {
+        daysCaloriesData.first?.dataPoints.last?.weekdayStr ?? ""
+    }
+
+    @MainActor
+    func fetchDaysCalorieData() async {
         var date: Date = Date()
         var burntData = [CalorieDataPoint]()
         var caloriesConsumedData = [CalorieDataPoint]()
@@ -73,13 +84,10 @@ class ContentViewModel {
             date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
         }
 
-        let daysCalorieData: [CalorieDataPointsType] = [.init(barType: "Burnt", dataPoints: burntData.reversed()),
-                                                        .init(barType: "Consumed", dataPoints: caloriesConsumedData.reversed()),
-                                                        .init(barType: "Difference", dataPoints: differenceData.reversed())]
-        let weeklyProgress = max(min(-Double(differenceData.reduce(0, { $0 + $1.calories })) / 3500, 1), 0.001)
-
-        return (daysCalorieData, weeklyProgress)
-
+        daysCaloriesData = [.init(barType: "Burnt", dataPoints: burntData.reversed()),
+                            .init(barType: "Consumed", dataPoints: caloriesConsumedData.reversed()),
+                            .init(barType: "Difference", dataPoints: differenceData.reversed())]
+        weeklyProgress = max(min(-Double(differenceData.reduce(0, { $0 + $1.calories })) / 3500, 1), 0.001)
     }
 
     private func colourForDifference(_ difference: Int) -> Color {

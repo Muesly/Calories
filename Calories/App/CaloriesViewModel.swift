@@ -26,11 +26,12 @@ class Day: Identifiable {
     }
 }
 
-class CaloriesViewModel {
+class CaloriesViewModel: ObservableObject {
     let container: NSPersistentContainer
     let healthStore: HealthStore
     var dateForEntries: Date = Date()
     private var timeFormatter: DateFormatter = DateFormatter()
+    @Published var daySections: [Day] = []
 
     init(healthStore: HealthStore = HKHealthStore(),
          container: NSPersistentContainer = PersistenceController.shared.container) {
@@ -38,7 +39,8 @@ class CaloriesViewModel {
         self.container = container
     }
 
-    var daySections: [Day] {
+    @MainActor
+    func fetchDaySections() {
         let request = FoodEntry.fetchRequest()
         let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
@@ -58,7 +60,7 @@ class CaloriesViewModel {
                 daySections.append(daySection)
             }
         }
-        return daySections.sorted { d1, d2 in
+        self.daySections = daySections.sorted { d1, d2 in
             d1.date > d2.date
         }
     }
