@@ -78,11 +78,11 @@ class CaloriesViewModel {
         return timeFormatter
     }
 
-    func deleteEntries(offsets: IndexSet) async {
-        guard let foodEntry = offsets.map({ foodEntries[$0] }).first else {
+    func deleteEntries(atRow row: Int?, inFoodEntries foodEntries: [FoodEntry]) async {
+        guard let row = row else {
             return
         }
-        await deleteFoodEntry(foodEntry)
+        await deleteFoodEntry(foodEntries[row])
     }
 
     func deleteFoodEntry(_ foodEntry: FoodEntry) async {

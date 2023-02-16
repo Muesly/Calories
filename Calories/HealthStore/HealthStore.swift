@@ -96,9 +96,14 @@ extension HKHealthStore: HealthStore {
                                            predicate: predicate,
                                            limit: HKObjectQueryNoLimit,
                                            sortDescriptors: nil) { [weak self] (query, results, error) in
-                guard let result = (results as? [HKQuantitySample])?.first,
-                      result.quantity.doubleValue(for: .largeCalorie()) == foodEntry.calories,
-                      result.metadata?[HKMetadataKeyFoodType] as? String == foodEntry.foodDescription else {
+                guard let result = (results as? [HKQuantitySample])?.first(where: { result in
+                    if result.quantity.doubleValue(for: .largeCalorie()) == foodEntry.calories,
+                       result.metadata?[HKMetadataKeyFoodType] as? String == foodEntry.foodDescription {
+                        return true
+                    } else {
+                        return false
+                    }
+                }) else {
                     print("Failed to delete record")
                     continuation.resume()
                     return
