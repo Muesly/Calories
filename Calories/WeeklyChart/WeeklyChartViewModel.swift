@@ -25,11 +25,15 @@ struct CalorieDataPointsType: Identifiable {
 class WeeklyChartViewModel: ObservableObject {
     let healthStore: HealthStore
     let deficitGoal: Int = -500
+    let numberOfDays: Int
+
     @Published var daysCaloriesData: [CalorieDataPointsType] = []
     @Published var weeklyProgress: Double = 0.0
 
-    init(healthStore: HealthStore = HKHealthStore()) {
+    init(healthStore: HealthStore = HKHealthStore(),
+         numberOfDays: Int = 7) {
         self.healthStore = healthStore
+        self.numberOfDays = numberOfDays
     }
 
     private func weekdayStrFromDate(_ date: Date) -> String {
@@ -84,10 +88,25 @@ class WeeklyChartViewModel: ObservableObject {
             date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
         }
 
-        daysCaloriesData = [.init(barType: "Burnt", dataPoints: burntData.reversed()),
-                                                        .init(barType: "Consumed", dataPoints: caloriesConsumedData.reversed()),
-                                                        .init(barType: "Difference", dataPoints: differenceData.reversed())]
-        weeklyProgress = max(min(-Double(differenceData.reduce(0, { $0 + $1.calories })) / 3500, 1), 0.001)
+        // Calculate weekly progres before cropping to e.g. two days for watch app
+        weeklyProgress = progressSinceMonday(data: differenceData)
+
+        let croppedBurntData = Array(burntData[..<numberOfDays])
+        let croppedCaloriesConsumedData = Array(caloriesConsumedData[..<numberOfDays])
+        let croppedDifferenceData = Array(differenceData[..<numberOfDays])
+
+        daysCaloriesData = [.init(barType: "Burnt", dataPoints: croppedBurntData.reversed()),
+                            .init(barType: "Consumed", dataPoints: croppedCaloriesConsumedData.reversed()),
+                            .init(barType: "Difference", dataPoints: croppedDifferenceData.reversed())]
+    }
+
+    private func progressSinceMonday(data: [CalorieDataPoint]) -> Double {
+        guard let mondayIndex = data.firstIndex(where: { $0.weekdayStr == "Mon" }) else {
+            return 0.0
+        }
+        let index = mondayIndex + 1
+        let amount = -Double(data[index...].reduce(0, { $0 + $1.calories }))
+        return max(min(amount / 3500, 1), 0.001)
     }
 
     private func colourForDifference(_ difference: Int) -> Color {
