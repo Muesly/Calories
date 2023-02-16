@@ -12,7 +12,7 @@ struct CaloriesWatch_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                ContentView(viewModel: ContentViewModel())
+                TwoDayChartView(viewModel: ContentViewModel())
                 Text("Page Two")
                 Text("Page Three")
             }

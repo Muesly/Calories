@@ -15,17 +15,14 @@ struct Suggestion: Hashable {
 }
 
 class AddEntryViewModel {
-    var calorieStats: CalorieStats
     let container: NSPersistentContainer
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
 
     init(healthStore: HealthStore = HKHealthStore(),
-         container: NSPersistentContainer = PersistenceController.shared.container,
-         calorieStats: CalorieStats = .init()) {
+         container: NSPersistentContainer = PersistenceController.shared.container) {
         self.healthStore = healthStore
         self.container = container
-        self.calorieStats = calorieStats
     }
 
     func prompt(for date: Date = Date()) -> String {
@@ -95,7 +92,6 @@ class AddEntryViewModel {
         try await healthStore.authorize()
         try await healthStore.addFoodEntry(foodEntry)
         try container.viewContext.save()
-        await calorieStats.fetchCaloriesConsumed()
     }
 
     func defCaloriesFor(_ name: String) -> Int {

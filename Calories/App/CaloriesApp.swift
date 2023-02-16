@@ -12,7 +12,7 @@ import SwiftUI
 struct CaloriesApp: App {
     var body: some Scene {
         WindowGroup {
-            CaloriesView(calorieStats: CalorieStats())
+            CaloriesView()
                 .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
         }
     }

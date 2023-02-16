@@ -14,7 +14,6 @@ import XCTest
 final class AddEntryViewModelTests: XCTestCase {
     var subject: AddEntryViewModel!
     var mockHealthStore: MockHealthStore!
-    var calorieStats: CalorieStats!
 
     var controller: PersistenceController!
     var container: NSPersistentContainer {
@@ -27,16 +26,13 @@ final class AddEntryViewModelTests: XCTestCase {
     override func setUpWithError() throws {
         controller = PersistenceController(inMemory: true)
         mockHealthStore = MockHealthStore()
-        calorieStats = CalorieStats(healthStore: mockHealthStore, dispatchQueue: MockDispatcher())
         subject = AddEntryViewModel(healthStore: mockHealthStore,
-                                        container: container,
-                                        calorieStats: calorieStats)
+                                        container: container)
     }
 
     override func tearDownWithError() throws {
         subject = nil
         mockHealthStore = nil
-        calorieStats = nil
         controller = nil
     }
 
@@ -49,13 +45,12 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some food",
                                   calories: 100,
                                   timeConsumed: dateFromComponents())
-        XCTAssertEqual(calorieStats.caloriesConsumed, 100)
 
         let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
-        let result = try? context.fetch(fetchRequest)
+        let results = try? context.fetch(fetchRequest)
 
-        guard let foodEntry = result?.first else {
+        guard let foodEntry = results?.first else {
             XCTFail("Expected food entry")
             return
         }
@@ -72,7 +67,11 @@ final class AddEntryViewModelTests: XCTestCase {
         } catch let healthStoreError as HealthStoreError {
             XCTAssertEqual(healthStoreError, HealthStoreError.ErrorNoHealthDataAvailable)
         }
-        XCTAssertEqual(calorieStats.caloriesConsumed, 0)
+
+        let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
+        let results = try? context.fetch(fetchRequest)
+        XCTAssertEqual(results, [])
     }
 
     func testTodaysEntriesReturnedOnly() async throws {
@@ -166,11 +165,5 @@ final class AddEntryViewModelTests: XCTestCase {
 
     func testCalorieSearchURL() {
         XCTAssertEqual(subject.calorieSearchURL(for: "Banana Cake").absoluteString, "https://www.myfitnesspal.com/nutrition-facts-calories/Banana%20Cake")
-    }
-}
-
-class MockDispatcher: Dispatching {
-    func async(execute work: @escaping @convention(block) () -> Void) {
-        work()
     }
 }

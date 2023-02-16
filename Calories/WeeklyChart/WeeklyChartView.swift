@@ -9,9 +9,7 @@ import Charts
 import SwiftUI
 
 struct WeeklyChartView: View {
-    let viewModel: WeeklyChartViewModel
-    @State var daysCaloriesData: [CalorieDataPointsType] = []
-    @State var weeklyProgress: Double = 0
+    @ObservedObject var viewModel: WeeklyChartViewModel
     @State var isCalloutShown: Bool = false
     @State var calloutDay: String = ""
     @State var calloutViewDetails: CallOutViewDetails = .init()
@@ -19,17 +17,19 @@ struct WeeklyChartView: View {
     var body: some View {
         VStack(spacing: 40) {
             Chart {
-                ForEach(daysCaloriesData) { dayCalorieData in
+                ForEach(viewModel.daysCaloriesData) { dayCalorieData in
                     ForEach(dayCalorieData.dataPoints) {
                         BarMark(x: .value("Day", $0.weekdayStr), y: .value("Calories", $0.calories))
                             .foregroundStyle($0.barColour)
                     }
+                    //.foregroundStyle(by: .value("Day", dayCalorieData.barType))
+//                    .symbol(by: .value("Day", dayCalorieData.barType))
                     .position(by: .value("Day", dayCalorieData.barType))
                 }
                 RuleMark(
-                    xStart: .value("Day", daysCaloriesData.first?.dataPoints.first?.weekdayStr ?? ""),
-                    xEnd: .value("Day", daysCaloriesData.first?.dataPoints.last?.weekdayStr ?? ""),
-                    y: .value("Calories", -500)
+                    xStart: .value("Day", viewModel.firstDayStr),
+                    xEnd: .value("Day", viewModel.lastDayStr),
+                    y: .value("Calories", viewModel.deficitGoal)
                 ).lineStyle(StrokeStyle(lineWidth: 1, dash: [5]))
             }
             .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
@@ -44,10 +44,11 @@ struct WeeklyChartView: View {
                     }
                 }
             }
+            .chartLegend(position: .trailing)
             ZStack {
                 if !isCalloutShown {
-                    ProgressView("Weekly progress to a 1lb weight loss", value: weeklyProgress, total: 1)
-                        .progressViewStyle(LinearProgressViewStyle(tint: weeklyProgress == 1 ? .green : .blue))
+                    ProgressView("Weekly progress to a 1lb weight loss", value: viewModel.weeklyProgress, total: 1)
+                        .progressViewStyle(LinearProgressViewStyle(tint: viewModel.weeklyProgress == 1 ? .green : .blue))
                         .padding()
                 }
                 if isCalloutShown {
@@ -72,11 +73,11 @@ struct WeeklyChartView: View {
         }
         .font(.brand)
         .task {
-            (daysCaloriesData, weeklyProgress) = await viewModel.getDaysCalorieData()
+            await viewModel.fetchDaysCalorieData()
         }
     }
 
-    func showCallout(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {
+    private func showCallout(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {
         let xPosition = location.x - geometry[proxy.plotAreaFrame].origin.x
         guard let day: String = proxy.value(atX: xPosition) else {
             return
