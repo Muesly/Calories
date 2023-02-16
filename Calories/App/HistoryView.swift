@@ -30,16 +30,19 @@ struct HistoryView: View {
                     }
                     .listRowBackground(Colours.backgroundSecondary)
                 }
+                .onDelete { indexSet in
+                    self.deleteItem(atRow: indexSet.first, inFoodEntries: daySection.foodEntries)
+                }
             }
         }
-        .onDelete(perform: deleteItems)
     }
 
-    private func deleteItems(offsets: IndexSet) {
+    private func deleteItem(atRow row: Int?, inFoodEntries foodEntries: [FoodEntry]) {
         _ = withAnimation {
             Task {
-                await viewModel.deleteEntries(offsets: offsets)
+                await viewModel.deleteEntries(atRow: row, inFoodEntries: foodEntries)
                 await calorieStats.fetchCaloriesConsumed()
+                entryDeleted = true
             }
         }
     }
