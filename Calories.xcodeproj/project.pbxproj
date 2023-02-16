@@ -36,7 +36,8 @@
 		EA767591299D845200771517 /* CaloriesWatch_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA767590299D845200771517 /* CaloriesWatch_Watch_AppTests.swift */; };
 		EA7675AD299D865C00771517 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
 		EA7675B3299D88F700771517 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7675B2299D88F700771517 /* FoodEntry.swift */; };
-		EA7675B4299D897A00771517 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7675AB299D855700771517 /* ContentViewModel.swift */; };
+		EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */; };
+		EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,9 +93,9 @@
 		EA767590299D845200771517 /* CaloriesWatch_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppTests.swift; sourceTree = "<group>"; };
 		EA76759A299D845400771517 /* CaloriesWatch_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		EA76759C299D845400771517 /* CaloriesWatch_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		EA7675AB299D855700771517 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		EA7675B2299D88F700771517 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
 		EA7675B5299D8DEE00771517 /* CaloriesWatch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CaloriesWatch Watch App.entitlements"; sourceTree = "<group>"; };
+		EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyProgressView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,7 +254,7 @@
 				EA7675B5299D8DEE00771517 /* CaloriesWatch Watch App.entitlements */,
 				EA76757F299D844E00771517 /* CaloriesWatchApp.swift */,
 				EA767581299D844E00771517 /* TwoDayChartView.swift */,
-				EA7675AB299D855700771517 /* ContentViewModel.swift */,
+				EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */,
 				EA767583299D845000771517 /* Assets.xcassets */,
 				EA7675B2299D88F700771517 /* FoodEntry.swift */,
 			);
@@ -475,7 +476,8 @@
 				EA767582299D844E00771517 /* TwoDayChartView.swift in Sources */,
 				EA7675AD299D865C00771517 /* HealthStore.swift in Sources */,
 				EA767580299D844E00771517 /* CaloriesWatchApp.swift in Sources */,
-				EA7675B4299D897A00771517 /* ContentViewModel.swift in Sources */,
+				EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */,
+				EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

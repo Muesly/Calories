@@ -12,8 +12,8 @@ struct CaloriesWatch_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                TwoDayChartView(viewModel: ContentViewModel())
-                Text("Page Two")
+                TwoDayChartView()
+                WeeklyProgressView()
                 Text("Page Three")
             }
             .tabViewStyle(PageTabViewStyle())

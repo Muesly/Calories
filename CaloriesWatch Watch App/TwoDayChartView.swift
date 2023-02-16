@@ -9,12 +9,11 @@ import Charts
 import SwiftUI
 
 struct TwoDayChartView: View {
-    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var viewModel: WeeklyChartViewModel
 
     @State var daysCaloriesData: [CalorieDataPointsType] = []
-    @State var weeklyProgress: Double = 0
 
-    init(viewModel: ContentViewModel) {
+    init(viewModel: WeeklyChartViewModel = .init(numberOfDays: 2)) {
         self.viewModel = viewModel
     }
 
@@ -47,10 +46,4 @@ struct TwoDayChartView: View {
         }
     }
 
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        TwoDayChartView(viewModel: ContentViewModel())
-    }
 }
