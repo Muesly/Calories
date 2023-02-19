@@ -15,6 +15,7 @@ protocol HealthStore {
     func exercise(date: Date?) async throws -> Int
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws
 }
 
 enum HealthStoreError: Error {
@@ -28,7 +29,7 @@ extension HKHealthStore: HealthStore {
            let basalEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.basalEnergyBurned),
            let activeEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)
         {
-            try await requestAuthorization(toShare: [dietaryEnergyConsumed], read: [dietaryEnergyConsumed, basalEnergyBurned, activeEnergyBurned])
+            try await requestAuthorization(toShare: [dietaryEnergyConsumed, activeEnergyBurned], read: [dietaryEnergyConsumed, basalEnergyBurned, activeEnergyBurned])
         } else {
             throw HealthStoreError.ErrorNoHealthDataAvailable
         }
@@ -86,7 +87,7 @@ extension HKHealthStore: HealthStore {
 
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
         guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
-            let timeConsumed = foodEntry.timeConsumed else {
+              let timeConsumed = foodEntry.timeConsumed else {
             return
         }
 
@@ -118,5 +119,19 @@ extension HKHealthStore: HealthStore {
             }
             execute(query)
         }
+    }
+
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
+        guard let activeEnergyBurnedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned) else {
+            return
+        }
+        let quantity = HKQuantity(unit: .largeCalorie(), doubleValue: Double(exerciseEntry.calories))
+        let timeConsumed = exerciseEntry.timeExercised
+        let exercise = HKQuantitySample(type: activeEnergyBurnedType,
+                                        quantity: quantity,
+                                        start: timeConsumed,
+                                        end: timeConsumed,
+                                        metadata: [HKMetadataKeyWorkoutBrandName: exerciseEntry.exerciseDescription])
+        try await save(exercise)
     }
 }
