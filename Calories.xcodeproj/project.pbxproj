@@ -28,6 +28,12 @@
 		EA2D49122998142100248864 /* AddEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49112998142100248864 /* AddEntryViewModel.swift */; };
 		EA2D49142998166500248864 /* AddEntryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49132998166500248864 /* AddEntryViewModelTests.swift */; };
 		EA3EDC18299D74DA005070D3 /* WeeklyChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */; };
+		EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */; };
+		EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */; };
+		EA4EE50E299EA49F000FE6AC /* AddEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE50D299EA49F000FE6AC /* AddEntryView.swift */; };
+		EA4EE50F299EA514000FE6AC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
+		EA4EE511299EA53C000FE6AC /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */; };
+		EA4EE512299EA546000FE6AC /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */; };
 		EA6655A329939B4E000770F6 /* FoodEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */; };
 		EA6655A429939B4E000770F6 /* FoodEntry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */; };
 		EA767580299D844E00771517 /* CaloriesWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA76757F299D844E00771517 /* CaloriesWatchApp.swift */; };
@@ -36,8 +42,11 @@
 		EA767591299D845200771517 /* CaloriesWatch_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA767590299D845200771517 /* CaloriesWatch_Watch_AppTests.swift */; };
 		EA7675AD299D865C00771517 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
 		EA7675B3299D88F700771517 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7675B2299D88F700771517 /* FoodEntry.swift */; };
+		EAB542DB29A228A900664583 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA2D49032994394900248864 /* Colours.xcassets */; };
+		EAB542DD29A28B5300664583 /* AddEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */; };
 		EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */; };
 		EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */; };
+		EAFC439F29A1525B00945E70 /* NumberPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFC439E29A1525B00945E70 /* NumberPadView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +92,10 @@
 		EA2D49132998166500248864 /* AddEntryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModelTests.swift; sourceTree = "<group>"; };
 		EA3EDC15299D5042005070D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartViewModelTests.swift; sourceTree = "<group>"; };
+		EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseView.swift; sourceTree = "<group>"; };
+		EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewModel.swift; sourceTree = "<group>"; };
+		EA4EE50D299EA49F000FE6AC /* AddEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryView.swift; sourceTree = "<group>"; };
+		EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		EA76757A299D844D00771517 /* CaloriesWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CaloriesWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,7 +108,9 @@
 		EA76759C299D845400771517 /* CaloriesWatch_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		EA7675B2299D88F700771517 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
 		EA7675B5299D8DEE00771517 /* CaloriesWatch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CaloriesWatch Watch App.entitlements"; sourceTree = "<group>"; };
+		EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModel.swift; sourceTree = "<group>"; };
 		EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyProgressView.swift; sourceTree = "<group>"; };
+		EAFC439E29A1525B00945E70 /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +176,7 @@
 				EA2D491929981B4600248864 /* Resources */,
 				EA6655A529939EEA000770F6 /* Model */,
 				EA2D491529981AE800248864 /* App */,
+				EA4EE50A299E9D44000FE6AC /* AddExercise */,
 				EA2D491629981AFD00248864 /* AddEntry */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				EA2D491829981B3C00248864 /* HealthStore */,
@@ -237,6 +253,15 @@
 			path = WeeklyChart;
 			sourceTree = "<group>";
 		};
+		EA4EE50A299E9D44000FE6AC /* AddExercise */ = {
+			isa = PBXGroup;
+			children = (
+				EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */,
+				EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */,
+			);
+			path = AddExercise;
+			sourceTree = "<group>";
+		};
 		EA6655A529939EEA000770F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +269,7 @@
 				EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */,
 				EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */,
 				EA097DC32993986D00735129 /* Model.xcdatamodeld */,
+				EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -254,6 +280,9 @@
 				EA7675B5299D8DEE00771517 /* CaloriesWatch Watch App.entitlements */,
 				EA76757F299D844E00771517 /* CaloriesWatchApp.swift */,
 				EA767581299D844E00771517 /* TwoDayChartView.swift */,
+				EA4EE50D299EA49F000FE6AC /* AddEntryView.swift */,
+				EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */,
+				EAFC439E29A1525B00945E70 /* NumberPadView.swift */,
 				EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */,
 				EA767583299D845000771517 /* Assets.xcassets */,
 				EA7675B2299D88F700771517 /* FoodEntry.swift */,
@@ -420,6 +449,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA767584299D845000771517 /* Assets.xcassets in Resources */,
+				EAB542DB29A228A900664583 /* Colours.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,12 +475,15 @@
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
 				EA08544E299BD62A0029DD42 /* AddEntryInputFieldsView.swift in Sources */,
+				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,
 				EA2D490629944E3000248864 /* AddEntryView.swift in Sources */,
 				EA097DC52993986D00735129 /* Model.xcdatamodeld in Sources */,
+				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
 				EA2D49122998142100248864 /* AddEntryViewModel.swift in Sources */,
 				EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */,
 				EA097DB82991909500735129 /* CaloriesViewModel.swift in Sources */,
 				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
+				EA4EE511299EA53C000FE6AC /* ExerciseEntry.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
 				EA6655A429939B4E000770F6 /* FoodEntry+CoreDataProperties.swift in Sources */,
@@ -473,9 +506,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA7675B3299D88F700771517 /* FoodEntry.swift in Sources */,
+				EA4EE50F299EA514000FE6AC /* Theme.swift in Sources */,
 				EA767582299D844E00771517 /* TwoDayChartView.swift in Sources */,
+				EAB542DD29A28B5300664583 /* AddEntryViewModel.swift in Sources */,
+				EA4EE50E299EA49F000FE6AC /* AddEntryView.swift in Sources */,
 				EA7675AD299D865C00771517 /* HealthStore.swift in Sources */,
+				EA4EE512299EA546000FE6AC /* ExerciseEntry.swift in Sources */,
 				EA767580299D844E00771517 /* CaloriesWatchApp.swift in Sources */,
+				EAFC439F29A1525B00945E70 /* NumberPadView.swift in Sources */,
 				EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */,
 				EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */,
 			);

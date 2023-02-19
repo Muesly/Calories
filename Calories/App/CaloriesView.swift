@@ -12,6 +12,7 @@ struct CaloriesView: View {
     private let viewModel = CaloriesViewModel()
     @Environment(\.scenePhase) var scenePhase
     @State var showingAddEntryView = false
+    @State var showingAddExerciseView = false
     private let weeklyChartViewModel = WeeklyChartViewModel()
     @State var entryDeleted = false
 
@@ -21,14 +22,26 @@ struct CaloriesView: View {
                 Section {
                     VStack(spacing: 40) {
                         WeeklyChartView(viewModel: weeklyChartViewModel)
-                        Button {
-                            showingAddEntryView = true
-                        } label: {
-                            Text("Add food or drink").font(.brand)
-                                .padding(10)
-                                .bold()
+                        HStack {
+                            Button {
+                                showingAddExerciseView = true
+                            } label: {
+                                Text("Add exercise").font(.brand)
+                                    .padding(10)
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            Button {
+                                showingAddEntryView = true
+                            } label: {
+                                Text("Add food").font(.brand)
+                                    .padding(10)
+                                    .bold()
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
                         }
-                        .buttonStyle(.borderedProminent)
                     }
                 }
                 HistoryView(viewModel: viewModel, entryDeleted: $entryDeleted)
@@ -52,9 +65,18 @@ struct CaloriesView: View {
                     refresh()
                 }
             }
+            .onChange(of: showingAddExerciseView) { isBeingShown in
+                if !isBeingShown {
+                    refresh()
+                }
+            }
             .sheet(isPresented: $showingAddEntryView) {
                 AddEntryView(viewModel: AddEntryViewModel(),
                              showingAddEntryView: $showingAddEntryView)
+            }
+            .sheet(isPresented: $showingAddExerciseView) {
+                AddExerciseView(viewModel: AddExerciseViewModel(),
+                                showingAddExerciseView: $showingAddExerciseView)
             }
             .background(Colours.backgroundPrimary)
         }

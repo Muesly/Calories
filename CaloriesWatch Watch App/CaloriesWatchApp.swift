@@ -14,7 +14,7 @@ struct CaloriesWatch_Watch_AppApp: App {
             TabView {
                 TwoDayChartView()
                 WeeklyProgressView()
-                Text("Page Three")
+                AddEntryView()
             }
             .tabViewStyle(PageTabViewStyle())
         }

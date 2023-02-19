@@ -104,7 +104,7 @@ class WeeklyChartViewModel: ObservableObject {
         guard let mondayIndex = data.firstIndex(where: { $0.weekdayStr == "Mon" }) else {
             return 0.0
         }
-        let index = mondayIndex + 1
+        let index = mondayIndex
         let amount = -Double(data[index...].reduce(0, { $0 + $1.calories }))
         return max(min(amount / 3500, 1), 0.001)
     }
