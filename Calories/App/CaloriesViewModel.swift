@@ -12,17 +12,31 @@ import SwiftUI
 class Day: Identifiable {
     let id = UUID()
     let date: Date
-    var foodEntries: [FoodEntry]
+    var meals = [Meal]()
     private let df = DateFormatter()
 
-    init(date: Date, foodEntries: [FoodEntry]) {
+    init(date: Date) {
         self.date = date
-        self.foodEntries = foodEntries
         df.dateFormat = "EEEE, MMM d"
     }
 
     var title: String {
         df.string(from: date)
+    }
+}
+
+class Meal: Identifiable {
+    let mealType: MealType
+    var foodEntries = [FoodEntry]()
+
+    init(mealType: MealType, foodEntries: [FoodEntry]) {
+        self.mealType = mealType
+        self.foodEntries = foodEntries
+    }
+
+    var summary: String {
+        let mealCalories = Int(foodEntries.reduce(0) { $0 + $1.calories })
+        return "\(mealType.rawValue) (\(mealCalories) cals)"
     }
 }
 
@@ -52,11 +66,17 @@ class CaloriesViewModel: ObservableObject {
         var daySections = [Day]()
         foodEntriesForWeek.forEach { foodEntry in
             guard let timeConsumed = foodEntry.timeConsumed else { return }
+            let mealType = MealType.mealTypeForDate(timeConsumed)
             let startOfDay = Calendar.current.startOfDay(for: timeConsumed)
             if let foundDaySection = daySections.first(where: { startOfDay == $0.date }) {
-                foundDaySection.foodEntries.append(foodEntry)
+                if let foundMeal = foundDaySection.meals.first(where: { $0.mealType == mealType }) {
+                    foundMeal.foodEntries.append(foodEntry)
+                } else {
+                    foundDaySection.meals.append(Meal(mealType: mealType, foodEntries: [foodEntry]))
+                }
             } else {
-                let daySection = Day(date: startOfDay, foodEntries: [foodEntry])
+                let daySection = Day(date: startOfDay)
+                daySection.meals.append(Meal(mealType: mealType, foodEntries: [foodEntry]))
                 daySections.append(daySection)
             }
         }
@@ -100,5 +120,9 @@ class CaloriesViewModel: ObservableObject {
         } catch {
             print("Failed to save delete")
         }
+    }
+
+    func shouldExpandMeal(meal: Meal) -> Bool {
+        meal.foodEntries.last?.timeConsumed == daySections.last?.meals.last?.foodEntries.last?.timeConsumed
     }
 }

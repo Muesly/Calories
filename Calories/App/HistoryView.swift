@@ -20,18 +20,17 @@ struct HistoryView: View {
 
     var body: some View {
         ForEach(viewModel.daySections) { daySection in
-            Section(header: Text("\(daySection.title)")) {
-                ForEach(daySection.foodEntries) { foodEntry in
-                    HStack {
-                        Text("\(foodEntry.timeConsumed ?? Date(), formatter: viewModel.timeConsumedTimeFormatter)").opacity(0.5).font(.brand)
-                        Text("\(foodEntry.foodDescription)").font(.brand)
-                        Spacer()
-                        Text("\(Int(foodEntry.calories)) cals").opacity(0.5).font(.brand)
+            Section(header: Text(daySection.title)) {
+                ForEach(daySection.meals) { meal in
+                    DisclosureGroup(meal.summary) {
+                        ForEach(meal.foodEntries) { foodEntry in
+                            FoodEntryView(foodEntry: foodEntry,
+                                          formatter: viewModel.timeConsumedTimeFormatter)
+                        }
+                        .onDelete { indexSet in
+                            self.deleteItem(atRow: indexSet.first, inFoodEntries: meal.foodEntries)
+                        }
                     }
-                    .listRowBackground(Colours.backgroundSecondary)
-                }
-                .onDelete { indexSet in
-                    self.deleteItem(atRow: indexSet.first, inFoodEntries: daySection.foodEntries)
                 }
             }
         }
@@ -44,5 +43,20 @@ struct HistoryView: View {
                 entryDeleted = true
             }
         }
+    }
+}
+
+struct FoodEntryView: View {
+    let foodEntry: FoodEntry
+    let formatter: DateFormatter
+
+    var body: some View {
+        HStack {
+            Text("\(foodEntry.timeConsumed ?? Date(), formatter: formatter)").opacity(0.5).font(.brand)
+            Text("\(foodEntry.foodDescription)").font(.brand)
+            Spacer()
+            Text("\(Int(foodEntry.calories)) cals").opacity(0.5).font(.brand)
+        }
+        .listRowBackground(Colours.backgroundSecondary)
     }
 }
