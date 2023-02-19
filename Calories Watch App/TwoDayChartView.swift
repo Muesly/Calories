@@ -1,6 +1,6 @@
 //
 //  TwoDayChartView.swift
-//  CaloriesWatch Watch App
+//  Calories Watch App
 //
 //  Created by Tony Short on 15/02/2023.
 //
