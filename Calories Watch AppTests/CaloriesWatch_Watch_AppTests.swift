@@ -1,14 +1,14 @@
 //
-//  CaloriesWatch_Watch_AppTests.swift
-//  CaloriesWatch Watch AppTests
+//  Calories_Watch_AppTests.swift
+//  Calories Watch AppTests
 //
 //  Created by Tony Short on 15/02/2023.
 //
 
 import XCTest
-@testable import CaloriesWatch_Watch_App
+@testable import Calories_Watch_App
 
-final class CaloriesWatch_Watch_AppTests: XCTestCase {
+final class Calories_Watch_AppTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

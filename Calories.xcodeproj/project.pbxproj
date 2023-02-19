@@ -27,6 +27,11 @@
 		EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */; };
 		EA2D49122998142100248864 /* AddEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49112998142100248864 /* AddEntryViewModel.swift */; };
 		EA2D49142998166500248864 /* AddEntryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49132998166500248864 /* AddEntryViewModelTests.swift */; };
+		EA3146F129A2C6F3002AAA45 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */; };
+		EA3146F329A2C6F3002AAA45 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */; };
+		EA3146F629A2C6F3002AAA45 /* CaloriesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3146F529A2C6F3002AAA45 /* CaloriesWidget.swift */; };
+		EA3146F829A2C6F4002AAA45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA3146F729A2C6F4002AAA45 /* Assets.xcassets */; };
+		EA3146FC29A2C6F4002AAA45 /* CaloriesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EA3EDC18299D74DA005070D3 /* WeeklyChartViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */; };
 		EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */; };
 		EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */; };
@@ -36,10 +41,9 @@
 		EA4EE512299EA546000FE6AC /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */; };
 		EA6655A329939B4E000770F6 /* FoodEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */; };
 		EA6655A429939B4E000770F6 /* FoodEntry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */; };
-		EA767580299D844E00771517 /* CaloriesWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA76757F299D844E00771517 /* CaloriesWatchApp.swift */; };
+		EA767580299D844E00771517 /* CaloriesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA76757F299D844E00771517 /* CaloriesApp.swift */; };
 		EA767582299D844E00771517 /* TwoDayChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA767581299D844E00771517 /* TwoDayChartView.swift */; };
 		EA767584299D845000771517 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA767583299D845000771517 /* Assets.xcassets */; };
-		EA767591299D845200771517 /* CaloriesWatch_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA767590299D845200771517 /* CaloriesWatch_Watch_AppTests.swift */; };
 		EA7675AD299D865C00771517 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
 		EA7675B3299D88F700771517 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7675B2299D88F700771517 /* FoodEntry.swift */; };
 		EAB542DB29A228A900664583 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA2D49032994394900248864 /* Colours.xcassets */; };
@@ -57,14 +61,35 @@
 			remoteGlobalIDString = EA097D8329918C9E00735129;
 			remoteInfo = Calories;
 		};
+		EA3146FA29A2C6F4002AAA45 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA097D7C29918C9E00735129 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA3146ED29A2C6F2002AAA45;
+			remoteInfo = CaloriesWidgetExtension;
+		};
 		EA76758D299D845100771517 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA097D7C29918C9E00735129 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = EA767579299D844D00771517;
-			remoteInfo = "CaloriesWatch Watch App";
+			remoteInfo = "Calories Watch App";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EA3146FD29A2C6F4002AAA45 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				EA3146FC29A2C6F4002AAA45 /* CaloriesWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryInputFieldsView.swift; sourceTree = "<group>"; };
@@ -90,6 +115,12 @@
 		EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemsViewModelTests.swift; sourceTree = "<group>"; };
 		EA2D49112998142100248864 /* AddEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModel.swift; sourceTree = "<group>"; };
 		EA2D49132998166500248864 /* AddEntryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModelTests.swift; sourceTree = "<group>"; };
+		EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CaloriesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		EA3146F529A2C6F3002AAA45 /* CaloriesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWidget.swift; sourceTree = "<group>"; };
+		EA3146F729A2C6F4002AAA45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EA3146F929A2C6F4002AAA45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EA3EDC15299D5042005070D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartViewModelTests.swift; sourceTree = "<group>"; };
 		EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseView.swift; sourceTree = "<group>"; };
@@ -98,16 +129,13 @@
 		EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		EA76757A299D844D00771517 /* CaloriesWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CaloriesWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA76757F299D844E00771517 /* CaloriesWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatchApp.swift; sourceTree = "<group>"; };
+		EA76757A299D844D00771517 /* Calories Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Calories Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA76757F299D844E00771517 /* CaloriesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesApp.swift; sourceTree = "<group>"; };
 		EA767581299D844E00771517 /* TwoDayChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDayChartView.swift; sourceTree = "<group>"; };
 		EA767583299D845000771517 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EA76758C299D845000771517 /* CaloriesWatch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaloriesWatch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA767590299D845200771517 /* CaloriesWatch_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppTests.swift; sourceTree = "<group>"; };
-		EA76759A299D845400771517 /* CaloriesWatch_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppUITests.swift; sourceTree = "<group>"; };
-		EA76759C299D845400771517 /* CaloriesWatch_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesWatch_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EA76758C299D845000771517 /* Calories Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Calories Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA7675B2299D88F700771517 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
-		EA7675B5299D8DEE00771517 /* CaloriesWatch Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CaloriesWatch Watch App.entitlements"; sourceTree = "<group>"; };
+		EA7675B5299D8DEE00771517 /* Calories Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Calories Watch App.entitlements"; sourceTree = "<group>"; };
 		EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModel.swift; sourceTree = "<group>"; };
 		EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyProgressView.swift; sourceTree = "<group>"; };
 		EAFC439E29A1525B00945E70 /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
@@ -125,6 +153,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA3146EB29A2C6F2002AAA45 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA3146F329A2C6F3002AAA45 /* SwiftUI.framework in Frameworks */,
+				EA3146F129A2C6F3002AAA45 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,9 +187,9 @@
 			children = (
 				EA097D8629918C9E00735129 /* Calories */,
 				EA097D9C29918CA000735129 /* CaloriesTests */,
-				EA76757E299D844E00771517 /* CaloriesWatch Watch App */,
-				EA76758F299D845200771517 /* CaloriesWatch Watch AppTests */,
-				EA767599299D845400771517 /* CaloriesWatch Watch AppUITests */,
+				EA76757E299D844E00771517 /* Calories Watch App */,
+				EA3146F429A2C6F3002AAA45 /* CaloriesWidget */,
+				EA3146EF29A2C6F3002AAA45 /* Frameworks */,
 				EA097D8529918C9E00735129 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -162,8 +199,9 @@
 			children = (
 				EA097D8429918C9E00735129 /* Calories.app */,
 				EA097D9929918CA000735129 /* CaloriesTests.xctest */,
-				EA76757A299D844D00771517 /* CaloriesWatch Watch App.app */,
-				EA76758C299D845000771517 /* CaloriesWatch Watch AppTests.xctest */,
+				EA76757A299D844D00771517 /* Calories Watch App.app */,
+				EA76758C299D845000771517 /* Calories Watch AppTests.xctest */,
+				EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -244,6 +282,25 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		EA3146EF29A2C6F3002AAA45 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */,
+				EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA3146F429A2C6F3002AAA45 /* CaloriesWidget */ = {
+			isa = PBXGroup;
+			children = (
+				EA3146F529A2C6F3002AAA45 /* CaloriesWidget.swift */,
+				EA3146F729A2C6F4002AAA45 /* Assets.xcassets */,
+				EA3146F929A2C6F4002AAA45 /* Info.plist */,
+			);
+			path = CaloriesWidget;
+			sourceTree = "<group>";
+		};
 		EA3EDC16299D6E8D005070D3 /* WeeklyChart */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,11 +331,11 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		EA76757E299D844E00771517 /* CaloriesWatch Watch App */ = {
+		EA76757E299D844E00771517 /* Calories Watch App */ = {
 			isa = PBXGroup;
 			children = (
-				EA7675B5299D8DEE00771517 /* CaloriesWatch Watch App.entitlements */,
-				EA76757F299D844E00771517 /* CaloriesWatchApp.swift */,
+				EA7675B5299D8DEE00771517 /* Calories Watch App.entitlements */,
+				EA76757F299D844E00771517 /* CaloriesApp.swift */,
 				EA767581299D844E00771517 /* TwoDayChartView.swift */,
 				EA4EE50D299EA49F000FE6AC /* AddEntryView.swift */,
 				EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */,
@@ -287,24 +344,7 @@
 				EA767583299D845000771517 /* Assets.xcassets */,
 				EA7675B2299D88F700771517 /* FoodEntry.swift */,
 			);
-			path = "CaloriesWatch Watch App";
-			sourceTree = "<group>";
-		};
-		EA76758F299D845200771517 /* CaloriesWatch Watch AppTests */ = {
-			isa = PBXGroup;
-			children = (
-				EA767590299D845200771517 /* CaloriesWatch_Watch_AppTests.swift */,
-			);
-			path = "CaloriesWatch Watch AppTests";
-			sourceTree = "<group>";
-		};
-		EA767599299D845400771517 /* CaloriesWatch Watch AppUITests */ = {
-			isa = PBXGroup;
-			children = (
-				EA76759A299D845400771517 /* CaloriesWatch_Watch_AppUITests.swift */,
-				EA76759C299D845400771517 /* CaloriesWatch_Watch_AppUITestsLaunchTests.swift */,
-			);
-			path = "CaloriesWatch Watch AppUITests";
+			path = "Calories Watch App";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -345,26 +385,45 @@
 			productReference = EA097D9929918CA000735129 /* CaloriesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		EA767579299D844D00771517 /* CaloriesWatch Watch App */ = {
+		EA3146ED29A2C6F2002AAA45 /* CaloriesWidgetExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EA76759E299D845400771517 /* Build configuration list for PBXNativeTarget "CaloriesWatch Watch App" */;
+			buildConfigurationList = EA31470029A2C6F4002AAA45 /* Build configuration list for PBXNativeTarget "CaloriesWidgetExtension" */;
 			buildPhases = (
-				EA767576299D844D00771517 /* Sources */,
-				EA767577299D844D00771517 /* Frameworks */,
-				EA767578299D844D00771517 /* Resources */,
+				EA3146EA29A2C6F2002AAA45 /* Sources */,
+				EA3146EB29A2C6F2002AAA45 /* Frameworks */,
+				EA3146EC29A2C6F2002AAA45 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "CaloriesWatch Watch App";
-			productName = "CaloriesWatch Watch App";
-			productReference = EA76757A299D844D00771517 /* CaloriesWatch Watch App.app */;
+			name = CaloriesWidgetExtension;
+			productName = CaloriesWidgetExtension;
+			productReference = EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		EA767579299D844D00771517 /* Calories Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EA76759E299D845400771517 /* Build configuration list for PBXNativeTarget "Calories Watch App" */;
+			buildPhases = (
+				EA767576299D844D00771517 /* Sources */,
+				EA767577299D844D00771517 /* Frameworks */,
+				EA767578299D844D00771517 /* Resources */,
+				EA3146FD29A2C6F4002AAA45 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA3146FB29A2C6F4002AAA45 /* PBXTargetDependency */,
+			);
+			name = "Calories Watch App";
+			productName = "Calories Watch App";
+			productReference = EA76757A299D844D00771517 /* Calories Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EA76758B299D845000771517 /* CaloriesWatch Watch AppTests */ = {
+		EA76758B299D845000771517 /* Calories Watch AppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EA7675A5299D845400771517 /* Build configuration list for PBXNativeTarget "CaloriesWatch Watch AppTests" */;
+			buildConfigurationList = EA7675A5299D845400771517 /* Build configuration list for PBXNativeTarget "Calories Watch AppTests" */;
 			buildPhases = (
 				EA767588299D845000771517 /* Sources */,
 				EA767589299D845000771517 /* Frameworks */,
@@ -375,9 +434,9 @@
 			dependencies = (
 				EA76758E299D845100771517 /* PBXTargetDependency */,
 			);
-			name = "CaloriesWatch Watch AppTests";
-			productName = "CaloriesWatch Watch AppTests";
-			productReference = EA76758C299D845000771517 /* CaloriesWatch Watch AppTests.xctest */;
+			name = "Calories Watch AppTests";
+			productName = "Calories Watch AppTests";
+			productReference = EA76758C299D845000771517 /* Calories Watch AppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -396,6 +455,9 @@
 					EA097D9829918CA000735129 = {
 						CreatedOnToolsVersion = 14.1;
 						TestTargetID = EA097D8329918C9E00735129;
+					};
+					EA3146ED29A2C6F2002AAA45 = {
+						CreatedOnToolsVersion = 14.1;
 					};
 					EA767579299D844D00771517 = {
 						CreatedOnToolsVersion = 14.1;
@@ -421,8 +483,9 @@
 			targets = (
 				EA097D8329918C9E00735129 /* Calories */,
 				EA097D9829918CA000735129 /* CaloriesTests */,
-				EA767579299D844D00771517 /* CaloriesWatch Watch App */,
-				EA76758B299D845000771517 /* CaloriesWatch Watch AppTests */,
+				EA767579299D844D00771517 /* Calories Watch App */,
+				EA76758B299D845000771517 /* Calories Watch AppTests */,
+				EA3146ED29A2C6F2002AAA45 /* CaloriesWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -441,6 +504,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA3146EC29A2C6F2002AAA45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA3146F829A2C6F4002AAA45 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +572,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EA3146EA29A2C6F2002AAA45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA3146F629A2C6F3002AAA45 /* CaloriesWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA767576299D844D00771517 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -512,7 +591,7 @@
 				EA4EE50E299EA49F000FE6AC /* AddEntryView.swift in Sources */,
 				EA7675AD299D865C00771517 /* HealthStore.swift in Sources */,
 				EA4EE512299EA546000FE6AC /* ExerciseEntry.swift in Sources */,
-				EA767580299D844E00771517 /* CaloriesWatchApp.swift in Sources */,
+				EA767580299D844E00771517 /* CaloriesApp.swift in Sources */,
 				EAFC439F29A1525B00945E70 /* NumberPadView.swift in Sources */,
 				EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */,
 				EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */,
@@ -523,7 +602,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA767591299D845200771517 /* CaloriesWatch_Watch_AppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,9 +613,14 @@
 			target = EA097D8329918C9E00735129 /* Calories */;
 			targetProxy = EA097D9A29918CA000735129 /* PBXContainerItemProxy */;
 		};
+		EA3146FB29A2C6F4002AAA45 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA3146ED29A2C6F2002AAA45 /* CaloriesWidgetExtension */;
+			targetProxy = EA3146FA29A2C6F4002AAA45 /* PBXContainerItemProxy */;
+		};
 		EA76758E299D845100771517 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EA767579299D844D00771517 /* CaloriesWatch Watch App */;
+			target = EA767579299D844D00771517 /* Calories Watch App */;
 			targetProxy = EA76758D299D845100771517 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -761,18 +844,79 @@
 			};
 			name = Release;
 		};
+		EA3146FE29A2C6F4002AAA45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CaloriesWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CaloriesWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.Calories.watchkitapp.CaloriesWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		EA3146FF29A2C6F4002AAA45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CaloriesWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CaloriesWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.Calories.watchkitapp.CaloriesWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Release;
+		};
 		EA76759F299D845400771517 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "CaloriesWatch Watch App/CaloriesWatch Watch App.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Calories Watch App/Calories Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6BTW6RT2T4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CaloriesWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = Calories;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need to access your health data to find out your active calories";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need to update your health data to update your consumed calories";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -782,7 +926,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesWatch.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.Calories.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -796,15 +940,16 @@
 		EA7675A0299D845400771517 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "CaloriesWatch Watch App/CaloriesWatch Watch App.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "Calories Watch App/Calories Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6BTW6RT2T4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = CaloriesWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = Calories;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need to access your health data to find out your active calories";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need to update your health data to update your consumed calories";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -814,7 +959,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesWatch.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.Calories.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -835,13 +980,13 @@
 				DEVELOPMENT_TEAM = 6BTW6RT2T4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tonyshort.mynextweek.CaloriesWatch-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tonyshort.mynextweek.Calories-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CaloriesWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CaloriesWatch Watch App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Calories Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Calories Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 9.1;
 			};
 			name = Debug;
@@ -856,13 +1001,13 @@
 				DEVELOPMENT_TEAM = 6BTW6RT2T4;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tonyshort.mynextweek.CaloriesWatch-Watch-AppTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tonyshort.mynextweek.Calories-Watch-AppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CaloriesWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CaloriesWatch Watch App";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Calories Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Calories Watch App";
 				WATCHOS_DEPLOYMENT_TARGET = 9.1;
 			};
 			name = Release;
@@ -897,7 +1042,16 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EA76759E299D845400771517 /* Build configuration list for PBXNativeTarget "CaloriesWatch Watch App" */ = {
+		EA31470029A2C6F4002AAA45 /* Build configuration list for PBXNativeTarget "CaloriesWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA3146FE29A2C6F4002AAA45 /* Debug */,
+				EA3146FF29A2C6F4002AAA45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EA76759E299D845400771517 /* Build configuration list for PBXNativeTarget "Calories Watch App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EA76759F299D845400771517 /* Debug */,
@@ -906,7 +1060,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EA7675A5299D845400771517 /* Build configuration list for PBXNativeTarget "CaloriesWatch Watch AppTests" */ = {
+		EA7675A5299D845400771517 /* Build configuration list for PBXNativeTarget "Calories Watch AppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EA7675A6299D845400771517 /* Debug */,

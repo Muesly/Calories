@@ -1,13 +1,13 @@
 //
-//  CaloriesWatch_Watch_AppUITestsLaunchTests.swift
-//  CaloriesWatch Watch AppUITests
+//  Calories_Watch_AppUITestsLaunchTests.swift
+//  Calories Watch AppUITests
 //
 //  Created by Tony Short on 15/02/2023.
 //
 
 import XCTest
 
-final class CaloriesWatch_Watch_AppUITestsLaunchTests: XCTestCase {
+final class Calories_Watch_AppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -1,6 +1,6 @@
 //
 //  AddEntryView.swift
-//  CaloriesWatch Watch App
+//  Calories Watch App
 //
 //  Created by Tony Short on 16/02/2023.
 //
