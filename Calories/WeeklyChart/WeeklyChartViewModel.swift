@@ -89,7 +89,7 @@ class WeeklyChartViewModel: ObservableObject {
         }
 
         // Calculate weekly progres before cropping to e.g. two days for watch app
-        weeklyProgress = progressSinceMonday(data: differenceData)
+        weeklyProgress = progressSinceMonday(data: differenceData.reversed())
 
         let croppedBurntData = Array(burntData[..<numberOfDays])
         let croppedCaloriesConsumedData = Array(caloriesConsumedData[..<numberOfDays])
