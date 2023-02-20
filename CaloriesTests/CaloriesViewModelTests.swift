@@ -121,6 +121,7 @@ class MockHealthStore: HealthStore {
     var exercise: Int = 0
     var caloriesConsumed: Int = 0
     var caloriesBurned: Int = 0
+    var weight: Double = 0
 
     func authorize() async throws {
         guard let error = authorizeError else {
@@ -141,6 +142,10 @@ class MockHealthStore: HealthStore {
         caloriesConsumed
     }
 
+    func weight(date: Date?) async throws -> Double {
+        weight
+    }
+
     func addFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
         caloriesConsumed += Int(foodEntry.calories)
     }
@@ -153,3 +158,17 @@ class MockHealthStore: HealthStore {
         caloriesBurned += exerciseEntry.calories
     }
 }
+
+// When I open the app
+// Then next to the weekly progress I see a button to record weight
+
+// When I click on record weight
+// then a new screen appears
+
+// When I'm on record weight view
+// Then I should see a close to remove view
+
+// Given I am unauthorized to see weight
+// When I'm on record weight view
+// Then I should see an auth screen
+

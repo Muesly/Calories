@@ -13,9 +13,12 @@ protocol HealthStore {
     func caloriesConsumed(date: Date?) async throws -> Int
     func bmr(date: Date?) async throws -> Int
     func exercise(date: Date?) async throws -> Int
+    func weight(date: Date?) async throws -> Double?
+
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
     func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws
+    func addWeightEntry(_ weightEntry: WeightEntry) async throws
 }
 
 enum HealthStoreError: Error {
@@ -27,9 +30,11 @@ extension HKHealthStore: HealthStore {
         if HKHealthStore.isHealthDataAvailable(),
            let dietaryEnergyConsumed = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
            let basalEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.basalEnergyBurned),
-           let activeEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)
+           let activeEnergyBurned = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned),
+           let weight = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.bodyMass)
         {
-            try await requestAuthorization(toShare: [dietaryEnergyConsumed, activeEnergyBurned], read: [dietaryEnergyConsumed, basalEnergyBurned, activeEnergyBurned])
+            try await requestAuthorization(toShare: [dietaryEnergyConsumed, activeEnergyBurned, weight],
+                                           read: [dietaryEnergyConsumed, basalEnergyBurned, activeEnergyBurned, weight])
         } else {
             throw HealthStoreError.ErrorNoHealthDataAvailable
         }
@@ -69,6 +74,28 @@ extension HKHealthStore: HealthStore {
 
     func caloriesConsumed(date: Date?) async throws -> Int {
         try await countForType(.dietaryEnergyConsumed, date: date)
+    }
+
+    func weight(date: Date?) async throws -> Double? {
+        guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
+            return 0
+        }
+
+        let startDate = date?.addingTimeInterval(-7 * 86400)
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: date, options: .strictStartDate)
+
+        return await withCheckedContinuation { continuation in
+            let query = HKStatisticsQuery(quantityType: type,
+                                          quantitySamplePredicate: predicate,
+                                          options: .mostRecent) { _, result, error in
+                guard let result = result?.mostRecentQuantity() else {
+                    continuation.resume(returning: nil)
+                    return
+                }
+                continuation.resume(returning: result.doubleValue(for: HKUnit.pound()))
+            }
+            execute (query)
+        }
     }
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws {
@@ -133,5 +160,19 @@ extension HKHealthStore: HealthStore {
                                         end: timeConsumed,
                                         metadata: [HKMetadataKeyWorkoutBrandName: exerciseEntry.exerciseDescription])
         try await save(exercise)
+    }
+
+    func addWeightEntry(_ weightEntry: WeightEntry) async throws {
+        guard let bodyMassType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.bodyMass) else {
+            return
+        }
+        let weight = HKQuantity(unit: .pound(), doubleValue: Double(weightEntry.weight))
+        let timeRecorded = weightEntry.timeRecorded
+        let newBodyMass = HKQuantitySample(type: bodyMassType,
+                                        quantity: weight,
+                                        start: timeRecorded,
+                                        end: timeRecorded,
+                                        metadata: [HKMetadataKeyWasUserEntered: true])
+        try await save(newBodyMass)
     }
 }
