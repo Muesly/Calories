@@ -85,11 +85,11 @@ class AddEntryViewModel {
     }
 
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date) async throws {
+        try await healthStore.authorize()
         let foodEntry = FoodEntry(context: container.viewContext,
                                   foodDescription: foodDescription,
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed)
-        try await healthStore.authorize()
         try await healthStore.addFoodEntry(foodEntry)
         try container.viewContext.save()
     }

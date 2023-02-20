@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-enum MealType: String {
+enum MealType: String, Equatable {
     case breakfast = "Breakfast"
     case morningSnack = "Morning Snack"
     case lunch = "Lunch"

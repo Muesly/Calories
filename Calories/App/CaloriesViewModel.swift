@@ -9,7 +9,7 @@ import CoreData
 import HealthKit
 import SwiftUI
 
-class Day: Identifiable {
+class Day: Identifiable, Equatable {
     let id = UUID()
     let date: Date
     var meals = [Meal]()
@@ -23,9 +23,13 @@ class Day: Identifiable {
     var title: String {
         df.string(from: date)
     }
+
+    static func == (lhs: Day, rhs: Day) -> Bool {
+        return (lhs.date == rhs.date) && (lhs.meals == rhs.meals)
+    }
 }
 
-class Meal: Identifiable {
+class Meal: Identifiable, Equatable {
     let mealType: MealType
     var foodEntries = [FoodEntry]()
 
@@ -37,6 +41,10 @@ class Meal: Identifiable {
     var summary: String {
         let mealCalories = Int(foodEntries.reduce(0) { $0 + $1.calories })
         return "\(mealType.rawValue) (\(mealCalories) cals)"
+    }
+
+    static func == (lhs: Meal, rhs: Meal) -> Bool {
+        return (lhs.mealType == rhs.mealType) && (lhs.foodEntries == rhs.foodEntries)
     }
 }
 

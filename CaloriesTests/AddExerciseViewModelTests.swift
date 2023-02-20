@@ -1,0 +1,60 @@
+//
+//  AddExerciseViewModelTests.swift
+//  CaloriesTests
+//
+//  Created by Tony Short on 20/02/2023.
+//
+
+import Foundation
+import XCTest
+
+@testable import Calories
+
+final class AddExerciseViewModelTests: XCTestCase {
+    var subject: AddExerciseViewModel!
+    var mockHealthStore: MockHealthStore!
+
+    override func setUpWithError() throws {
+        mockHealthStore = MockHealthStore()
+        subject = AddExerciseViewModel(healthStore: mockHealthStore)
+    }
+
+    override func tearDownWithError() throws {
+        subject = nil
+        mockHealthStore = nil
+    }
+
+    func dateFromComponents() -> Date {
+        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        return dc.date!
+    }
+
+    func testGivenPermissionGrantedCanAddCalories() async throws {
+        try await subject.addExercise(exerciseDescription: "Ran somewhere",
+                                      calories: 100,
+                                      timeExercised: dateFromComponents())
+        XCTAssertEqual(mockHealthStore.caloriesBurned, 100)
+    }
+
+    func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
+        mockHealthStore.authorizeError = HealthStoreError.ErrorNoHealthDataAvailable
+        do {
+            try await subject.addExercise(exerciseDescription: "Ran somewhere",
+                                          calories: 100,
+                                          timeExercised: dateFromComponents())
+        } catch let healthStoreError as HealthStoreError {
+            XCTAssertEqual(healthStoreError, HealthStoreError.ErrorNoHealthDataAvailable)
+        }
+        XCTAssertEqual(mockHealthStore.caloriesBurned, 0)
+    }
+
+    func testClearDownOfInProgressDetailsAfterDay() async {
+        let result = AddExerciseViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-86400))
+        XCTAssertTrue(result)
+    }
+
+    func testNoClearDownOfInProgressDetailsOnSameDay() async {
+        let result = AddExerciseViewModel.shouldClearFields(phase: .active, date: Date())
+        XCTAssertFalse(result)
+    }
+}

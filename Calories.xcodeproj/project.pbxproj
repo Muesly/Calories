@@ -39,6 +39,7 @@
 		EA4EE50F299EA514000FE6AC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
 		EA4EE511299EA53C000FE6AC /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */; };
 		EA4EE512299EA546000FE6AC /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */; };
+		EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */; };
 		EA6655A329939B4E000770F6 /* FoodEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */; };
 		EA6655A429939B4E000770F6 /* FoodEntry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */; };
 		EA767580299D844E00771517 /* CaloriesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA76757F299D844E00771517 /* CaloriesApp.swift */; };
@@ -127,6 +128,7 @@
 		EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewModel.swift; sourceTree = "<group>"; };
 		EA4EE50D299EA49F000FE6AC /* AddEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryView.swift; sourceTree = "<group>"; };
 		EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
+		EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewModelTests.swift; sourceTree = "<group>"; };
 		EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataClass.swift"; sourceTree = "<group>"; };
 		EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FoodEntry+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		EA76757A299D844D00771517 /* Calories Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Calories Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -228,6 +230,7 @@
 			children = (
 				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
 				EA2D49132998166500248864 /* AddEntryViewModelTests.swift */,
+				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
 				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
 				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
 			);
@@ -569,6 +572,7 @@
 				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddEntryViewModelTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
+				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
