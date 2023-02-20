@@ -22,8 +22,6 @@ struct WeeklyChartView: View {
                         BarMark(x: .value("Day", $0.weekdayStr), y: .value("Calories", $0.calories))
                             .foregroundStyle($0.barColour)
                     }
-                    //.foregroundStyle(by: .value("Day", dayCalorieData.barType))
-//                    .symbol(by: .value("Day", dayCalorieData.barType))
                     .position(by: .value("Day", dayCalorieData.barType))
                 }
                 RuleMark(

@@ -108,12 +108,11 @@ struct AddExerciseView: View {
             .cornerRadius(10)
             .toolbar {
                 ToolbarItem {
-                    Button("Cancel") {
+                    Button("Close") {
                         dismiss()
                     }
                 }
             }
-
         }
     }
 }

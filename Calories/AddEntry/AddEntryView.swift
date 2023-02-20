@@ -54,13 +54,13 @@ struct AddEntryView: View {
             MealItemsView(viewModel: MealItemsViewModel(foodEntries: viewModel.foodEntries))
             Spacer()
             .navigationTitle("Add new food")
-            .toolbar(content: {
-                ToolbarItem(placement: .cancellationAction) {
+            .toolbar {
+                ToolbarItem {
                     Button("Close") {
                         self.showingAddEntryView = false
                     }
                 }
-            })
+            }
         }
         .font(.brand)
         .searchable(text: $searchText,
