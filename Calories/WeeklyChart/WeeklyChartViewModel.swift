@@ -23,11 +23,15 @@ struct CalorieDataPointsType: Identifiable {
     let dataPoints: [CalorieDataPoint]
 }
 
-struct WeeklyStat: Identifiable {
+struct WeeklyStat: Identifiable, Equatable {
     let id = UUID()
     let department: String
     let calories: Int
     let stat: String
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        (lhs.department == rhs.department) && (lhs.calories == rhs.calories) && (lhs.stat == rhs.stat)
+    }
 }
 
 class WeeklyChartViewModel: ObservableObject {
@@ -93,7 +97,7 @@ class WeeklyChartViewModel: ObservableObject {
         var differenceData = [CalorieDataPoint]()
         for i in 0..<7 {
             let calorieDifference = caloriesConsumedData[i].calories - burntData[i].calories
-            let barColour = colourForDifference(calorieDifference)
+            let barColour = Self.colourForDifference(calorieDifference)
             differenceData.append(.init(date: date,
                                         weekdayStr: weekdayStrFromDate(date),
                                         calories: calorieDifference,
@@ -141,7 +145,7 @@ class WeeklyChartViewModel: ObservableObject {
         return startOfWeek
     }
 
-    private func colourForDifference(_ difference: Int) -> Color {
+    static func colourForDifference(_ difference: Int) -> Color {
         var barColour: Color
         if difference > 0 {
             barColour = .red

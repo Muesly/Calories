@@ -11,6 +11,8 @@ import XCTest
 
 final class CaloriesViewModelTests: XCTestCase {
     var controller: PersistenceController!
+    var subject: CaloriesViewModel!
+
     var container: NSPersistentContainer {
         controller.container
     }
@@ -20,21 +22,24 @@ final class CaloriesViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
         controller = PersistenceController(inMemory: true)
+        subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
     }
 
     override func tearDownWithError() throws {
         controller = nil
+        subject = nil
+    }
+
+    private var dateFromComponents: Date {
+        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        return dc.date!
     }
 
     func testCanDeleteFoodEntry() async throws {
-        let subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-        let date = dc.date!
-
         _ = FoodEntry(context: container.viewContext,
                                   foodDescription: "Some food",
                                   calories: Double(100),
-                                  timeConsumed: date)
+                                  timeConsumed: dateFromComponents)
         try container.viewContext.save()
 
         let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
@@ -50,18 +55,15 @@ final class CaloriesViewModelTests: XCTestCase {
     }
 
     func testFetchingFoodEntriesSortsMostRecentFirst() async throws {
-        let subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-        let date = dc.date!
-        subject.dateForEntries = date
+        subject.dateForEntries = dateFromComponents
         let entry1 = FoodEntry(context: container.viewContext,
                                   foodDescription: "Some food",
                                   calories: Double(100),
-                                  timeConsumed: date)
+                                  timeConsumed: dateFromComponents)
         let entry2 = FoodEntry(context: container.viewContext,
                                   foodDescription: "Some more food",
                                   calories: Double(200),
-                                  timeConsumed: date.addingTimeInterval(600))
+                                  timeConsumed: dateFromComponents.addingTimeInterval(600))
         try container.viewContext.save()
 
         let foodEntries = subject.foodEntries
@@ -69,9 +71,7 @@ final class CaloriesViewModelTests: XCTestCase {
     }
 
     func testFetchingDaySections() async throws {
-        let subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-        let date = dc.date!
+        let date = dateFromComponents
         subject.dateForEntries = date
         let entry1 = FoodEntry(context: container.viewContext,
                                   foodDescription: "Some food",
@@ -85,15 +85,33 @@ final class CaloriesViewModelTests: XCTestCase {
                                   foodDescription: "Even more food",
                                   calories: Double(100),
                                   timeConsumed: date.addingTimeInterval(90700))
+        let entry4 = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Late addition",
+                                  calories: Double(50),
+                                  timeConsumed: date.addingTimeInterval(112700))
         try container.viewContext.save()
 
         await subject.fetchDaySections()
         let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(86400)))
+        expectedDay1.meals.append(Meal(mealType: .dinner, foodEntries: [entry4]))
         expectedDay1.meals.append(Meal(mealType: .lunch, foodEntries: [entry3, entry2]))
         let expectedDay2 = Day(date: Calendar.current.startOfDay(for: date))
         expectedDay2.meals.append(Meal(mealType: .morningSnack, foodEntries: [entry1]))
 
         XCTAssertEqual(subject.daySections, [expectedDay1, expectedDay2])
+    }
+
+    func testGettingDayTitleAndMealSummaryInHistoryView() async throws {
+        subject.dateForEntries = dateFromComponents
+
+        _ = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Some food",
+                                  calories: Double(100),
+                                  timeConsumed: dateFromComponents)
+        try container.viewContext.save()
+        await subject.fetchDaySections()
+        XCTAssertEqual(subject.daySections.first?.title, "Sunday, Jan 1")
+        XCTAssertEqual(subject.daySections.first?.meals.first?.summary, "Morning Snack (100 cals)")
     }
 }
 
