@@ -47,9 +47,18 @@ struct WeeklyChartView: View {
             .chartLegend(position: .trailing)
             ZStack {
                 if !isCalloutShown {
-                    ProgressView("Weekly progress to a 1lb weight loss", value: viewModel.weeklyProgress, total: 1)
-                        .progressViewStyle(LinearProgressViewStyle(tint: viewModel.weeklyProgress == 1 ? .green : .blue))
-                        .padding()
+                    VStack {
+                        Text("Progress from \(viewModel.startOfWeek)")
+                        Chart {
+                            ForEach(viewModel.weeklyData) {
+                                BarMark(
+                                    x: .value("Calories", $0.calories)
+                                )
+                                .foregroundStyle(by: .value("Production", $0.stat))
+                            }
+                        }
+                    }
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }
                 if isCalloutShown {
                     HStack {

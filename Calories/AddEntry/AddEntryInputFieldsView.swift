@@ -98,13 +98,14 @@ struct AddEntryInputFieldsView: View {
                         .bold()
                 }
                 .buttonStyle(.borderedProminent)
-                .background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .disabled(calories == 0 || foodDescription.isEmpty)
             }
             .padding()
             .background(Colours.backgroundSecondary)
             .cornerRadius(10)
             Spacer()
             .onAppear {
+                searchText = ""
                 foodDescription = defFoodDescription
                 calories = defCalories
             }

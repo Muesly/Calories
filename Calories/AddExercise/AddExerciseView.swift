@@ -33,77 +33,87 @@ struct AddExerciseView: View {
     }
 
     var body: some View {
-        VStack {
-            VStack(spacing: 20) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("Exercise")
-                        TextField("Enter exercise...", text: $exerciseDescription)
-                            .focused($descriptionIsFocused)
-                            .padding(5)
-                            .background(.white)
-                            .cornerRadius(10)
-                            .foregroundColor(.black)
-                    }
-                    VStack(alignment: .leading) {
-                        Text("Calories")
-                        TextField("", value: $calories, formatter: numberFormatter)
-                            .frame(maxWidth: 60)
-                            .focused($caloriesIsFocused)
-                            .keyboardType(.numberPad)
-                            .padding(5)
-                            .background(.white)
-                            .cornerRadius(10)
-                            .foregroundColor(.black)
-                    }
-                }
-                VStack(alignment: .center) {
-                    DatePicker("Time exercised", selection: $timeExercised, displayedComponents: .hourAndMinute)
-                }
-
-                Button {
-                    Task {
-                        do {
-                            descriptionIsFocused = false
-                            caloriesIsFocused = false
-                            try await viewModel.addExercise(exerciseDescription: exerciseDescription,
-                                                            calories: calories,
-                                                            timeExercised: timeExercised)
-                            exerciseDescription = ""
-                            calories = 0
-                            showingAddExerciseView = false
-                            dismiss()
-                        } catch {
-                            isShowingFailureToAuthoriseAlert = true
+        NavigationView {
+            VStack {
+                VStack(spacing: 20) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
+                            Text("Exercise")
+                            TextField("Enter exercise...", text: $exerciseDescription)
+                                .focused($descriptionIsFocused)
+                                .padding(5)
+                                .background(.white)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
+                        }
+                        VStack(alignment: .leading) {
+                            Text("Calories")
+                            TextField("", value: $calories, formatter: numberFormatter)
+                                .frame(maxWidth: 60)
+                                .focused($caloriesIsFocused)
+                                .keyboardType(.numberPad)
+                                .padding(5)
+                                .background(.white)
+                                .cornerRadius(10)
+                                .foregroundColor(.black)
                         }
                     }
-                } label: {
-                    Text("Add \(exerciseDescription)")
-                        .padding(10)
-                        .bold()
+                    VStack(alignment: .center) {
+                        DatePicker("Time exercised", selection: $timeExercised, displayedComponents: .hourAndMinute)
+                    }
+
+                    Button {
+                        Task {
+                            do {
+                                descriptionIsFocused = false
+                                caloriesIsFocused = false
+                                try await viewModel.addExercise(exerciseDescription: exerciseDescription,
+                                                                calories: calories,
+                                                                timeExercised: timeExercised)
+                                exerciseDescription = ""
+                                calories = 0
+                                showingAddExerciseView = false
+                                dismiss()
+                            } catch {
+                                isShowingFailureToAuthoriseAlert = true
+                            }
+                        }
+                    } label: {
+                        Text("Add \(exerciseDescription)")
+                            .padding(10)
+                            .bold()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
-                .buttonStyle(.borderedProminent)
-                .background(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .padding()
+                .background(Colours.backgroundSecondary)
+                .cornerRadius(10)
+                Spacer()
+                    .onChange(of: scenePhase) { newPhase in
+                        if AddExerciseViewModel.shouldClearFields(phase: newPhase, date: timeExercised) {
+                            Task {
+                                exerciseDescription = ""
+                                calories = 0
+                                timeExercised = Date()
+                            }
+                        }
+                    }
+                    .alert("Failed to access vehicle health",
+                           isPresented: $isShowingFailureToAuthoriseAlert) {
+                        Button("OK", role: .cancel) {}
+                    }
             }
             .padding()
-            .background(Colours.backgroundSecondary)
             .cornerRadius(10)
-            Spacer()
-            .onChange(of: scenePhase) { newPhase in
-                if AddExerciseViewModel.shouldClearFields(phase: newPhase, date: timeExercised) {
-                    Task {
-                        exerciseDescription = ""
-                        calories = 0
-                        timeExercised = Date()
+            .toolbar {
+                ToolbarItem {
+                    Button("Cancel") {
+                        dismiss()
                     }
                 }
             }
-            .alert("Failed to access vehicle health",
-                   isPresented: $isShowingFailureToAuthoriseAlert) {
-                Button("OK", role: .cancel) {}
-            }
+
         }
-        .padding()
-        .cornerRadius(10)
     }
 }

@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CalorieDataPoint: Identifiable {
     let id = UUID()
+    let date: Date
     let weekdayStr: String
     let calories: Int
     let barColour: Color
@@ -22,13 +23,22 @@ struct CalorieDataPointsType: Identifiable {
     let dataPoints: [CalorieDataPoint]
 }
 
+struct WeeklyStat: Identifiable {
+    let id = UUID()
+    let department: String
+    let calories: Int
+    let stat: String
+}
+
 class WeeklyChartViewModel: ObservableObject {
     let healthStore: HealthStore
     let deficitGoal: Int = -500
     let numberOfDays: Int
+    let startOfWeekFormatter = DateFormatter()
 
     @Published var daysCaloriesData: [CalorieDataPointsType] = []
-    @Published var weeklyProgress: Double = 0.0
+    @Published var weeklyData: [WeeklyStat] = []
+    @Published var startOfWeek: String = ""
 
     init(healthStore: HealthStore = HKHealthStore(),
          numberOfDays: Int = 7) {
@@ -59,7 +69,8 @@ class WeeklyChartViewModel: ObservableObject {
             for _ in 0..<7 {
                 let bmr = try await healthStore.bmr(date: date)
                 let exercise = try await healthStore.exercise(date: date)
-                burntData.append(.init(weekdayStr: weekdayStrFromDate(date),
+                burntData.append(.init(date: date,
+                                       weekdayStr: weekdayStrFromDate(date),
                                        calories: bmr + exercise,
                                        barColour: Color.blue))
                 date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
@@ -68,7 +79,8 @@ class WeeklyChartViewModel: ObservableObject {
             date = Date()
             for _ in 0..<7 {
                 let caloriesConsumed = try await healthStore.caloriesConsumed(date: date)
-                caloriesConsumedData.append(.init(weekdayStr: weekdayStrFromDate(date),
+                caloriesConsumedData.append(.init(date: date,
+                                                  weekdayStr: weekdayStrFromDate(date),
                                                   calories: caloriesConsumed,
                                                   barColour: Color.cyan))
                 date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
@@ -82,14 +94,25 @@ class WeeklyChartViewModel: ObservableObject {
         for i in 0..<7 {
             let calorieDifference = caloriesConsumedData[i].calories - burntData[i].calories
             let barColour = colourForDifference(calorieDifference)
-            differenceData.append(.init(weekdayStr: weekdayStrFromDate(date),
+            differenceData.append(.init(date: date,
+                                        weekdayStr: weekdayStrFromDate(date),
                                         calories: calorieDifference,
                                         barColour: barColour))
             date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
         }
 
         // Calculate weekly progres before cropping to e.g. two days for watch app
-        weeklyProgress = progressSinceMonday(data: differenceData.reversed())
+        let progress = progressSinceMonday(data: differenceData.reversed())
+        weeklyData = [WeeklyStat(department: "Production", calories: min(progress, 3500), stat: "Burnt")]
+        if progress < 3500 {
+            weeklyData.append(WeeklyStat(department: "Production", calories: 3500 - progress, stat: "To Go"))
+            weeklyData.append(WeeklyStat(department: "Production", calories: 0, stat: "Can Eat"))
+        } else if progress > 3500 {
+            weeklyData.append(WeeklyStat(department: "Production", calories: 0, stat: "To Go"))
+            weeklyData.append(WeeklyStat(department: "Production", calories: progress - 3500, stat: "Can Eat"))
+        }
+
+        startOfWeek = findStartOfWeek(data: differenceData.reversed())
 
         let croppedBurntData = Array(burntData[..<numberOfDays])
         let croppedCaloriesConsumedData = Array(caloriesConsumedData[..<numberOfDays])
@@ -100,13 +123,22 @@ class WeeklyChartViewModel: ObservableObject {
                             .init(barType: "Difference", dataPoints: croppedDifferenceData.reversed())]
     }
 
-    private func progressSinceMonday(data: [CalorieDataPoint]) -> Double {
+    private func progressSinceMonday(data: [CalorieDataPoint]) -> Int {
         guard let mondayIndex = data.firstIndex(where: { $0.weekdayStr == "Mon" }) else {
-            return 0.0
+            return 0
         }
         let index = mondayIndex
-        let amount = -Double(data[index...].reduce(0, { $0 + $1.calories }))
-        return max(min(amount / 3500, 1), 0.001)
+        return -data[index...].reduce(0, { $0 + $1.calories })
+    }
+
+    private func findStartOfWeek(data: [CalorieDataPoint]) -> String {
+        guard let mondayData = data.first(where: { $0.weekdayStr == "Mon" }) else {
+            return ""
+        }
+
+        startOfWeekFormatter.dateFormat = "EEEE, MMM d"
+        let startOfWeek = startOfWeekFormatter.string(from: mondayData.date)
+        return startOfWeek
     }
 
     private func colourForDifference(_ difference: Int) -> Color {
