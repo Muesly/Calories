@@ -5,6 +5,7 @@
 //  Created by Tony Short on 16/02/2023.
 //
 
+import Charts
 import SwiftUI
 
 struct WeeklyProgressView: View {
@@ -17,12 +18,20 @@ struct WeeklyProgressView: View {
     }
 
     var body: some View {
-        ProgressView("Weekly progress to a 1lb weight loss", value: viewModel.weeklyProgress, total: 1)
-            .progressViewStyle(LinearProgressViewStyle(tint: viewModel.weeklyProgress == 1 ? .green : .blue))
-            .padding()
-            .onAppear {
-                refresh()
+        VStack {
+            Text("Progress from \(viewModel.startOfWeek)")
+            Chart {
+                ForEach(viewModel.weeklyData) {
+                    BarMark(
+                        x: .value("Calories", $0.calories)
+                    )
+                    .foregroundStyle(by: .value("Production", $0.stat))
+                }
             }
+        }
+        .onAppear {
+            refresh()
+        }
     }
 
     private func refresh() {

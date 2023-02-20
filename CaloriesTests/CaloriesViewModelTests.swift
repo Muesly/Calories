@@ -67,6 +67,34 @@ final class CaloriesViewModelTests: XCTestCase {
         let foodEntries = subject.foodEntries
         XCTAssertEqual(foodEntries, [entry2, entry1])
     }
+
+    func testFetchingDaySections() async throws {
+        let subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
+        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let date = dc.date!
+        subject.dateForEntries = date
+        let entry1 = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Some food",
+                                  calories: Double(100),
+                                  timeConsumed: date)
+        let entry2 = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Some more food",
+                                  calories: Double(200),
+                                  timeConsumed: date.addingTimeInterval(90600))
+        let entry3 = FoodEntry(context: container.viewContext,
+                                  foodDescription: "Even more food",
+                                  calories: Double(100),
+                                  timeConsumed: date.addingTimeInterval(90700))
+        try container.viewContext.save()
+
+        await subject.fetchDaySections()
+        let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(86400)))
+        expectedDay1.meals.append(Meal(mealType: .lunch, foodEntries: [entry3, entry2]))
+        let expectedDay2 = Day(date: Calendar.current.startOfDay(for: date))
+        expectedDay2.meals.append(Meal(mealType: .morningSnack, foodEntries: [entry1]))
+
+        XCTAssertEqual(subject.daySections, [expectedDay1, expectedDay2])
+    }
 }
 
 class MockHealthStore: HealthStore {
@@ -74,6 +102,7 @@ class MockHealthStore: HealthStore {
     var bmr: Int = 0
     var exercise: Int = 0
     var caloriesConsumed: Int = 0
+    var caloriesBurned: Int = 0
 
     func authorize() async throws {
         guard let error = authorizeError else {
@@ -100,5 +129,9 @@ class MockHealthStore: HealthStore {
 
     func deleteFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
         caloriesConsumed -= Int(foodEntry.calories)
+    }
+
+    func addExerciseEntry(_ exerciseEntry: Calories.ExerciseEntry) async throws {
+        caloriesBurned += exerciseEntry.calories
     }
 }
