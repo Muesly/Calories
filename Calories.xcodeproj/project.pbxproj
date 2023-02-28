@@ -53,6 +53,11 @@
 		EAD2115D29A390E80007A813 /* RecordWeightViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD2115C29A390E80007A813 /* RecordWeightViewModel.swift */; };
 		EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */; };
 		EAD2116129A412450007A813 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD2116029A412450007A813 /* WeightEntry.swift */; };
+		EAE553A529A6B4F4006102D2 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD2116029A412450007A813 /* WeightEntry.swift */; };
+		EAE553A629A6B7FB006102D2 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
+		EAE553AA29A6B89B006102D2 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7675B2299D88F700771517 /* FoodEntry.swift */; };
+		EAE553AB29A6B8AE006102D2 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */; };
+		EAE553AC29A6B8B5006102D2 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD2116029A412450007A813 /* WeightEntry.swift */; };
 		EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */; };
 		EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */; };
 		EAFC439F29A1525B00945E70 /* NumberPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFC439E29A1525B00945E70 /* NumberPadView.swift */; };
@@ -335,10 +340,10 @@
 		EA6655A529939EEA000770F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EA097DC32993986D00735129 /* Model.xcdatamodeld */,
 				EA097D9029918CA000735129 /* Persistence.swift */,
 				EA6655A129939B4E000770F6 /* FoodEntry+CoreDataClass.swift */,
 				EA6655A229939B4E000770F6 /* FoodEntry+CoreDataProperties.swift */,
-				EA097DC32993986D00735129 /* Model.xcdatamodeld */,
 				EA4EE510299EA53C000FE6AC /* ExerciseEntry.swift */,
 				EAD2116029A412450007A813 /* WeightEntry.swift */,
 			);
@@ -604,7 +609,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAE553AB29A6B8AE006102D2 /* ExerciseEntry.swift in Sources */,
 				EA3146F629A2C6F3002AAA45 /* CaloriesWidget.swift in Sources */,
+				EAE553AC29A6B8B5006102D2 /* WeightEntry.swift in Sources */,
+				EAE553AA29A6B89B006102D2 /* FoodEntry.swift in Sources */,
+				EAE553A629A6B7FB006102D2 /* HealthStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +631,7 @@
 				EA767580299D844E00771517 /* CaloriesApp.swift in Sources */,
 				EAFC439F29A1525B00945E70 /* NumberPadView.swift in Sources */,
 				EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */,
+				EAE553A529A6B4F4006102D2 /* WeightEntry.swift in Sources */,
 				EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -774,9 +784,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Calories/Calories.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 3NT7YH4NA6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Calories/Info.plist;
@@ -794,6 +805,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.Calories;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -806,9 +818,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Calories/Calories.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 3NT7YH4NA6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Calories/Info.plist;
@@ -826,6 +839,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.Calories;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

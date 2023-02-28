@@ -42,11 +42,24 @@ struct WeeklyChartView: View {
                     }
                 }
             }
-            .chartLegend(position: .trailing)
+            .chartForegroundStyleScale(["Burnt": .blue, "Consumed": .cyan, "Good": .green, "Ok": .orange, "Bad": .red])
             ZStack {
                 if !isCalloutShown {
                     VStack {
-                        Text("Progress from \(viewModel.startOfWeek)")
+                        HStack {
+                            Button {
+                                viewModel.previousWeekPressed()
+                            } label: {
+                                Image(systemName: "arrowshape.backward.fill")
+                            }
+                            Text("Progress from \(viewModel.startOfWeek)")
+                                .frame(maxWidth: .infinity)
+                            Button {
+                                viewModel.nextWeekPressed()
+                            } label: {
+                                Image(systemName: "arrowshape.forward.fill")
+                            }
+                        }
                         Chart {
                             ForEach(viewModel.weeklyData) {
                                 BarMark(
@@ -55,6 +68,7 @@ struct WeeklyChartView: View {
                                 .foregroundStyle(by: .value("Production", $0.stat))
                             }
                         }
+                        .chartForegroundStyleScale(["Burnt": .blue, "Can Eat": .green, "To Go": .orange])
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }

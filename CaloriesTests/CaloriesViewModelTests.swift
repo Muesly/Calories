@@ -157,18 +157,12 @@ class MockHealthStore: HealthStore {
     func addExerciseEntry(_ exerciseEntry: Calories.ExerciseEntry) async throws {
         caloriesBurned += exerciseEntry.calories
     }
+
+    func weight(fromDate: Date, toDate: Date) async throws -> Double? {
+        0.0
+    }
+
+    func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
+        weight = Double(weightEntry.weight)
+    }
 }
-
-// When I open the app
-// Then next to the weekly progress I see a button to record weight
-
-// When I click on record weight
-// then a new screen appears
-
-// When I'm on record weight view
-// Then I should see a close to remove view
-
-// Given I am unauthorized to see weight
-// When I'm on record weight view
-// Then I should see an auth screen
-

@@ -105,6 +105,7 @@ struct AddExerciseView: View {
                     }
             }
             .padding()
+            .font(.brand)
             .cornerRadius(10)
             .toolbar {
                 ToolbarItem {

@@ -13,7 +13,7 @@ protocol HealthStore {
     func caloriesConsumed(date: Date?) async throws -> Int
     func bmr(date: Date?) async throws -> Int
     func exercise(date: Date?) async throws -> Int
-    func weight(date: Date?) async throws -> Double?
+    func weight(fromDate: Date, toDate: Date) async throws -> Double?
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -76,13 +76,12 @@ extension HKHealthStore: HealthStore {
         try await countForType(.dietaryEnergyConsumed, date: date)
     }
 
-    func weight(date: Date?) async throws -> Double? {
+    func weight(fromDate: Date, toDate: Date) async throws -> Double? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return 0
         }
 
-        let startDate = date?.addingTimeInterval(-7 * 86400)
-        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: date, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
 
         return await withCheckedContinuation { continuation in
             let query = HKStatisticsQuery(quantityType: type,

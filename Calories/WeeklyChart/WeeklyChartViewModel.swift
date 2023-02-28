@@ -40,6 +40,9 @@ class WeeklyChartViewModel: ObservableObject {
     let numberOfDays: Int
     let startOfWeekFormatter = DateFormatter()
 
+    @MainActor
+    var startDate: Date = Date()
+
     @Published var daysCaloriesData: [CalorieDataPointsType] = []
     @Published var weeklyData: [WeeklyStat] = []
     @Published var startOfWeek: String = ""
@@ -64,8 +67,10 @@ class WeeklyChartViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchDaysCalorieData() async {
-        var date: Date = Date()
+    func fetchDaysCalorieData(forDate date: Date? = nil) async {
+        var date = date ?? startDate
+        startDate = date
+        print("start date: \(startDate)")
         var burntData = [CalorieDataPoint]()
         var caloriesConsumedData = [CalorieDataPoint]()
 
@@ -177,6 +182,18 @@ class WeeklyChartViewModel: ObservableObject {
         return CallOutViewDetails(bmr: bmr,
                                   exercise: exercise,
                                   caloriesConsumed: caloriesConsumed)
+    }
+
+    func previousWeekPressed() {
+        Task {
+            await fetchDaysCalorieData(forDate: startDate.addingTimeInterval(-7 * 86400))
+        }
+    }
+
+    func nextWeekPressed() {
+        Task {
+            await fetchDaysCalorieData(forDate: startDate.addingTimeInterval(7 * 86400))
+        }
     }
 }
 

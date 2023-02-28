@@ -11,6 +11,7 @@ import SwiftUI
 
 struct RecordWeightView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.scenePhase) var scenePhase
     @ObservedObject var viewModel: RecordWeightViewModel
     @State private var isShowingFailureToAuthoriseAlert = false
 
@@ -25,11 +26,29 @@ struct RecordWeightView: View {
                     ForEach(viewModel.weightData) { weightDataPoint in
                         LineMark(x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
                                  y: .value("Stones", weightDataPoint.stones))
+                        .foregroundStyle(.green)
+                    }
+                }
+                .chartYAxis {
+                    AxisMarks() { yValue in
+                        let yValueStr = WeightDataPoint.poundsToStoneAndPoundsStr(stones: yValue.as(Double.self)!)
+                        AxisValueLabel {
+                            Text("\(yValueStr)")
+                        }
                     }
                 }
                 .chartYScale(domain: .automatic(includesZero: false))
                 .padding()
                 .frame(height: 250)
+                Chart {
+                    ForEach(viewModel.weightData) { weightDataPoint in
+                        BarMark(x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
+                                y: .value("Calories", weightDataPoint.deficit))
+                    }
+                }
+                .chartYScale(domain: .automatic(includesZero: false))
+                .padding()
+                .frame(height: 150)
                 VStack {
                     Text("Current Weight")
                     HStack {
@@ -37,7 +56,7 @@ struct RecordWeightView: View {
                             viewModel.decreaseWeight()
                         } label: {
                             Image(systemName: "minus.circle")
-                                .tint(Color.black)
+                                .tint(Colours.foregroundPrimary)
                                 .padding(5)
                         }
                         Text(viewModel.currentWeight)
@@ -47,7 +66,7 @@ struct RecordWeightView: View {
                             viewModel.increaseWeight()
                         } label: {
                             Image(systemName: "plus.circle")
-                                .tint(Color.black)
+                                .tint(Colours.foregroundPrimary)
                                 .padding(5)
                         }
                     }
@@ -83,15 +102,26 @@ struct RecordWeightView: View {
                 }
             }
             .task {
-                do {
-                    try await viewModel.fetchWeightData()
-                } catch {
-                    isShowingFailureToAuthoriseAlert = true
+                refresh()
+            }
+            .onChange(of: scenePhase) { newPhase in
+                if newPhase == .active {
+                    refresh()
                 }
             }
             .alert("Failed to access vehicle health",
                    isPresented: $isShowingFailureToAuthoriseAlert) {
                 Button("OK", role: .cancel) {}
+            }
+        }
+    }
+
+    private func refresh() {
+        Task {
+            do {
+                try await viewModel.fetchWeightData()
+            } catch {
+                isShowingFailureToAuthoriseAlert = true
             }
         }
     }

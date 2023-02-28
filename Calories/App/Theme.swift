@@ -10,6 +10,7 @@ import SwiftUI
 enum Colours {
     static let backgroundPrimary = Color("backgroundPrimary")
     static let backgroundSecondary = Color("backgroundSecondary")
+    static let foregroundPrimary = Color("foregroundPrimary")
 }
 
 extension Font {
