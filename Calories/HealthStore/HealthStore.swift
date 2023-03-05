@@ -10,9 +10,9 @@ import HealthKit
 
 protocol HealthStore {
     func authorize() async throws
-    func caloriesConsumed(date: Date?) async throws -> Int
-    func bmr(date: Date?) async throws -> Int
-    func exercise(date: Date?) async throws -> Int
+    func caloriesConsumed(date: Date) async throws -> Int
+    func bmr(date: Date) async throws -> Int
+    func exercise(date: Date) async throws -> Int
     func weight(fromDate: Date, toDate: Date) async throws -> Double?
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -22,7 +22,7 @@ protocol HealthStore {
 }
 
 enum HealthStoreError: Error {
-    case ErrorNoHealthDataAvailable
+    case errorNoHealthDataAvailable
 }
 
 extension HKHealthStore: HealthStore {
@@ -36,16 +36,16 @@ extension HKHealthStore: HealthStore {
             try await requestAuthorization(toShare: [dietaryEnergyConsumed, activeEnergyBurned, weight],
                                            read: [dietaryEnergyConsumed, basalEnergyBurned, activeEnergyBurned, weight])
         } else {
-            throw HealthStoreError.ErrorNoHealthDataAvailable
+            throw HealthStoreError.errorNoHealthDataAvailable
         }
     }
 
-    private func countForType(_ typeIdentifier: HKQuantityTypeIdentifier, date: Date? = nil) async throws -> Int {
+    private func countForType(_ typeIdentifier: HKQuantityTypeIdentifier, date: Date) async throws -> Int {
         guard let type = HKObjectType.quantityType(forIdentifier: typeIdentifier) else {
             return 0
         }
 
-        let endOfDay = date ?? Date()
+        let endOfDay = date.endOfDay
         let startOfDay = Calendar.current.startOfDay(for: endOfDay)
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
 
@@ -64,15 +64,15 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func bmr(date: Date?) async throws -> Int {
+    func bmr(date: Date) async throws -> Int {
         try await countForType(.basalEnergyBurned, date: date)
     }
 
-    func exercise(date: Date?) async throws -> Int {
+    func exercise(date: Date) async throws -> Int {
         try await countForType(.activeEnergyBurned, date: date)
     }
 
-    func caloriesConsumed(date: Date?) async throws -> Int {
+    func caloriesConsumed(date: Date) async throws -> Int {
         try await countForType(.dietaryEnergyConsumed, date: date)
     }
 

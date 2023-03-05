@@ -14,8 +14,15 @@ enum Colours {
 }
 
 extension Font {
-    static var brand = Font
-        .custom("Avenir Next", size: UIFont.preferredFont(
-            forTextStyle: .body
-        ).pointSize)
+    static var brand = Font.custom("Avenir Next",
+                                   size: UIFont.preferredFont(forTextStyle: .body).pointSize)
+}
+
+struct ButtonText: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(10)
+            .bold()
+            .frame(maxWidth: .infinity)
+    }
 }

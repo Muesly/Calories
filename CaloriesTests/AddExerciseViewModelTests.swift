@@ -37,19 +37,19 @@ final class AddExerciseViewModelTests: XCTestCase {
     }
 
     func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
-        mockHealthStore.authorizeError = HealthStoreError.ErrorNoHealthDataAvailable
+        mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         do {
             try await subject.addExercise(exerciseDescription: "Ran somewhere",
                                           calories: 100,
                                           timeExercised: dateFromComponents())
         } catch let healthStoreError as HealthStoreError {
-            XCTAssertEqual(healthStoreError, HealthStoreError.ErrorNoHealthDataAvailable)
+            XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
         }
         XCTAssertEqual(mockHealthStore.caloriesBurned, 0)
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {
-        let result = AddExerciseViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-86400))
+        let result = AddExerciseViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
         XCTAssertTrue(result)
     }
 
