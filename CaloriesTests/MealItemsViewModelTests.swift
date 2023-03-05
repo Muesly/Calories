@@ -52,7 +52,7 @@ final class MealItemsViewModelTests: XCTestCase {
         let oldFoodEntry = FoodEntry(context: context,
                                      foodDescription: "Some old food entry",
                                      calories: Double(100),
-                                     timeConsumed: date.addingTimeInterval(-86400))
+                                     timeConsumed: date.addingTimeInterval(-secsPerDay))
         let foodEntry = FoodEntry(context: context,
                       foodDescription: "Some food",
                       calories: Double(200),

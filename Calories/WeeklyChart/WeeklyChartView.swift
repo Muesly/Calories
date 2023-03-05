@@ -52,6 +52,9 @@ struct WeeklyChartView: View {
                             } label: {
                                 Image(systemName: "arrowshape.backward.fill")
                             }
+                            .disabled(!viewModel.previousWeekEnabled)
+                            .foregroundColor(.blue)
+                            .buttonStyle(.plain)
                             Text("Progress from \(viewModel.startOfWeek)")
                                 .frame(maxWidth: .infinity)
                             Button {
@@ -59,6 +62,9 @@ struct WeeklyChartView: View {
                             } label: {
                                 Image(systemName: "arrowshape.forward.fill")
                             }
+                            .disabled(!viewModel.nextWeekEnabled)
+                            .foregroundColor(.blue)
+                            .buttonStyle(.plain)
                         }
                         Chart {
                             ForEach(viewModel.weeklyData) {
@@ -76,11 +82,10 @@ struct WeeklyChartView: View {
                     HStack {
                         Spacer()
                         VStack(alignment: .leading) {
+                            Text("Date: \(calloutViewDetails.dateStr)")
                             Text("Burnt: \(calloutViewDetails.bmr) + \(calloutViewDetails.exercise) = \(calloutViewDetails.burnt)")
                             Text("Consumed: \(calloutViewDetails.caloriesConsumed)")
                             Text("Difference: \(calloutViewDetails.difference)")
-                            Text("Deficit goal: \(calloutViewDetails.deficitGoal)")
-                            Text("Can eat: \(calloutViewDetails.canEat)")
                         }
                         Spacer()
                     }

@@ -40,17 +40,27 @@ class WeeklyChartViewModel: ObservableObject {
     let numberOfDays: Int
     let startOfWeekFormatter = DateFormatter()
 
-    @MainActor
-    var startDate: Date = Date()
+    var startDate: Date?
 
     @Published var daysCaloriesData: [CalorieDataPointsType] = []
     @Published var weeklyData: [WeeklyStat] = []
     @Published var startOfWeek: String = ""
+    @Published var previousWeekEnabled: Bool = false
+    @Published var nextWeekEnabled: Bool = false
 
     init(healthStore: HealthStore = HKHealthStore(),
          numberOfDays: Int = 7) {
         self.healthStore = healthStore
         self.numberOfDays = numberOfDays
+        self.startDate = startOfWeek()
+    }
+
+    private func startOfWeek(_ date: Date = Date()) -> Date {
+        var weekday = Calendar.current.dateComponents([.weekday], from: date).weekday!
+        if weekday == 1 {
+            weekday += 7    // for Sun
+        }
+        return date.startOfDay.addingTimeInterval(-Double(weekday - 2) * secsPerDay)
     }
 
     private func weekdayStrFromDate(_ date: Date) -> String {
@@ -66,78 +76,93 @@ class WeeklyChartViewModel: ObservableObject {
         daysCaloriesData.first?.dataPoints.last?.weekdayStr ?? ""
     }
 
+    private func caloriesConsumedPresentForDate(_ date: Date) async -> Bool {
+        do {
+            let caloriesConsumed = try await healthStore.caloriesConsumed(date: date)
+            return caloriesConsumed > 0
+        } catch {
+            return false
+        }
+    }
+
     @MainActor
-    func fetchDaysCalorieData(forDate date: Date? = nil) async {
-        var date = date ?? startDate
-        startDate = date
-        print("start date: \(startDate)")
+    func fetchDaysCalorieData(currentDate: Date = Date()) async {
+        guard let startDate = startDate else {
+            return
+        }
+        var nextDate = startDate
         var burntData = [CalorieDataPoint]()
         var caloriesConsumedData = [CalorieDataPoint]()
 
         do {
             for _ in 0..<7 {
-                let bmr = try await healthStore.bmr(date: date)
-                let exercise = try await healthStore.exercise(date: date)
-                burntData.append(.init(date: date,
-                                       weekdayStr: weekdayStrFromDate(date),
+                var bmr = 0
+                var exercise = 0
+                if nextDate <= currentDate {
+                    bmr = try await healthStore.bmr(date: nextDate)
+                    exercise = try await healthStore.exercise(date: nextDate)
+                }
+                burntData.append(.init(date: nextDate,
+                                       weekdayStr: weekdayStrFromDate(nextDate),
                                        calories: bmr + exercise,
                                        barColour: Color.blue))
-                date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
+                nextDate.addTimeInterval(secsPerDay)
             }
 
-            date = Date()
+            nextDate = startDate
             for _ in 0..<7 {
-                let caloriesConsumed = try await healthStore.caloriesConsumed(date: date)
-                caloriesConsumedData.append(.init(date: date,
-                                                  weekdayStr: weekdayStrFromDate(date),
+                var caloriesConsumed = 0
+                if nextDate <= currentDate {
+                    caloriesConsumed = try await healthStore.caloriesConsumed(date: nextDate)
+                }
+                caloriesConsumedData.append(.init(date: nextDate,
+                                                  weekdayStr: weekdayStrFromDate(nextDate),
                                                   calories: caloriesConsumed,
                                                   barColour: Color.cyan))
-                date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
+                nextDate.addTimeInterval(secsPerDay)
             }
         } catch {
             print("Failed to fetch burnt or consumed data")
         }
 
-        date = Date()
+        nextDate = startDate
         var differenceData = [CalorieDataPoint]()
         for i in 0..<7 {
-            let calorieDifference = caloriesConsumedData[i].calories - burntData[i].calories
+            var calorieDifference = 0
+            if nextDate <= currentDate {
+                calorieDifference = caloriesConsumedData[i].calories - burntData[i].calories
+            }
             let barColour = Self.colourForDifference(calorieDifference)
-            differenceData.append(.init(date: date,
-                                        weekdayStr: weekdayStrFromDate(date),
+            differenceData.append(.init(date: nextDate,
+                                        weekdayStr: weekdayStrFromDate(nextDate),
                                         calories: calorieDifference,
                                         barColour: barColour))
-            date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
+            nextDate.addTimeInterval(secsPerDay)
         }
 
         // Calculate weekly progres before cropping to e.g. two days for watch app
-        let progress = progressSinceMonday(data: differenceData.reversed())
-        weeklyData = [WeeklyStat(department: "Production", calories: min(progress, 3500), stat: "Burnt")]
+        let progress = -differenceData.reduce(0, { $0 + $1.calories })
         if progress < 3500 {
+            weeklyData = [WeeklyStat(department: "Production", calories: progress, stat: "Burnt")]
             weeklyData.append(WeeklyStat(department: "Production", calories: 3500 - progress, stat: "To Go"))
             weeklyData.append(WeeklyStat(department: "Production", calories: 0, stat: "Can Eat"))
         } else if progress > 3500 {
+            weeklyData = [WeeklyStat(department: "Production", calories: 3500, stat: "Burnt")]
             weeklyData.append(WeeklyStat(department: "Production", calories: 0, stat: "To Go"))
             weeklyData.append(WeeklyStat(department: "Production", calories: progress - 3500, stat: "Can Eat"))
         }
 
-        startOfWeek = findStartOfWeek(data: differenceData.reversed())
+        startOfWeek = findStartOfWeek(data: differenceData)
 
         let croppedBurntData = Array(burntData[..<numberOfDays])
         let croppedCaloriesConsumedData = Array(caloriesConsumedData[..<numberOfDays])
         let croppedDifferenceData = Array(differenceData[..<numberOfDays])
 
-        daysCaloriesData = [.init(barType: "Burnt", dataPoints: croppedBurntData.reversed()),
-                            .init(barType: "Consumed", dataPoints: croppedCaloriesConsumedData.reversed()),
-                            .init(barType: "Difference", dataPoints: croppedDifferenceData.reversed())]
-    }
-
-    private func progressSinceMonday(data: [CalorieDataPoint]) -> Int {
-        guard let mondayIndex = data.firstIndex(where: { $0.weekdayStr == "Mon" }) else {
-            return 0
-        }
-        let index = mondayIndex
-        return -data[index...].reduce(0, { $0 + $1.calories })
+        daysCaloriesData = [.init(barType: "Burnt", dataPoints: croppedBurntData),
+                            .init(barType: "Consumed", dataPoints: croppedCaloriesConsumedData),
+                            .init(barType: "Difference", dataPoints: croppedDifferenceData)]
+        previousWeekEnabled = await caloriesConsumedPresentForDate(startDate.addingTimeInterval(-secsPerWeek))
+        nextWeekEnabled = startDate.addingTimeInterval(secsPerWeek) < Date()
     }
 
     private func findStartOfWeek(data: [CalorieDataPoint]) -> String {
@@ -162,55 +187,70 @@ class WeeklyChartViewModel: ObservableObject {
         return barColour
     }
 
-    func calloutViewDetails(for calloutDay: String?, currentDate: Date = Date()) async throws -> CallOutViewDetails {
+    func calloutViewDetails(for calloutDay: String?) async throws -> CallOutViewDetails {
         guard let calloutDay = calloutDay,
               let calloutDayPos = Calendar.current.shortWeekdaySymbols.firstIndex(of: calloutDay),
-              let currentDayPos = Calendar.current.dateComponents([.weekday], from: currentDate).weekday else {
+              let startDate = startDate else {
             return CallOutViewDetails()
         }
-
-        var offset = currentDayPos - calloutDayPos - 1
-        if offset < 0 {
+        var offset = calloutDayPos - 1
+        if offset == -1 {
             offset += 7
         }
-        let date: Date = currentDate.addingTimeInterval(TimeInterval(-offset * 86400))
-        let endOfDay = Calendar.current.startOfDay(for: date).addingTimeInterval(86399)
+        let date: Date = startOfWeek(startDate).addingTimeInterval(secsPerDay * Double(offset))
+        let endOfDay = Calendar.current.startOfDay(for: date).addingTimeInterval(secsPerDay - 1)
         let bmr = try await healthStore.bmr(date: endOfDay)
         let exercise = try await healthStore.exercise(date: endOfDay)
         let caloriesConsumed = try await healthStore.caloriesConsumed(date: endOfDay)
 
-        return CallOutViewDetails(bmr: bmr,
+        return CallOutViewDetails(date: date,
+                                  bmr: bmr,
                                   exercise: exercise,
                                   caloriesConsumed: caloriesConsumed)
     }
 
     func previousWeekPressed() {
         Task {
-            await fetchDaysCalorieData(forDate: startDate.addingTimeInterval(-7 * 86400))
+            startDate?.addTimeInterval(-secsPerWeek)
+            await fetchDaysCalorieData()
         }
     }
 
     func nextWeekPressed() {
         Task {
-            await fetchDaysCalorieData(forDate: startDate.addingTimeInterval(7 * 86400))
+            startDate?.addTimeInterval(secsPerWeek)
+            await fetchDaysCalorieData()
         }
     }
 }
 
 struct CallOutViewDetails: Equatable {
+    private let date: Date
+    private static var df: DateFormatter = .init()
     let bmr: Int
     let exercise: Int
     let caloriesConsumed: Int
     let deficitGoal = 500
 
-    init(bmr: Int = 0,
+    init(date: Date = Date(),
+         bmr: Int = 0,
          exercise: Int = 0,
          caloriesConsumed: Int = 0) {
+        self.date = date
         self.bmr = bmr
         self.exercise = exercise
         self.caloriesConsumed = caloriesConsumed
     }
 
+    var dateFormatter: DateFormatter {
+        Self.df.dateFormat = "EEEE, MMM d"
+        return Self.df
+    }
+
+    var dateStr: String {
+        dateFormatter.string(from: date)
+    }
+    
     var burnt: Int { bmr + exercise }
     var difference: Int { burnt - caloriesConsumed }
     var canEat: Int { difference - deficitGoal }

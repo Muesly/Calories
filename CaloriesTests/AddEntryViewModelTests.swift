@@ -59,13 +59,13 @@ final class AddEntryViewModelTests: XCTestCase {
     }
 
     func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
-        mockHealthStore.authorizeError = HealthStoreError.ErrorNoHealthDataAvailable
+        mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         do {
             try await subject.addFood(foodDescription: "Some food",
                                       calories: 100,
                                       timeConsumed: dateFromComponents())
         } catch let healthStoreError as HealthStoreError {
-            XCTAssertEqual(healthStoreError, HealthStoreError.ErrorNoHealthDataAvailable)
+            XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
         }
 
         let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
@@ -92,7 +92,7 @@ final class AddEntryViewModelTests: XCTestCase {
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {
-        let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-86400))
+        let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
         XCTAssertTrue(result)
     }
 
@@ -116,7 +116,7 @@ final class AddEntryViewModelTests: XCTestCase {
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
-                                  timeConsumed: date.addingTimeInterval(-86400 - (3 * 3600)))
+                                  timeConsumed: date.addingTimeInterval(-secsPerDay - (3 * 3600)))
         let suggestions = subject.getSuggestions(currentDate: date)
         XCTAssertEqual(suggestions, [])
     }
@@ -126,7 +126,7 @@ final class AddEntryViewModelTests: XCTestCase {
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
-                                  timeConsumed: date.addingTimeInterval(-86400))
+                                  timeConsumed: date.addingTimeInterval(-secsPerDay))
         let suggestions = subject.getSuggestions(currentDate: date)
         XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
     }
@@ -136,7 +136,7 @@ final class AddEntryViewModelTests: XCTestCase {
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
-                                  timeConsumed: date.addingTimeInterval(-86400))
+                                  timeConsumed: date.addingTimeInterval(-secsPerDay))
         var suggestions = subject.getSuggestions(searchText: "more", currentDate: date)
         XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
 

@@ -9,12 +9,14 @@ import SwiftUI
 import CoreData
 
 struct CaloriesView: View {
-    private let viewModel = CaloriesViewModel()
     @Environment(\.scenePhase) var scenePhase
+
+    private let historyViewModel = HistoryViewModel()
+    private let weeklyChartViewModel = WeeklyChartViewModel()
+
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
     @State var showingRecordWeightView = false
-    private let weeklyChartViewModel = WeeklyChartViewModel()
     @State var entryDeleted = false
 
     var body: some View {
@@ -25,42 +27,23 @@ struct CaloriesView: View {
                         WeeklyChartView(viewModel: weeklyChartViewModel)
                         VStack(spacing: 10) {
                             HStack {
-                                Button {
-                                    showingAddExerciseView = true
-                                } label: {
-                                    Text("Add exercise").font(.brand)
-                                        .padding(10)
-                                        .bold()
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(.borderedProminent)
-                                Button {
-                                    showingAddEntryView = true
-                                } label: {
-                                    Text("Add food").font(.brand)
-                                        .padding(10)
-                                        .bold()
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(.borderedProminent)
+                                Button { showingAddExerciseView = true } label: { Text("Add exercise").modifier(ButtonText()) }
+                                    .buttonStyle(.borderedProminent)
+                                Button { showingAddEntryView = true } label: { Text("Add food").modifier(ButtonText()) }
+                                    .buttonStyle(.borderedProminent)
                             }
-                            Button {
-                                showingRecordWeightView = true
-                            } label: {
-                                Text("Record weight").font(.brand)
-                                    .padding(10)
-                                    .bold()
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.bordered)
+                            Button { showingRecordWeightView = true } label: { Text("Record weight").modifier(ButtonText()) }
+                                .buttonStyle(.bordered)
                         }
                     }
                 }
-                HistoryView(viewModel: viewModel, entryDeleted: $entryDeleted)
+                HistoryView(viewModel: historyViewModel, entryDeleted: $entryDeleted)
             }
+            .navigationTitle("Today's Calories")
+            .background(Colours.backgroundPrimary)
+            .font(.brand)
             .scrollContentBackground(.hidden)
             .cornerRadius(10)
-            .navigationTitle("Today's Calories")
             .sheet(isPresented: $showingAddEntryView) {
                 AddEntryView(viewModel: AddEntryViewModel(),
                              showingAddEntryView: $showingAddEntryView)
@@ -84,25 +67,18 @@ struct CaloriesView: View {
                 entryDeleted = false
             }
             .onChange(of: showingAddEntryView) { isBeingShown in
-                if !isBeingShown {
-                    refresh()
-                }
+                if !isBeingShown { refresh() }
             }
             .onChange(of: showingAddExerciseView) { isBeingShown in
-                if !isBeingShown {
-                    refresh()
-                }
+                if !isBeingShown { refresh() }
             }
-            .background(Colours.backgroundPrimary)
         }
-
     }
 
     private func refresh() {
         Task {
             await weeklyChartViewModel.fetchDaysCalorieData()
-            await viewModel.fetchDaySections()
+            await historyViewModel.fetchDaySections()
         }
     }
 }
-

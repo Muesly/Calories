@@ -11,7 +11,7 @@ import XCTest
 
 final class CaloriesViewModelTests: XCTestCase {
     var controller: PersistenceController!
-    var subject: CaloriesViewModel!
+    var subject: HistoryViewModel!
 
     var container: NSPersistentContainer {
         controller.container
@@ -22,7 +22,7 @@ final class CaloriesViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
         controller = PersistenceController(inMemory: true)
-        subject = CaloriesViewModel(healthStore: MockHealthStore(), container: container)
+        subject = HistoryViewModel(healthStore: MockHealthStore(), container: container)
     }
 
     override func tearDownWithError() throws {
@@ -92,7 +92,7 @@ final class CaloriesViewModelTests: XCTestCase {
         try container.viewContext.save()
 
         await subject.fetchDaySections()
-        let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(86400)))
+        let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(secsPerDay)))
         expectedDay1.meals.append(Meal(mealType: .dinner, foodEntries: [entry4]))
         expectedDay1.meals.append(Meal(mealType: .lunch, foodEntries: [entry3, entry2]))
         let expectedDay2 = Day(date: Calendar.current.startOfDay(for: date))
@@ -159,7 +159,7 @@ class MockHealthStore: HealthStore {
     }
 
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
-        0.0
+        weight
     }
 
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {

@@ -1,5 +1,5 @@
 //
-//  CaloriesViewModel.swift
+//  HistoryViewModel.swift
 //  Calories
 //
 //  Created by Tony Short on 06/02/2023.
@@ -9,50 +9,11 @@ import CoreData
 import HealthKit
 import SwiftUI
 
-class Day: Identifiable, Equatable {
-    let id = UUID()
-    let date: Date
-    var meals = [Meal]()
-    private let df = DateFormatter()
-
-    init(date: Date) {
-        self.date = date
-        df.dateFormat = "EEEE, MMM d"
-    }
-
-    var title: String {
-        df.string(from: date)
-    }
-
-    static func == (lhs: Day, rhs: Day) -> Bool {
-        return (lhs.date == rhs.date) && (lhs.meals == rhs.meals)
-    }
-}
-
-class Meal: Identifiable, Equatable {
-    let mealType: MealType
-    var foodEntries = [FoodEntry]()
-
-    init(mealType: MealType, foodEntries: [FoodEntry]) {
-        self.mealType = mealType
-        self.foodEntries = foodEntries
-    }
-
-    var summary: String {
-        let mealCalories = Int(foodEntries.reduce(0) { $0 + $1.calories })
-        return "\(mealType.rawValue) (\(mealCalories) cals)"
-    }
-
-    static func == (lhs: Meal, rhs: Meal) -> Bool {
-        return (lhs.mealType == rhs.mealType) && (lhs.foodEntries == rhs.foodEntries)
-    }
-}
-
-class CaloriesViewModel: ObservableObject {
-    let container: NSPersistentContainer
-    let healthStore: HealthStore
-    var dateForEntries: Date = Date()
+class HistoryViewModel: ObservableObject {
+    private let container: NSPersistentContainer
+    private let healthStore: HealthStore
     private var timeFormatter: DateFormatter = DateFormatter()
+    var dateForEntries: Date = Date()
     @Published var daySections: [Day] = []
 
     init(healthStore: HealthStore = HKHealthStore(),
@@ -67,7 +28,7 @@ class CaloriesViewModel: ObservableObject {
         let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
 
-        let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-(7 * 86400))
+        let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
         request.predicate = NSPredicate(format: "timeConsumed >= %@", weekPrior as CVarArg)
         let foodEntriesForWeek: [FoodEntry] = (try? container.viewContext.fetch(request)) ?? []
 

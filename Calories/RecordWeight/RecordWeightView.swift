@@ -25,13 +25,13 @@ struct RecordWeightView: View {
                 Chart {
                     ForEach(viewModel.weightData) { weightDataPoint in
                         LineMark(x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
-                                 y: .value("Stones", weightDataPoint.stones))
+                                 y: .value("Stones", weightDataPoint.weight))
                         .foregroundStyle(.green)
                     }
                 }
                 .chartYAxis {
                     AxisMarks() { yValue in
-                        let yValueStr = WeightDataPoint.poundsToStoneAndPoundsStr(stones: yValue.as(Double.self)!)
+                        let yValueStr = WeightDataPoint.poundsToStoneAndPoundsStr(pounds: yValue.as(Double.self)!)
                         AxisValueLabel {
                             Text("\(yValueStr)")
                         }
