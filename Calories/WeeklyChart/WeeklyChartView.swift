@@ -74,6 +74,7 @@ struct WeeklyChartView: View {
                                 .foregroundStyle(by: .value("Production", $0.stat))
                             }
                         }
+                        .chartXScale(domain: 0...8400)
                         .chartForegroundStyleScale(["Burnt": .blue, "Can Eat": .green, "To Go": .orange])
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))

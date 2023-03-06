@@ -130,15 +130,15 @@ class MockHealthStore: HealthStore {
         throw error
     }
 
-    func bmr(date: Date?) async throws -> Int {
+    func bmr(date: Date) async throws -> Int {
         bmr
     }
 
-    func exercise(date: Date?) async throws -> Int {
+    func exercise(date: Date) async throws -> Int {
         exercise
     }
 
-    func caloriesConsumed(date: Date?) async throws -> Int {
+    func caloriesConsumed(date: Date) async throws -> Int {
         caloriesConsumed
     }
 

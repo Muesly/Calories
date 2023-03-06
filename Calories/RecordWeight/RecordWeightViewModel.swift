@@ -67,7 +67,6 @@ class RecordWeightViewModel: ObservableObject {
         }
         self.weightData = weightData.reversed()
         self.latestWeight = Int(weightData.first?.weight ?? 0.0)
-        print(weightData)
     }
 
     func weekStr(forDataPoint dataPoint: WeightDataPoint) -> String {
@@ -134,18 +133,4 @@ class RecordWeightViewModel: ObservableObject {
 
 enum RecordWeightErrors: Error {
     case noCaloriesReported
-}
-
-extension Date {
-    var startOfDay: Date {
-        Calendar.current.startOfDay(for: self)
-    }
-
-    var endOfDay: Date {
-        startOfDay.addingTimeInterval(86399)
-    }
-
-    var startOfWeek: Date {
-        Calendar(identifier: .iso8601).dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: self).date!
-    }
 }

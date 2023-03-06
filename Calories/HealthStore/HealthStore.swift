@@ -15,6 +15,8 @@ protocol HealthStore {
     func exercise(date: Date) async throws -> Int
     func weight(fromDate: Date, toDate: Date) async throws -> Double?
 
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)]
+
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
     func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws
@@ -75,6 +77,34 @@ extension HKHealthStore: HealthStore {
     func caloriesConsumed(date: Date) async throws -> Int {
         try await countForType(.dietaryEnergyConsumed, date: date)
     }
+
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+        guard let type = HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed) else {
+            return []
+        }
+
+        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
+
+        return await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(sampleType: type,
+                                      predicate: predicate,
+                                      limit: Int(HKObjectQueryNoLimit),
+                                      sortDescriptors: nil) { _, result, error in
+                guard let result = result,
+                      let dataPoints = result as? [HKCumulativeQuantitySample]  else {
+                    continuation.resume(returning: [])
+                    return
+                }
+                continuation.resume(returning: dataPoints.map {
+                    let date = $0.startDate
+                    let calories = $0.quantity.doubleValue(for: .kilocalorie())
+                    return (date, calories)
+                })
+            }
+            execute (query)
+        }
+    }
+
 
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {

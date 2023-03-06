@@ -13,7 +13,7 @@ struct TwoDayChartView: View {
 
     @State var daysCaloriesData: [CalorieDataPointsType] = []
 
-    init(viewModel: WeeklyChartViewModel = .init(numberOfDays: 2)) {
+    init(viewModel: WeeklyChartViewModel = .init(numberOfDays: 7)) {
         self.viewModel = viewModel
     }
 

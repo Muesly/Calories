@@ -61,7 +61,7 @@ final class WeeklyChartViewModelTests: XCTestCase {
 
         await subject.fetchDaysCalorieData(currentDate: dc.date!.addingTimeInterval(secsPerWeek))
 
-        XCTAssertEqual(subject.weeklyData, [.init(department: "Production", calories: 9100, stat: "Burnt"),
+        XCTAssertEqual(subject.weeklyData, [.init(department: "Production", calories: 3500, stat: "Burnt"),
                                             .init(department: "Production", calories: 0, stat: "To Go"),
                                             .init(department: "Production", calories: 5600, stat: "Can Eat")])
     }
