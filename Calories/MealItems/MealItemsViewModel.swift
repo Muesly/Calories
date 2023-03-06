@@ -5,8 +5,9 @@
 //  Created by Tony Short on 11/02/2023.
 //
 
-import Foundation
 import CoreData
+import Foundation
+import SwiftUI
 
 enum MealType: String, Equatable {
     case breakfast = "Breakfast"
@@ -42,6 +43,17 @@ enum MealType: String, Equatable {
         case .afternoonSnack: return 14..<17
         case .dinner: return 17..<20
         default: return 20..<24
+        }
+    }
+
+    func mealTypeColor() -> Color {
+        switch(self) {
+        case .breakfast: return .red
+        case .morningSnack: return .orange
+        case .lunch: return .yellow
+        case .afternoonSnack: return .green
+        case .dinner: return .blue
+        default: return .purple
         }
     }
 
