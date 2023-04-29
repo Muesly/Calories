@@ -45,7 +45,7 @@ class RecordWeightViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchWeightData(date: Date = Date(), numWeeks: Int = 8) async throws {
+    func fetchWeightData(date: Date = Date(), numWeeks: Int = 12) async throws {
         try await healthStore.authorize()
         var endDate = date
         var startDate = startOfWeek(date)
@@ -57,6 +57,7 @@ class RecordWeightViewModel: ObservableObject {
                 do {
                     let deficit = try await fetchWeeklyDeficit(forDate: endDate)
                     weightData.append(WeightDataPoint(date: endDate, weight: weightDataPoint, deficit: deficit))
+                } catch RecordWeightErrors.noCaloriesReported {
                 } catch {
                     break
                 }

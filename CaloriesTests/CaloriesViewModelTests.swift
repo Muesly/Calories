@@ -165,4 +165,8 @@ class MockHealthStore: HealthStore {
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
         weight = Double(weightEntry.weight)
     }
+
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+        []
+    }
 }
