@@ -73,7 +73,7 @@ struct AddEntryInputFieldsView: View {
                     }
                 }
                 VStack(alignment: .center) {
-                    DatePicker("Time consumed", selection: $defTimeConsumed, displayedComponents: .hourAndMinute)
+                    DatePicker("Time consumed", selection: $defTimeConsumed)
                 }
 
                 Button {
