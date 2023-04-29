@@ -51,6 +51,8 @@
 		EA767584299D845000771517 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA767583299D845000771517 /* Assets.xcassets */; };
 		EA7675AD299D865C00771517 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
 		EA7675B3299D88F700771517 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7675B2299D88F700771517 /* FoodEntry.swift */; };
+		EA8060E929FD4AAA00310527 /* AddEntryViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8060E829FD4AAA00310527 /* AddEntryViewTests.swift */; };
+		EA8060EF29FD4F7F00310527 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = EA8060EE29FD4F7F00310527 /* ViewInspector */; };
 		EAB542DB29A228A900664583 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA2D49032994394900248864 /* Colours.xcassets */; };
 		EAB542DD29A28B5300664583 /* AddEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */; };
 		EABBF0CE29B1342500C3B1F9 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABBF0CD29B1342500C3B1F9 /* Day.swift */; };
@@ -159,6 +161,7 @@
 		EA76758C299D845000771517 /* Calories Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Calories Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA7675B2299D88F700771517 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
 		EA7675B5299D8DEE00771517 /* Calories Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Calories Watch App.entitlements"; sourceTree = "<group>"; };
+		EA8060E829FD4AAA00310527 /* AddEntryViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewTests.swift; sourceTree = "<group>"; };
 		EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModel.swift; sourceTree = "<group>"; };
 		EABBF0CD29B1342500C3B1F9 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
 		EABBF0CF29B1343800C3B1F9 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
@@ -183,6 +186,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA8060EF29FD4F7F00310527 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +264,7 @@
 			children = (
 				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
 				EA2D49132998166500248864 /* AddEntryViewModelTests.swift */,
+				EA8060E829FD4AAA00310527 /* AddEntryViewTests.swift */,
 				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
 				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
 				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
@@ -420,6 +425,8 @@
 			dependencies = (
 			);
 			name = Calories;
+			packageProductDependencies = (
+			);
 			productName = Calories;
 			productReference = EA097D8429918C9E00735129 /* Calories.app */;
 			productType = "com.apple.product-type.application";
@@ -438,6 +445,9 @@
 				EA097D9B29918CA000735129 /* PBXTargetDependency */,
 			);
 			name = CaloriesTests;
+			packageProductDependencies = (
+				EA8060EE29FD4F7F00310527 /* ViewInspector */,
+			);
 			productName = CaloriesTests;
 			productReference = EA097D9929918CA000735129 /* CaloriesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -534,6 +544,9 @@
 				Base,
 			);
 			mainGroup = EA097D7B29918C9E00735129;
+			packageReferences = (
+				EA8060ED29FD4F7F00310527 /* XCRemoteSwiftPackageReference "ViewInspector" */,
+			);
 			productRefGroup = EA097D8529918C9E00735129 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -635,6 +648,7 @@
 				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddEntryViewModelTests.swift in Sources */,
+				EA8060E929FD4AAA00310527 /* AddEntryViewTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
 				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,
 			);
@@ -1150,6 +1164,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EA8060ED29FD4F7F00310527 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nalexn/ViewInspector";
+			requirement = {
+				branch = 0.9.6;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EA8060EE29FD4F7F00310527 /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA8060ED29FD4F7F00310527 /* XCRemoteSwiftPackageReference "ViewInspector" */;
+			productName = ViewInspector;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		EA097DC32993986D00735129 /* Model.xcdatamodeld */ = {
