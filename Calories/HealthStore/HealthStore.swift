@@ -28,6 +28,10 @@ enum HealthStoreError: Error {
 }
 
 extension HKHealthStore: HealthStore {
+    func geneticFactor() -> Double {
+        0.1
+    }
+
     func authorize() async throws {
         if HKHealthStore.isHealthDataAvailable(),
            let dietaryEnergyConsumed = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
@@ -67,15 +71,15 @@ extension HKHealthStore: HealthStore {
     }
 
     func bmr(date: Date) async throws -> Int {
-        try await countForType(.basalEnergyBurned, date: date)
+        try await Int(Double(countForType(.basalEnergyBurned, date: date)) * (1 - geneticFactor()))
     }
 
     func exercise(date: Date) async throws -> Int {
-        try await countForType(.activeEnergyBurned, date: date)
+        try await Int(Double(countForType(.activeEnergyBurned, date: date)) * (1 - geneticFactor()))
     }
 
     func caloriesConsumed(date: Date) async throws -> Int {
-        try await countForType(.dietaryEnergyConsumed, date: date)
+        try await Int(Double(countForType(.dietaryEnergyConsumed, date: date)) * (1 + geneticFactor()))
     }
 
     func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
@@ -97,7 +101,7 @@ extension HKHealthStore: HealthStore {
                 }
                 continuation.resume(returning: dataPoints.map {
                     let date = $0.startDate
-                    let calories = $0.quantity.doubleValue(for: .kilocalorie())
+                    let calories = $0.quantity.doubleValue(for: .kilocalorie()) * (1 + self.geneticFactor())
                     return (date, calories)
                 })
             }
