@@ -37,7 +37,6 @@ struct CaloriesView: View {
                         }
                     }
                 }
-                MealBreakdownView(viewModel: MealBreakdownViewModel())
                 HistoryView(viewModel: historyViewModel, entryDeleted: $entryDeleted)
             }
             .navigationTitle("Today's Calories")
