@@ -27,20 +27,30 @@ final class MealItemsViewModelTests: XCTestCase {
     }
 
     func testMealTitlesDependingOnTimeOfDay() async throws {
-        let subject = MealItemsViewModel(foodEntries: [])
         var dc = DateComponents(calendar: Calendar.current)
         dc.hour = 8
-        XCTAssertEqual(subject.getMealTitle(currentDate: dc.date!), "Breakfast - 0 Calories")
+        let breakfastSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        XCTAssertEqual(breakfastSubject.mealTitle, "Breakfast - 0 Calories")
+
         dc.hour = 10
-        XCTAssertEqual(subject.getMealTitle(currentDate: dc.date!), "Morning Snack - 0 Calories")
+        let morningSnackSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        XCTAssertEqual(morningSnackSubject.mealTitle, "Morning Snack - 0 Calories")
+
         dc.hour = 12
-        XCTAssertEqual(subject.getMealTitle(currentDate: dc.date!), "Lunch - 0 Calories")
+        let lunchSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        XCTAssertEqual(lunchSubject.mealTitle, "Lunch - 0 Calories")
+
         dc.hour = 14
-        XCTAssertEqual(subject.getMealTitle(currentDate: dc.date!), "Afternoon Snack - 0 Calories")
+        let afternoonSnackSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        XCTAssertEqual(afternoonSnackSubject.mealTitle, "Afternoon Snack - 0 Calories")
+
         dc.hour = 17
-        XCTAssertEqual(subject.getMealTitle(currentDate: dc.date!), "Dinner - 0 Calories")
+        let dinnerSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        XCTAssertEqual(dinnerSubject.mealTitle, "Dinner - 0 Calories")
+
         dc.hour = 20
-        XCTAssertEqual(subject.getMealTitle(currentDate: dc.date!), "Evening Snack - 0 Calories")
+        let eveningSnackSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        XCTAssertEqual(eveningSnackSubject.mealTitle, "Evening Snack - 0 Calories")
     }
 
     func testMealTitlesWithCalories() throws {
@@ -49,7 +59,7 @@ final class MealItemsViewModelTests: XCTestCase {
                                   month: 1,
                                   day: 1,
                                   hour: 8).date!
-        let oldFoodEntry = FoodEntry(context: context,
+        let _ = FoodEntry(context: context,
                                      foodDescription: "Some old food entry",
                                      calories: Double(100),
                                      timeConsumed: date.addingTimeInterval(-secsPerDay))
@@ -61,12 +71,10 @@ final class MealItemsViewModelTests: XCTestCase {
                                         foodDescription: "Some more food",
                                         calories: Double(100),
                                         timeConsumed: date.addingTimeInterval(7199))    // Right at end of breakfast time
-        let subject = MealItemsViewModel(foodEntries: [oldFoodEntry, foodEntry, secondFoodEntry])
         try context.save()
-        XCTAssertEqual(subject.getMealTitle(currentDate: date), "Breakfast - 300 Calories")
-        XCTAssertEqual(subject.getMealFoodEntries(currentDate: date), [secondFoodEntry, foodEntry])
-    }
-
-    func testMealItemsWithinTimePeriod() async throws {
+        let subject = MealItemsViewModel(viewContext: context, currentDate: date)
+        subject.fetchMealFoodEntries()
+        XCTAssertEqual(subject.mealTitle, "Breakfast - 300 Calories")
+        XCTAssertEqual(subject.mealFoodEntries, [secondFoodEntry, foodEntry])
     }
 }

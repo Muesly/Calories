@@ -12,26 +12,31 @@ struct AddEntryInputFieldsView: View {
     private let viewModel: AddEntryViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
-    @State private var foodDescription: String = ""
-    @State private var calories: Int = 0
+    @State var foodDescription: String
+    @State var calories: Int = 0
     @Binding var defTimeConsumed: Date
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
     private let defFoodDescription: String
-    private let defCalories: Int
+    let defCalories: Int
     @Binding var searchText: String
+    @Binding var foodAdded: Bool
 
     init(viewModel: AddEntryViewModel,
          defFoodDescription: String,
          defCalories: Int,
          defTimeConsumed: Binding<Date>,
-         searchText: Binding<String>) {
+         searchText: Binding<String>,
+         foodAdded: Binding<Bool>) {
         self.viewModel = viewModel
         self.defFoodDescription = defFoodDescription
         self.defCalories = defCalories
-        self._defTimeConsumed = defTimeConsumed
-        self._searchText = searchText
+        _defTimeConsumed = defTimeConsumed
+        _searchText = searchText
+        _foodDescription = State(initialValue: defFoodDescription)
+        _calories = State(initialValue: defCalories)
+        _foodAdded = foodAdded
     }
 
     var numberFormatter: NumberFormatter {
@@ -77,7 +82,7 @@ struct AddEntryInputFieldsView: View {
                 }
 
                 Button {
-                    Task {
+                    Task(priority: .high) {
                         do {
                             descriptionIsFocused = false
                             caloriesIsFocused = false
@@ -88,6 +93,7 @@ struct AddEntryInputFieldsView: View {
                             calories = 0
                             searchText = ""
                             dismiss()
+                            foodAdded = true
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }
@@ -104,11 +110,6 @@ struct AddEntryInputFieldsView: View {
             .background(Colours.backgroundSecondary)
             .cornerRadius(10)
             Spacer()
-            .onAppear {
-                searchText = ""
-                foodDescription = defFoodDescription
-                calories = defCalories
-            }
             .onChange(of: scenePhase) { newPhase in
                 if AddEntryViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
                     Task {

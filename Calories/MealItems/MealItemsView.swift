@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct MealItemsView: View {
-    let viewModel: MealItemsViewModel
+    @ObservedObject var viewModel: MealItemsViewModel
 
     init(viewModel: MealItemsViewModel) {
         self.viewModel = viewModel
@@ -17,9 +17,9 @@ struct MealItemsView: View {
 
     var body: some View {
         VStack {
-            Text("\(viewModel.getMealTitle())")
+            Text("\(viewModel.mealTitle)")
 
-            ForEach(viewModel.getMealFoodEntries()) { foodEntry in
+            ForEach(viewModel.mealFoodEntries) { foodEntry in
                 HStack {
                     Text("\(foodEntry.timeConsumed!, formatter: itemFormatter)")
                     Text("\(foodEntry.foodDescription)")
@@ -32,6 +32,9 @@ struct MealItemsView: View {
         .background(Colours.backgroundSecondary)
         .cornerRadius(10)
         .padding()
+        .onAppear {
+            viewModel.fetchMealFoodEntries()
+        }
     }
 }
 
