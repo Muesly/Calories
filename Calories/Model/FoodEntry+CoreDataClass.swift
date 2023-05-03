@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 public class FoodEntry: NSManagedObject {
     convenience init(context: NSManagedObjectContext, foodDescription: String, calories: Double, timeConsumed: Date) {
         self.init(context: context)

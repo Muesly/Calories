@@ -69,27 +69,36 @@ enum MealType: String, Equatable {
     }
 }
 
-struct MealItemsViewModel {
-    private let foodEntries: [FoodEntry]
+class MealItemsViewModel: ObservableObject {
+    private let context: NSManagedObjectContext
+    private let currentDate: Date
+    @Published var mealFoodEntries: [FoodEntry] = []
 
-    init(foodEntries: [FoodEntry]) {
-        self.foodEntries = foodEntries
+    init(viewContext: NSManagedObjectContext,
+         currentDate: Date) {
+        self.context = viewContext
+        self.currentDate = currentDate
     }
 
-    func getMealCalories(currentDate: Date = Date()) -> Int {
-        Int(getMealFoodEntries(currentDate: currentDate).reduce(0, { $0 + $1.calories }))
+    var mealCalories: Int {
+        Int(mealFoodEntries.reduce(0, { $0 + $1.calories }))
     }
 
-    func getMealTitle(currentDate: Date = Date()) -> String {
+    var mealTitle: String {
         let mealTitle: String = MealType.mealTypeForDate(currentDate).rawValue
-        let mealCalories = getMealCalories(currentDate: currentDate)
+        let mealCalories = mealCalories
         return "\(mealTitle) - \(mealCalories) Calories"
     }
 
-    func getMealFoodEntries(currentDate: Date = Date()) -> [FoodEntry] {
+    func fetchMealFoodEntries() {
         let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: currentDate)
 
-        return foodEntries.filter { foodEntry in
+        let request = FoodEntry.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
+        request.predicate = NSPredicate(format: "timeConsumed > %@ && timeConsumed < %@", startOfPeriod as CVarArg, endOfPeriod as CVarArg)
+        let entries = (try? context.fetch(request)) ?? []
+
+        mealFoodEntries = entries.filter { foodEntry in
             guard let timeConsumed = foodEntry.timeConsumed else { return false }
             return (timeConsumed > startOfPeriod) && (timeConsumed < endOfPeriod)
         }.sorted { entry1, entry2 in

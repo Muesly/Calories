@@ -41,22 +41,12 @@ class AddEntryViewModel {
         dateForEntries = date
     }
 
-    var foodEntries: [FoodEntry] {
-        let request = FoodEntry.fetchRequest()
-        let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
-        request.sortDescriptors = [sort]
-
-        let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
-        request.predicate = NSPredicate(format: "timeConsumed >= %@", startOfDay as CVarArg)
-        return (try? container.viewContext.fetch(request)) ?? []
-    }
-
-    func getSuggestions(searchText: String = "", currentDate: Date = Date()) -> [Suggestion] {
+    func getSuggestions(searchText: String = "") -> [Suggestion] {
 
         let request = FoodEntry.fetchRequest()
 
         if searchText.isEmpty { // Show list of suitable suggestions for this time of day
-            let mealType = MealType.mealTypeForDate(currentDate)
+            let mealType = MealType.mealTypeForDate(dateForEntries)
             let range = mealType.rangeOfPeriod()
             let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
             request.predicate = NSPredicate(format: "timeConsumed < %@", startOfDay as CVarArg)

@@ -57,6 +57,7 @@
 		EAB542DD29A28B5300664583 /* AddEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */; };
 		EABBF0CE29B1342500C3B1F9 /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABBF0CD29B1342500C3B1F9 /* Day.swift */; };
 		EABBF0D029B1343800C3B1F9 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABBF0CF29B1343800C3B1F9 /* Meal.swift */; };
+		EABC054A2A015B8E0018496C /* AddEntryInputFieldsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABC05492A015B8E0018496C /* AddEntryInputFieldsViewTests.swift */; };
 		EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */; };
 		EABDB44F29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */; };
 		EABDB45029B4A9D80096FBF1 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */; };
@@ -165,6 +166,7 @@
 		EAB542DC29A28B5300664583 /* AddEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryViewModel.swift; sourceTree = "<group>"; };
 		EABBF0CD29B1342500C3B1F9 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
 		EABBF0CF29B1343800C3B1F9 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		EABC05492A015B8E0018496C /* AddEntryInputFieldsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryInputFieldsViewTests.swift; sourceTree = "<group>"; };
 		EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		EAD2115A29A38F860007A813 /* RecordWeightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightView.swift; sourceTree = "<group>"; };
 		EAD2115C29A390E80007A813 /* RecordWeightViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightViewModel.swift; sourceTree = "<group>"; };
@@ -262,12 +264,13 @@
 		EA097D9C29918CA000735129 /* CaloriesTests */ = {
 			isa = PBXGroup;
 			children = (
-				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
+				EABC05492A015B8E0018496C /* AddEntryInputFieldsViewTests.swift */,
 				EA2D49132998166500248864 /* AddEntryViewModelTests.swift */,
 				EA8060E829FD4AAA00310527 /* AddEntryViewTests.swift */,
-				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
 				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
+				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
 				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
+				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
 				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
 			);
 			path = CaloriesTests;
@@ -645,6 +648,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA3EDC18299D74DA005070D3 /* WeeklyChartViewModelTests.swift in Sources */,
+				EABC054A2A015B8E0018496C /* AddEntryInputFieldsViewTests.swift in Sources */,
 				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddEntryViewModelTests.swift in Sources */,
@@ -845,7 +849,6 @@
 				INFOPLIST_FILE = Calories/Info.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need to access your health data to find out your active calories";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need to update your health data to update your consumed calories";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -879,7 +882,6 @@
 				INFOPLIST_FILE = Calories/Info.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need to access your health data to find out your active calories";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need to update your health data to update your consumed calories";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

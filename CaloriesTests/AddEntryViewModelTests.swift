@@ -74,23 +74,6 @@ final class AddEntryViewModelTests: XCTestCase {
         XCTAssertEqual(results, [])
     }
 
-    func testTodaysEntriesReturnedOnly() async throws {
-        var dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-        let earlyDate = dc.date!
-        try await subject.addFood(foodDescription: "Some food",
-                                  calories: 100,
-                                  timeConsumed: earlyDate)
-        dc.day = 2
-        let lateDate = dc.date!
-        try await subject.addFood(foodDescription: "Some more food",
-                                  calories: 100,
-                                  timeConsumed: lateDate)
-
-        subject.setDateForEntries(Calendar.current.startOfDay(for: lateDate))
-        let entries = subject.foodEntries
-        XCTAssertEqual(entries.map { $0.foodDescription }, ["Some more food"])
-    }
-
     func testClearDownOfInProgressDetailsAfterDay() async {
         let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
         XCTAssertTrue(result)
@@ -107,7 +90,7 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date)
-        let suggestions = subject.getSuggestions(currentDate: date)
+        let suggestions = subject.getSuggestions()
         XCTAssertEqual(suggestions, [])
     }
 
@@ -117,7 +100,7 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date.addingTimeInterval(-secsPerDay - (3 * 3600)))
-        let suggestions = subject.getSuggestions(currentDate: date)
+        let suggestions = subject.getSuggestions()
         XCTAssertEqual(suggestions, [])
     }
 
@@ -127,7 +110,7 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date.addingTimeInterval(-secsPerDay))
-        let suggestions = subject.getSuggestions(currentDate: date)
+        let suggestions = subject.getSuggestions()
         XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
     }
 
@@ -137,10 +120,10 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date.addingTimeInterval(-secsPerDay))
-        var suggestions = subject.getSuggestions(searchText: "more", currentDate: date)
+        var suggestions = subject.getSuggestions(searchText: "more")
         XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
 
-        suggestions = subject.getSuggestions(searchText: "mxe", currentDate: date)  // Shouldn't return results
+        suggestions = subject.getSuggestions(searchText: "mxe")  // Shouldn't return results
         XCTAssertEqual(suggestions, [])
     }
 
