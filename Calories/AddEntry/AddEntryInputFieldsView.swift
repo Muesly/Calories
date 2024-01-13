@@ -77,9 +77,7 @@ struct AddEntryInputFieldsView: View {
                         }
                     }
                 }
-                VStack(alignment: .center) {
-                    DatePicker("Time consumed", selection: $defTimeConsumed)
-                }
+                MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $defTimeConsumed))
 
                 Button {
                     Task(priority: .high) {
@@ -126,5 +124,17 @@ struct AddEntryInputFieldsView: View {
         }
         .padding()
         .cornerRadius(10)
+        .font(.brand)
+    }
+}
+
+struct AddEntryInputFieldsView_Previews: PreviewProvider {
+    static var previews: some View {
+        AddEntryInputFieldsView(viewModel: AddEntryViewModel(),
+                                defFoodDescription: "Some food",
+                                defCalories: 100,
+                                defTimeConsumed: .constant(Date()),
+                                searchText: .constant("Some food"),
+                                foodAdded: .constant(false))
     }
 }
