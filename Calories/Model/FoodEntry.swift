@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 
-extension FoodEntry {
+class FoodEntry: NSManagedObject {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<FoodEntry> {
         return NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
@@ -19,6 +19,17 @@ extension FoodEntry {
     @NSManaged public var calories: Double
     @NSManaged public var foodDescription: String
     @NSManaged public var timeConsumed: Date?
+
+    convenience init(context: NSManagedObjectContext,
+         foodDescription: String,
+         calories: Double,
+         timeConsumed: Date
+    ) {
+        self.init(context: context)
+        self.calories = calories
+        self.foodDescription = foodDescription
+        self.timeConsumed = timeConsumed
+    }
 }
 
 extension FoodEntry : Identifiable {
