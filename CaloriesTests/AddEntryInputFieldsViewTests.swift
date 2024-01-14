@@ -44,6 +44,8 @@ final class AddEntryInputFieldsViewTests: XCTestCase {
                                               defTimeConsumed: timeConsumedBinding,
                                               searchText: searchTextBinding,
                                               foodAdded: foodAddedBinding)
+        ViewHosting.host(view: subject)
+
         XCTAssertEqual(subject.foodDescription, "Biscuit")
         XCTAssertEqual(subject.calories, 60)
 
