@@ -74,6 +74,9 @@
 		EAE553AC29A6B8B5006102D2 /* WeightEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD2116029A412450007A813 /* WeightEntry.swift */; };
 		EAF0153F299E940C002AE7D5 /* WeeklyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */; };
 		EAF01541299E978E002AE7D5 /* WeeklyProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */; };
+		EAF29EC32B548E96002C85FE /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF29EC22B548E96002C85FE /* AddPlantView.swift */; };
+		EAF29EC52B548F14002C85FE /* PlantPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF29EC42B548F14002C85FE /* PlantPickerView.swift */; };
+		EAF29EC82B54940F002C85FE /* Plant.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF29EC72B54940F002C85FE /* Plant.swift */; };
 		EAFC439F29A1525B00945E70 /* NumberPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAFC439E29A1525B00945E70 /* NumberPadView.swift */; };
 /* End PBXBuildFile section */
 
@@ -177,6 +180,10 @@
 		EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightViewModelTests.swift; sourceTree = "<group>"; };
 		EAD2116029A412450007A813 /* WeightEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightEntry.swift; sourceTree = "<group>"; };
 		EAF01540299E978E002AE7D5 /* WeeklyProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyProgressView.swift; sourceTree = "<group>"; };
+		EAF29EC22B548E96002C85FE /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
+		EAF29EC42B548F14002C85FE /* PlantPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantPickerView.swift; sourceTree = "<group>"; };
+		EAF29EC62B5493BF002C85FE /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
+		EAF29EC72B54940F002C85FE /* Plant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plant.swift; sourceTree = "<group>"; };
 		EAFC439E29A1525B00945E70 /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -309,6 +316,8 @@
 				EA2D490529944E3000248864 /* AddEntryView.swift */,
 				EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */,
 				EA2EA7492B507A7D00382DC8 /* PlantListView.swift */,
+				EAF29EC22B548E96002C85FE /* AddPlantView.swift */,
+				EAF29EC42B548F14002C85FE /* PlantPickerView.swift */,
 				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
 				EA2D49112998142100248864 /* AddEntryViewModel.swift */,
 			);
@@ -382,6 +391,7 @@
 			isa = PBXGroup;
 			children = (
 				EA2201E22B372351007F444B /* FoodEntry.swift */,
+				EAF29EC72B54940F002C85FE /* Plant.swift */,
 				EA097DC32993986D00735129 /* Model.xcdatamodeld */,
 				EABBF0CD29B1342500C3B1F9 /* Day.swift */,
 				EA42A0FF29B15EEE003BB1FC /* Helpers.swift */,
@@ -625,6 +635,7 @@
 				EABBF0D029B1343800C3B1F9 /* Meal.swift in Sources */,
 				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
 				EA2C9B8E29B4B2AC0019DB36 /* MealBreakdownViewModel.swift in Sources */,
+				EAF29EC52B548F14002C85FE /* PlantPickerView.swift in Sources */,
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				EA2201E32B372351007F444B /* FoodEntry.swift in Sources */,
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
@@ -639,7 +650,9 @@
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
 				EA2D49122998142100248864 /* AddEntryViewModel.swift in Sources */,
 				EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */,
+				EAF29EC32B548E96002C85FE /* AddPlantView.swift in Sources */,
 				EA097DB82991909500735129 /* HistoryViewModel.swift in Sources */,
+				EAF29EC82B54940F002C85FE /* Plant.swift in Sources */,
 				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
 				EA4EE511299EA53C000FE6AC /* ExerciseEntry.swift in Sources */,
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
@@ -1198,9 +1211,10 @@
 		EA097DC32993986D00735129 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EAF29EC62B5493BF002C85FE /* Model 2.xcdatamodel */,
 				EA097DC42993986D00735129 /* Model.xcdatamodel */,
 			);
-			currentVersion = EA097DC42993986D00735129 /* Model.xcdatamodel */;
+			currentVersion = EAF29EC62B5493BF002C85FE /* Model 2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

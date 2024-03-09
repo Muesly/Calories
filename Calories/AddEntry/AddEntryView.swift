@@ -75,7 +75,7 @@ struct AddEntryView: View {
         }
         .font(.brand)
         .searchable(text: $searchText,
-                     placement:  .navigationBarDrawer(displayMode: .always),
+                     placement: .navigationBarDrawer(displayMode: .always),
                      prompt: viewModel.prompt())
         .onSubmit(of: .search) {
             dismissSearch()

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G816" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FoodEntry" representedClassName=".FoodEntry" syncable="YES">
+        <attribute name="calories" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="foodDescription" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="timeConsumed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="plants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Plant" inverseName="foodEntries" inverseEntity="Plant"/>
+        <fetchIndex name="byTimeConsumed">
+            <fetchIndexElement property="timeConsumed" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="Plant" representedClassName=".Plant" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="points" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="foodEntries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FoodEntry" inverseName="plants" inverseEntity="FoodEntry"/>
+    </entity>
+</model>

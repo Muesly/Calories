@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 class FoodEntry: NSManagedObject {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<FoodEntry> {

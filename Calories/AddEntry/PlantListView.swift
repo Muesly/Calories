@@ -8,22 +8,31 @@
 import SwiftUI
 
 struct PlantListView: View {
+    let viewModel: PlantListViewModel
+
     var body: some View {
-        List {
-            Section {
-                Text("Lettuce")
-                Text("Tomato")
-                Text("Red Pepper")
-                Text("+")
-            } header: {
-                Text("List of plants/seeds/herbs in dish")
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Plants")
+                Spacer()
             }
-        }.listStyle(.grouped)
+            Grid() {
+                GridRow {
+                    NavigationLink("+") {
+                        PlantPickerView()
+                    }
+                }
+            }
+        }
     }
 }
 
 struct PlantListView_Previews: PreviewProvider {
     static var previews: some View {
-        PlantListView()
+        PlantListView(viewModel: PlantListViewModel())
     }
+}
+
+class PlantListViewModel {
+
 }

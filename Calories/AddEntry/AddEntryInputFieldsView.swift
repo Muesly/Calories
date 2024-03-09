@@ -46,81 +46,80 @@ struct AddEntryInputFieldsView: View {
     }
 
     var body: some View {
-        VStack {
-            VStack(spacing: 20) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("Food")
-                        TextField("Enter food or drink...", text: $foodDescription)
-                            .focused($descriptionIsFocused)
+        VStack(spacing: 20) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading) {
+                    Text("Food")
+                    TextField("Enter food or drink...", text: $foodDescription)
+                        .focused($descriptionIsFocused)
+                        .padding(5)
+                        .background(.white)
+                        .cornerRadius(10)
+                        .foregroundColor(.black)
+                }
+                VStack(alignment: .leading) {
+                    Text("Calories")
+                    HStack {
+                        TextField("", value: $calories, formatter: numberFormatter)
+                            .frame(maxWidth: 60)
+                            .focused($caloriesIsFocused)
+                            .keyboardType(.numberPad)
                             .padding(5)
                             .background(.white)
                             .cornerRadius(10)
                             .foregroundColor(.black)
-                    }
-                    VStack(alignment: .leading) {
-                        Text("Calories")
-                        HStack {
-                            TextField("", value: $calories, formatter: numberFormatter)
-                                .frame(maxWidth: 60)
-                                .focused($caloriesIsFocused)
-                                .keyboardType(.numberPad)
-                                .padding(5)
-                                .background(.white)
-                                .cornerRadius(10)
-                                .foregroundColor(.black)
-                            Button {
-                                UIApplication.shared.open(viewModel.calorieSearchURL(for: foodDescription))
-                            } label: {
-                                Image(systemName: "magnifyingglass")
-                            }
+                        Button {
+                            UIApplication.shared.open(viewModel.calorieSearchURL(for: foodDescription))
+                        } label: {
+                            Image(systemName: "magnifyingglass")
                         }
                     }
                 }
-                MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $defTimeConsumed))
-
-                Button {
-                    Task(priority: .high) {
-                        do {
-                            descriptionIsFocused = false
-                            caloriesIsFocused = false
-                            try await viewModel.addFood(foodDescription: foodDescription,
-                                                        calories: calories,
-                                                        timeConsumed: defTimeConsumed)
-                            foodDescription = ""
-                            calories = 0
-                            searchText = ""
-                            dismiss()
-                            foodAdded = true
-                        } catch {
-                            isShowingFailureToAuthoriseAlert = true
-                        }
-                    }
-                } label: {
-                    Text("Add \(foodDescription)")
-                        .padding(10)
-                        .bold()
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(calories == 0 || foodDescription.isEmpty)
             }
-            .padding()
-            .background(Colours.backgroundSecondary)
-            .cornerRadius(10)
-            Spacer()
-            .onChange(of: scenePhase) { newPhase in
-                if AddEntryViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
-                    Task {
+            MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $defTimeConsumed))
+            PlantListView(viewModel: PlantListViewModel())
+
+            Button {
+                Task(priority: .high) {
+                    do {
+                        descriptionIsFocused = false
+                        caloriesIsFocused = false
+                        try await viewModel.addFood(foodDescription: foodDescription,
+                                                    calories: calories,
+                                                    timeConsumed: defTimeConsumed)
                         foodDescription = ""
                         calories = 0
-                        defTimeConsumed = Date()
+                        searchText = ""
+                        dismiss()
+                        foodAdded = true
+                    } catch {
+                        isShowingFailureToAuthoriseAlert = true
                     }
                 }
+            } label: {
+                Text("Add \(foodDescription)")
+                    .padding(10)
+                    .bold()
             }
-            .alert("Failed to access vehicle health",
-                   isPresented: $isShowingFailureToAuthoriseAlert) {
-                Button("OK", role: .cancel) {}
+            .buttonStyle(.borderedProminent)
+            .disabled(calories == 0 || foodDescription.isEmpty)
+        }
+        .padding()
+        .background(Colours.backgroundSecondary)
+        .cornerRadius(10)
+        Spacer()
+        .onChange(of: scenePhase) { newPhase in
+            if AddEntryViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
+                Task {
+                    foodDescription = ""
+                    calories = 0
+                    defTimeConsumed = Date()
+                }
             }
+        }
+        .alert("Failed to access vehicle health",
+               isPresented: $isShowingFailureToAuthoriseAlert) {
+            Button("OK", role: .cancel) {}
         }
         .padding()
         .cornerRadius(10)
