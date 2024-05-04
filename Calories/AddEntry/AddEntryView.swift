@@ -13,7 +13,7 @@ struct AddEntryView: View {
     private var viewModel: AddEntryViewModel
     @State var searchText = ""
     @State var foodAdded = false
-    @State private var readyToNavigateToAddEntryInputFields : Bool = false
+    @State private var readyToNavigateToAddEntryInputFields: Bool = false
     @Binding var showingAddEntryView: Bool
     @State private var newEntryAdded: Bool = false
     @State var timeConsumed: Date = Date()

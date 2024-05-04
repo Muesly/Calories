@@ -71,7 +71,7 @@ class MealPickerViewModel {
 
     func setInitialMealForTimeConsumed() {
         let hour = hourOfTimeConsumed
-        let initialMeal = meals.reversed().first { hour >= $0.hour }!
+        let initialMeal = meals.reversed().first { hour >= $0.hour } ?? meals.first!
         selectMeal(initialMeal)
     }
 
