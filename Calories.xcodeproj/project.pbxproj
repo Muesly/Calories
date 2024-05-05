@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
+		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
 		EA08544E299BD62A0029DD42 /* AddEntryInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */; };
 		EA085450299BED050029DD42 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
 		EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085451299C01350029DD42 /* WeeklyChartView.swift */; };
@@ -116,6 +118,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
+		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryInputFieldsView.swift; sourceTree = "<group>"; };
 		EA08544F299BED050029DD42 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EA085451299C01350029DD42 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 				EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */,
 				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
 				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
+				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
 			);
 			path = CaloriesTests;
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
+				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
 				EA08544F299BED050029DD42 /* Theme.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
 				EA097DB72991909500735129 /* HistoryViewModel.swift */,
@@ -621,6 +627,7 @@
 				EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */,
 				EA2EA74A2B507A7D00382DC8 /* PlantListView.swift in Sources */,
 				EABBF0CE29B1342500C3B1F9 /* Day.swift in Sources */,
+				DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */,
 				EAD2115D29A390E80007A813 /* RecordWeightViewModel.swift in Sources */,
 				EABBF0D029B1343800C3B1F9 /* Meal.swift in Sources */,
 				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
@@ -660,6 +667,7 @@
 				EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddEntryViewModelTests.swift in Sources */,
 				EA8060E929FD4AAA00310527 /* AddEntryViewTests.swift in Sources */,
+				DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
 				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,
 				EA16CEFF2B53418B00E01122 /* MealPickerViewTests.swift in Sources */,

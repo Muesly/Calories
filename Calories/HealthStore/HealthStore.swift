@@ -15,6 +15,7 @@ protocol HealthStore {
     func exercise(date: Date) async throws -> Int
     func weight(fromDate: Date, toDate: Date) async throws -> Double?
 
+    func caloriesConsumedAllDataPoints() async throws -> [(Date, Double)]
     func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)]
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -82,12 +83,19 @@ extension HKHealthStore: HealthStore {
         try await Int(Double(countForType(.dietaryEnergyConsumed, date: date)) * (1 + geneticFactor()))
     }
 
+    func caloriesConsumedAllDataPoints() async throws -> [(Date, Double)] {
+        try await caloriesConsumedAllDataPoints(predicate: nil)
+    }
+    
     func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
+        return try await caloriesConsumedAllDataPoints(predicate: predicate)
+    }
+
+    private func caloriesConsumedAllDataPoints(predicate: NSPredicate?) async throws -> [(Date, Double)] {
         guard let type = HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed) else {
             return []
         }
-
-        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
 
         return await withCheckedContinuation { continuation in
             let query = HKSampleQuery(sampleType: type,
@@ -108,8 +116,7 @@ extension HKHealthStore: HealthStore {
             execute (query)
         }
     }
-
-
+    
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return 0
