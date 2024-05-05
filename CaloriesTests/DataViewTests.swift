@@ -12,6 +12,7 @@ import XCTest
 final class DataViewTests: XCTestCase {
     var controller: PersistenceController!
     var mockHealthStore: MockHealthStore!
+    let segmentLength = 10.0 * 86400
     
     override func setUpWithError() throws {
         controller = PersistenceController(inMemory: true)
@@ -33,21 +34,7 @@ final class DataViewTests: XCTestCase {
         }
     }
     
-    func testDatesOfFirstConsumptionDataPoints() async throws {
-        let date1 = Date()
-        let date2 = date1.addingTimeInterval(7 * 86400)
-        let dataPoint1 = (date1, 2200.0)
-        let dataPoint2 = (date2, 2300.0)
-        let consumptionDataPoints = [dataPoint1, dataPoint2]
-        mockHealthStore.caloriesConsumedAllDataPoints = consumptionDataPoints
-        let vm = DataViewModel(healthStore: mockHealthStore)
-        let response = try! await vm.calculate()
-        XCTAssertEqual(response.startDate, date1)
-        XCTAssertEqual(response.endDate, date2)
-    }
-    
-    func testDateRangeCuttingOffIncomplete() async throws {
-        let segmentLength = 10.0 * 86400
+    private var oneAndABitSegments: [(Date, Double)] {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
@@ -57,23 +44,45 @@ final class DataViewTests: XCTestCase {
         let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 2600.0)
         let seg1DataPoint3 = (seg1StartDate.addingTimeInterval(2 * 86400), 1900.0)
         
-        let seg2DataPoint1 = (seg2EndDate, 2200.0)
-        let seg2DataPoint2 = (seg2EndDate.addingTimeInterval(86400), 2000.0)
+        let seg2DataPoint1 = (seg2StartDate, 2200.0)
+        let seg2DataPoint2 = (seg2StartDate.addingTimeInterval(86400), 2000.0)
         
-        let consumptionDataPoints = [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
-        mockHealthStore.caloriesConsumedAllDataPoints = consumptionDataPoints
-        
+        return [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
+    }
+    
+    func testDateRangeCuttingOffIncomplete() async throws {
+        let dataPoints = oneAndABitSegments
+        mockHealthStore.caloriesConsumedAllDataPoints = dataPoints
         let vm = DataViewModel(healthStore: mockHealthStore)
         let response = try! await vm.calculate()
         XCTAssertEqual(response.segments,
-                       [Segment(consumptionDataPoints: [.init(date: seg1DataPoint1.0,
-                                                              calories: seg1DataPoint1.1),
-                                                        .init(date: seg1DataPoint2.0,
-                                                              calories: seg1DataPoint2.1),
-                                                        .init(date: seg1DataPoint3.0,
-                                                              calories: seg1DataPoint3.1)],
-                                startDate: seg1StartDate,
-                                endDate: seg1StartDate.addingTimeInterval(segmentLength))])
+                       [Segment(consumptionDataPoints: [.init(date: dataPoints[0].0,
+                                                              calories: dataPoints[0].1),
+                                                        .init(date: dataPoints[1].0,
+                                                              calories: dataPoints[1].1),
+                                                        .init(date: dataPoints[2].0,
+                                                              calories: dataPoints[2].1)],
+                                startDate: dataPoints[0].0,
+                                endDate: dataPoints[0].0.addingTimeInterval(segmentLength))])
+    }
+    
+    func testCaloriesConsumedInSegment() async throws {
+        mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
+        let vm = DataViewModel(healthStore: mockHealthStore)
+        let response = try! await vm.calculate()
+        
+        let firstSegment = response.segments.first!
+        XCTAssertEqual(firstSegment.caloriesConsumed, 6700)
+    }
+    
+    func testBMRInSegment() async throws {
+        mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
+        mockHealthStore.bmr = 2000
+        let vm = DataViewModel(healthStore: mockHealthStore)
+        let response = try! await vm.calculate()
+
+        let firstSegment = response.segments.first!
+        XCTAssertEqual(firstSegment.bmr, 6700)
     }
 }
 
@@ -89,16 +98,18 @@ struct ConsumptionDataPoint: Equatable {
 
 struct Segment: Equatable {
     let consumptionDataPoints: [ConsumptionDataPoint]
+    let bmrDataPoints = [Double]()
     let startDate: Date
     let endDate: Date
+    
+    var caloriesConsumed: Double { consumptionDataPoints.reduce(0) { $0 + $1.calories } }
+    var bmr: Double { bmrDataPoints.reduce(0) { $0 + $1 } }
 }
 
 struct CalculatedData: Equatable {
-    let consumptionDataPoints: [ConsumptionDataPoint]
     let segments: [Segment]
-    
-    var startDate: Date? { consumptionDataPoints.first?.date }
-    var endDate: Date? { consumptionDataPoints.last?.date }
+    var startDate: Date? { segments.first?.startDate }
+    var endDate: Date? {segments.last?.endDate }
 }
 
 class DataViewModel {
@@ -108,7 +119,7 @@ class DataViewModel {
         self.healthStore = healthStore
     }
     
-    func calculate() async throws -> CalculatedData {
+    private func getConsumptionDataPoints() async throws -> [ConsumptionDataPoint] {
         let currentDate = Date()
         let fromDateComponents = NSDateComponents()
         fromDateComponents.year = 2023
@@ -123,26 +134,47 @@ class DataViewModel {
         } catch {
             throw DataViewError.failedToGetCaloriesConsumed
         }
+        return consumptionDataPoints
+    }
+
+    private func createSegment(consumptionDataPoints: [ConsumptionDataPoint],
+                               startDate: Date,
+                               endDate: Date) -> Segment {
         
-        guard let firstRecordedDate = consumptionDataPoints.first?.date else {
-            throw DataViewError.failedToGetFirstCaloriesConsumedItem
-        }
-        
+        return Segment(consumptionDataPoints: consumptionDataPoints,
+                       startDate: startDate,
+                       endDate: endDate)
+    }
+    
+    private func createSegments(firstRecordedDate: Date,
+                                consumptionDataPoints: [ConsumptionDataPoint]) -> [Segment] {
         var segments = [Segment]()
         let segmentLength = 10.0 * 86400
         var nextSegmentDate = firstRecordedDate + segmentLength
         var currentDataPoints = [ConsumptionDataPoint]()
         consumptionDataPoints.forEach { dataPoint in
-            if dataPoint.date >= nextSegmentDate.addingTimeInterval(segmentLength) {
-                segments.append(Segment(consumptionDataPoints: currentDataPoints,
-                                        startDate: nextSegmentDate - segmentLength, endDate: nextSegmentDate))
+            if dataPoint.date >= nextSegmentDate {
+                let segment = createSegment(consumptionDataPoints: currentDataPoints,
+                                            startDate: nextSegmentDate - segmentLength,
+                                            endDate: nextSegmentDate)
+                segments.append(segment)
                 nextSegmentDate += segmentLength
                 currentDataPoints.removeAll()
             }
             currentDataPoints.append(dataPoint)
         }
-        let calculatedData = CalculatedData(consumptionDataPoints: consumptionDataPoints,
-                                            segments: segments)
+        return segments
+    }
+    
+    func calculate() async throws -> CalculatedData {
+        let consumptionDataPoints = try await getConsumptionDataPoints()
+        guard let firstRecordedDate = consumptionDataPoints.first?.date else {
+            throw DataViewError.failedToGetFirstCaloriesConsumedItem
+        }
+        let segments = createSegments(firstRecordedDate: firstRecordedDate,
+                                      consumptionDataPoints: consumptionDataPoints)
+        
+        let calculatedData = CalculatedData(segments: segments)
         return calculatedData
         
         //        let df = DateFormatter()
