@@ -15,8 +15,10 @@ protocol HealthStore {
     func exercise(date: Date) async throws -> Int
     func weight(fromDate: Date, toDate: Date) async throws -> Double?
 
-    func caloriesConsumedAllDataPoints() async throws -> [(Date, Double)]
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)]
+    func caloriesConsumedAllDataPoints() async throws -> [(Date, Int)]
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
+    func bmrBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
+    func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -83,16 +85,16 @@ extension HKHealthStore: HealthStore {
         try await Int(Double(countForType(.dietaryEnergyConsumed, date: date)) * (1 + geneticFactor()))
     }
 
-    func caloriesConsumedAllDataPoints() async throws -> [(Date, Double)] {
+    func caloriesConsumedAllDataPoints() async throws -> [(Date, Int)] {
         try await caloriesConsumedAllDataPoints(predicate: nil)
     }
     
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
         return try await caloriesConsumedAllDataPoints(predicate: predicate)
     }
 
-    private func caloriesConsumedAllDataPoints(predicate: NSPredicate?) async throws -> [(Date, Double)] {
+    private func dataPointsForType(_ typeIdentifier: HKQuantityTypeIdentifier, predicate: NSPredicate?) async throws -> [(Date, Int)] {
         guard let type = HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed) else {
             return []
         }
@@ -109,14 +111,28 @@ extension HKHealthStore: HealthStore {
                 }
                 continuation.resume(returning: dataPoints.map {
                     let date = $0.startDate
-                    let calories = $0.quantity.doubleValue(for: .kilocalorie()) * (1 + self.geneticFactor())
+                    let calories = Int($0.quantity.doubleValue(for: .kilocalorie()) * (1 + self.geneticFactor()))
                     return (date, calories)
                 })
             }
             execute (query)
         }
     }
-    
+
+    private func caloriesConsumedAllDataPoints(predicate: NSPredicate?) async throws -> [(Date, Int)] {
+        try await dataPointsForType(.dietaryEnergyConsumed, predicate: predicate)
+    }
+
+    func bmrBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
+        return try await dataPointsForType(.basalEnergyBurned, predicate: predicate)
+    }
+
+    func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
+        return try await dataPointsForType(.activeEnergyBurned, predicate: predicate)
+    }
+
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return 0

@@ -23,8 +23,8 @@ class MealBreakdownViewModel: ObservableObject {
         let fromDate = toDate.addingTimeInterval(-secsPerWeek * 8)
         do {
             let consumptionDataPoints = try await healthStore.caloriesConsumedAllDataPoints(fromDate: fromDate, toDate: toDate)
-            var meals = [MealType: Double]()
-            var totalCalories = 0.0
+            var meals = [MealType: Int]()
+            var totalCalories = 0
             consumptionDataPoints.forEach { dataPoint in
                 let timeConsumed = dataPoint.0
                 let calories = dataPoint.1
@@ -36,7 +36,7 @@ class MealBreakdownViewModel: ObservableObject {
                     meals[mealType] = calories
                 }
             }
-            self.caloriesPerMealType = meals.map { ($0.value / totalCalories, $0.key.mealTypeColor()) }
+            self.caloriesPerMealType = meals.map { (Double($0.value) / Double(totalCalories), $0.key.mealTypeColor()) }
         } catch {
             print("Failed to fetch calories per meal type")
         }
