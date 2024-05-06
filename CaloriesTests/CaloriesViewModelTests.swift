@@ -125,6 +125,7 @@ class MockHealthStore: HealthStore {
     var caloriesConsumedAllDataPoints = [(Date, Int)]()
     var bmrAllDataPoints = [(Date, Int)]()
     var activeCaloriesAllDataPoints = [(Date, Int)]()
+    var weightAllDataPoints = [(Date, Double)]()
     
     func authorize() async throws {
         guard let error = authorizeError else {
@@ -183,5 +184,9 @@ class MockHealthStore: HealthStore {
     
     func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         activeCaloriesAllDataPoints
+    }
+    
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+        weightAllDataPoints
     }
 }

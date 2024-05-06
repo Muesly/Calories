@@ -19,6 +19,7 @@ protocol HealthStore {
     func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
     func bmrBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
     func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)]
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -133,6 +134,33 @@ extension HKHealthStore: HealthStore {
         return try await dataPointsForType(.activeEnergyBurned, predicate: predicate)
     }
 
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+        guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
+            return []
+        }
+
+        let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
+
+        return await withCheckedContinuation { continuation in
+            let query = HKSampleQuery(sampleType: type,
+                                      predicate: predicate,
+                                      limit: Int(HKObjectQueryNoLimit),
+                                      sortDescriptors: nil) { _, result, error in
+                guard let result = result,
+                      let dataPoints = result as? [HKCumulativeQuantitySample]  else {
+                    continuation.resume(returning: [])
+                    return
+                }
+                continuation.resume(returning: dataPoints.map {
+                    let date = $0.startDate
+                    let weight = $0.sumQuantity.doubleValue(for: HKUnit.pound())
+                    return (date, weight)
+                })
+            }
+            execute (query)
+        }
+    }
+    
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return 0

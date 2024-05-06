@@ -65,19 +65,35 @@ final class DataViewTests: XCTestCase {
         
         return [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
     }
-
+    
     private var oneAndABitSegmentsForActiveCalories: [(Date, Int)] {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
         let seg2EndDate = seg2StartDate.addingTimeInterval(segmentLength)
         
-        let seg1DataPoint1 = (seg1StartDate, 200)
+        let seg1DataPoint1 = (seg1StartDate, 800)
         let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 300)
         let seg1DataPoint3 = (seg1StartDate.addingTimeInterval(2 * 86400), 600)
         
         let seg2DataPoint1 = (seg2StartDate, 300)
         let seg2DataPoint2 = (seg2StartDate.addingTimeInterval(86400), 150)
+        
+        return [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
+    }
+
+    private var oneAndABitSegmentsForWeight: [(Date, Double)] {
+        let seg1StartDate = Date()
+        let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
+        let seg2StartDate = seg1EndDate
+        let seg2EndDate = seg2StartDate.addingTimeInterval(segmentLength)
+        
+        let seg1DataPoint1 = (seg1StartDate, 14.8)
+        let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 14.6)
+        let seg1DataPoint3 = (seg1StartDate.addingTimeInterval(2 * 86400), 14.3)
+        
+        let seg2DataPoint1 = (seg2StartDate, 14.3)
+        let seg2DataPoint2 = (seg2StartDate.addingTimeInterval(86400), 14.2)
         
         return [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
     }
@@ -96,6 +112,8 @@ final class DataViewTests: XCTestCase {
                                                               calories: dataPoints[2].1)],
                                 bmrTotal: 0,
                                 activeTotal: 0,
+                                startWeight: 0,
+                                endWeight: 0,
                                 startDate: dataPoints[0].0,
                                 endDate: dataPoints[0].0.addingTimeInterval(segmentLength))])
     }
@@ -124,9 +142,33 @@ final class DataViewTests: XCTestCase {
         mockHealthStore.activeCaloriesAllDataPoints = oneAndABitSegmentsForActiveCalories
         let vm = DataViewModel(healthStore: mockHealthStore)
         let response = try! await vm.calculate()
+        
+        let firstSegment = response.segments.first!
+        XCTAssertEqual(firstSegment.activeTotal, 1700)
+    }
+    
+    func testWeightInSegment() async throws {
+        mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
+        mockHealthStore.weightAllDataPoints = oneAndABitSegmentsForWeight
+        let vm = DataViewModel(healthStore: mockHealthStore)
+        let response = try! await vm.calculate()
 
         let firstSegment = response.segments.first!
-        XCTAssertEqual(firstSegment.activeTotal, 1100)
+        XCTAssertEqual(firstSegment.endWeight, 14.3)
+    }
+    
+    func testExpectedWeightLossPerDeficit() async throws {
+        mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
+        mockHealthStore.bmrAllDataPoints = oneAndABitSegmentsForBMR
+        mockHealthStore.activeCaloriesAllDataPoints = oneAndABitSegmentsForActiveCalories
+        mockHealthStore.weightAllDataPoints = oneAndABitSegmentsForWeight
+        let vm = DataViewModel(healthStore: mockHealthStore)
+        let response = try! await vm.calculate()
+
+        let firstSegment = response.segments.first!
+        XCTAssertEqual(firstSegment.expectedWeightLoss, 0.1111111111111111)
+        XCTAssertEqual(firstSegment.actualWeightLoss, 0.5)
+        XCTAssertEqual(firstSegment.weightVariance, 0.3888888888888889)
     }
 }
 
@@ -140,14 +182,33 @@ struct CalorieDataPoint: Equatable {
     let calories: Int
 }
 
+struct ReportedWeightDataPoint: Equatable {
+    let date: Date
+    let weight: Double
+}
+
 struct Segment: Equatable {
     let consumptionDataPoints: [CalorieDataPoint]
     let bmrTotal: Int
     let activeTotal: Int
+    let startWeight: Double
+    let endWeight: Double
     let startDate: Date
     let endDate: Date
     
     var caloriesConsumed: Int { consumptionDataPoints.reduce(0) { $0 + $1.calories } }
+
+    var expectedWeightLoss: Double {
+        return Double(bmrTotal + activeTotal - caloriesConsumed) / 3600
+    }
+    
+    var actualWeightLoss: Double {
+        return startWeight - endWeight
+    }
+    
+    var weightVariance: Double {
+        return abs(expectedWeightLoss - actualWeightLoss)
+    }
 }
 
 struct CalculatedData: Equatable {
@@ -184,6 +245,8 @@ class DataViewModel {
     private func createSegment(consumptionDataPoints: [CalorieDataPoint],
                                bmrDataPoints: [CalorieDataPoint],
                                activeDataPoints: [CalorieDataPoint],
+                               startWeight: Double,
+                               weightDataPoints: [ReportedWeightDataPoint],
                                startDate: Date,
                                endDate: Date) -> Segment {
         let bmrTotal = bmrDataPoints.reduce(0) {
@@ -202,9 +265,13 @@ class DataViewModel {
             }
         }
 
+        let lastWeightInDataPoints = weightDataPoints.last(where: { $0.date >= startDate && $0.date < endDate })?.weight ?? 0
+
         return Segment(consumptionDataPoints: consumptionDataPoints,
                        bmrTotal: bmrTotal,
                        activeTotal: activeTotal,
+                       startWeight: startWeight,
+                       endWeight: lastWeightInDataPoints,
                        startDate: startDate,
                        endDate: endDate)
     }
@@ -212,19 +279,24 @@ class DataViewModel {
     private func createSegments(firstRecordedDate: Date,
                                 consumptionDataPoints: [CalorieDataPoint],
                                 bmrDataPoints: [CalorieDataPoint],
-                                activeDataPoints: [CalorieDataPoint]) -> [Segment] {
+                                activeDataPoints: [CalorieDataPoint],
+                                weightDataPoints: [ReportedWeightDataPoint]) -> [Segment] {
         var segments = [Segment]()
         let segmentLength = 10.0 * 86400
         var nextSegmentDate = firstRecordedDate + segmentLength
         var currentDataPoints = [CalorieDataPoint]()
+        var startWeight = weightDataPoints.first?.weight ?? 0
         consumptionDataPoints.forEach { dataPoint in
             if dataPoint.date >= nextSegmentDate {
                 let segment = createSegment(consumptionDataPoints: currentDataPoints,
                                             bmrDataPoints: bmrDataPoints,
                                             activeDataPoints: activeDataPoints,
+                                            startWeight: startWeight,
+                                            weightDataPoints: weightDataPoints,
                                             startDate: nextSegmentDate - segmentLength,
                                             endDate: nextSegmentDate)
                 segments.append(segment)
+                startWeight = weightDataPoints.last?.weight ?? 0
                 nextSegmentDate += segmentLength
                 currentDataPoints.removeAll()
             }
@@ -235,50 +307,33 @@ class DataViewModel {
     
     func calculate() async throws -> CalculatedData {
         let consumptionDataPoints = try await getConsumptionDataPoints()
-        guard let firstRecordedDate = consumptionDataPoints.first?.date else {
+        guard let firstRecordedDate = consumptionDataPoints.first?.date,
+              let lastRecordedDate = consumptionDataPoints.last?.date else {
             throw DataViewError.failedToGetFirstCaloriesConsumedItem
         }
 
         let bmrDataPoints = try await healthStore.bmrBetweenDates(fromDate: firstRecordedDate,
-                                                                  toDate: consumptionDataPoints.last!.date).map {
+                                                                  toDate: lastRecordedDate).map {
             CalorieDataPoint(date: $0.0, calories: $0.1)
         }
 
         let activeDataPoints = try await healthStore.activeBetweenDates(fromDate: firstRecordedDate,
-                                                                     toDate: consumptionDataPoints.last!.date).map {
+                                                                     toDate: lastRecordedDate).map {
             CalorieDataPoint(date: $0.0, calories: $0.1)
+        }
+
+        let weightDataPoints = try await healthStore.weightBetweenDates(fromDate: firstRecordedDate,
+                                                                        toDate: lastRecordedDate).map {
+            ReportedWeightDataPoint(date: $0.0, weight: $0.1)
         }
 
         let segments = createSegments(firstRecordedDate: firstRecordedDate,
                                       consumptionDataPoints: consumptionDataPoints,
                                       bmrDataPoints: bmrDataPoints,
-                                      activeDataPoints: activeDataPoints)
+                                      activeDataPoints: activeDataPoints,
+                                      weightDataPoints: weightDataPoints)
 
         let calculatedData = CalculatedData(segments: segments)
         return calculatedData
-        
-        //        let df = DateFormatter()
-        //        df.dateStyle = .short
-        //        let fromDateStr = df.string(from: firstRecordedDate)
-        //        let toDateStr = df.string(from: currentDate)
-        //        dataText += "Calculating from \(fromDateStr) to \(toDateStr)\n"
-        //
-        //        guard let numberOfDays = Calendar.current.dateComponents([.day], from: firstRecordedDate, to: currentDate).day else {
-        //            return
-        //        }
-        //        dataText += "\(numberOfDays) days\n"
-        //
-        //        let segmentLength = Int((Float(numberOfDays) / 10))
-        //        var segmentFromDate = firstRecordedDate
-        //        var segments = [Segment]()
-        //        while segmentFromDate < currentDate {
-        //            let segment = Segment(fromDate: segmentFromDate, toDate: segmentFromDate.addingTimeInterval(TimeInterval(segmentLength * 86400)))
-        //            segmentFromDate = segment.toDate
-        //            segments.append(segment)
-        //        }
-        //
-        //        for (i, segment) in segments.enumerated() {
-        //            dataText += "Segment \(i + 1): \(df.string(from: segment.fromDate))\n"
-        //        }
     }
 }
