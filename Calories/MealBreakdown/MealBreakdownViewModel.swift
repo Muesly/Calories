@@ -22,7 +22,7 @@ class MealBreakdownViewModel: ObservableObject {
         let toDate = Date()
         let fromDate = toDate.addingTimeInterval(-secsPerWeek * 8)
         do {
-            let consumptionDataPoints = try await healthStore.caloriesConsumedAllDataPoints(fromDate: fromDate, toDate: toDate)
+            let consumptionDataPoints = try await healthStore.caloriesConsumedAllDataPoints(fromDate: fromDate, toDate: toDate, applyModifier: true)
             var meals = [MealType: Int]()
             var totalCalories = 0
             consumptionDataPoints.forEach { dataPoint in

@@ -170,19 +170,19 @@ class MockHealthStore: HealthStore {
         weight = Double(weightEntry.weight)
     }
 
-    func caloriesConsumedAllDataPoints() async throws -> [(Date, Int)] {
+    func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
         caloriesConsumedAllDataPoints
     }
 
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         caloriesConsumedAllDataPoints
     }
     
-    func bmrBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         bmrAllDataPoints
     }
     
-    func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         activeCaloriesAllDataPoints
     }
     

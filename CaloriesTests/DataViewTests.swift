@@ -24,8 +24,12 @@ final class DataViewTests: XCTestCase {
         return dc.date!
     }
     
+    private func setupVM() -> DataViewModel {
+        DataViewModel(healthStore: mockHealthStore, segmentLengthInDays: 10)
+    }
+    
     func testFailedDataFetchWhenNoConsumptionData() async throws {
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         do {
             let _ = try await vm.calculate()
             XCTFail("Shouldn't succeed")
@@ -38,7 +42,6 @@ final class DataViewTests: XCTestCase {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
-        let seg2EndDate = seg2StartDate.addingTimeInterval(segmentLength)
         
         let seg1DataPoint1 = (seg1StartDate, 2200)
         let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 2600)
@@ -54,7 +57,6 @@ final class DataViewTests: XCTestCase {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
-        let seg2EndDate = seg2StartDate.addingTimeInterval(segmentLength)
         
         let seg1DataPoint1 = (seg1StartDate, 1800)
         let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 1800)
@@ -70,7 +72,6 @@ final class DataViewTests: XCTestCase {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
-        let seg2EndDate = seg2StartDate.addingTimeInterval(segmentLength)
         
         let seg1DataPoint1 = (seg1StartDate, 800)
         let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 300)
@@ -86,7 +87,6 @@ final class DataViewTests: XCTestCase {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
-        let seg2EndDate = seg2StartDate.addingTimeInterval(segmentLength)
         
         let seg1DataPoint1 = (seg1StartDate, 14.8)
         let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 14.6)
@@ -101,15 +101,10 @@ final class DataViewTests: XCTestCase {
     func testDateRangeCuttingOffIncomplete() async throws {
         let dataPoints = oneAndABitSegments
         mockHealthStore.caloriesConsumedAllDataPoints = dataPoints
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         let response = try! await vm.calculate()
         XCTAssertEqual(response.segments,
-                       [Segment(consumptionDataPoints: [.init(date: dataPoints[0].0,
-                                                              calories: dataPoints[0].1),
-                                                        .init(date: dataPoints[1].0,
-                                                              calories: dataPoints[1].1),
-                                                        .init(date: dataPoints[2].0,
-                                                              calories: dataPoints[2].1)],
+                       [Segment(caloriesConsumed: 6700,
                                 bmrTotal: 0,
                                 activeTotal: 0,
                                 startWeight: 0,
@@ -120,7 +115,7 @@ final class DataViewTests: XCTestCase {
     
     func testCaloriesConsumedInSegment() async throws {
         mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         let response = try! await vm.calculate()
         
         let firstSegment = response.segments.first!
@@ -130,7 +125,7 @@ final class DataViewTests: XCTestCase {
     func testBMRInSegment() async throws {
         mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
         mockHealthStore.bmrAllDataPoints = oneAndABitSegmentsForBMR
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         let response = try! await vm.calculate()
         
         let firstSegment = response.segments.first!
@@ -140,7 +135,7 @@ final class DataViewTests: XCTestCase {
     func testActiveCaloriesInSegment() async throws {
         mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
         mockHealthStore.activeCaloriesAllDataPoints = oneAndABitSegmentsForActiveCalories
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         let response = try! await vm.calculate()
         
         let firstSegment = response.segments.first!
@@ -150,7 +145,7 @@ final class DataViewTests: XCTestCase {
     func testWeightInSegment() async throws {
         mockHealthStore.caloriesConsumedAllDataPoints = oneAndABitSegments
         mockHealthStore.weightAllDataPoints = oneAndABitSegmentsForWeight
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         let response = try! await vm.calculate()
 
         let firstSegment = response.segments.first!
@@ -162,12 +157,12 @@ final class DataViewTests: XCTestCase {
         mockHealthStore.bmrAllDataPoints = oneAndABitSegmentsForBMR
         mockHealthStore.activeCaloriesAllDataPoints = oneAndABitSegmentsForActiveCalories
         mockHealthStore.weightAllDataPoints = oneAndABitSegmentsForWeight
-        let vm = DataViewModel(healthStore: mockHealthStore)
+        let vm = setupVM()
         let response = try! await vm.calculate()
 
         let firstSegment = response.segments.first!
-        XCTAssertEqual(firstSegment.expectedWeightLoss, 0.1111111111111111)
+        XCTAssertEqual(firstSegment.expectedWeightLoss, 0.11428571428571428)
         XCTAssertEqual(firstSegment.actualWeightLoss, 0.5)
-        XCTAssertEqual(firstSegment.weightVariance, 0.3888888888888889)
+        XCTAssertEqual(firstSegment.weightVariance, -0.38571428571428573)
     }
 }

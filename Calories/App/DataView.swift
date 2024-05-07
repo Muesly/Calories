@@ -10,7 +10,7 @@ import HealthKit
 import SwiftUI
 
 struct DataView: View {
-    private let viewModel = DataViewModel(healthStore: HKHealthStore())
+    private let viewModel = DataViewModel(healthStore: HKHealthStore(), segmentLengthInDays: 14)
     
     @State var text = "Calculating"
     
@@ -76,9 +76,11 @@ struct CalculatedData: Equatable {
 
 class DataViewModel {
     let healthStore: HealthStore
+    let segmentLengthInDays: Int
     
-    init(healthStore: HealthStore) {
+    init(healthStore: HealthStore, segmentLengthInDays: Int) {
         self.healthStore = healthStore
+        self.segmentLengthInDays = segmentLengthInDays
     }
     
     private func getConsumptionDataPoints() async throws -> [ReportedCalorieDataPoint] {
@@ -90,7 +92,7 @@ class DataViewModel {
         let fromDate = Calendar.current.date(from: fromDateComponents as DateComponents)!
         let consumptionDataPoints: [ReportedCalorieDataPoint]
         do {
-            consumptionDataPoints = try await healthStore.caloriesConsumedAllDataPoints(fromDate: fromDate, toDate: currentDate).map {
+            consumptionDataPoints = try await healthStore.caloriesConsumedAllDataPoints(fromDate: fromDate, toDate: currentDate, applyModifier: false).map {
                 .init(date: $0.0, calories: $0.1)
             }
         } catch {
@@ -143,7 +145,7 @@ class DataViewModel {
                                 activeDataPoints: [ReportedCalorieDataPoint],
                                 weightDataPoints: [ReportedWeightDataPoint]) -> [Segment] {
         var segments = [Segment]()
-        let segmentLength = 14.0 * 86400
+        let segmentLength = Double(segmentLengthInDays * 86400)
         var nextSegmentDate = firstRecordedDate + segmentLength
         var currentDataPoints = [ReportedCalorieDataPoint]()
         var startWeight = weightDataPoints.first?.weight ?? 0
@@ -174,12 +176,14 @@ class DataViewModel {
         }
 
         let bmrDataPoints = try await healthStore.bmrBetweenDates(fromDate: firstRecordedDate,
-                                                                  toDate: lastRecordedDate).map {
+                                                                  toDate: lastRecordedDate,
+                                                                  applyModifier: false).map {
             ReportedCalorieDataPoint(date: $0.0, calories: $0.1)
         }
 
         let activeDataPoints = try await healthStore.activeBetweenDates(fromDate: firstRecordedDate,
-                                                                     toDate: lastRecordedDate).map {
+                                                                        toDate: lastRecordedDate,
+                                                                        applyModifier: false).map {
             ReportedCalorieDataPoint(date: $0.0, calories: $0.1)
         }
 
@@ -217,7 +221,7 @@ class DataViewModel {
             var lowestBMRFactor = 999.0
             var lowestActiveFactor = 999.0
             var lowestCalorieFactor = 999.0
-
+            
             bmrFactor = startingFactor
             for _ in 1...10 {
                 activeFactor = startingFactor
@@ -255,6 +259,15 @@ class DataViewModel {
             }
                
             text += "Best ratio:\nBMR \(lowestBMRFactor)\nActive: \(lowestActiveFactor)\nCalorie: \(lowestCalorieFactor)\nVariance: \(lowestVariance)\n"
+
+//            bmrFactor = 1.0
+//            activeFactor = 0.8
+//            calorieFactor = 1.1
+//
+//            let bmr = calculatedData.segments.reduce(0) { $0 + ((Double)($1.bmrTotal) * bmrFactor) }
+//            let active = calculatedData.segments.reduce(0) { $0 + ((Double)($1.activeTotal) * activeFactor) }
+//            let calories = calculatedData.segments.reduce(0) { $0 + ((Double)($1.caloriesConsumed) * calorieFactor) }
+//            let expectedWeightLoss = (bmr + active - calories) / 3500
 
             return text
         } catch {

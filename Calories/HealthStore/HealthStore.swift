@@ -15,10 +15,10 @@ protocol HealthStore {
     func exercise(date: Date) async throws -> Int
     func weight(fromDate: Date, toDate: Date) async throws -> Double?
 
-    func caloriesConsumedAllDataPoints() async throws -> [(Date, Int)]
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
-    func bmrBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
-    func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
+    func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)]
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
+    func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
+    func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
     func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)]
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -32,8 +32,16 @@ enum HealthStoreError: Error {
 }
 
 extension HKHealthStore: HealthStore {
-    func geneticFactor() -> Double {
-        0.0
+    func calorieConsumedModifier() -> Double {
+        1.1
+    }
+
+    func bmrModifier() -> Double {
+        1.0
+    }
+
+    func activeEnergyModifier() -> Double {
+        0.8
     }
 
     func authorize() async throws {
@@ -75,27 +83,29 @@ extension HKHealthStore: HealthStore {
     }
 
     func bmr(date: Date) async throws -> Int {
-        try await Int(Double(countForType(.basalEnergyBurned, date: date)) * (1 - geneticFactor()))
+        try await Int(Double(countForType(.basalEnergyBurned, date: date)) * bmrModifier())
     }
 
     func exercise(date: Date) async throws -> Int {
-        try await Int(Double(countForType(.activeEnergyBurned, date: date)) * (1 - geneticFactor()))
+        try await Int(Double(countForType(.activeEnergyBurned, date: date)) * activeEnergyModifier())
     }
 
     func caloriesConsumed(date: Date) async throws -> Int {
-        try await Int(Double(countForType(.dietaryEnergyConsumed, date: date)) * (1 + geneticFactor()))
+        try await Int(Double(countForType(.dietaryEnergyConsumed, date: date)) * calorieConsumedModifier())
     }
 
-    func caloriesConsumedAllDataPoints() async throws -> [(Date, Int)] {
-        try await caloriesConsumedAllDataPoints(predicate: nil)
+    func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
+        try await caloriesConsumedAllDataPoints(predicate: nil, applyModifier: applyModifier)
     }
     
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
-        return try await caloriesConsumedAllDataPoints(predicate: predicate)
+        return try await caloriesConsumedAllDataPoints(predicate: predicate, applyModifier: applyModifier)
     }
 
-    private func dataPointsForType(_ typeIdentifier: HKQuantityTypeIdentifier, predicate: NSPredicate?) async throws -> [(Date, Int)] {
+    private func dataPointsForType(_ typeIdentifier: HKQuantityTypeIdentifier, 
+                                   predicate: NSPredicate?,
+                                   modifierFactor: Double) async throws -> [(Date, Int)] {
         guard let type = HKObjectType.quantityType(forIdentifier: typeIdentifier) else {
             return []
         }
@@ -112,7 +122,7 @@ extension HKHealthStore: HealthStore {
                 }
                 continuation.resume(returning: dataPoints.map {
                     let date = $0.startDate
-                    let calories = Int($0.quantity.doubleValue(for: .kilocalorie()) * (1 + self.geneticFactor()))
+                    let calories = Int($0.quantity.doubleValue(for: .kilocalorie()) * modifierFactor)
                     return (date, calories)
                 })
             }
@@ -120,18 +130,29 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    private func caloriesConsumedAllDataPoints(predicate: NSPredicate?) async throws -> [(Date, Int)] {
-        try await dataPointsForType(.dietaryEnergyConsumed, predicate: predicate)
+    private func caloriesConsumedAllDataPoints(predicate: NSPredicate?, 
+                                               applyModifier: Bool) async throws -> [(Date, Int)] {
+        try await dataPointsForType(.dietaryEnergyConsumed,
+                                    predicate: predicate,
+                                    modifierFactor: applyModifier ? calorieConsumedModifier() : 1.0)
     }
 
-    func bmrBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    func bmrBetweenDates(fromDate: Date, 
+                         toDate: Date,
+                         applyModifier: Bool) async throws -> [(Date, Int)] {
         let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
-        return try await dataPointsForType(.basalEnergyBurned, predicate: predicate)
+        return try await dataPointsForType(.basalEnergyBurned, 
+                                           predicate: predicate,
+                                           modifierFactor: applyModifier ? bmrModifier() : 1.0)
     }
 
-    func activeBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    func activeBetweenDates(fromDate: Date, 
+                            toDate: Date,
+                            applyModifier: Bool) async throws -> [(Date, Int)] {
         let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
-        return try await dataPointsForType(.activeEnergyBurned, predicate: predicate)
+        return try await dataPointsForType(.activeEnergyBurned, 
+                                           predicate: predicate,
+                                           modifierFactor: applyModifier ? activeEnergyModifier() : 1.0)
     }
 
     func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
