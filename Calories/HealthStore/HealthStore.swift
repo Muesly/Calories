@@ -33,7 +33,7 @@ enum HealthStoreError: Error {
 
 extension HKHealthStore: HealthStore {
     func geneticFactor() -> Double {
-        0.1
+        0.0
     }
 
     func authorize() async throws {
@@ -96,7 +96,7 @@ extension HKHealthStore: HealthStore {
     }
 
     private func dataPointsForType(_ typeIdentifier: HKQuantityTypeIdentifier, predicate: NSPredicate?) async throws -> [(Date, Int)] {
-        guard let type = HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed) else {
+        guard let type = HKObjectType.quantityType(forIdentifier: typeIdentifier) else {
             return []
         }
 
@@ -147,20 +147,20 @@ extension HKHealthStore: HealthStore {
                                       limit: Int(HKObjectQueryNoLimit),
                                       sortDescriptors: nil) { _, result, error in
                 guard let result = result,
-                      let dataPoints = result as? [HKCumulativeQuantitySample]  else {
+                      let dataPoints = result as? [HKQuantitySample]  else {
                     continuation.resume(returning: [])
                     return
                 }
                 continuation.resume(returning: dataPoints.map {
                     let date = $0.startDate
-                    let weight = $0.sumQuantity.doubleValue(for: HKUnit.pound())
+                    let weight = $0.quantity.doubleValue(for: HKUnit.pound())
                     return (date, weight)
                 })
             }
             execute (query)
         }
     }
-    
+
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return 0
