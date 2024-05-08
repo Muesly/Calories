@@ -12,8 +12,8 @@ import SwiftUI
 struct CaloriesApp: App {
     var body: some Scene {
         WindowGroup {
-            //CaloriesView()
-            DataView()
+            CaloriesView()
+            //DataView()
         }
     }
 }

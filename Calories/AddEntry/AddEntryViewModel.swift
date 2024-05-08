@@ -14,11 +14,12 @@ struct Suggestion: Hashable {
     let name: String
 }
 
-class AddEntryViewModel {
+class AddEntryViewModel: ObservableObject {
     let container: NSPersistentContainer
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
-
+    @Published var suggestions: [Suggestion] = []
+    
     init(healthStore: HealthStore = HKHealthStore(),
          container: NSPersistentContainer = PersistenceController.shared.container) {
         self.healthStore = healthStore
@@ -41,7 +42,7 @@ class AddEntryViewModel {
         dateForEntries = date
     }
 
-    func getSuggestions(searchText: String = "") -> [Suggestion] {
+    func fetchSuggestions(searchText: String = "") {
 
         let request = FoodEntry.fetchRequest()
 
@@ -52,7 +53,8 @@ class AddEntryViewModel {
             request.predicate = NSPredicate(format: "timeConsumed < %@", startOfDay as CVarArg)
             request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
             guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
-                return []
+                suggestions = []
+                return
             }
             let filteredResults = results.filter { foodEntry in
                 guard let date = foodEntry.timeConsumed else { return false }
@@ -60,17 +62,18 @@ class AddEntryViewModel {
                 return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
             }
             let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
-            return orderedSet.map { $0 as! Suggestion }
+            suggestions = orderedSet.map { $0 as! Suggestion }
         } else {    // Show fuzzy matched strings for this search text
             request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
             guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
-                return []
+                suggestions = []
+                return
             }
             let filteredResults = results.filter { foodEntry in
                 return foodEntry.foodDescription.fuzzyMatch(searchText)
             }
             let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
-            return orderedSet.map { $0 as! Suggestion }
+            suggestions = orderedSet.map { $0 as! Suggestion }
         }
     }
 

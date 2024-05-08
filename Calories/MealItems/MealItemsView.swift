@@ -18,14 +18,6 @@ struct MealItemsView: View {
     var body: some View {
         VStack {
             Text("\(viewModel.mealTitle)")
-
-            ForEach(viewModel.mealFoodEntries) { foodEntry in
-                HStack {
-                    Text("\(foodEntry.timeConsumed!, formatter: itemFormatter)")
-                    Text("\(foodEntry.foodDescription)")
-                    Text("\(Int(foodEntry.calories)) calories")
-                }
-            }
         }
         .frame(maxWidth: .infinity)
         .padding()
