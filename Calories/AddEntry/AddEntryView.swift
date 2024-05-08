@@ -10,14 +10,14 @@ import SwiftUI
 
 struct AddEntryView: View {
     @Environment(\.dismissSearch) private var dismissSearch
-    private var viewModel: AddEntryViewModel
+    @ObservedObject private var viewModel: AddEntryViewModel
     @State var searchText = ""
-    @State var foodAdded = false
+    @State var foodAddedAtTime: Date?
     @State private var readyToNavigateToAddEntryInputFields: Bool = false
     @Binding var showingAddEntryView: Bool
     @State private var newEntryAdded: Bool = false
     @State var timeConsumed: Date = Date()
-    private let mealItemsViewModel: MealItemsViewModel
+    @ObservedObject private var mealItemsViewModel: MealItemsViewModel
 
     init(viewModel: AddEntryViewModel,
          showingAddEntryView: Binding<Bool>,
@@ -38,20 +38,20 @@ struct AddEntryView: View {
                                                 defCalories: viewModel.defCaloriesFor(searchText),
                                                 defTimeConsumed: $timeConsumed,
                                                 searchText: $searchText,
-                                                foodAdded: $foodAdded)
+                                                foodAddedAtTime: $foodAddedAtTime)
                     } label: {
                         Text("Add \(searchText) as a new food").bold()
                     }
                 }
                 Section("Recent foods you've had at this time") {
-                    ForEach(viewModel.getSuggestions(searchText: searchText), id: \.self) { suggestion in
+                    ForEach(viewModel.suggestions, id: \.self) { suggestion in
                         NavigationLink {
                             AddEntryInputFieldsView(viewModel: viewModel,
                                                     defFoodDescription: suggestion.name,
                                                     defCalories: viewModel.defCaloriesFor(suggestion.name),
                                                     defTimeConsumed: $timeConsumed,
                                                     searchText: $searchText,
-                                                    foodAdded: $foodAdded)
+                                                    foodAddedAtTime: $foodAddedAtTime)
                         } label: {
                             Text(suggestion.name)
                         }
@@ -69,25 +69,38 @@ struct AddEntryView: View {
                     }
                 }
             }
-            .onChange(of: foodAdded) { foodAdded in
+            .onAppear {
+                viewModel.fetchSuggestions(searchText: searchText)
+            }
+            .onChange(of: searchText) { searchText in
+                viewModel.fetchSuggestions(searchText: searchText)
+            }
+            .onChange(of: foodAddedAtTime) { foodAddedAtTime in
                 mealItemsViewModel.fetchMealFoodEntries()
+                if let foodAddedAtTime {
+                    timeConsumed = foodAddedAtTime
+                    viewModel.setDateForEntries(timeConsumed)
+                    viewModel.fetchSuggestions(searchText: searchText)
+                    mealItemsViewModel.currentDate = timeConsumed
+                    mealItemsViewModel.fetchMealFoodEntries()
+                }
+            }
+            .navigationDestination(isPresented: $readyToNavigateToAddEntryInputFields) {
+                AddEntryInputFieldsView(viewModel: viewModel,
+                                        defFoodDescription: searchText,
+                                        defCalories: viewModel.defCaloriesFor(searchText),
+                                        defTimeConsumed: $timeConsumed,
+                                        searchText: $searchText,
+                                        foodAddedAtTime: $foodAddedAtTime)
             }
         }
         .font(.brand)
         .searchable(text: $searchText,
-                     placement:  .navigationBarDrawer(displayMode: .always),
-                     prompt: viewModel.prompt())
+                    placement:  .navigationBarDrawer(displayMode: .always),
+                    prompt: viewModel.prompt(for: timeConsumed))
         .onSubmit(of: .search) {
             dismissSearch()
             readyToNavigateToAddEntryInputFields = true
-        }
-        .navigationDestination(isPresented: $readyToNavigateToAddEntryInputFields) {
-            AddEntryInputFieldsView(viewModel: viewModel,
-                                    defFoodDescription: searchText,
-                                    defCalories: viewModel.defCaloriesFor(searchText),
-                                    defTimeConsumed: $timeConsumed,
-                                    searchText: $searchText,
-                                    foodAdded: $foodAdded)
         }
     }
 }

@@ -71,38 +71,29 @@ enum MealType: String, Equatable {
 
 class MealItemsViewModel: ObservableObject {
     private let context: NSManagedObjectContext
-    private let currentDate: Date
+    var currentDate: Date
     @Published var mealFoodEntries: [FoodEntry] = []
+    @Published var mealTitle: String = ""
 
     init(viewContext: NSManagedObjectContext,
          currentDate: Date) {
         self.context = viewContext
         self.currentDate = currentDate
     }
-
-    var mealCalories: Int {
-        Int(mealFoodEntries.reduce(0, { $0 + $1.calories }))
-    }
-
-    var mealTitle: String {
-        let mealTitle: String = MealType.mealTypeForDate(currentDate).rawValue
-        let mealCalories = mealCalories
-        return "\(mealTitle) - \(mealCalories) Calories"
-    }
-
+    
     func fetchMealFoodEntries() {
         let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: currentDate)
 
         let request = FoodEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
-        request.predicate = NSPredicate(format: "timeConsumed > %@ && timeConsumed < %@", startOfPeriod as CVarArg, endOfPeriod as CVarArg)
+        request.predicate = NSPredicate(format: "timeConsumed >= %@ && timeConsumed < %@", startOfPeriod as CVarArg, endOfPeriod as CVarArg)
         let entries = (try? context.fetch(request)) ?? []
 
-        mealFoodEntries = entries.filter { foodEntry in
-            guard let timeConsumed = foodEntry.timeConsumed else { return false }
-            return (timeConsumed > startOfPeriod) && (timeConsumed < endOfPeriod)
-        }.sorted { entry1, entry2 in
+        mealFoodEntries = entries.sorted { entry1, entry2 in
             entry1.timeConsumed! > entry2.timeConsumed!
         }
+        let mealCalories = Int(mealFoodEntries.reduce(0, { $0 + $1.calories }))
+        let mealType: String = MealType.mealTypeForDate(currentDate).rawValue
+        mealTitle = "\(mealType) - \(mealCalories) Calories"
     }
 }

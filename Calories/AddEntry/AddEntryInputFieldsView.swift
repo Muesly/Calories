@@ -21,14 +21,14 @@ struct AddEntryInputFieldsView: View {
     private let defFoodDescription: String
     let defCalories: Int
     @Binding var searchText: String
-    @Binding var foodAdded: Bool
+    @Binding var foodAddedAtTime: Date?
 
     init(viewModel: AddEntryViewModel,
          defFoodDescription: String,
          defCalories: Int,
          defTimeConsumed: Binding<Date>,
          searchText: Binding<String>,
-         foodAdded: Binding<Bool>) {
+         foodAddedAtTime: Binding<Date?>) {
         self.viewModel = viewModel
         self.defFoodDescription = defFoodDescription
         self.defCalories = defCalories
@@ -36,7 +36,7 @@ struct AddEntryInputFieldsView: View {
         _searchText = searchText
         _foodDescription = State(initialValue: defFoodDescription)
         _calories = State(initialValue: defCalories)
-        _foodAdded = foodAdded
+        _foodAddedAtTime = foodAddedAtTime
     }
 
     var numberFormatter: NumberFormatter {
@@ -91,7 +91,7 @@ struct AddEntryInputFieldsView: View {
                             calories = 0
                             searchText = ""
                             dismiss()
-                            foodAdded = true
+                            foodAddedAtTime = defTimeConsumed
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }
@@ -135,6 +135,6 @@ struct AddEntryInputFieldsView_Previews: PreviewProvider {
                                 defCalories: 100,
                                 defTimeConsumed: .constant(Date()),
                                 searchText: .constant("Some food"),
-                                foodAdded: .constant(false))
+                                foodAddedAtTime: .constant(Date()))
     }
 }
