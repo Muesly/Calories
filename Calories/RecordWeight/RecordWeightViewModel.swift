@@ -26,8 +26,9 @@ struct WeightDataPoint: Identifiable, Equatable {
     }
 
     static func weekStr(from fromDate: Date, to toDate: Date) -> String {
-        let toDateComps = Calendar.current.dateComponents([.day, .month], from: toDate)
-        return "\(toDateComps.day ?? 0)/\(toDateComps.month ?? 0)"
+        let toDateComps = Calendar.current.dateComponents([.day, .month, .year], from: toDate)
+        let monthStr = Calendar.current.shortMonthSymbols[(toDateComps.month ?? 1) - 1]
+        return "\(toDateComps.day ?? 0) \(monthStr) \((toDateComps.year ?? 0) - 2000)"
     }
 }
 
@@ -45,12 +46,12 @@ class RecordWeightViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchWeightData(date: Date = Date(), numWeeks: Int = 12) async throws {
+    func fetchWeightData(date: Date = Date(), numWeeks: Int = 100) async throws {
         try await healthStore.authorize()
         var endDate = date
         var startDate = startOfWeek(date)
         var weightData = [WeightDataPoint]()
-        for _ in 0..<numWeeks {  // For last 8 weeks
+        for _ in 0..<numWeeks {  // For last x weeks
             // Find most recent data point in last 7 days from now
             if let weightDataPoint = try await healthStore.weight(fromDate: startDate,
                                                                   toDate: endDate) {
@@ -76,7 +77,13 @@ class RecordWeightViewModel: ObservableObject {
         }
         return WeightDataPoint.weekStr(from: firstRecordedDate.startOfWeek, to: dataPoint.date.startOfWeek)
     }
-
+        
+    func weightStr(_ weight: Double) -> String {
+        let stones = Int(weight) / 14
+        let pounds = Int(weight) % 14
+        return "\(stones)st \(pounds)"
+    }
+    
     var currentWeight: String {
         let lastWeight = latestWeight
         let stone = Int(lastWeight/14)
