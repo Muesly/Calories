@@ -25,12 +25,11 @@ struct CalorieDataPointsType: Identifiable {
 
 struct WeeklyStat: Identifiable, Equatable {
     let id = UUID()
-    let department: String
     let calories: Int
     let stat: String
 
     static func == (lhs: Self, rhs: Self) -> Bool {
-        (lhs.department == rhs.department) && (lhs.calories == rhs.calories) && (lhs.stat == rhs.stat)
+        (lhs.calories == rhs.calories) && (lhs.stat == rhs.stat)
     }
 }
 
@@ -143,13 +142,13 @@ class WeeklyChartViewModel: ObservableObject {
         // Calculate weekly progres before cropping to e.g. two days for watch app
         let progress = -differenceData.reduce(0, { $0 + $1.calories })
         if progress < 3500 {
-            weeklyData = [WeeklyStat(department: "Production", calories: progress, stat: "Burnt")]
-            weeklyData.append(WeeklyStat(department: "Production", calories: 3500 - progress, stat: "To Go"))
-            weeklyData.append(WeeklyStat(department: "Production", calories: 0, stat: "Can Eat"))
+            weeklyData = [WeeklyStat(calories: progress, stat: "Burnt")]
+            weeklyData.append(WeeklyStat(calories: 3500 - progress, stat: "To Go"))
+            weeklyData.append(WeeklyStat(calories: 0, stat: "Can Eat"))
         } else if progress > 3500 {
-            weeklyData = [WeeklyStat(department: "Production", calories: 3500, stat: "Burnt")]
-            weeklyData.append(WeeklyStat(department: "Production", calories: 0, stat: "To Go"))
-            weeklyData.append(WeeklyStat(department: "Production", calories: progress - 3500, stat: "Can Eat"))
+            weeklyData = [WeeklyStat(calories: 3500, stat: "Burnt")]
+            weeklyData.append(WeeklyStat(calories: 0, stat: "To Go"))
+            weeklyData.append(WeeklyStat(calories: progress - 3500, stat: "Can Eat"))
         }
 
         startOfWeek = findStartOfWeek(data: differenceData)

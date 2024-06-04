@@ -43,8 +43,7 @@ final class AddEntryViewTests: XCTestCase {
             ViewHosting.host(view: subject)
             var texts = try subject.inspect().findAll(ViewType.Text.self)
             XCTAssertEqual(try texts.map({ try $0.string() }),
-                           ["Food", "Enter food or drink...", "Calories", "", "Time consumed", "Add Biscuit", "Biscuit",
-                            "Recent foods you\'ve had at this time", "Morning Snack - 0 Calories", "Close"])
+                           ["Food", "Enter food or drink...", "Calories", "", "🥣", "☕️", "🥗", "🥜", "🍲", "🍺", "", "Date:", "Add Biscuit", "Biscuit", "Recent foods you\'ve had at this time", "Morning Snack - 0 Calories", "Close"])
 
             let biscuitCell = try subject.inspect().find(navigationLink: "Biscuit")
             let addEntryInputFieldsView = try biscuitCell.view(AddEntryInputFieldsView.self).actualView()
