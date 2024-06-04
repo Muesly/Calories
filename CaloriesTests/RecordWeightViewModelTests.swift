@@ -58,7 +58,7 @@ final class RecordWeightViewModelTests: XCTestCase {
         let weightDataPoint = WeightDataPoint(date: dateFromComponents(), weight: 192, deficit: 0)
         let weightDataPoint2 = WeightDataPoint(date: dateFromComponents().addingTimeInterval(20 * secsPerDay), weight: 188, deficit: 0)
         subject.weightData = [weightDataPoint, weightDataPoint2]
-        XCTAssertEqual(subject.weekStr(forDataPoint: weightDataPoint2), "16/1/23")
+        XCTAssertEqual(subject.weekStr(forDataPoint: weightDataPoint2), "16 Jan 23")
     }
 }
 

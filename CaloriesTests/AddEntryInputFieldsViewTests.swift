@@ -31,7 +31,7 @@ final class AddEntryInputFieldsViewTests: XCTestCase {
 
         let expectation = expectation(description: "Add food button tap")
         let timeConsumedBinding = Binding<Date>(wrappedValue: date)
-        let foodAddedBinding = Binding<Bool>(wrappedValue: false)
+        let foodAddedAtTimeBinding = Binding<Date?>(wrappedValue: nil)
         var searchText = "Biscuit"
         let searchTextBinding = Binding(get: { searchText }, set: {
             searchText = $0
@@ -43,18 +43,17 @@ final class AddEntryInputFieldsViewTests: XCTestCase {
                                               defCalories: 60,
                                               defTimeConsumed: timeConsumedBinding,
                                               searchText: searchTextBinding,
-                                              foodAdded: foodAddedBinding)
+                                              foodAddedAtTime: foodAddedAtTimeBinding)
         ViewHosting.host(view: subject)
 
         XCTAssertEqual(subject.foodDescription, "Biscuit")
         XCTAssertEqual(subject.calories, 60)
 
-        XCTAssertFalse(foodAddedBinding.wrappedValue)
+        XCTAssertNil(foodAddedAtTimeBinding.wrappedValue)
 
         let addFoodButton = try subject.inspect().find(button: "Add Biscuit")
         try addFoodButton.tap()
-
         wait(for: [expectation], timeout: 0.5)
-        XCTAssertTrue(foodAddedBinding.wrappedValue)
+        XCTAssertEqual(date, foodAddedAtTimeBinding.wrappedValue)
     }
 }

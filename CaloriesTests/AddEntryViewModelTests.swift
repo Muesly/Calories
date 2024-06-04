@@ -90,8 +90,8 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date)
-        let suggestions = subject.getSuggestions()
-        XCTAssertEqual(suggestions, [])
+        subject.fetchSuggestions()
+        XCTAssertEqual(subject.suggestions, [])
     }
 
     func testWhenNoSuggestionsShownForAFoodEntryWhenFoodNotInSameMealTime() async throws {
@@ -100,8 +100,8 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date.addingTimeInterval(-secsPerDay - (3 * 3600)))
-        let suggestions = subject.getSuggestions()
-        XCTAssertEqual(suggestions, [])
+        subject.fetchSuggestions()
+        XCTAssertEqual(subject.suggestions, [])
     }
 
     func testWhenSuggestionsShownForAFoodEntryWhenFoodInSameMealTime() async throws {
@@ -110,8 +110,8 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date.addingTimeInterval(-secsPerDay))
-        let suggestions = subject.getSuggestions()
-        XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
+        subject.fetchSuggestions()
+        XCTAssertEqual(subject.suggestions, [Suggestion(name: "Some more food")])
     }
 
     func testSuggestionsFuzzyMatched() async throws {
@@ -120,11 +120,11 @@ final class AddEntryViewModelTests: XCTestCase {
         try await subject.addFood(foodDescription: "Some more food",
                                   calories: 100,
                                   timeConsumed: date.addingTimeInterval(-secsPerDay))
-        var suggestions = subject.getSuggestions(searchText: "more")
-        XCTAssertEqual(suggestions, [Suggestion(name: "Some more food")])
+        subject.fetchSuggestions(searchText: "more")
+        XCTAssertEqual(subject.suggestions, [Suggestion(name: "Some more food")])
 
-        suggestions = subject.getSuggestions(searchText: "mxe")  // Shouldn't return results
-        XCTAssertEqual(suggestions, [])
+        subject.fetchSuggestions(searchText: "mxe")  // Shouldn't return results
+        XCTAssertEqual(subject.suggestions, [])
     }
 
     func testDefaultCaloriesForTwoSimilarFoodEntriesReturnsLatest() async throws {
