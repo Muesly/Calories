@@ -15,7 +15,7 @@ struct WeeklyChartView: View {
     @State var calloutViewDetails: CallOutViewDetails = .init()
 
     var body: some View {
-        VStack(spacing: 40) {
+        VStack(spacing: 20) {
             Chart {
                 ForEach(viewModel.daysCaloriesData) { dayCalorieData in
                     ForEach(dayCalorieData.dataPoints) {
@@ -74,7 +74,7 @@ struct WeeklyChartView: View {
                                 .foregroundStyle(by: .value("Production", $0.stat))
                             }
                         }
-                        .chartXScale(domain: 0...8400)
+                        .chartXScale(domain: 0...viewModel.weeklyData.reduce(0, { $0 + $1.calories }))
                         .chartForegroundStyleScale(["Burnt": .blue, "Can Eat": .green, "To Go": .orange])
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
