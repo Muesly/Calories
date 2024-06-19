@@ -105,3 +105,9 @@ struct AddEntryView: View {
     }
 }
 
+#Preview {
+    AddEntryView(viewModel: .init(healthStore: MockHealthStore(),
+                                  container: PersistenceController(inMemory: true).container), 
+                 showingAddEntryView: .constant(false),
+                 currentDate: Date())
+}
