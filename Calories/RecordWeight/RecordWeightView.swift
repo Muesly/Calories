@@ -48,9 +48,8 @@ struct RecordWeightView: View {
     }
 
     var body: some View {
+        NavigationView {
         VStack {
-            Text("Weight & Deficits Over Time")
-                .bold()
             ZStack {
                 let weights = viewModel.weightData.map { $0.weight }
                 let weightsMin = weights.min() ?? 0
@@ -152,7 +151,7 @@ struct RecordWeightView: View {
         }
         .padding()
         .font(.brand)
-        .navigationTitle("Record Weight")
+            .navigationTitle("Weight over time")
         .toolbar {
             ToolbarItem {
                 Button("Close") {
@@ -172,6 +171,7 @@ struct RecordWeightView: View {
         .alert("Failed to access vehicle health",
                isPresented: $isShowingFailureToAuthoriseAlert) {
             Button("OK", role: .cancel) {}
+            }
         }
     }
         
