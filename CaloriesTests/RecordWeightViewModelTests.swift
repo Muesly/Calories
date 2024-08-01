@@ -60,5 +60,18 @@ final class RecordWeightViewModelTests: XCTestCase {
         subject.weightData = [weightDataPoint, weightDataPoint2]
         XCTAssertEqual(subject.weekStr(forDataPoint: weightDataPoint2), "16 Jan 23")
     }
+    
+    func testProgressShownInStonesAndPounds() async throws {
+        let mockHealthStore = MockHealthStore()
+        mockHealthStore.caloriesConsumed = 2000
+        mockHealthStore.caloriesBurned = 2200
+        mockHealthStore.weightBetweenDates = [200, 190, 180]
+        let subject = RecordWeightViewModel(healthStore: mockHealthStore)
+
+        let date = dateFromComponents()
+        try await subject.fetchWeightData(date: date, numWeeks: 2)
+
+        XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 6 lbs \u{2193}")
+    }
 }
 
