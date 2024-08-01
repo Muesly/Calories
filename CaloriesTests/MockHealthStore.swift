@@ -58,9 +58,13 @@ class MockHealthStore: HealthStore {
     }
 
     func weight(fromDate: Date, toDate: Date) async throws -> Double? {
-        let weight = weightBetweenDates.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
-        weightBetweenDatesIndex += 1
-        return weight
+        if weightBetweenDates.isEmpty {
+            return weight
+        } else {
+            let weight = weightBetweenDates.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
+            weightBetweenDatesIndex += 1
+            return weight
+        }
     }
 
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
