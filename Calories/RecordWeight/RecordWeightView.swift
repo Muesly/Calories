@@ -14,6 +14,7 @@ struct RecordWeightView: View {
     @Environment(\.scenePhase) var scenePhase
     @ObservedObject var viewModel: RecordWeightViewModel
     @State private var isShowingFailureToAuthoriseAlert = false
+    @State private var isRefreshing = false
     
     init(viewModel: RecordWeightViewModel) {
         self.viewModel = viewModel
@@ -78,6 +79,7 @@ struct RecordWeightView: View {
                             .foregroundStyle(.blue.opacity(0.3))
                     }
                 }
+                .opacity(isRefreshing ? 0 : 1)
 
                 Chart {
                     ForEach(viewModel.weightData) { weightDataPoint in
@@ -99,6 +101,10 @@ struct RecordWeightView: View {
                     }
                 }
                 .chartXAxis(.hidden)
+                .opacity(isRefreshing ? 0 : 1)
+                if isRefreshing {
+                    ProgressView()
+                }
             }
             .padding()
             .frame(height: 300)
@@ -155,6 +161,7 @@ struct RecordWeightView: View {
             }
         }
         .task {
+            isRefreshing = true
             refresh()
         }
         .onChange(of: scenePhase) { newPhase in
@@ -175,6 +182,7 @@ struct RecordWeightView: View {
             } catch {
                 isShowingFailureToAuthoriseAlert = true
             }
+            isRefreshing = false
         }
     }
 }
