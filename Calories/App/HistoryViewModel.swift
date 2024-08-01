@@ -16,7 +16,7 @@ class HistoryViewModel: ObservableObject {
     var dateForEntries: Date = Date()
     @Published var daySections: [Day] = []
 
-    init(healthStore: HealthStore = HKHealthStore(),
+    init(healthStore: HealthStore,
          container: NSPersistentContainer = PersistenceController.shared.container) {
         self.healthStore = healthStore
         self.container = container

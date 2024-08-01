@@ -12,7 +12,7 @@ import SwiftUI
 class AddEntryViewModel {
     let healthStore: HealthStore
 
-    init(healthStore: HealthStore = HKHealthStore()) {
+    init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
 

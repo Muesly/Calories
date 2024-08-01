@@ -130,7 +130,7 @@ struct AddEntryInputFieldsView: View {
 
 struct AddEntryInputFieldsView_Previews: PreviewProvider {
     static var previews: some View {
-        AddEntryInputFieldsView(viewModel: AddEntryViewModel(),
+        AddEntryInputFieldsView(viewModel: AddEntryViewModel(healthStore: StubbedHealthStore()),
                                 defFoodDescription: "Some food",
                                 defCalories: 100,
                                 defTimeConsumed: .constant(Date()),

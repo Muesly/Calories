@@ -37,7 +37,7 @@ class RecordWeightViewModel: ObservableObject {
     @Published var weightData: [WeightDataPoint] = []
     @Published var latestWeight: Int = 0
 
-    init(healthStore: HealthStore = HKHealthStore()) {
+    init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
 

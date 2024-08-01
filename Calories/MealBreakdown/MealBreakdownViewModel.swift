@@ -13,7 +13,7 @@ class MealBreakdownViewModel: ObservableObject {
     let healthStore: HealthStore
     @Published var caloriesPerMealType: [(Double, Color)] = []
 
-    init(healthStore: HealthStore = HKHealthStore()) {
+    init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
 
