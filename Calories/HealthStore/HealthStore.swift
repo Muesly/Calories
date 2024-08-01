@@ -7,6 +7,7 @@
 
 import Foundation
 import HealthKit
+import SwiftUI
 
 protocol HealthStore {
     func authorize() async throws
@@ -279,5 +280,16 @@ extension HKHealthStore: HealthStore {
                                         end: timeRecorded,
                                         metadata: [HKMetadataKeyWasUserEntered: true])
         try await save(newBodyMass)
+    }
+}
+
+private struct HealthStoreKey: EnvironmentKey {
+    static let defaultValue: HealthStore = HKHealthStore()
+}
+
+extension EnvironmentValues {
+    var healthStore: HealthStore {
+        get { self[HealthStoreKey.self] }
+        set { self[HealthStoreKey.self] = newValue }
     }
 }

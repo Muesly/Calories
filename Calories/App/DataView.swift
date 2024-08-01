@@ -10,10 +10,13 @@ import HealthKit
 import SwiftUI
 
 struct DataView: View {
-    private let viewModel = DataViewModel(healthStore: HKHealthStore(), segmentLengthInDays: 14)
+    private let viewModel: DataViewModel
     
     @State var text = "Calculating"
     
+    init(healthStore: HealthStore) {
+        self.viewModel = DataViewModel(healthStore: healthStore, segmentLengthInDays: 14)
+    }
     var body: some View {
         Text(text)
             .onAppear {

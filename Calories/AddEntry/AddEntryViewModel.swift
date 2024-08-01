@@ -20,7 +20,7 @@ class AddEntryViewModel: ObservableObject {
     private var dateForEntries: Date = Date()
     @Published var suggestions: [Suggestion] = []
     
-    init(healthStore: HealthStore = HKHealthStore(),
+    init(healthStore: HealthStore,
          container: NSPersistentContainer = PersistenceController.shared.container) {
         self.healthStore = healthStore
         self.container = container

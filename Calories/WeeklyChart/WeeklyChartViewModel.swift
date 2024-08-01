@@ -47,7 +47,7 @@ class WeeklyChartViewModel: ObservableObject {
     @Published var previousWeekEnabled: Bool = false
     @Published var nextWeekEnabled: Bool = false
 
-    init(healthStore: HealthStore = HKHealthStore(),
+    init(healthStore: HealthStore,
          numberOfDays: Int = 7) {
         self.healthStore = healthStore
         self.numberOfDays = numberOfDays

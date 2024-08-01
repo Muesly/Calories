@@ -10,14 +10,21 @@ import CoreData
 
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.healthStore) var healthStore
 
-    private let historyViewModel = HistoryViewModel()
-    private let weeklyChartViewModel = WeeklyChartViewModel()
+    private let historyViewModel: HistoryViewModel
+    private let weeklyChartViewModel: WeeklyChartViewModel
 
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
     @State var showingRecordWeightView = false
     @State var entryDeleted = false
+
+    init(historyViewModel: HistoryViewModel,
+         weeklyChartViewModel: WeeklyChartViewModel) {
+        self.historyViewModel = historyViewModel
+        self.weeklyChartViewModel = weeklyChartViewModel
+    }
 
     var body: some View {
         NavigationView {
@@ -45,40 +52,40 @@ struct CaloriesView: View {
             .scrollContentBackground(.hidden)
             .cornerRadius(10)
             .sheet(isPresented: $showingAddEntryView) {
-                AddEntryView(viewModel: AddEntryViewModel(),
+                AddEntryView(viewModel: AddEntryViewModel(healthStore: healthStore),
                              showingAddEntryView: $showingAddEntryView)
             }
             .sheet(isPresented: $showingAddExerciseView) {
-                AddExerciseView(viewModel: AddExerciseViewModel(),
+                AddExerciseView(viewModel: AddExerciseViewModel(healthStore: healthStore),
                                 showingAddExerciseView: $showingAddExerciseView)
             }
             .sheet(isPresented: $showingRecordWeightView) {
-                RecordWeightView(viewModel: RecordWeightViewModel())
+                RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
             }
-            .onChange(of: scenePhase) { newPhase in
+            .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {
                     refresh()
                 }
             }
-            .onChange(of: entryDeleted) { isDeleted in
+            .onChange(of: entryDeleted) { _, isDeleted in
                 if isDeleted == true {
                     refresh()
                 }
                 entryDeleted = false
             }
-            .onChange(of: showingAddEntryView) { isBeingShown in
+            .onChange(of: showingAddEntryView) { _, isBeingShown in
                 if !isBeingShown { refresh() }
             }
-            .onChange(of: showingAddExerciseView) { isBeingShown in
+            .onChange(of: showingAddExerciseView) { _, isBeingShown in
                 if !isBeingShown { refresh() }
             }
         }
     }
 
     private func refresh() {
+        historyViewModel.fetchDaySections()
         Task {
             await weeklyChartViewModel.fetchDaysCalorieData()
-            await historyViewModel.fetchDaySections()
         }
     }
 }
