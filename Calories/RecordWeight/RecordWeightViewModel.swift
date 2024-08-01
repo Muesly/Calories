@@ -51,7 +51,7 @@ class RecordWeightViewModel: ObservableObject {
         var endDate = date
         var startDate = startOfWeek(date)
         var weightData = [WeightDataPoint]()
-        for _ in 0..<numWeeks {  // For last x weeks
+        for _ in 0...numWeeks {  // For last x weeks
             // Find most recent data point in last 7 days from now
             if let weightDataPoint = try await healthStore.weight(fromDate: startDate,
                                                                   toDate: endDate) {
@@ -94,10 +94,15 @@ class RecordWeightViewModel: ObservableObject {
     var totalLoss: String {
         let startingWeight = Int(weightData.first?.weight ?? 0)
         let lastWeight = latestWeight
-        let upDownPounds = Int(abs(lastWeight - startingWeight))
+
         let down = "\u{2193}"
         let up = "\u{2191}"
-        return "Progress: \(upDownPounds) lbs \(lastWeight > startingWeight ? up : down)"
+        let directionStr = lastWeight > startingWeight ? up : down
+
+        let upDownPounds = Int(abs(lastWeight - startingWeight))
+        let upDownStone = upDownPounds / 14
+        let upDownPoundsLeft = upDownPounds % 14
+        return "Progress: \(upDownStone) stone \(upDownPoundsLeft) lbs \(directionStr)"
     }
 
     func decreaseWeight() {
