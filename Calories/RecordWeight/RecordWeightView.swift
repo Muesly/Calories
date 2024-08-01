@@ -102,7 +102,7 @@ struct RecordWeightView: View {
                 .chartXAxis(.hidden)
                 .opacity(isRefreshing ? 0 : 1)
                 if isRefreshing {
-                    ProgressView()
+                        ProgressView().accessibilityIdentifier("Loading Weight Chart")
                 }
             }
             .padding()

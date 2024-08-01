@@ -40,11 +40,11 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "YES"
+            skipped = "NO"
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EA097DA229918CA000735129"
+               BlueprintIdentifier = "DDDCA4092C5C157800445F06"
                BuildableName = "CaloriesUITests.xctest"
                BlueprintName = "CaloriesUITests"
                ReferencedContainer = "container:Calories.xcodeproj">

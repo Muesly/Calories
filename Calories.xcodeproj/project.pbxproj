@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -79,6 +79,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		DDDCA4102C5C157800445F06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EA097D7C29918C9E00735129 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA097D8329918C9E00735129;
+			remoteInfo = Calories;
+		};
 		EA097D9A29918CA000735129 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EA097D7C29918C9E00735129 /* Project object */;
@@ -120,6 +127,7 @@
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
+		DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaloriesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryInputFieldsView.swift; sourceTree = "<group>"; };
 		EA08544F299BED050029DD42 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EA085451299C01350029DD42 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
@@ -182,7 +190,18 @@
 		EAFC439E29A1525B00945E70 /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DDDCA40B2C5C157800445F06 /* CaloriesUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CaloriesUITests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		DDDCA4072C5C157800445F06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA097D8129918C9E00735129 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -230,6 +249,7 @@
 				EA097D9C29918CA000735129 /* CaloriesTests */,
 				EA76757E299D844E00771517 /* Calories Watch App */,
 				EA3146F429A2C6F3002AAA45 /* CaloriesWidget */,
+				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
 				EA3146EF29A2C6F3002AAA45 /* Frameworks */,
 				EA097D8529918C9E00735129 /* Products */,
 			);
@@ -243,6 +263,7 @@
 				EA76757A299D844D00771517 /* Calories Watch App.app */,
 				EA76758C299D845000771517 /* Calories Watch AppTests.xctest */,
 				EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */,
+				DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -423,6 +444,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		DDDCA4092C5C157800445F06 /* CaloriesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDDCA4122C5C157800445F06 /* Build configuration list for PBXNativeTarget "CaloriesUITests" */;
+			buildPhases = (
+				DDDCA4062C5C157800445F06 /* Sources */,
+				DDDCA4072C5C157800445F06 /* Frameworks */,
+				DDDCA4082C5C157800445F06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DDDCA4112C5C157800445F06 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
+			);
+			name = CaloriesUITests;
+			packageProductDependencies = (
+			);
+			productName = CaloriesUITests;
+			productReference = DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		EA097D8329918C9E00735129 /* Calories */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EA097DAD29918CA000735129 /* Build configuration list for PBXNativeTarget "Calories" */;
@@ -523,9 +567,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1410;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					DDDCA4092C5C157800445F06 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = EA097D8329918C9E00735129;
+					};
 					EA097D8329918C9E00735129 = {
 						CreatedOnToolsVersion = 14.1;
 					};
@@ -563,6 +611,7 @@
 			targets = (
 				EA097D8329918C9E00735129 /* Calories */,
 				EA097D9829918CA000735129 /* CaloriesTests */,
+				DDDCA4092C5C157800445F06 /* CaloriesUITests */,
 				EA767579299D844D00771517 /* Calories Watch App */,
 				EA76758B299D845000771517 /* Calories Watch AppTests */,
 				EA3146ED29A2C6F2002AAA45 /* CaloriesWidgetExtension */,
@@ -571,6 +620,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		DDDCA4082C5C157800445F06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA097D8229918C9E00735129 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -614,6 +670,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DDDCA4062C5C157800445F06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EA097D8029918C9E00735129 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -713,6 +776,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DDDCA4112C5C157800445F06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA097D8329918C9E00735129 /* Calories */;
+			targetProxy = DDDCA4102C5C157800445F06 /* PBXContainerItemProxy */;
+		};
 		EA097D9B29918CA000735129 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EA097D8329918C9E00735129 /* Calories */;
@@ -731,6 +799,61 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		DDDCA4132C5C157800445F06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.CaloriesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = Calories;
+			};
+			name = Debug;
+		};
+		DDDCA4142C5C157800445F06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.CaloriesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = Calories;
+			};
+			name = Release;
+		};
 		EA097DAB29918CA000735129 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -865,7 +988,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -900,7 +1023,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -924,13 +1047,17 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6BTW6RT2T4;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Calories.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Calories";
 			};
 			name = Debug;
@@ -944,13 +1071,17 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6BTW6RT2T4;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Calories.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Calories";
 			};
 			name = Release;
@@ -1126,6 +1257,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DDDCA4122C5C157800445F06 /* Build configuration list for PBXNativeTarget "CaloriesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDDCA4132C5C157800445F06 /* Debug */,
+				DDDCA4142C5C157800445F06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EA097D7F29918C9E00735129 /* Build configuration list for PBXProject "Calories" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
