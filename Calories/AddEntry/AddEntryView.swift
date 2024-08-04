@@ -72,10 +72,10 @@ struct AddEntryView: View {
             .onAppear {
                 viewModel.fetchSuggestions(searchText: searchText)
             }
-            .onChange(of: searchText) { searchText in
+            .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
             }
-            .onChange(of: foodAddedAtTime) { foodAddedAtTime in
+            .onChange(of: foodAddedAtTime) { _, foodAddedAtTime in
                 mealItemsViewModel.fetchMealFoodEntries()
                 if let foodAddedAtTime {
                     timeConsumed = foodAddedAtTime

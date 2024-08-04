@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import Calories
 
 class MockHealthStore: HealthStore {
     var authorizeError: Error?

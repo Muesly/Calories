@@ -108,7 +108,7 @@ struct AddEntryInputFieldsView: View {
             .background(Colours.backgroundSecondary)
             .cornerRadius(10)
             Spacer()
-            .onChange(of: scenePhase) { newPhase in
+            .onChange(of: scenePhase) { _, newPhase in
                 if AddEntryViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
                     Task {
                         foodDescription = ""

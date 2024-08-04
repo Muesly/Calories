@@ -15,6 +15,7 @@ final class MealPickerViewTests: XCTestCase {
         return dc.date!
     }
 
+    @MainActor
     func testSettingOfMeals() {
         var timeConsumed = dateFromComponents()
         let subject = MealPickerViewModel(timeConsumed: .init(get: {

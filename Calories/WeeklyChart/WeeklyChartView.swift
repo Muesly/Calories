@@ -105,7 +105,10 @@ struct WeeklyChartView: View {
     }
 
     private func showCallout(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {
-        let xPosition = location.x - geometry[proxy.plotAreaFrame].origin.x
+        guard let plotFrame = proxy.plotFrame else {
+            return
+        }
+        let xPosition = location.x - geometry[plotFrame].origin.x
         guard let day: String = proxy.value(atX: xPosition) else {
             return
         }

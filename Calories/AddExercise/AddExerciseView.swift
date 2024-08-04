@@ -90,7 +90,7 @@ struct AddExerciseView: View {
                 .background(Colours.backgroundSecondary)
                 .cornerRadius(10)
                 Spacer()
-                    .onChange(of: scenePhase) { newPhase in
+                    .onChange(of: scenePhase) { _, newPhase in
                         if AddExerciseViewModel.shouldClearFields(phase: newPhase, date: timeExercised) {
                             Task {
                                 exerciseDescription = ""
