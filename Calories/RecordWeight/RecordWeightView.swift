@@ -15,6 +15,8 @@ struct RecordWeightView: View {
     @ObservedObject var viewModel: RecordWeightViewModel
     @State private var isShowingFailureToAuthoriseAlert = false
     @State private var isRefreshing = false
+    @State private var applied = false
+    @State private var showConfetti = false
     
     init(viewModel: RecordWeightViewModel) {
         self.viewModel = viewModel
@@ -132,6 +134,8 @@ struct RecordWeightView: View {
                     Task {
                         do {
                             try await viewModel.applyNewWeight()
+                            applied = !applied
+                            showConfetti = viewModel.hasLostWeight
                         } catch {
                             print("Failed to apply new weight")
                         }
@@ -142,6 +146,7 @@ struct RecordWeightView: View {
                         .bold()
                 }
                 .buttonStyle(.borderedProminent)
+                .sensoryFeedback(.success, trigger: applied)
                 Text(viewModel.totalLoss)
             }
             .frame(maxWidth: .infinity)
@@ -159,6 +164,7 @@ struct RecordWeightView: View {
                 }
             }
         }
+        .displayConfetti(isActive: $showConfetti)
         .task {
             isRefreshing = true
             refresh()

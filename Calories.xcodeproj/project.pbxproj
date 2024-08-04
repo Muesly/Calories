@@ -10,6 +10,7 @@
 		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
 		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
+		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		EA08544E299BD62A0029DD42 /* AddEntryInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */; };
 		EA085450299BED050029DD42 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
 		EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085451299C01350029DD42 /* WeeklyChartView.swift */; };
@@ -126,6 +127,7 @@
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
+		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaloriesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA08544D299BD6290029DD42 /* AddEntryInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEntryInputFieldsView.swift; sourceTree = "<group>"; };
 		EA08544F299BED050029DD42 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 			isa = PBXGroup;
 			children = (
 				EAD2115A29A38F860007A813 /* RecordWeightView.swift */,
+				DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */,
 				EAD2115C29A390E80007A813 /* RecordWeightViewModel.swift */,
 			);
 			path = RecordWeight;
@@ -697,6 +700,7 @@
 				EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */,
 				EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */,
 				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,
+				DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */,
 				EA2C9B9029B4B2BD0019DB36 /* MealBreakdownView.swift in Sources */,
 				EA2D490629944E3000248864 /* AddEntryView.swift in Sources */,
 				EA097DC52993986D00735129 /* Model.xcdatamodeld in Sources */,

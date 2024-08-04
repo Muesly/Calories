@@ -36,7 +36,8 @@ class RecordWeightViewModel: ObservableObject {
     let healthStore: HealthStore
     @Published var weightData: [WeightDataPoint] = []
     @Published var latestWeight: Int = 0
-
+    var originalWeight = 0
+    
     init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
@@ -69,6 +70,9 @@ class RecordWeightViewModel: ObservableObject {
         }
         self.weightData = weightData.reversed()
         self.latestWeight = Int(weightData.first?.weight ?? 0.0)
+        if originalWeight == 0 {
+            originalWeight = self.latestWeight
+        }
     }
 
     func weekStr(forDataPoint dataPoint: WeightDataPoint) -> String {
@@ -105,6 +109,10 @@ class RecordWeightViewModel: ObservableObject {
         return "Progress: \(upDownStone) stone \(upDownPoundsLeft) lbs \(directionStr)"
     }
 
+    var hasLostWeight: Bool {
+        originalWeight > self.latestWeight
+    }
+    
     func decreaseWeight() {
         latestWeight -= 1
     }
