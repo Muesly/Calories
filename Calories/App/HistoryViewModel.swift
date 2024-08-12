@@ -9,12 +9,13 @@ import CoreData
 import HealthKit
 import SwiftUI
 
-class HistoryViewModel: ObservableObject {
+@Observable
+class HistoryViewModel {
     private let container: NSPersistentContainer
     private let healthStore: HealthStore
     private var timeFormatter: DateFormatter = DateFormatter()
     var dateForEntries: Date = Date()
-    @Published var daySections: [Day] = []
+    var daySections: [Day] = []
 
     init(healthStore: HealthStore,
          container: NSPersistentContainer = PersistenceController.shared.container) {

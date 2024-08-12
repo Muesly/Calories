@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MealBreakdownView: View {
-    @ObservedObject var viewModel: MealBreakdownViewModel
+    var viewModel: MealBreakdownViewModel
 
     init(viewModel: MealBreakdownViewModel) {
         self.viewModel = viewModel

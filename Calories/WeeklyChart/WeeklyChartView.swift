@@ -9,7 +9,7 @@ import Charts
 import SwiftUI
 
 struct WeeklyChartView: View {
-    @ObservedObject var viewModel: WeeklyChartViewModel
+    var viewModel: WeeklyChartViewModel
     @State var isCalloutShown: Bool = false
     @State var calloutDay: String = ""
     @State var calloutViewDetails: CallOutViewDetails = .init()

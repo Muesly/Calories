@@ -10,14 +10,14 @@ import SwiftUI
 
 struct AddEntryView: View {
     @Environment(\.dismissSearch) private var dismissSearch
-    @ObservedObject private var viewModel: AddEntryViewModel
+    private var viewModel: AddEntryViewModel
     @State var searchText = ""
     @State var foodAddedAtTime: Date?
     @State private var readyToNavigateToAddEntryInputFields: Bool = false
     @Binding var showingAddEntryView: Bool
     @State private var newEntryAdded: Bool = false
     @State var timeConsumed: Date = Date()
-    @ObservedObject private var mealItemsViewModel: MealItemsViewModel
+    private var mealItemsViewModel: MealItemsViewModel
 
     init(viewModel: AddEntryViewModel,
          showingAddEntryView: Binding<Bool>,
