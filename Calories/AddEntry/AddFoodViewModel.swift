@@ -11,7 +11,7 @@ import HealthKit
 import SwiftUI
 
 @Observable
-class AddEntryViewModel: ObservableObject {
+class AddFoodViewModel: ObservableObject {
     let container: NSPersistentContainer
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()

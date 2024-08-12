@@ -1,5 +1,5 @@
 //
-//  AddEntryViewModelTests.swift
+//  AddFoodViewModelTests.swift
 //  CaloriesTests
 //
 //  Created by Tony Short on 11/02/2023.
@@ -11,8 +11,8 @@ import XCTest
 
 @testable import Calories
 
-final class AddEntryViewModelTests: XCTestCase {
-    var subject: AddEntryViewModel!
+final class AddFoodViewModelTests: XCTestCase {
+    var subject: AddFoodViewModel!
     var mockHealthStore: MockHealthStore!
 
     var controller: PersistenceController!
@@ -26,7 +26,7 @@ final class AddEntryViewModelTests: XCTestCase {
     override func setUpWithError() throws {
         controller = PersistenceController(inMemory: true)
         mockHealthStore = MockHealthStore()
-        subject = AddEntryViewModel(healthStore: mockHealthStore,
+        subject = AddFoodViewModel(healthStore: mockHealthStore,
                                         container: container)
     }
 
@@ -75,12 +75,12 @@ final class AddEntryViewModelTests: XCTestCase {
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {
-        let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
+        let result = AddFoodViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
         XCTAssertTrue(result)
     }
 
     func testNoClearDownOfInProgressDetailsOnSameDay() async {
-        let result = AddEntryViewModel.shouldClearFields(phase: .active, date: Date())
+        let result = AddFoodViewModel.shouldClearFields(phase: .active, date: Date())
         XCTAssertFalse(result)
     }
 

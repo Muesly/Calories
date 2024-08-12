@@ -1,5 +1,5 @@
 //
-//  AddEntryView.swift
+//  AddFoodView.swift
 //  Calories
 //
 //  Created by Tony Short on 08/02/2023.
@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct AddEntryView: View {
+struct AddFoodView: View {
     @Environment(\.dismissSearch) private var dismissSearch
-    private var viewModel: AddEntryViewModel
+    private var viewModel: AddFoodViewModel
     @State var searchText = ""
     @State var foodAddedAtTime: Date?
     @State private var readyToNavigateToAddEntryInputFields: Bool = false
@@ -19,7 +19,7 @@ struct AddEntryView: View {
     @State var timeConsumed: Date = Date()
     private var mealItemsViewModel: MealItemsViewModel
 
-    init(viewModel: AddEntryViewModel,
+    init(viewModel: AddFoodViewModel,
          showingAddEntryView: Binding<Bool>,
          currentDate: Date = Date()) {
         self.viewModel = viewModel
@@ -33,7 +33,7 @@ struct AddEntryView: View {
             List {
                 if !searchText.isEmpty {
                     NavigationLink {
-                        AddEntryInputFieldsView(viewModel: viewModel,
+                        AddFoodInputFieldsView(viewModel: viewModel,
                                                 defFoodDescription: searchText,
                                                 defCalories: viewModel.defCaloriesFor(searchText),
                                                 defTimeConsumed: $timeConsumed,
@@ -46,7 +46,7 @@ struct AddEntryView: View {
                 Section("Recent foods you've had at this time") {
                     ForEach(viewModel.suggestions, id: \.self) { suggestion in
                         NavigationLink {
-                            AddEntryInputFieldsView(viewModel: viewModel,
+                            AddFoodInputFieldsView(viewModel: viewModel,
                                                     defFoodDescription: suggestion.name,
                                                     defCalories: viewModel.defCaloriesFor(suggestion.name),
                                                     defTimeConsumed: $timeConsumed,
@@ -86,7 +86,7 @@ struct AddEntryView: View {
                 }
             }
             .navigationDestination(isPresented: $readyToNavigateToAddEntryInputFields) {
-                AddEntryInputFieldsView(viewModel: viewModel,
+                AddFoodInputFieldsView(viewModel: viewModel,
                                         defFoodDescription: searchText,
                                         defCalories: viewModel.defCaloriesFor(searchText),
                                         defTimeConsumed: $timeConsumed,
@@ -106,7 +106,7 @@ struct AddEntryView: View {
 }
 
 #Preview {
-    AddEntryView(viewModel: .init(healthStore: MockHealthStore(),
+    AddFoodView(viewModel: .init(healthStore: MockHealthStore(),
                                   container: PersistenceController(inMemory: true).container), 
                  showingAddEntryView: .constant(false),
                  currentDate: Date())

@@ -52,7 +52,7 @@ struct CaloriesView: View {
             .scrollContentBackground(.hidden)
             .cornerRadius(10)
             .sheet(isPresented: $showingAddEntryView) {
-                AddEntryView(viewModel: AddEntryViewModel(healthStore: healthStore),
+                AddFoodView(viewModel: AddFoodViewModel(healthStore: healthStore),
                              showingAddEntryView: $showingAddEntryView)
             }
             .sheet(isPresented: $showingAddExerciseView) {
