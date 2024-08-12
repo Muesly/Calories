@@ -10,10 +10,6 @@ import Foundation
 import HealthKit
 import SwiftUI
 
-struct Suggestion: Hashable {
-    let name: String
-}
-
 @Observable
 class AddEntryViewModel: ObservableObject {
     let container: NSPersistentContainer
