@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct MealItemsView: View {
-    @ObservedObject var viewModel: MealItemsViewModel
+    var viewModel: MealItemsViewModel
 
     init(viewModel: MealItemsViewModel) {
         self.viewModel = viewModel

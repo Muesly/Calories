@@ -9,9 +9,10 @@ import Foundation
 import HealthKit
 import SwiftUI
 
-class MealBreakdownViewModel: ObservableObject {
+@Observable
+class MealBreakdownViewModel {
     let healthStore: HealthStore
-    @Published var caloriesPerMealType: [(Double, Color)] = []
+    var caloriesPerMealType: [(Double, Color)] = []
 
     init(healthStore: HealthStore) {
         self.healthStore = healthStore

@@ -69,11 +69,12 @@ enum MealType: String, Equatable {
     }
 }
 
-class MealItemsViewModel: ObservableObject {
+@Observable
+class MealItemsViewModel {
     private let context: NSManagedObjectContext
     var currentDate: Date
-    @Published var mealFoodEntries: [FoodEntry] = []
-    @Published var mealTitle: String = ""
+    var mealFoodEntries: [FoodEntry] = []
+    var mealTitle: String = ""
 
     init(viewContext: NSManagedObjectContext,
          currentDate: Date) {

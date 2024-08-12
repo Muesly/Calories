@@ -14,11 +14,12 @@ struct Suggestion: Hashable {
     let name: String
 }
 
+@Observable
 class AddEntryViewModel: ObservableObject {
     let container: NSPersistentContainer
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
-    @Published var suggestions: [Suggestion] = []
+    var suggestions: [Suggestion] = []
     
     init(healthStore: HealthStore,
          container: NSPersistentContainer = PersistenceController.shared.container) {

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct HistoryView: View {
-    @ObservedObject private var viewModel: HistoryViewModel
+    private var viewModel: HistoryViewModel
     @Binding var entryDeleted: Bool
 
     init(viewModel: HistoryViewModel,
