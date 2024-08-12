@@ -1,5 +1,5 @@
 //
-//  AddEntryInputFieldsView.swift
+//  AddFoodInputFieldsView.swift
 //  Calories
 //
 //  Created by Tony Short on 14/02/2023.
@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct AddEntryInputFieldsView: View {
-    private let viewModel: AddEntryViewModel
+struct AddFoodInputFieldsView: View {
+    private let viewModel: AddFoodViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
     @State var foodDescription: String
@@ -23,7 +23,7 @@ struct AddEntryInputFieldsView: View {
     @Binding var searchText: String
     @Binding var foodAddedAtTime: Date?
 
-    init(viewModel: AddEntryViewModel,
+    init(viewModel: AddFoodViewModel,
          defFoodDescription: String,
          defCalories: Int,
          defTimeConsumed: Binding<Date>,
@@ -109,7 +109,7 @@ struct AddEntryInputFieldsView: View {
             .cornerRadius(10)
             Spacer()
             .onChange(of: scenePhase) { _, newPhase in
-                if AddEntryViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
+                if AddFoodViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
                     Task {
                         foodDescription = ""
                         calories = 0
@@ -130,7 +130,7 @@ struct AddEntryInputFieldsView: View {
 
 struct AddEntryInputFieldsView_Previews: PreviewProvider {
     static var previews: some View {
-        AddEntryInputFieldsView(viewModel: AddEntryViewModel(healthStore: StubbedHealthStore()),
+        AddFoodInputFieldsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore()),
                                 defFoodDescription: "Some food",
                                 defCalories: 100,
                                 defTimeConsumed: .constant(Date()),
