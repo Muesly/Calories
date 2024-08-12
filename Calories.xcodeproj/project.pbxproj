@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
+		DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */; };
 		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
 		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
@@ -127,6 +128,8 @@
 
 /* Begin PBXFileReference section */
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
+		DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseInputFieldsView.swift; sourceTree = "<group>"; };
+		DD3253FE2C6ABF0E00D9FF1D /* Model 0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 0.1.xcdatamodel"; sourceTree = "<group>"; };
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
@@ -401,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */,
+				DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */,
 				EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */,
 			);
 			path = AddExercise;
@@ -701,6 +705,7 @@
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				EA2201E32B372351007F444B /* FoodEntry.swift in Sources */,
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
+				DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
 				EA08544E299BD62A0029DD42 /* AddFoodInputFieldsView.swift in Sources */,
 				EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */,
@@ -1343,6 +1348,7 @@
 		EA097DC32993986D00735129 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				DD3253FE2C6ABF0E00D9FF1D /* Model 0.1.xcdatamodel */,
 				EA097DC42993986D00735129 /* Model.xcdatamodel */,
 			);
 			currentVersion = EA097DC42993986D00735129 /* Model.xcdatamodel */;

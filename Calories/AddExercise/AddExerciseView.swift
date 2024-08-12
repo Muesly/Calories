@@ -13,6 +13,7 @@ struct AddExerciseView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
     @State var searchText = ""
+    @State var exerciseAddedAtTime: Date?
     @State private var exerciseDescription: String = ""
     @State private var calories: Int = 0
     @State private var timeExercised: Date = Date()
@@ -38,7 +39,12 @@ struct AddExerciseView: View {
             List {
                 if !searchText.isEmpty {
                     NavigationLink {
-                        Text("Screen to add details on new exercise")
+                        AddExerciseInputFieldsView(viewModel: viewModel,
+                                                   defExerciseDescription: searchText,
+                                                   defCalories: 0,
+                                                   defTimeConsumed: $timeExercised,
+                                                   searchText: $searchText,
+                                                   exerciseAddedAtTime: $exerciseAddedAtTime)
                     } label: {
                         Text("Add \(searchText) as a new exercise").bold()
                     }
@@ -54,23 +60,27 @@ struct AddExerciseView: View {
                         placement:  .navigationBarDrawer(displayMode: .always),
                         prompt: "Enter exercise")
             .accessibilityIdentifier("Exercise List")
-
-            Spacer()
-                .navigationTitle("Add new exercise")
-                .toolbar {
-                    ToolbarItem {
-                        Button("Close") {
-                            self.showingAddExerciseView = false
-                        }
+            .navigationTitle("Add new exercise")
+            .toolbar {
+                ToolbarItem {
+                    Button("Close") {
+                        self.showingAddExerciseView = false
                     }
                 }
-                .onAppear {
-                    viewModel.fetchSuggestions(searchText: searchText)
-                }
-                .onChange(of: searchText) { _, searchText in
-                    viewModel.fetchSuggestions(searchText: searchText)
-                }
+            }
+            .onAppear {
+                viewModel.fetchSuggestions(searchText: searchText)
+            }
+            .onChange(of: searchText) { _, searchText in
+                viewModel.fetchSuggestions(searchText: searchText)
+            }
         }
         .font(.brand)
+        .onChange(of: exerciseAddedAtTime) { _, exerciseAddedAtTime in
+            if let exerciseAddedAtTime {
+                timeExercised = exerciseAddedAtTime
+                viewModel.fetchSuggestions(searchText: searchText)
+            }
+        }
     }
 }
