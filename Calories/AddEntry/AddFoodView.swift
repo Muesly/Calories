@@ -15,7 +15,6 @@ struct AddFoodView: View {
     @State var foodAddedAtTime: Date?
     @State private var readyToNavigateToAddFoodInputFields: Bool = false
     @Binding var showingAddEntryView: Bool
-    @State private var newEntryAdded: Bool = false
     @State var timeConsumed: Date = Date()
     private var mealItemsViewModel: MealItemsViewModel
 
@@ -33,12 +32,7 @@ struct AddFoodView: View {
             List {
                 if !searchText.isEmpty {
                     NavigationLink {
-                        AddFoodInputFieldsView(viewModel: viewModel,
-                                                defFoodDescription: searchText,
-                                                defCalories: viewModel.defCaloriesFor(searchText),
-                                                defTimeConsumed: $timeConsumed,
-                                                searchText: $searchText,
-                                                foodAddedAtTime: $foodAddedAtTime)
+                        addFoodInputFieldsView(description: searchText)
                     } label: {
                         Text("Add \(searchText) as a new food").bold()
                     }
@@ -46,12 +40,7 @@ struct AddFoodView: View {
                 Section("Recent foods you've had at this time") {
                     ForEach(viewModel.suggestions, id: \.self) { suggestion in
                         NavigationLink {
-                            AddFoodInputFieldsView(viewModel: viewModel,
-                                                    defFoodDescription: suggestion.name,
-                                                    defCalories: viewModel.defCaloriesFor(suggestion.name),
-                                                    defTimeConsumed: $timeConsumed,
-                                                    searchText: $searchText,
-                                                    foodAddedAtTime: $foodAddedAtTime)
+                            addFoodInputFieldsView(description: suggestion.name)
                         } label: {
                             Text(suggestion.name)
                         }
@@ -86,12 +75,7 @@ struct AddFoodView: View {
                 }
             }
             .navigationDestination(isPresented: $readyToNavigateToAddFoodInputFields) {
-                AddFoodInputFieldsView(viewModel: viewModel,
-                                        defFoodDescription: searchText,
-                                        defCalories: viewModel.defCaloriesFor(searchText),
-                                        defTimeConsumed: $timeConsumed,
-                                        searchText: $searchText,
-                                        foodAddedAtTime: $foodAddedAtTime)
+                addFoodInputFieldsView(description: searchText)
             }
         }
         .font(.brand)
@@ -102,6 +86,15 @@ struct AddFoodView: View {
             dismissSearch()
             readyToNavigateToAddFoodInputFields = true
         }
+    }
+
+    private func addFoodInputFieldsView(description: String) -> AddFoodInputFieldsView {
+        AddFoodInputFieldsView(viewModel: viewModel,
+                               defFoodDescription: description,
+                               defCalories: viewModel.defCaloriesFor(description),
+                               defTimeConsumed: $timeConsumed,
+                               searchText: $searchText,
+                               foodAddedAtTime: $foodAddedAtTime)
     }
 }
 

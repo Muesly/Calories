@@ -10,18 +10,11 @@ import SwiftUI
 
 struct AddExerciseView: View {
     private let viewModel: AddExerciseViewModel
-    @Environment(\.scenePhase) var scenePhase
-    @Environment(\.dismiss) var dismiss
     @Environment(\.dismissSearch) private var dismissSearch
     @State var searchText = ""
     @State private var readyToNavigateToAddExerciseInputFields: Bool = false
-    @State var exerciseAddedAtTime: Date?
-    @State private var exerciseDescription: String = ""
-    @State private var calories: Int = 0
+    @State var exerciseAdded = false
     @State private var timeExercised: Date = Date()
-    @FocusState private var descriptionIsFocused: Bool
-    @FocusState private var caloriesIsFocused: Bool
-    @State private var isShowingFailureToAuthoriseAlert = false
     @Binding var showingAddExerciseView: Bool
     
     init(viewModel: AddExerciseViewModel,
@@ -30,23 +23,12 @@ struct AddExerciseView: View {
         self._showingAddExerciseView = showingAddExerciseView
     }
     
-    var numberFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.zeroSymbol = ""
-        return formatter
-    }
-    
     var body: some View {
         NavigationStack {
             List {
                 if !searchText.isEmpty {
                     NavigationLink {
-                        AddExerciseInputFieldsView(viewModel: viewModel,
-                                                   defExerciseDescription: searchText,
-                                                   defCalories: 0,
-                                                   defTimeConsumed: $timeExercised,
-                                                   searchText: $searchText,
-                                                   exerciseAddedAtTime: $exerciseAddedAtTime)
+                        addExerciseInputFieldsView(description: searchText)
                     } label: {
                         Text("Add \(searchText) as a new exercise").bold()
                     }
@@ -54,12 +36,7 @@ struct AddExerciseView: View {
                 Section("Recent exercises") {
                     ForEach(viewModel.suggestions, id: \.self) { suggestion in
                         NavigationLink {
-                            AddExerciseInputFieldsView(viewModel: viewModel,
-                                                       defExerciseDescription: suggestion.name,
-                                                       defCalories: 0,
-                                                       defTimeConsumed: $timeExercised,
-                                                       searchText: $searchText,
-                                                       exerciseAddedAtTime: $exerciseAddedAtTime)
+                            addExerciseInputFieldsView(description: suggestion.name)
                         } label: {
                             Text(suggestion.name)
                         }
@@ -67,6 +44,7 @@ struct AddExerciseView: View {
                     }
                 }
             }
+            .font(.brand)
             .searchable(text: $searchText,
                         placement:  .navigationBarDrawer(displayMode: .always),
                         prompt: "Enter exercise")
@@ -89,20 +67,24 @@ struct AddExerciseView: View {
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
             }
-            .onChange(of: exerciseAddedAtTime) { _, exerciseAddedAtTime in
-                if let exerciseAddedAtTime {
+            .onChange(of: exerciseAdded) { _, exerciseAdded in
+                if exerciseAdded {
                     self.showingAddExerciseView = false
                 }
             }
             .navigationDestination(isPresented: $readyToNavigateToAddExerciseInputFields) {
-                AddExerciseInputFieldsView(viewModel: viewModel,
-                                           defExerciseDescription: searchText,
-                                           defCalories: 0,
-                                           defTimeConsumed: $timeExercised,
-                                           searchText: $searchText,
-                                           exerciseAddedAtTime: $exerciseAddedAtTime)
+                addExerciseInputFieldsView(description: searchText)
             }
         }
-        .font(.brand)
+    }
+
+    private func addExerciseInputFieldsView(description: String) -> AddExerciseInputFieldsView {
+        AddExerciseInputFieldsView(viewModel: viewModel,
+                                   defExerciseDescription: description,
+                                   defCalories: 0,
+                                   defTimeConsumed: $timeExercised,
+                                   searchText: $searchText,
+                                   exerciseAdded: $exerciseAdded)
     }
 }
+
