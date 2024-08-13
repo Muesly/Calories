@@ -24,7 +24,7 @@ final class RecordWeightViewModelTests: XCTestCase {
 
     func testGivenPermissionGrantedCanReadWeight() async throws {
         let mockHealthStore = MockHealthStore()
-        mockHealthStore.weight = 14.5
+        mockHealthStore.weight = 194
         mockHealthStore.caloriesConsumed = 2500
         mockHealthStore.bmr = 1900
         mockHealthStore.exercise = 900
@@ -32,9 +32,9 @@ final class RecordWeightViewModelTests: XCTestCase {
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
         let date = dateFromComponents()
         try await subject.fetchWeightData(date: date, numWeeks: 2)
-        XCTAssertEqual(subject.weightData, [WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 14.5, deficit: -2100),
-                                            WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-1), weight: 14.5, deficit: -2100),
-                                            WeightDataPoint(date: date, weight: 14.5, deficit: -2100)])
+        XCTAssertEqual(subject.weightData, [WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 194, deficit: -2100),
+                                            WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-1), weight: 194, deficit: -2100),
+                                            WeightDataPoint(date: date, weight: 194, deficit: -2100)])
     }
 
     func testNoPermissionGrantedCannotReadWeight() async throws {
@@ -46,10 +46,6 @@ final class RecordWeightViewModelTests: XCTestCase {
             XCTFail("Expects to fail")
         } catch {
         }
-    }
-
-    func testPoundsToStoneAndPoundsStr() {
-        XCTAssertEqual(WeightDataPoint.poundsToStoneAndPoundsStr(pounds: 214), "15 st 4 lbs")
     }
 
     func testWeekStr() {

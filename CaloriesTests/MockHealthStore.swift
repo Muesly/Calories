@@ -13,13 +13,13 @@ class MockHealthStore: HealthStore {
     var exercise: Int = 0
     var caloriesConsumed: Int = 0
     var caloriesBurned: Int = 0
-    var weight: Double = 0
+    var weight: Int = 0
     var weightBetweenDatesIndex = 0
-    var weightBetweenDates = [Double]()
+    var weightBetweenDates = [Int]()
     var caloriesConsumedAllDataPoints = [(Date, Int)]()
     var bmrAllDataPoints = [(Date, Int)]()
     var activeCaloriesAllDataPoints = [(Date, Int)]()
-    var weightAllDataPoints = [(Date, Double)]()
+    var weightAllDataPoints = [(Date, Int)]()
     
     func authorize() async throws {
         guard let error = authorizeError else {
@@ -40,7 +40,7 @@ class MockHealthStore: HealthStore {
         caloriesConsumed
     }
 
-    func weight(date: Date?) async throws -> Double {
+    func weight(date: Date?) async throws -> Int {
         weight
     }
 
@@ -56,7 +56,7 @@ class MockHealthStore: HealthStore {
         caloriesBurned += exerciseEntry.calories
     }
 
-    func weight(fromDate: Date, toDate: Date) async throws -> Double? {
+    func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         if weightBetweenDates.isEmpty {
             return weight
         } else {
@@ -67,7 +67,7 @@ class MockHealthStore: HealthStore {
     }
 
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
-        weight = Double(weightEntry.weight)
+        weight = weightEntry.weight
     }
 
     func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
@@ -86,7 +86,7 @@ class MockHealthStore: HealthStore {
         activeCaloriesAllDataPoints
     }
     
-    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         weightAllDataPoints
     }
 }

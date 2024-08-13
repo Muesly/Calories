@@ -83,18 +83,18 @@ final class DataViewTests: XCTestCase {
         return [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
     }
 
-    private var oneAndABitSegmentsForWeight: [(Date, Double)] {
+    private var oneAndABitSegmentsForWeight: [(Date, Int)] {
         let seg1StartDate = Date()
         let seg1EndDate = seg1StartDate.addingTimeInterval(segmentLength)
         let seg2StartDate = seg1EndDate
         
-        let seg1DataPoint1 = (seg1StartDate, 14.8)
-        let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 14.6)
-        let seg1DataPoint3 = (seg1StartDate.addingTimeInterval(2 * 86400), 14.3)
-        
-        let seg2DataPoint1 = (seg2StartDate, 14.3)
-        let seg2DataPoint2 = (seg2StartDate.addingTimeInterval(86400), 14.2)
-        
+        let seg1DataPoint1 = (seg1StartDate, 202)
+        let seg1DataPoint2 = (seg1StartDate.addingTimeInterval(86400), 200)
+        let seg1DataPoint3 = (seg1StartDate.addingTimeInterval(2 * 86400), 197)
+
+        let seg2DataPoint1 = (seg2StartDate, 197)
+        let seg2DataPoint2 = (seg2StartDate.addingTimeInterval(86400), 196)
+
         return [seg1DataPoint1, seg1DataPoint2, seg1DataPoint3, seg2DataPoint1, seg2DataPoint2]
     }
 
@@ -149,7 +149,7 @@ final class DataViewTests: XCTestCase {
         let response = try! await vm.calculate()
 
         let firstSegment = response.segments.first!
-        XCTAssertEqual(firstSegment.endWeight, 14.3)
+        XCTAssertEqual(firstSegment.endWeight, 197)
     }
     
     func testExpectedWeightLossPerDeficit() async throws {
@@ -162,7 +162,7 @@ final class DataViewTests: XCTestCase {
 
         let firstSegment = response.segments.first!
         XCTAssertEqual(firstSegment.expectedWeightLoss, 0.11428571428571428)
-        XCTAssertEqual(firstSegment.actualWeightLoss, 0.5)
-        XCTAssertEqual(firstSegment.weightVariance, -0.38571428571428573)
+        XCTAssertEqual(firstSegment.actualWeightLoss, 5)
+        XCTAssertEqual(firstSegment.weightVariance, -4.885714285714286)
     }
 }

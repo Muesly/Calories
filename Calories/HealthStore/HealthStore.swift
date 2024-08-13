@@ -14,13 +14,13 @@ protocol HealthStore {
     func caloriesConsumed(date: Date) async throws -> Int
     func bmr(date: Date) async throws -> Int
     func exercise(date: Date) async throws -> Int
-    func weight(fromDate: Date, toDate: Date) async throws -> Double?
+    func weight(fromDate: Date, toDate: Date) async throws -> Int?
 
     func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)]
     func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
     func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
     func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
-    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)]
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
@@ -156,7 +156,7 @@ extension HKHealthStore: HealthStore {
                                            modifierFactor: applyModifier ? activeEnergyModifier() : 1.0)
     }
 
-    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return []
         }
@@ -175,7 +175,7 @@ extension HKHealthStore: HealthStore {
                 }
                 continuation.resume(returning: dataPoints.map {
                     let date = $0.startDate
-                    let weight = $0.quantity.doubleValue(for: HKUnit.pound())
+                    let weight = Int(round($0.quantity.doubleValue(for: HKUnit.pound())))
                     return (date, weight)
                 })
             }
@@ -183,9 +183,9 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func weight(fromDate: Date, toDate: Date) async throws -> Double? {
+    func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
-            return 0
+            return nil
         }
 
         let predicate = HKQuery.predicateForSamples(withStart: fromDate, end: toDate, options: .strictStartDate)
@@ -198,7 +198,7 @@ extension HKHealthStore: HealthStore {
                     continuation.resume(returning: nil)
                     return
                 }
-                continuation.resume(returning: result.doubleValue(for: HKUnit.pound()))
+                continuation.resume(returning: Int(round(result.doubleValue(for: HKUnit.pound()))))
             }
             execute (query)
         }
