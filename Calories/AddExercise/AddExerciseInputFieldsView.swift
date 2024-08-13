@@ -21,14 +21,14 @@ struct AddExerciseInputFieldsView: View {
     private let defExerciseDescription: String
     let defCalories: Int
     @Binding var searchText: String
-    @Binding var exerciseAddedAtTime: Date?
+    @Binding var exerciseAdded: Bool
 
     init(viewModel: AddExerciseViewModel,
          defExerciseDescription: String,
          defCalories: Int,
          defTimeConsumed: Binding<Date>,
          searchText: Binding<String>,
-         exerciseAddedAtTime: Binding<Date?>) {
+         exerciseAdded: Binding<Bool>) {
         self.viewModel = viewModel
         self.defExerciseDescription = defExerciseDescription
         self.defCalories = defCalories
@@ -36,7 +36,7 @@ struct AddExerciseInputFieldsView: View {
         _searchText = searchText
         _exerciseDescription = State(initialValue: defExerciseDescription)
         _calories = State(initialValue: defCalories)
-        _exerciseAddedAtTime = exerciseAddedAtTime
+        _exerciseAdded = exerciseAdded
     }
 
     var numberFormatter: NumberFormatter {
@@ -86,7 +86,7 @@ struct AddExerciseInputFieldsView: View {
                             calories = 0
                             searchText = ""
                             dismiss()
-                            exerciseAddedAtTime = defTimeConsumed
+                            exerciseAdded = true
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }
@@ -129,5 +129,5 @@ struct AddExerciseInputFieldsView: View {
                                defCalories: 100,
                                defTimeConsumed: .constant(Date()),
                                searchText: .constant("Some exercise"),
-                               exerciseAddedAtTime: .constant(Date()))
+                               exerciseAdded: .constant(false))
 }
