@@ -136,6 +136,7 @@ struct RecordWeightView: View {
                                 try await viewModel.applyNewWeight()
                                 applied = !applied
                                 showConfetti = viewModel.hasLostWeight
+                                refresh()
                             } catch {
                                 print("Failed to apply new weight")
                             }

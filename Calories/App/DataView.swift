@@ -39,15 +39,15 @@ struct ReportedCalorieDataPoint: Equatable {
 
 struct ReportedWeightDataPoint: Equatable {
     let date: Date
-    let weight: Double
+    let weight: Int
 }
 
 struct Segment: Equatable {
     var caloriesConsumed: Int
     let bmrTotal: Int
     let activeTotal: Int
-    let startWeight: Double
-    let endWeight: Double
+    let startWeight: Int
+    let endWeight: Int
     let startDate: Date
     let endDate: Date
 
@@ -62,12 +62,12 @@ struct Segment: Equatable {
         return (bmr + active - calories) / 3500
     }
     
-    var actualWeightLoss: Double {
+    var actualWeightLoss: Int {
         return startWeight - endWeight
     }
     
     var weightVariance: Double {
-        return expectedWeightLoss - actualWeightLoss
+        return expectedWeightLoss - Double(actualWeightLoss)
     }
 }
 
@@ -107,7 +107,7 @@ class DataViewModel {
     private func createSegment(consumptionDataPoints: [ReportedCalorieDataPoint],
                                bmrDataPoints: [ReportedCalorieDataPoint],
                                activeDataPoints: [ReportedCalorieDataPoint],
-                               startWeight: Double,
+                               startWeight: Int,
                                weightDataPoints: [ReportedWeightDataPoint],
                                startDate: Date,
                                endDate: Date) -> Segment {

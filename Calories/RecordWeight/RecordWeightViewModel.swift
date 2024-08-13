@@ -12,14 +12,8 @@ import SwiftUI
 struct WeightDataPoint: Identifiable, Equatable {
     let id = UUID()
     let date: Date
-    let weight: Double
+    let weight: Int
     let deficit: Int
-
-    static func poundsToStoneAndPoundsStr(pounds: Double) -> String {
-        let stones = pounds / 14
-        let fullStones = Int(stones)
-        return "\(fullStones) st \(Int(pounds) % fullStones) lbs"
-    }
 
     static func == (lhs: Self, rhs: Self) -> Bool {
         (lhs.date == rhs.date) && (lhs.weight == rhs.weight) && (lhs.deficit == rhs.deficit)
@@ -70,7 +64,8 @@ class RecordWeightViewModel: ObservableObject {
             startDate = endDate.startOfWeek
         }
         self.weightData = weightData.reversed()
-        self.latestWeight = Int(weightData.first?.weight ?? 0.0)
+        print(weightData.first)
+        self.latestWeight = Int(weightData.first?.weight ?? 0)
         if originalWeight == 0 {
             originalWeight = self.latestWeight
         }

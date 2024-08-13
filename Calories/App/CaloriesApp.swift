@@ -44,7 +44,7 @@ class StubbedHealthStore: HealthStore {
         600
     }
     
-    func weight(fromDate: Date, toDate: Date) async throws -> Double? {
+    func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         sleep(1)
         return 200
     }
@@ -65,7 +65,7 @@ class StubbedHealthStore: HealthStore {
         []
     }
     
-    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Double)] {
+    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         []
     }
     
