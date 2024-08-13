@@ -64,16 +64,6 @@ struct AddFoodView: View {
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
             }
-            .onChange(of: foodAddedAtTime) { _, foodAddedAtTime in
-                mealItemsViewModel.fetchMealFoodEntries()
-                if let foodAddedAtTime {
-                    timeConsumed = foodAddedAtTime
-                    viewModel.setDateForEntries(timeConsumed)
-                    viewModel.fetchSuggestions(searchText: searchText)
-                    mealItemsViewModel.currentDate = timeConsumed
-                    mealItemsViewModel.fetchMealFoodEntries()
-                }
-            }
             .navigationDestination(isPresented: $readyToNavigateToAddFoodInputFields) {
                 addFoodInputFieldsView(description: searchText)
             }
@@ -85,6 +75,17 @@ struct AddFoodView: View {
         .onSubmit(of: .search) {
             dismissSearch()
             readyToNavigateToAddFoodInputFields = true
+        }
+        .onChange(of: foodAddedAtTime) { _, foodAddedAtTime in
+            mealItemsViewModel.fetchMealFoodEntries()
+            if let foodAddedAtTime {
+                timeConsumed = foodAddedAtTime
+                viewModel.setDateForEntries(timeConsumed)
+                viewModel.fetchSuggestions(searchText: searchText)
+                mealItemsViewModel.currentDate = timeConsumed
+                mealItemsViewModel.fetchMealFoodEntries()
+                dismissSearch()
+            }
         }
     }
 
