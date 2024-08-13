@@ -13,7 +13,7 @@ struct AddFoodView: View {
     private var viewModel: AddFoodViewModel
     @State var searchText = ""
     @State var foodAddedAtTime: Date?
-    @State private var readyToNavigateToAddEntryInputFields: Bool = false
+    @State private var readyToNavigateToAddFoodInputFields: Bool = false
     @Binding var showingAddEntryView: Bool
     @State private var newEntryAdded: Bool = false
     @State var timeConsumed: Date = Date()
@@ -85,7 +85,7 @@ struct AddFoodView: View {
                     mealItemsViewModel.fetchMealFoodEntries()
                 }
             }
-            .navigationDestination(isPresented: $readyToNavigateToAddEntryInputFields) {
+            .navigationDestination(isPresented: $readyToNavigateToAddFoodInputFields) {
                 AddFoodInputFieldsView(viewModel: viewModel,
                                         defFoodDescription: searchText,
                                         defCalories: viewModel.defCaloriesFor(searchText),
@@ -100,7 +100,7 @@ struct AddFoodView: View {
                     prompt: viewModel.prompt(for: timeConsumed))
         .onSubmit(of: .search) {
             dismissSearch()
-            readyToNavigateToAddEntryInputFields = true
+            readyToNavigateToAddFoodInputFields = true
         }
     }
 }

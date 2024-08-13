@@ -12,7 +12,9 @@ struct AddExerciseView: View {
     private let viewModel: AddExerciseViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
+    @Environment(\.dismissSearch) private var dismissSearch
     @State var searchText = ""
+    @State private var readyToNavigateToAddExerciseInputFields: Bool = false
     @State var exerciseAddedAtTime: Date?
     @State private var exerciseDescription: String = ""
     @State private var calories: Int = 0
@@ -51,14 +53,27 @@ struct AddExerciseView: View {
                 }
                 Section("Recent exercises") {
                     ForEach(viewModel.suggestions, id: \.self) { suggestion in
-                        Text(suggestion.name)
-                            .listRowBackground(Colours.backgroundSecondary)
+                        NavigationLink {
+                            AddExerciseInputFieldsView(viewModel: viewModel,
+                                                       defExerciseDescription: suggestion.name,
+                                                       defCalories: 0,
+                                                       defTimeConsumed: $timeExercised,
+                                                       searchText: $searchText,
+                                                       exerciseAddedAtTime: $exerciseAddedAtTime)
+                        } label: {
+                            Text(suggestion.name)
+                        }
+                        .listRowBackground(Colours.backgroundSecondary)
                     }
                 }
             }
             .searchable(text: $searchText,
                         placement:  .navigationBarDrawer(displayMode: .always),
                         prompt: "Enter exercise")
+            .onSubmit(of: .search) {
+                dismissSearch()
+                readyToNavigateToAddExerciseInputFields = true
+            }
             .accessibilityIdentifier("Exercise List")
             .navigationTitle("Add new exercise")
             .toolbar {
@@ -74,13 +89,20 @@ struct AddExerciseView: View {
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
             }
-        }
-        .font(.brand)
-        .onChange(of: exerciseAddedAtTime) { _, exerciseAddedAtTime in
-            if let exerciseAddedAtTime {
-                timeExercised = exerciseAddedAtTime
-                viewModel.fetchSuggestions(searchText: searchText)
+            .onChange(of: exerciseAddedAtTime) { _, exerciseAddedAtTime in
+                if let exerciseAddedAtTime {
+                    self.showingAddExerciseView = false
+                }
+            }
+            .navigationDestination(isPresented: $readyToNavigateToAddExerciseInputFields) {
+                AddExerciseInputFieldsView(viewModel: viewModel,
+                                           defExerciseDescription: searchText,
+                                           defCalories: 0,
+                                           defTimeConsumed: $timeExercised,
+                                           searchText: $searchText,
+                                           exerciseAddedAtTime: $exerciseAddedAtTime)
             }
         }
+        .font(.brand)
     }
 }
