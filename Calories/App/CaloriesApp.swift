@@ -20,13 +20,15 @@ struct CaloriesApp: App {
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         requestNotificationsPermission()
-        scheduleTomorrowsMotivationalMessage()
     }
     
     var body: some Scene {
         WindowGroup {
             CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore), weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore))
                 .environment(\.healthStore, healthStore)
+                .task {
+                    try? await scheduleTomorrowsMotivationalMessage()
+                }
             //DataView()
         }
     }
@@ -40,23 +42,23 @@ struct CaloriesApp: App {
         }
     }
 
-    private func scheduleTomorrowsMotivationalMessage() {
+    private func scheduleTomorrowsMotivationalMessage() async throws {
         let content = UNMutableNotificationContent()
 
         var dateComponents = tomorrowDateComponents()
         let companion = Companion(messageDetails: Companion.defaultMessages)
-        let (message, scheduledHour) = companion.nextMotivationalMessage(weekday: dateComponents.weekday!)
+        let weeklyWeightChange = try await healthStore.weeklyWeightChange()
+        let monthlyWeightChange = try await healthStore.monthlyWeightChange()
+        let (message, scheduledHour) = try companion.nextMotivationalMessage(weekday: dateComponents.weekday!,
+                                                                         weeklyWeightChange: weeklyWeightChange,
+                                                                         monthlyWeightChange: monthlyWeightChange)
         dateComponents.hour = scheduledHour
 
         content.body = message
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
 
         let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Notification error: \(error.localizedDescription)")
-            }
-        }
+        try await UNUserNotificationCenter.current().add(request)
     }
 
     private func tomorrowDateComponents() -> DateComponents {
@@ -104,7 +106,15 @@ class StubbedHealthStore: HealthStore {
     func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         []
     }
-    
+
+    func weeklyWeightChange() async throws -> Int {
+        0
+    }
+
+    func monthlyWeightChange() async throws -> Int {
+        0
+    }
+
     func addFoodEntry(_ foodEntry: FoodEntry) async throws {
         
     }

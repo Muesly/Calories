@@ -22,6 +22,9 @@ protocol HealthStore {
     func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)]
     func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)]
 
+    func weeklyWeightChange() async throws -> Int
+    func monthlyWeightChange() async throws -> Int
+
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
     func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws
@@ -202,6 +205,23 @@ extension HKHealthStore: HealthStore {
             }
             execute (query)
         }
+    }
+
+    func weeklyWeightChange() async throws -> Int {
+        try await weightChange(days: 7)
+    }
+
+    func monthlyWeightChange() async throws -> Int {
+        try await weightChange(days: 31)
+    }
+
+    func weightChange(days: Int) async throws -> Int {
+        let weightDataPoints = try await weightBetweenDates(fromDate: Date().addingTimeInterval(TimeInterval(-86400 * days)), toDate: Date())
+        guard let first = weightDataPoints.first,
+              let last = weightDataPoints.last else {
+            return 0
+        }
+        return last.1 - first.1
     }
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws {
