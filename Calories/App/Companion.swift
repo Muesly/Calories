@@ -14,9 +14,9 @@ struct Companion {
         CompanionMessageDetails(message: "The only bad workout is the one you didn't do.")
     ]
 
-    static func nextMotivationalMessage() -> String {
+    static func nextMotivationalMessage(randomPicker: RandomPickerType = RandomPicker()) -> String {
         let validMessages = messageDetails
-        return validMessages.first!.message
+        return validMessages[randomPicker.pick(fromNumberOfItems: validMessages.count)].message
     }
 }
 
@@ -25,5 +25,15 @@ struct CompanionMessageDetails {
 
     init(message: String) {
         self.message = message
+    }
+}
+
+protocol RandomPickerType {
+    func pick(fromNumberOfItems numberOfItems: Int) -> Int
+}
+
+struct RandomPicker: RandomPickerType {
+    func pick(fromNumberOfItems numberOfItems: Int) -> Int {
+        Int.random(in: 0..<numberOfItems)
     }
 }

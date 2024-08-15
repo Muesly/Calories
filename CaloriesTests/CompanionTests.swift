@@ -10,7 +10,13 @@ import Testing
 
 struct CompanionTests {
     @Test func testCompanionReturnsMessage() {
-        let message = Companion.nextMotivationalMessage()
+        let message = Companion.nextMotivationalMessage(randomPicker: MockRandomPicker())
         #expect(message == "Rise and Shine! What’s good for breakfast?")
+    }
+}
+
+struct MockRandomPicker: RandomPickerType {
+    func pick(fromNumberOfItems numberOfItems: Int) -> Int {
+        0
     }
 }
