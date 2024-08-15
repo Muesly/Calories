@@ -44,13 +44,7 @@ struct CaloriesApp: App {
         let content = UNMutableNotificationContent()
 
         var dateComponents = tomorrowDateComponents()
-        let companion = Companion(messageDetails: [
-            CompanionMessage(message: "Rise and Shine! What’s good for breakfast?", timeOfDay: .earlyMorning),
-            CompanionMessage(message: "Time for a quick stretch! Your muscles will thank you.", timeOfDay: .midMorning),
-            CompanionMessage(message: "The only bad workout is the one you didn't do."),
-            CompanionMessage(message: "Going in to work? Take some 🥜.", timeOfDay: .earlyMorning, validDay: .thursday)
-        ]
-)
+        let companion = Companion(messageDetails: Companion.defaultMessages)
         let (message, scheduledHour) = companion.nextMotivationalMessage(weekday: dateComponents.weekday!)
         dateComponents.hour = scheduledHour
 

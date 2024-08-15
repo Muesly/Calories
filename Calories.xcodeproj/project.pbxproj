@@ -13,6 +13,8 @@
 		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
 		DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEA2C6C0CCF007CAD98 /* Companion.swift */; };
 		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
+		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
+		DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
@@ -136,6 +138,8 @@
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		DD538CEA2C6C0CCF007CAD98 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
 		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
+		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
+		DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMessage.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
@@ -329,8 +333,10 @@
 			isa = PBXGroup;
 			children = (
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
+				DD538CF22C6E9377007CAD98 /* RandomPicker.swift */,
 				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
 				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
+				DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */,
 				EA08544F299BED050029DD42 /* Theme.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
 				EA097DB72991909500735129 /* HistoryViewModel.swift */,
@@ -709,6 +715,7 @@
 				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
 				EA2C9B8E29B4B2AC0019DB36 /* MealBreakdownViewModel.swift in Sources */,
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
+				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
 				EA2201E32B372351007F444B /* FoodEntry.swift in Sources */,
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */,
@@ -720,6 +727,7 @@
 				DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */,
 				EA2C9B9029B4B2BD0019DB36 /* MealBreakdownView.swift in Sources */,
 				DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */,
+				DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */,
 				EA2D490629944E3000248864 /* AddFoodView.swift in Sources */,
 				EA097DC52993986D00735129 /* Model.xcdatamodeld in Sources */,
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
