@@ -11,13 +11,16 @@ struct CompanionMessage {
     let message: String
     let timeOfDay: TimeOfDay?
     let validDay: DayOfWeek?
+    let validScenario: Scenario?
 
     init(message: String,
          timeOfDay: TimeOfDay? = nil,
-         validDay: DayOfWeek? = nil) {
+         validDay: DayOfWeek? = nil,
+         validScenario: Scenario? = nil) {
         self.message = message
         self.timeOfDay = timeOfDay
         self.validDay = validDay
+        self.validScenario = validScenario
     }
 
     var scheduledHour: Int? {
@@ -39,11 +42,18 @@ struct CompanionMessage {
         }
     }
 
-    func validForWeekday(_ weekday: Int) -> Bool {
-        guard let validDay else {
-            return true
+    func valid(forWeekday weekday: Int, scenario: Scenario?) -> Bool {
+        if let validDay {
+            return DayOfWeek.allCases.firstIndex(of: validDay) == weekday
         }
-        return DayOfWeek.allCases.firstIndex(of: validDay) == weekday
+        if let validScenario {
+            if let scenario {
+                return scenario == validScenario
+            } else {
+                return false
+            }
+        }
+        return true
     }
 }
 
@@ -64,4 +74,10 @@ enum DayOfWeek: CaseIterable {
     case friday
     case saturday
     case sunday
+}
+
+enum Scenario {
+    case weeklyWeightLoss
+    case monthlyWeightLoss
+    case weeklyWeightGain
 }

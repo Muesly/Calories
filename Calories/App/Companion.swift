@@ -14,9 +14,26 @@ struct Companion {
         self.messageDetails = messageDetails
     }
 
-    func nextMotivationalMessage(weekday: Int, randomPicker: RandomPickerType = RandomPicker()) -> (String, Int) {
-        let validMessages = messageDetails.filter { $0.validForWeekday(weekday) }
-        let chosenMessage = validMessages[randomPicker.pick(fromNumberOfItems: validMessages.count)]
+    func nextMotivationalMessage(weekday: Int,
+                                 randomPicker: RandomPickerType = RandomPicker(),
+                                 weeklyWeightChange: Int,
+                                 monthlyWeightChange: Int) throws -> (String, Int) {
+        var scenario: Scenario?
+
+        if weeklyWeightChange > 0 {
+            scenario = .weeklyWeightGain
+        } else if monthlyWeightChange < -1 {
+            scenario = .monthlyWeightLoss
+        } else if weeklyWeightChange < 0 {
+            scenario = .weeklyWeightLoss
+        }
+
+        let validMessages = messageDetails.filter { $0.valid(forWeekday: weekday, scenario: scenario) }
+        let chosenMessageID = randomPicker.pick(fromNumberOfItems: validMessages.count)
+        if chosenMessageID >= validMessages.count {
+            throw CompanionError.NoValidMessages
+        }
+        let chosenMessage = validMessages[chosenMessageID]
         if let scheduledHour = chosenMessage.scheduledHour {
             return (chosenMessage.message, scheduledHour)
         } else {
@@ -49,16 +66,12 @@ struct Companion {
         CompanionMessage(message: "Cut down on UPFs - food like manufactured substances. 🍭"),
         CompanionMessage(message: "Stress in ourselves is damaging, and contagious to others 😫", timeOfDay: .midMorning),
         CompanionMessage(message: "Take a couple of minutes to meditate 🧘"),
+        CompanionMessage(message: "You’ve done so well to lose another bit of weight! Keep going 📉", validScenario: .weeklyWeightLoss),
+        CompanionMessage(message: "Don’t worry about the blip yesterday. It’s a marathon, not a sprint.", validScenario: .weeklyWeightGain),
+        CompanionMessage(message: "You’ve done really well over the last month 👏", validScenario: .monthlyWeightLoss),
     ]
 }
 
-//You’ve done so well to lose 18lbs!
-
-//Don’t worry about the blip yesterday. It’s a marathon, not a sprint.
-
-//You’ve done really well over the last month
-
-
-
-
-
+enum CompanionError: Error {
+    case NoValidMessages
+}

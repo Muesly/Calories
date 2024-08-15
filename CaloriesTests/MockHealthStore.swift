@@ -66,6 +66,14 @@ class MockHealthStore: HealthStore {
         }
     }
 
+    func weeklyWeightChange() async throws -> Int {
+        0
+    }
+
+    func monthlyWeightChange() async throws -> Int {
+        0
+    }
+
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
         weight = weightEntry.weight
     }
