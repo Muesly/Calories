@@ -8,24 +8,40 @@
 import Foundation
 
 struct Companion {
-    static let messageDetails: [CompanionMessageDetails] = [
-        CompanionMessageDetails(message: "Rise and Shine! What’s good for breakfast?"),
-        CompanionMessageDetails(message: "Time for a quick stretch! Your muscles will thank you."),
-        CompanionMessageDetails(message: "The only bad workout is the one you didn't do.")
-    ]
+    let messageDetails: [CompanionMessageDetails]
 
-    static func nextMotivationalMessage(randomPicker: RandomPickerType = RandomPicker()) -> String {
+    func nextMotivationalMessage(randomPicker: RandomPickerType = RandomPicker()) -> (String, Int) {
         let validMessages = messageDetails
-        return validMessages[randomPicker.pick(fromNumberOfItems: validMessages.count)].message
+        let chosenMessage = validMessages[randomPicker.pick(fromNumberOfItems: validMessages.count)]
+        if let scheduledHour = chosenMessage.scheduledHour {
+            return (chosenMessage.message, scheduledHour)
+        } else {
+            let randomScheduledHour = 7 + randomPicker.pick(fromNumberOfItems: 12)
+            return (chosenMessage.message, randomScheduledHour)
+        }
     }
 }
 
 struct CompanionMessageDetails {
     let message: String
+    let timeOfDay: TimeOfDay
 
-    init(message: String) {
-        self.message = message
+    var scheduledHour: Int? {
+        switch timeOfDay {
+        case .earlyMorning:
+            7
+        case .midMorning:
+            10
+        case .anyTime:
+            nil
+        }
     }
+}
+
+enum TimeOfDay: CaseIterable {
+    case earlyMorning
+    case midMorning
+    case anyTime
 }
 
 protocol RandomPickerType {
@@ -37,3 +53,4 @@ struct RandomPicker: RandomPickerType {
         Int.random(in: 0..<numberOfItems)
     }
 }
+
