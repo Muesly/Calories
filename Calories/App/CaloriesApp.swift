@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 import SwiftUI
+import UserNotifications
 
 @main
 struct CaloriesApp: App {
@@ -18,6 +19,8 @@ struct CaloriesApp: App {
     
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
+        requestNotificationsPermission()
+        scheduleTomorrowsMotivationalMessage()
     }
     
     var body: some Scene {
@@ -26,6 +29,38 @@ struct CaloriesApp: App {
                 .environment(\.healthStore, healthStore)
             //DataView()
         }
+    }
+
+    private func requestNotificationsPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
+            if granted {
+            } else if let error = error {
+                print("Permission denied: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func scheduleTomorrowsMotivationalMessage() {
+        let content = UNMutableNotificationContent()
+
+        var dateComponents = tomorrowDateComponents()
+        let message = Companion.nextMotivationalMessage()
+        dateComponents.hour = 8
+
+        content.body = message
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+        let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Notification error: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func tomorrowDateComponents() -> DateComponents {
+        let tomorrow = Date().addingTimeInterval(86400)
+        return Calendar.current.dateComponents([.year, .month, .day], from: tomorrow)
     }
 }
 
