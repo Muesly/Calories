@@ -11,6 +11,8 @@
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */; };
 		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
 		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
+		DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEA2C6C0CCF007CAD98 /* Companion.swift */; };
+		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
@@ -132,6 +134,8 @@
 		DD3253FE2C6ABF0E00D9FF1D /* Model 0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 0.1.xcdatamodel"; sourceTree = "<group>"; };
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
+		DD538CEA2C6C0CCF007CAD98 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
+		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
@@ -307,6 +311,7 @@
 				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
 				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
 				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
+				DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */,
 			);
 			path = CaloriesTests;
 			sourceTree = "<group>";
@@ -325,6 +330,7 @@
 			children = (
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
 				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
+				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
 				EA08544F299BED050029DD42 /* Theme.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
 				EA097DB72991909500735129 /* HistoryViewModel.swift */,
@@ -726,6 +732,7 @@
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
+				DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */,
 				DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */,
 				EA42A10029B15EEE003BB1FC /* Helpers.swift in Sources */,
 				EAD2116129A412450007A813 /* WeightEntry.swift in Sources */,
@@ -739,6 +746,7 @@
 				EA3EDC18299D74DA005070D3 /* WeeklyChartViewModelTests.swift in Sources */,
 				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */,
+				DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
 				DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
