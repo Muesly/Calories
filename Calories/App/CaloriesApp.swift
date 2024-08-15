@@ -44,8 +44,14 @@ struct CaloriesApp: App {
         let content = UNMutableNotificationContent()
 
         var dateComponents = tomorrowDateComponents()
-        let message = Companion.nextMotivationalMessage()
-        dateComponents.hour = 8
+        let companion = Companion(messageDetails: [
+            CompanionMessageDetails(message: "Rise and Shine! What’s good for breakfast?", timeOfDay: .earlyMorning),
+            CompanionMessageDetails(message: "Time for a quick stretch! Your muscles will thank you.", timeOfDay: .midMorning),
+            CompanionMessageDetails(message: "The only bad workout is the one you didn't do.", timeOfDay: .anyTime)
+        ]
+)
+        let (message, scheduledHour) = companion.nextMotivationalMessage()
+        dateComponents.hour = scheduledHour
 
         content.body = message
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
