@@ -45,12 +45,13 @@ struct CaloriesApp: App {
 
         var dateComponents = tomorrowDateComponents()
         let companion = Companion(messageDetails: [
-            CompanionMessageDetails(message: "Rise and Shine! What’s good for breakfast?", timeOfDay: .earlyMorning),
-            CompanionMessageDetails(message: "Time for a quick stretch! Your muscles will thank you.", timeOfDay: .midMorning),
-            CompanionMessageDetails(message: "The only bad workout is the one you didn't do.", timeOfDay: .anyTime)
+            CompanionMessage(message: "Rise and Shine! What’s good for breakfast?", timeOfDay: .earlyMorning),
+            CompanionMessage(message: "Time for a quick stretch! Your muscles will thank you.", timeOfDay: .midMorning),
+            CompanionMessage(message: "The only bad workout is the one you didn't do."),
+            CompanionMessage(message: "Going in to work? Take some 🥜.", timeOfDay: .earlyMorning, validDay: .thursday)
         ]
 )
-        let (message, scheduledHour) = companion.nextMotivationalMessage()
+        let (message, scheduledHour) = companion.nextMotivationalMessage(weekday: dateComponents.weekday!)
         dateComponents.hour = scheduledHour
 
         content.body = message
@@ -66,7 +67,7 @@ struct CaloriesApp: App {
 
     private func tomorrowDateComponents() -> DateComponents {
         let tomorrow = Date().addingTimeInterval(86400)
-        return Calendar.current.dateComponents([.year, .month, .day], from: tomorrow)
+        return Calendar.current.dateComponents([.weekday], from: tomorrow)
     }
 }
 

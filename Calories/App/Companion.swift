@@ -8,10 +8,10 @@
 import Foundation
 
 struct Companion {
-    let messageDetails: [CompanionMessageDetails]
+    let messageDetails: [CompanionMessage]
 
-    func nextMotivationalMessage(randomPicker: RandomPickerType = RandomPicker()) -> (String, Int) {
-        let validMessages = messageDetails
+    func nextMotivationalMessage(weekday: Int, randomPicker: RandomPickerType = RandomPicker()) -> (String, Int) {
+        let validMessages = messageDetails.filter { $0.validForWeekday(weekday) }
         let chosenMessage = validMessages[randomPicker.pick(fromNumberOfItems: validMessages.count)]
         if let scheduledHour = chosenMessage.scheduledHour {
             return (chosenMessage.message, scheduledHour)
@@ -22,26 +22,51 @@ struct Companion {
     }
 }
 
-struct CompanionMessageDetails {
+struct CompanionMessage {
     let message: String
-    let timeOfDay: TimeOfDay
+    let timeOfDay: TimeOfDay?
+    let validDay: DayOfWeek?
+
+    init(message: String,
+         timeOfDay: TimeOfDay? = nil,
+         validDay: DayOfWeek? = nil) {
+        self.message = message
+        self.timeOfDay = timeOfDay
+        self.validDay = validDay
+    }
 
     var scheduledHour: Int? {
+        guard let timeOfDay else { return nil }
+
         switch timeOfDay {
         case .earlyMorning:
-            7
+            return 7
         case .midMorning:
-            10
-        case .anyTime:
-            nil
+            return 10
         }
+    }
+
+    func validForWeekday(_ weekday: Int) -> Bool {
+        guard let validDay else {
+            return true
+        }
+        return DayOfWeek.allCases.firstIndex(of: validDay) == weekday
     }
 }
 
 enum TimeOfDay: CaseIterable {
     case earlyMorning
     case midMorning
-    case anyTime
+}
+
+enum DayOfWeek: CaseIterable {
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
 }
 
 protocol RandomPickerType {
