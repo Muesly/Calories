@@ -26,9 +26,6 @@ struct CaloriesApp: App {
         WindowGroup {
             CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore), weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore))
                 .environment(\.healthStore, healthStore)
-                .task {
-                    try? await scheduleTomorrowsMotivationalMessage()
-                }
             //DataView()
         }
     }
@@ -40,30 +37,6 @@ struct CaloriesApp: App {
                 print("Permission denied: \(error.localizedDescription)")
             }
         }
-    }
-
-    private func scheduleTomorrowsMotivationalMessage() async throws {
-        let content = UNMutableNotificationContent()
-
-        var dateComponents = tomorrowDateComponents()
-        let companion = Companion(messageDetails: Companion.defaultMessages)
-        let weeklyWeightChange = try await healthStore.weeklyWeightChange()
-        let monthlyWeightChange = try await healthStore.monthlyWeightChange()
-        let (message, scheduledHour) = try companion.nextMotivationalMessage(weekday: dateComponents.weekday!,
-                                                                         weeklyWeightChange: weeklyWeightChange,
-                                                                         monthlyWeightChange: monthlyWeightChange)
-        dateComponents.hour = scheduledHour
-
-        content.body = message
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-
-        let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
-        try await UNUserNotificationCenter.current().add(request)
-    }
-
-    private func tomorrowDateComponents() -> DateComponents {
-        let tomorrow = Date().addingTimeInterval(86400)
-        return Calendar.current.dateComponents([.weekday], from: tomorrow)
     }
 }
 
