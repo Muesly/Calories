@@ -86,6 +86,29 @@ struct CaloriesView: View {
         historyViewModel.fetchDaySections()
         Task {
             await weeklyChartViewModel.fetchDaysCalorieData()
+            try? await scheduleTomorrowsMotivationalMessage()
         }
+    }
+
+    private func scheduleTomorrowsMotivationalMessage() async throws {
+        let content = UNMutableNotificationContent()
+
+        let companion = Companion(messageDetails: Companion.defaultMessages)
+
+        let weeklyWeightChange = try await healthStore.weeklyWeightChange()
+        let monthlyWeightChange = try await healthStore.monthlyWeightChange()
+        let tomorrow = Date().addingTimeInterval(86400)
+        var dateComponents = Calendar.current.dateComponents([.weekday], from: tomorrow)
+
+        let (message, scheduledHour) = try companion.nextMotivationalMessage(weekday: dateComponents.weekday!,
+                                                                         weeklyWeightChange: weeklyWeightChange,
+                                                                         monthlyWeightChange: monthlyWeightChange)
+        dateComponents.hour = scheduledHour
+
+        content.body = message
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+        let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
+        try await UNUserNotificationCenter.current().add(request)
     }
 }
