@@ -31,7 +31,7 @@ final class RecordWeightViewModelTests: XCTestCase {
 
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
         let date = dateFromComponents()
-        try await subject.fetchWeightData(date: date, numWeeks: 2)
+        try await subject.fetchWeightData(date: date)
         XCTAssertEqual(subject.weightData, [WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 194, deficit: -2100),
                                             WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-1), weight: 194, deficit: -2100),
                                             WeightDataPoint(date: date, weight: 194, deficit: -2100)])
@@ -66,7 +66,7 @@ final class RecordWeightViewModelTests: XCTestCase {
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
 
         let date = dateFromComponents()
-        try await subject.fetchWeightData(date: date, numWeeks: 2)
+        try await subject.fetchWeightData(date: date)
 
         XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 6 lbs \u{2193}")
     }

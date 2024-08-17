@@ -42,19 +42,25 @@ class RecordWeightViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchWeightData(date: Date = Date(), numWeeks: Int = 100) async throws {
+    func fetchWeightData(date: Date = Date()) async throws {
         try await healthStore.authorize()
         var endDate = date
         var startDate = startOfWeek(date)
         var weightData = [WeightDataPoint]()
-        for _ in 0...numWeeks {  // For last x weeks
+        var numEmptyConsecutiveWeeks = 0
+        repeat {  // For last x weeks
             // Find most recent data point in last 7 days from now
             if let weightDataPoint = try await healthStore.weight(fromDate: startDate,
                                                                   toDate: endDate) {
                 do {
                     let deficit = try await fetchWeeklyDeficit(forDate: endDate)
                     weightData.append(WeightDataPoint(date: endDate, weight: weightDataPoint, deficit: deficit))
+                    numEmptyConsecutiveWeeks = 0
                 } catch RecordWeightErrors.noCaloriesReported {
+                    numEmptyConsecutiveWeeks += 1
+                    if numEmptyConsecutiveWeeks > 1 {
+                        break   // Break out of this when we have a signficant break in weight reporting to capture just the current weight reporting period
+                    }
                 } catch {
                     break
                 }
@@ -62,9 +68,8 @@ class RecordWeightViewModel: ObservableObject {
             // Move to start of day, then go to prevous week
             endDate = startDate.addingTimeInterval(-1)
             startDate = endDate.startOfWeek
-        }
+        } while true
         self.weightData = weightData.reversed()
-        print(weightData.first)
         self.latestWeight = Int(weightData.first?.weight ?? 0)
         if originalWeight == 0 {
             originalWeight = self.latestWeight
