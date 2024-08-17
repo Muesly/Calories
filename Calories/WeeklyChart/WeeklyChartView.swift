@@ -76,6 +76,7 @@ struct WeeklyChartView: View {
                         }
                         .chartXScale(domain: 0...viewModel.weeklyData.reduce(0, { $0 + $1.calories }))
                         .chartForegroundStyleScale(["Burnt": .blue, "Can Eat": .green, "To Go": .orange])
+                        .padding(.horizontal, 10)
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }

@@ -12,7 +12,7 @@ import SwiftUI
 struct RecordWeightView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
-    @ObservedObject var viewModel: RecordWeightViewModel
+    var viewModel: RecordWeightViewModel
     @State private var isShowingFailureToAuthoriseAlert = false
     @State private var isRefreshing = false
     @State private var applied = false
