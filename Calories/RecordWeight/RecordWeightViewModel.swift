@@ -42,12 +42,14 @@ class RecordWeightViewModel: ObservableObject {
     }
 
     @MainActor
-    func fetchWeightData(date: Date = Date()) async throws {
+    func fetchWeightData(date: Date = Date(), numWeeks: Int? = nil) async throws {
         try await healthStore.authorize()
         var endDate = date
         var startDate = startOfWeek(date)
         var weightData = [WeightDataPoint]()
         var numEmptyConsecutiveWeeks = 0
+        var numWeeksReported = 0
+
         repeat {  // For last x weeks
             // Find most recent data point in last 7 days from now
             if let weightDataPoint = try await healthStore.weight(fromDate: startDate,
@@ -59,9 +61,15 @@ class RecordWeightViewModel: ObservableObject {
                 } catch RecordWeightErrors.noCaloriesReported {
                     numEmptyConsecutiveWeeks += 1
                     if numEmptyConsecutiveWeeks > 1 {
-                        break   // Break out of this when we have a signficant break in weight reporting to capture just the current weight reporting period
+                        break   // Break out of this when we have a signficant break in calories reporting to capture just the current weight reporting period
                     }
                 } catch {
+                    break
+                }
+            }
+            if let numWeeks {
+                numWeeksReported += 1
+                if numWeeksReported == numWeeks {
                     break
                 }
             }

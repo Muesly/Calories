@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class FoodEntry: NSManagedObject {
+class FoodEntry: NSManagedObject, Identifiable {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<FoodEntry> {
         return NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
@@ -29,8 +29,4 @@ class FoodEntry: NSManagedObject {
         self.foodDescription = foodDescription
         self.timeConsumed = timeConsumed
     }
-}
-
-extension FoodEntry : Identifiable {
-
 }
