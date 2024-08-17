@@ -131,6 +131,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DD3236802C7106970058BAAE /* Calories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Calories.xctestplan; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseInputFieldsView.swift; sourceTree = "<group>"; };
 		DD3253FE2C6ABF0E00D9FF1D /* Model 0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 0.1.xcdatamodel"; sourceTree = "<group>"; };
@@ -261,6 +262,7 @@
 		EA097D7B29918C9E00735129 = {
 			isa = PBXGroup;
 			children = (
+				DD3236802C7106970058BAAE /* Calories.xctestplan */,
 				EA097D8629918C9E00735129 /* Calories */,
 				EA097D9C29918CA000735129 /* CaloriesTests */,
 				EA76757E299D844E00771517 /* Calories Watch App */,
