@@ -91,6 +91,12 @@ struct CaloriesView: View {
     }
 
     private func scheduleTomorrowsMotivationalMessage() async throws {
+
+        let notificationCenter = UNUserNotificationCenter.current()
+        guard await notificationCenter.pendingNotificationRequests().count == 0 else {
+            return
+        }
+
         let content = UNMutableNotificationContent()
 
         let companion = Companion(messageDetails: Companion.defaultMessages)
@@ -109,6 +115,6 @@ struct CaloriesView: View {
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
 
         let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
-        try await UNUserNotificationCenter.current().add(request)
+        try await notificationCenter.add(request)
     }
 }
