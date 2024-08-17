@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "523CD5DF-BD81-4489-BCAD-04AA32BBB17C",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "SIMULATOR_KEYBOARD_CONNECT",
+        "value" : "0"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Calories.xcodeproj",
+        "identifier" : "EA097D9829918CA000735129",
+        "name" : "CaloriesTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Calories.xcodeproj",
+        "identifier" : "DDDCA4092C5C157800445F06",
+        "name" : "CaloriesUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
