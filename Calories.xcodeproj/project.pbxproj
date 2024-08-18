@@ -15,6 +15,7 @@
 		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
 		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
 		DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */; };
+		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
@@ -141,6 +142,7 @@
 		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
 		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
 		DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMessage.swift; sourceTree = "<group>"; };
+		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
+				DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */,
 				DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */,
 			);
 			path = Companion;
@@ -742,6 +745,7 @@
 				EA097DC52993986D00735129 /* Model.xcdatamodeld in Sources */,
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
 				EA2D49122998142100248864 /* AddFoodViewModel.swift in Sources */,
+				DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */,
 				EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */,
 				EA097DB82991909500735129 /* HistoryViewModel.swift in Sources */,
 				DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */,

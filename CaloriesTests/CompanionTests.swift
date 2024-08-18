@@ -5,12 +5,13 @@
 //  Created by Tony Short on 13/08/2024.
 //
 
+import Foundation
 import Testing
 @testable import Calories
 
 struct CompanionTests {
-    @Test func testCompanionReturnsMessageForEarlyMorning() throws {
-        let sut = Companion(messageDetails: messageDetails)
+    @Test func companionReturnsMessageForEarlyMorning() throws {
+        let sut = createCompanionSubject()
         let (message, scheduledHour) = try sut.nextMotivationalMessage(weekday: 0,
                                                                        randomPicker: MockRandomPicker(),
                                                                        weeklyWeightChange: 0,
@@ -19,8 +20,8 @@ struct CompanionTests {
         #expect(scheduledHour == 7)
     }
 
-    @Test func testCompanionReturnsMessageForMidMorning() throws {
-        let sut = Companion(messageDetails: messageDetails)
+    @Test func companionReturnsMessageForMidMorning() throws {
+        let sut = createCompanionSubject()
         let (message, scheduledHour) = try sut.nextMotivationalMessage(weekday: 0,
                                                                        randomPicker: MockRandomPicker(numberPick: 1),
                                                                        weeklyWeightChange: 0,
@@ -29,8 +30,8 @@ struct CompanionTests {
         #expect(scheduledHour == 10)
     }
 
-    @Test func testCompanionReturnsMessageForAnyTime() throws {
-        let sut = Companion(messageDetails: messageDetails)
+    @Test func companionReturnsMessageForAnyTime() throws {
+        let sut = createCompanionSubject()
         let (message, scheduledHour) = try sut.nextMotivationalMessage(weekday: 0,
                                                                        randomPicker: MockRandomPicker(numberPick: 2),
                                                                        weeklyWeightChange: 0,
@@ -39,9 +40,9 @@ struct CompanionTests {
         #expect(scheduledHour == 9)
     }
 
-    @Test func testMessageOnSuitableDay() throws {
+    @Test func messageOnSuitableDay() throws {
         let messageDetails = [CompanionMessage(message: "Some advice for Tuesday", timeOfDay: .earlyMorning, validDay: .tuesday)]
-        let sut = Companion(messageDetails: messageDetails)
+        let sut = Companion(messageDetails: messageDetails, notificationSender: StubbedNotificationSender())
         #expect(throws: CompanionError.NoValidMessages) {
             let (_, _) = try sut.nextMotivationalMessage(weekday: 0,
                                                          randomPicker: MockRandomPicker(numberPick: 0),
@@ -56,9 +57,9 @@ struct CompanionTests {
         #expect(scheduledHour == 7)
     }
 
-    @Test func testMessageOnWeeklyWeightLossScenario() throws {
+    @Test func messageOnWeeklyWeightLossScenario() throws {
         let messageDetails = [CompanionMessage(message: "You've lost some weight", validScenario: .weeklyWeightLoss)]
-        let sut = Companion(messageDetails: messageDetails)
+        let sut = Companion(messageDetails: messageDetails, notificationSender: StubbedNotificationSender())
         #expect(throws: CompanionError.NoValidMessages) {
             let (_, _) = try sut.nextMotivationalMessage(weekday: 0,
                                                          randomPicker: MockRandomPicker(numberPick: 0),
@@ -74,9 +75,9 @@ struct CompanionTests {
         #expect(scheduledHour == 7)
     }
 
-    @Test func testMessageOnMonthlyWeightLossScenario() throws {
+    @Test func messageOnMonthlyWeightLossScenario() throws {
         let messageDetails = [CompanionMessage(message: "You've lost some weight", validScenario: .monthlyWeightLoss)]
-        let sut = Companion(messageDetails: messageDetails)
+        let sut = Companion(messageDetails: messageDetails, notificationSender: StubbedNotificationSender())
         #expect(throws: CompanionError.NoValidMessages) {
             let (_, _) = try sut.nextMotivationalMessage(weekday: 0,
                                                          randomPicker: MockRandomPicker(numberPick: 0),
@@ -92,9 +93,9 @@ struct CompanionTests {
         #expect(scheduledHour == 7)
     }
 
-    @Test func testMessageOnWeeklyWeightGainScenario() throws {
+    @Test func messageOnWeeklyWeightGainScenario() throws {
         let messageDetails = [CompanionMessage(message: "You've gained some weight", validScenario: .weeklyWeightGain)]
-        let sut = Companion(messageDetails: messageDetails)
+        let sut = Companion(messageDetails: messageDetails, notificationSender: StubbedNotificationSender())
         #expect(throws: CompanionError.NoValidMessages) {
             let (_, _) = try sut.nextMotivationalMessage(weekday: 0,
                                                          randomPicker: MockRandomPicker(numberPick: 0),
@@ -110,11 +111,51 @@ struct CompanionTests {
         #expect(scheduledHour == 7)
     }
 
+    @Test func schedulesNotificationForTomorrow() async throws {
+        let sut = createCompanionSubject()
+        await #expect(sut.notificationSender.pendingNotificationRequests().count == 0)
+
+        try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
+                                                                          weeklyWeightChange: 0,
+                                                                          monthlyWeightChange: 0))
+
+        await #expect(sut.notificationSender.pendingNotificationRequests().count == 1)
+        let currentWeekday = Calendar.current.dateComponents([.weekday], from: dateFromComponents()).weekday!
+        #expect(currentWeekday == 2)
+        let scheduledWeekday = (sut.notificationSender as? StubbedNotificationSender)?.requestDates.first?.weekday
+        #expect(scheduledWeekday == 3)
+    }
+
+    @Test func doesNotSchedulesNotificationIfAlreadyOneScheduled() async throws {
+        let sut = createCompanionSubject()
+        await #expect(sut.notificationSender.pendingNotificationRequests().count == 0)
+
+        try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
+                                                                          weeklyWeightChange: 0,
+                                                                          monthlyWeightChange: 0))
+        try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
+                                                                          weeklyWeightChange: 0,
+                                                                          monthlyWeightChange: 0))
+
+        await #expect(sut.notificationSender.pendingNotificationRequests().count == 1)
+        #expect((sut.notificationSender as? StubbedNotificationSender)?.requestDates.count == 1)
+    }
+
+    private func createCompanionSubject() -> Companion {
+        Companion(messageDetails: messageDetails, notificationSender: StubbedNotificationSender())
+    }
+
     private let messageDetails = [
         CompanionMessage(message: "Rise and Shine! What’s good for breakfast?", timeOfDay: .earlyMorning),
         CompanionMessage(message: "Time for a quick stretch! Your muscles will thank you.", timeOfDay: .midMorning),
         CompanionMessage(message: "The only bad workout is the one you didn't do.")
     ]
+
+    private func dateFromComponents() -> Date {
+        let dc = DateComponents(calendar: Calendar.current, year: 2024, month: 1, day: 1, hour: 11, minute: 30)
+        return dc.date!
+    }
+
 }
 
 struct MockRandomPicker: RandomPickerType {
