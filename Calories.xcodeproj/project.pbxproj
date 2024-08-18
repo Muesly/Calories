@@ -265,8 +265,8 @@
 			isa = PBXGroup;
 			children = (
 				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
-				DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */,
 				DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */,
+				DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */,
 			);
 			path = Companion;
 			sourceTree = "<group>";
@@ -321,16 +321,16 @@
 		EA097D9C29918CA000735129 /* CaloriesTests */ = {
 			isa = PBXGroup;
 			children = (
-				EA2D49132998166500248864 /* AddFoodViewModelTests.swift */,
-				DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */,
 				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
+				EA2D49132998166500248864 /* AddFoodViewModelTests.swift */,
 				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
+				DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */,
+				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
 				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
 				EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */,
+				DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */,
 				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
 				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
-				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
-				DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */,
 			);
 			path = CaloriesTests;
 			sourceTree = "<group>";
@@ -338,8 +338,8 @@
 		EA2C9B8C29B4B2990019DB36 /* MealBreakdown */ = {
 			isa = PBXGroup;
 			children = (
-				EA2C9B8D29B4B2AC0019DB36 /* MealBreakdownViewModel.swift */,
 				EA2C9B8F29B4B2BD0019DB36 /* MealBreakdownView.swift */,
+				EA2C9B8D29B4B2AC0019DB36 /* MealBreakdownViewModel.swift */,
 			);
 			path = MealBreakdown;
 			sourceTree = "<group>";
@@ -348,13 +348,13 @@
 			isa = PBXGroup;
 			children = (
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
-				DD538CF22C6E9377007CAD98 /* RandomPicker.swift */,
-				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
-				EA08544F299BED050029DD42 /* Theme.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
-				EA097DB72991909500735129 /* HistoryViewModel.swift */,
-				EA2D490929970B8A00248864 /* HistoryView.swift */,
+				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
 				EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */,
+				EA2D490929970B8A00248864 /* HistoryView.swift */,
+				EA097DB72991909500735129 /* HistoryViewModel.swift */,
+				DD538CF22C6E9377007CAD98 /* RandomPicker.swift */,
+				EA08544F299BED050029DD42 /* Theme.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -362,11 +362,11 @@
 		EA2D491629981AFD00248864 /* AddEntry */ = {
 			isa = PBXGroup;
 			children = (
-				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA08544D299BD6290029DD42 /* AddFoodInputFieldsView.swift */,
-				EA2EA7492B507A7D00382DC8 /* PlantListView.swift */,
-				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
+				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
+				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
+				EA2EA7492B507A7D00382DC8 /* PlantListView.swift */,
 			);
 			path = AddEntry;
 			sourceTree = "<group>";
@@ -374,8 +374,8 @@
 		EA2D491729981B0F00248864 /* MealItems */ = {
 			isa = PBXGroup;
 			children = (
-				EA2D490D2997D62000248864 /* MealItemsViewModel.swift */,
 				EA2D490B2997D60200248864 /* MealItemsView.swift */,
+				EA2D490D2997D62000248864 /* MealItemsViewModel.swift */,
 			);
 			path = MealItems;
 			sourceTree = "<group>";
@@ -428,8 +428,8 @@
 		EA4EE50A299E9D44000FE6AC /* AddExercise */ = {
 			isa = PBXGroup;
 			children = (
-				EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */,
 				DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */,
+				EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */,
 				EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */,
 			);
 			path = AddExercise;
@@ -470,10 +470,10 @@
 		EAD2115929A38F730007A813 /* RecordWeight */ = {
 			isa = PBXGroup;
 			children = (
-				EAD2115A29A38F860007A813 /* RecordWeightView.swift */,
-				DDC854022C5FDF2600420D87 /* RevealingTextView.swift */,
 				DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */,
+				EAD2115A29A38F860007A813 /* RecordWeightView.swift */,
 				EAD2115C29A390E80007A813 /* RecordWeightViewModel.swift */,
+				DDC854022C5FDF2600420D87 /* RevealingTextView.swift */,
 			);
 			path = RecordWeight;
 			sourceTree = "<group>";

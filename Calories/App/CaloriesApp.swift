@@ -16,9 +16,6 @@ struct CaloriesApp: App {
     var healthStore: HealthStore {
         isUITesting ? StubbedHealthStore() : HKHealthStore()
     }
-    var notificationSender: NotificationSender {
-        isUITesting ? StubbedNotificationSender() : UNUserNotificationCenter.current()
-    }
 
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
@@ -29,7 +26,7 @@ struct CaloriesApp: App {
         WindowGroup {
             CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
                          weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
-                         companion: Companion(messageDetails: Companion.defaultMessages, notificationSender: notificationSender))
+                         companion: isUITesting ? Companion.createNull() : Companion.create())
                 .environment(\.healthStore, healthStore)
             //DataView()
         }
