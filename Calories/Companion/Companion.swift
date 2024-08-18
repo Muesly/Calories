@@ -18,6 +18,16 @@ struct Companion {
         self.notificationSender = notificationSender
     }
 
+    static func create() -> Companion {
+        Companion(messageDetails: Self.defaultMessages,
+                  notificationSender: UNUserNotificationCenter.current())
+    }
+
+    static func createNull() -> Companion {
+        Companion(messageDetails: Self.defaultMessages,
+                  notificationSender: StubbedNotificationSender())
+    }
+
     func nextMotivationalMessage(weekday: Int,
                                  randomPicker: RandomPickerType = RandomPicker(),
                                  weeklyWeightChange: Int,

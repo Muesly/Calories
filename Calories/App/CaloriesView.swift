@@ -86,20 +86,23 @@ struct CaloriesView: View {
     }
 
     private func refresh() {
-        historyViewModel.fetchDaySections()
         Task {
+            historyViewModel.fetchDaySections()
             await weeklyChartViewModel.fetchDaysCalorieData()
-            do {
-                let weeklyWeightChange = try await healthStore.weeklyWeightChange()
-                let monthlyWeightChange = try await healthStore.monthlyWeightChange()
-                let context = MotivationalContext(date: Date(),
-                                                  weeklyWeightChange: weeklyWeightChange,
-                                                  monthlyWeightChange: monthlyWeightChange)
-                try? await companion.scheduleTomorrowsMotivationalMessage(context: context)
-            } catch {
-                fatalError("Failed to fetch weight changes: \(error)")
-            }
+            await scheduleTomorrowsMotivationalMessage()
         }
     }
 
+    private func scheduleTomorrowsMotivationalMessage() async {
+        do {
+            let weeklyWeightChange = try await healthStore.weeklyWeightChange()
+            let monthlyWeightChange = try await healthStore.monthlyWeightChange()
+            let context = MotivationalContext(date: Date(),
+                                              weeklyWeightChange: weeklyWeightChange,
+                                              monthlyWeightChange: monthlyWeightChange)
+            try? await companion.scheduleTomorrowsMotivationalMessage(context: context)
+        } catch {
+            fatalError("Failed to fetch weight changes: \(error)")
+        }
+    }
 }
