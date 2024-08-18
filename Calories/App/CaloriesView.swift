@@ -11,10 +11,10 @@ import CoreData
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.healthStore) var healthStore
-    @Environment(\.companion) var companion
 
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
+    private let companion: Companion
 
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
@@ -22,9 +22,11 @@ struct CaloriesView: View {
     @State var entryDeleted = false
 
     init(historyViewModel: HistoryViewModel,
-         weeklyChartViewModel: WeeklyChartViewModel) {
+         weeklyChartViewModel: WeeklyChartViewModel,
+         companion: Companion) {
         self.historyViewModel = historyViewModel
         self.weeklyChartViewModel = weeklyChartViewModel
+        self.companion = companion
     }
 
     var body: some View {
@@ -90,8 +92,10 @@ struct CaloriesView: View {
             do {
                 let weeklyWeightChange = try await healthStore.weeklyWeightChange()
                 let monthlyWeightChange = try await healthStore.monthlyWeightChange()
-                try? await companion.scheduleTomorrowsMotivationalMessage(context: MotivationalContext(weeklyWeightChange: weeklyWeightChange,
-                                                                                                       monthlyWeightChange: monthlyWeightChange))
+                let context = MotivationalContext(date: Date(),
+                                                  weeklyWeightChange: weeklyWeightChange,
+                                                  monthlyWeightChange: monthlyWeightChange)
+                try? await companion.scheduleTomorrowsMotivationalMessage(context: context)
             } catch {
                 fatalError("Failed to fetch weight changes: \(error)")
             }

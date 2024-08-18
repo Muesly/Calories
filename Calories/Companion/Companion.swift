@@ -10,9 +10,12 @@ import SwiftUI
 
 struct Companion {
     private let messageDetails: [CompanionMessage]
+    let notificationSender: NotificationSender
 
-    init(messageDetails: [CompanionMessage]) {
+    init(messageDetails: [CompanionMessage],
+         notificationSender: NotificationSender) {
         self.messageDetails = messageDetails
+        self.notificationSender = notificationSender
     }
 
     func nextMotivationalMessage(weekday: Int,
@@ -73,47 +76,34 @@ struct Companion {
     ]
 
     func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
-        let notificationCenter = UNUserNotificationCenter.current()
-        guard await notificationCenter.pendingNotificationRequests().count == 0 else {
+        guard await notificationSender.pendingNotificationRequests().count == 0 else {
             return
         }
 
-        let content = UNMutableNotificationContent()
-
         let weeklyWeightChange = context.weeklyWeightChange
         let monthlyWeightChange = context.monthlyWeightChange
-        let tomorrow = Date().addingTimeInterval(86400)
-        var dateComponents = Calendar.current.dateComponents([.weekday], from: tomorrow)
+        let tomorrow = context.date.addingTimeInterval(86400)
+        var timeToSchedule = Calendar.current.dateComponents([.weekday], from: tomorrow)
 
-        let (message, scheduledHour) = try nextMotivationalMessage(weekday: dateComponents.weekday!,
+        let (message, scheduledHour) = try nextMotivationalMessage(weekday: timeToSchedule.weekday!,
                                                                    weeklyWeightChange: weeklyWeightChange,
                                                                    monthlyWeightChange: monthlyWeightChange)
-        dateComponents.hour = scheduledHour
+        timeToSchedule.hour = scheduledHour
 
+        let content = UNMutableNotificationContent()
         content.body = message
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-
+        let trigger = UNCalendarNotificationTrigger(dateMatching: timeToSchedule, repeats: false)
         let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
-        try await notificationCenter.add(request)
+        try await notificationSender.add(request)
     }
 }
 
 struct MotivationalContext {
+    let date: Date
     let weeklyWeightChange: Int
     let monthlyWeightChange: Int
 }
 
 enum CompanionError: Error {
     case NoValidMessages
-}
-
-private struct CompanionKey: EnvironmentKey {
-    static let defaultValue: Companion = Companion(messageDetails: Companion.defaultMessages)
-}
-
-extension EnvironmentValues {
-    var companion: Companion {
-        get { self[CompanionKey.self] }
-        set { self[CompanionKey.self] = newValue }
-    }
 }
