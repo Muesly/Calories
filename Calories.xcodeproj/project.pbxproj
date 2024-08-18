@@ -259,6 +259,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DDB7FF8C2C724EB6000FE006 /* Companion */ = {
+			isa = PBXGroup;
+			children = (
+				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
+				DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */,
+			);
+			path = Companion;
+			sourceTree = "<group>";
+		};
 		EA097D7B29918C9E00735129 = {
 			isa = PBXGroup;
 			children = (
@@ -296,6 +305,7 @@
 				EA2D491529981AE800248864 /* App */,
 				EA4EE50A299E9D44000FE6AC /* AddExercise */,
 				EA2D491629981AFD00248864 /* AddEntry */,
+				DDB7FF8C2C724EB6000FE006 /* Companion */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				EA2D491829981B3C00248864 /* HealthStore */,
 				EA2C9B8C29B4B2990019DB36 /* MealBreakdown */,
@@ -337,8 +347,6 @@
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
 				DD538CF22C6E9377007CAD98 /* RandomPicker.swift */,
 				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
-				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
-				DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */,
 				EA08544F299BED050029DD42 /* Theme.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
 				EA097DB72991909500735129 /* HistoryViewModel.swift */,

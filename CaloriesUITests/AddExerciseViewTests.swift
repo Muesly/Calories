@@ -27,7 +27,7 @@ final class AddExerciseViewTests: XCTestCase {
         XCTAssertTrue(addExerciseButton.exists)
         addExerciseButton.tap()
         let searchBar = app.searchFields["Enter exercise"]
-        XCTAssert(searchBar.exists)
+        XCTAssert(searchBar.waitForExistence(timeout: 5))
         searchBar.tap()
         searchBar.typeText("Weights")
         let addButton = app.collectionViews["Exercise List"].staticTexts["Add Weights as a new exercise"]

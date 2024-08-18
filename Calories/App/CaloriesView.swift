@@ -11,6 +11,7 @@ import CoreData
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.healthStore) var healthStore
+    @Environment(\.companion) var companion
 
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
@@ -86,35 +87,15 @@ struct CaloriesView: View {
         historyViewModel.fetchDaySections()
         Task {
             await weeklyChartViewModel.fetchDaysCalorieData()
-            try? await scheduleTomorrowsMotivationalMessage()
+            do {
+                let weeklyWeightChange = try await healthStore.weeklyWeightChange()
+                let monthlyWeightChange = try await healthStore.monthlyWeightChange()
+                try? await companion.scheduleTomorrowsMotivationalMessage(context: MotivationalContext(weeklyWeightChange: weeklyWeightChange,
+                                                                                                       monthlyWeightChange: monthlyWeightChange))
+            } catch {
+                fatalError("Failed to fetch weight changes: \(error)")
+            }
         }
     }
 
-    private func scheduleTomorrowsMotivationalMessage() async throws {
-
-        let notificationCenter = UNUserNotificationCenter.current()
-        guard await notificationCenter.pendingNotificationRequests().count == 0 else {
-            return
-        }
-
-        let content = UNMutableNotificationContent()
-
-        let companion = Companion(messageDetails: Companion.defaultMessages)
-
-        let weeklyWeightChange = try await healthStore.weeklyWeightChange()
-        let monthlyWeightChange = try await healthStore.monthlyWeightChange()
-        let tomorrow = Date().addingTimeInterval(86400)
-        var dateComponents = Calendar.current.dateComponents([.weekday], from: tomorrow)
-
-        let (message, scheduledHour) = try companion.nextMotivationalMessage(weekday: dateComponents.weekday!,
-                                                                         weeklyWeightChange: weeklyWeightChange,
-                                                                         monthlyWeightChange: monthlyWeightChange)
-        dateComponents.hour = scheduledHour
-
-        content.body = message
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-
-        let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
-        try await notificationCenter.add(request)
-    }
 }

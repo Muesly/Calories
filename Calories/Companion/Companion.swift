@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Companion {
     private let messageDetails: [CompanionMessage]
@@ -70,8 +71,49 @@ struct Companion {
         CompanionMessage(message: "Don’t worry about the blip yesterday. It’s a marathon, not a sprint.", validScenario: .weeklyWeightGain),
         CompanionMessage(message: "You’ve done really well over the last month 👏", validScenario: .monthlyWeightLoss),
     ]
+
+    func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
+        let notificationCenter = UNUserNotificationCenter.current()
+        guard await notificationCenter.pendingNotificationRequests().count == 0 else {
+            return
+        }
+
+        let content = UNMutableNotificationContent()
+
+        let weeklyWeightChange = context.weeklyWeightChange
+        let monthlyWeightChange = context.monthlyWeightChange
+        let tomorrow = Date().addingTimeInterval(86400)
+        var dateComponents = Calendar.current.dateComponents([.weekday], from: tomorrow)
+
+        let (message, scheduledHour) = try nextMotivationalMessage(weekday: dateComponents.weekday!,
+                                                                   weeklyWeightChange: weeklyWeightChange,
+                                                                   monthlyWeightChange: monthlyWeightChange)
+        dateComponents.hour = scheduledHour
+
+        content.body = message
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+
+        let request = UNNotificationRequest(identifier: "reminder", content: content, trigger: trigger)
+        try await notificationCenter.add(request)
+    }
+}
+
+struct MotivationalContext {
+    let weeklyWeightChange: Int
+    let monthlyWeightChange: Int
 }
 
 enum CompanionError: Error {
     case NoValidMessages
+}
+
+private struct CompanionKey: EnvironmentKey {
+    static let defaultValue: Companion = Companion(messageDetails: Companion.defaultMessages)
+}
+
+extension EnvironmentValues {
+    var companion: Companion {
+        get { self[CompanionKey.self] }
+        set { self[CompanionKey.self] = newValue }
+    }
 }
