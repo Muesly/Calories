@@ -1,5 +1,5 @@
 //
-//  AddFoodInputFieldsView.swift
+//  AddFoodDetailsView.swift
 //  Calories
 //
 //  Created by Tony Short on 14/02/2023.

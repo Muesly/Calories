@@ -89,8 +89,8 @@ struct AddFoodView: View {
         }
     }
 
-    private func addFoodInputFieldsView(description: String) -> AddFoodInputFieldsView {
-        AddFoodInputFieldsView(viewModel: viewModel,
+    private func addFoodInputFieldsView(description: String) -> AddFoodDetailsView {
+        AddFoodDetailsView(viewModel: viewModel,
                                defFoodDescription: description,
                                defCalories: viewModel.defCaloriesFor(description),
                                defTimeConsumed: $timeConsumed,
