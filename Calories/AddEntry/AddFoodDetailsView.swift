@@ -69,6 +69,7 @@ struct AddFoodDetailsView: View {
                                 .background(.white)
                                 .cornerRadius(10)
                                 .foregroundColor(.black)
+                                .accessibilityIdentifier("Calories Number Field")
                             Button {
                                 UIApplication.shared.open(viewModel.calorieSearchURL(for: foodDescription))
                             } label: {

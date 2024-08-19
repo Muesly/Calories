@@ -48,6 +48,7 @@ struct AddFoodView: View {
                     }
                 }
             }
+            .accessibilityIdentifier("Food List")
             MealItemsView(viewModel: mealItemsViewModel)
             Spacer()
             .navigationTitle("Add new food")

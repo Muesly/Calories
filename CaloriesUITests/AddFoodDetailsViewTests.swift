@@ -10,32 +10,35 @@ import XCTest
 final class AddFoodDetailsViewTests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    private func runAndReturnApp() -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments.append("UI_TESTING")
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        return app
     }
 
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    func testWhenNewFoodIsAdded() throws
+    {
+        let app = runAndReturnApp()
+        let addFoodButton = app.buttons["Add food"]
+        XCTAssertTrue(addFoodButton.exists)
+        addFoodButton.tap()
+        let searchBar = app.searchFields["Enter Evening Snack food or drink..."]
+        XCTAssert(searchBar.waitForExistence(timeout: 5))
+        searchBar.tap()
+        searchBar.typeText("Katsu Chicken & Rice")
+        let addButton = app.collectionViews["Food List"].staticTexts["Add Katsu Chicken & Rice as a new food"]
+        XCTAssert(addButton.exists)
+        addButton.tap()
+        let caloriesTextField = app.textFields["Calories Number Field"]
+        caloriesTextField.tap()
+        caloriesTextField.typeText("450")
+        let confirmationButton = app.buttons["Add Katsu Chicken & Rice"]
+        confirmationButton.tap()
+        XCTAssertTrue(addFoodButton.exists)
     }
+
 }
