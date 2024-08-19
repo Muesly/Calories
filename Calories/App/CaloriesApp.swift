@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HealthKit
 import SwiftUI
 import UserNotifications
 
@@ -14,7 +13,11 @@ import UserNotifications
 struct CaloriesApp: App {
     let isUITesting: Bool
     var healthStore: HealthStore {
-        isUITesting ? StubbedHealthStore() : HKHealthStore()
+        isUITesting ? HealthStoreFactory.createNull() : HealthStoreFactory.create()
+    }
+
+    var companion: Companion {
+        isUITesting ? Companion.createNull() : Companion.create()
     }
 
     init() {
@@ -26,8 +29,8 @@ struct CaloriesApp: App {
         WindowGroup {
             CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
                          weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
-                         companion: isUITesting ? Companion.createNull() : Companion.create())
-                .environment(\.healthStore, healthStore)
+                         healthStore: healthStore,
+                         companion: companion)
             //DataView()
         }
     }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct AddFoodInputFieldsView: View {
+struct AddFoodDetailsView: View {
     private let viewModel: AddFoodViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
@@ -79,6 +79,27 @@ struct AddFoodInputFieldsView: View {
                 }
                 MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $defTimeConsumed))
 
+                List {
+                    Section {
+                        ForEach([Plant(name: "Lettuce")]) {
+                            Text($0.name)
+                        }
+                        Button("Add new plant") {
+
+                        }
+                    } header: {
+                        HStack {
+                            Text("Plants")
+                            Spacer()
+                            Button("Add +") {
+
+                            }
+                        }
+                    }
+                    .listSectionSeparator(.hidden, edges: .top)
+                }
+                .listStyle(.plain)
+
                 Button {
                     Task(priority: .high) {
                         do {
@@ -108,19 +129,19 @@ struct AddFoodInputFieldsView: View {
             .background(Colours.backgroundSecondary)
             .cornerRadius(10)
             Spacer()
-            .onChange(of: scenePhase) { _, newPhase in
-                if AddFoodViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
-                    Task {
-                        foodDescription = ""
-                        calories = 0
-                        defTimeConsumed = Date()
+                .onChange(of: scenePhase) { _, newPhase in
+                    if AddFoodViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
+                        Task {
+                            foodDescription = ""
+                            calories = 0
+                            defTimeConsumed = Date()
+                        }
                     }
                 }
-            }
-            .alert("Failed to access vehicle health",
-                   isPresented: $isShowingFailureToAuthoriseAlert) {
-                Button("OK", role: .cancel) {}
-            }
+                .alert("Failed to access vehicle health",
+                       isPresented: $isShowingFailureToAuthoriseAlert) {
+                    Button("OK", role: .cancel) {}
+                }
         }
         .padding()
         .cornerRadius(10)
@@ -128,13 +149,16 @@ struct AddFoodInputFieldsView: View {
     }
 }
 
-struct AddEntryInputFieldsView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddFoodInputFieldsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore()),
-                                defFoodDescription: "Some food",
-                                defCalories: 100,
-                                defTimeConsumed: .constant(Date()),
-                                searchText: .constant("Some food"),
-                                foodAddedAtTime: .constant(Date()))
-    }
+#Preview {
+    AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore()),
+                           defFoodDescription: "Some food",
+                           defCalories: 100,
+                           defTimeConsumed: .constant(Date()),
+                           searchText: .constant("Some food"),
+                           foodAddedAtTime: .constant(Date()))
+}
+
+struct Plant: Identifiable {
+    var id: String { name }
+    let name: String
 }

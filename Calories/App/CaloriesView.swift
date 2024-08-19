@@ -10,10 +10,10 @@ import CoreData
 
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.healthStore) var healthStore
 
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
+    private let healthStore: HealthStore
     private let companion: Companion
 
     @State var showingAddEntryView = false
@@ -23,9 +23,11 @@ struct CaloriesView: View {
 
     init(historyViewModel: HistoryViewModel,
          weeklyChartViewModel: WeeklyChartViewModel,
+         healthStore: HealthStore,
          companion: Companion) {
         self.historyViewModel = historyViewModel
         self.weeklyChartViewModel = weeklyChartViewModel
+        self.healthStore = healthStore
         self.companion = companion
     }
 
