@@ -31,6 +31,15 @@ protocol HealthStore {
     func addWeightEntry(_ weightEntry: WeightEntry) async throws
 }
 
+struct HealthStoreFactory {
+    static func create() -> HealthStore {
+        HKHealthStore()
+    }
+
+    static func createNull() -> HealthStore {
+        StubbedHealthStore()
+    }
+}
 enum HealthStoreError: Error {
     case errorNoHealthDataAvailable
 }
