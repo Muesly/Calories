@@ -19,7 +19,7 @@
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
-		EA08544E299BD62A0029DD42 /* AddFoodInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544D299BD6290029DD42 /* AddFoodInputFieldsView.swift */; };
+		EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */; };
 		EA085450299BED050029DD42 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
 		EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085451299C01350029DD42 /* WeeklyChartView.swift */; };
 		EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */; };
@@ -147,7 +147,7 @@
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
 		DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaloriesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA08544D299BD6290029DD42 /* AddFoodInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodInputFieldsView.swift; sourceTree = "<group>"; };
+		EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodDetailsView.swift; sourceTree = "<group>"; };
 		EA08544F299BED050029DD42 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EA085451299C01350029DD42 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
 		EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartViewModel.swift; sourceTree = "<group>"; };
@@ -362,7 +362,7 @@
 		EA2D491629981AFD00248864 /* AddEntry */ = {
 			isa = PBXGroup;
 			children = (
-				EA08544D299BD6290029DD42 /* AddFoodInputFieldsView.swift */,
+				EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */,
 				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
 				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
@@ -733,7 +733,7 @@
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
-				EA08544E299BD62A0029DD42 /* AddFoodInputFieldsView.swift in Sources */,
+				EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */,
 				EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */,
 				EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */,
 				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,
