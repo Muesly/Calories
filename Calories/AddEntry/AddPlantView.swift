@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddPlantView: View {
+    @Environment(\.dismiss) var dismiss
     @State var searchText = ""
 
     var body: some View {
@@ -15,6 +16,7 @@ struct AddPlantView: View {
             List {
                 if !searchText.isEmpty {
                     Button {
+                        dismiss()
                     } label: {
                         Text("Add \(searchText) as a new plant").bold()
                     }

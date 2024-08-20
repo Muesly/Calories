@@ -60,11 +60,12 @@ final class AddFoodDetailsViewTests: XCTestCase {
         XCTAssert(addPlantViewHeader.exists)
 
         let plantSearchBar = app.searchFields["Enter name of plant"]
-        XCTAssert(plantSearchBar.exists)
         plantSearchBar.tap()
         plantSearchBar.typeText("Rice")
 
         let plantAddButton = app.collectionViews["Plant List"].buttons["Add Rice as a new plant"]
-        XCTAssert(plantAddButton.exists)
+        plantAddButton.tap()
+        let foodsPlantList = app.collectionViews["Food's Plant List"]
+        XCTAssert(foodsPlantList.exists)
     }
 }

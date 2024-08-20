@@ -100,6 +100,7 @@ struct AddFoodDetailsView: View {
                     }
                     .listSectionSeparator(.hidden, edges: .top)
                 }
+                .accessibilityIdentifier("Food's Plant List")
                 .listStyle(.plain)
 
                 Button {
