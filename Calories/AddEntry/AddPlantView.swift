@@ -12,13 +12,19 @@ struct AddPlantView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
-                Text(searchText)
-                    .navigationTitle("Add Plant")
-                    .searchable(text: $searchText,
-                                placement:  .navigationBarDrawer(displayMode: .always),
-                                prompt: "Enter name of plant")
+            List {
+                if !searchText.isEmpty {
+                    Button {
+                    } label: {
+                        Text("Add \(searchText) as a new plant").bold()
+                    }
+                }
             }
+            .accessibilityIdentifier("Plant List")
+            .navigationTitle("Add Plant")
+            .searchable(text: $searchText,
+                        placement:  .navigationBarDrawer(displayMode: .always),
+                        prompt: "Enter name of plant")
         }
     }
 }
