@@ -26,19 +26,32 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let addFoodButton = app.buttons["Add food"]
         XCTAssertTrue(addFoodButton.exists)
         addFoodButton.tap()
+
+        let foodHeader = app.staticTexts["Add new food"]
+        XCTAssert(foodHeader.exists)
         let searchBar = app.searchFields["Enter Evening Snack food or drink..."]
-        XCTAssert(searchBar.waitForExistence(timeout: 5))
+        XCTAssert(searchBar.exists)
         searchBar.tap()
         searchBar.typeText("Katsu Chicken & Rice")
         let addButton = app.collectionViews["Food List"].staticTexts["Add Katsu Chicken & Rice as a new food"]
         XCTAssert(addButton.exists)
         addButton.tap()
+
         let caloriesTextField = app.textFields["Calories Number Field"]
         caloriesTextField.tap()
         caloriesTextField.typeText("450")
-        let confirmationButton = app.buttons["Add Katsu Chicken & Rice"]
-        confirmationButton.tap()
-        XCTAssertTrue(addFoodButton.exists)
+
+        let addPlantButton = app.buttons["Add Plant Header Button"]
+        addPlantButton.tap()
+        let addPlantViewHeader = app.navigationBars.staticTexts["Add Plant"]
+        XCTAssert(addPlantViewHeader.exists)
+
+        let plantSearchBar = app.searchFields["Enter name of plant"]
+        XCTAssert(plantSearchBar.exists)
+        plantSearchBar.tap()
+        plantSearchBar.typeText("Rice")
+
+        XCTAssert(app.staticTexts["Rice"].exists)
     }
 
 }
