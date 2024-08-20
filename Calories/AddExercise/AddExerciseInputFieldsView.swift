@@ -124,7 +124,8 @@ struct AddExerciseInputFieldsView: View {
 }
 
 #Preview {
-    AddExerciseInputFieldsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore()),
+    AddExerciseInputFieldsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
+                                                               viewContext: PersistenceController.inMemoryContext),
                                defExerciseDescription: "Some exercise",
                                defCalories: 100,
                                defTimeConsumed: .constant(Date()),

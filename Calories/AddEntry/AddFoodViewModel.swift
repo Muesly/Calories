@@ -12,15 +12,15 @@ import SwiftUI
 
 @Observable
 class AddFoodViewModel: ObservableObject {
-    let container: NSPersistentContainer
+    let viewContext: NSManagedObjectContext
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
     var suggestions: [Suggestion] = []
     
     init(healthStore: HealthStore,
-         container: NSPersistentContainer = PersistenceController.shared.container) {
+         viewContext: NSManagedObjectContext) {
         self.healthStore = healthStore
-        self.container = container
+        self.viewContext = viewContext
     }
 
     func prompt(for date: Date = Date()) -> String {
@@ -49,7 +49,7 @@ class AddFoodViewModel: ObservableObject {
             let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
             request.predicate = NSPredicate(format: "timeConsumed < %@", startOfDay as CVarArg)
             request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
-            guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
+            guard let results: [FoodEntry] = (try? viewContext.fetch(request)) else {
                 suggestions = []
                 return
             }
@@ -62,7 +62,7 @@ class AddFoodViewModel: ObservableObject {
             suggestions = orderedSet.map { $0 as! Suggestion }
         } else {    // Show fuzzy matched strings for this search text
             request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
-            guard let results: [FoodEntry] = (try? container.viewContext.fetch(request)) else {
+            guard let results: [FoodEntry] = (try? viewContext.fetch(request)) else {
                 suggestions = []
                 return
             }
@@ -76,12 +76,12 @@ class AddFoodViewModel: ObservableObject {
 
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date) async throws {
         try await healthStore.authorize()
-        let foodEntry = FoodEntry(context: container.viewContext,
+        let foodEntry = FoodEntry(context: viewContext,
                                   foodDescription: foodDescription,
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed)
         try await healthStore.addFoodEntry(foodEntry)
-        try container.viewContext.save()
+        try viewContext.save()
     }
 
     func defCaloriesFor(_ name: String) -> Int {
@@ -89,7 +89,7 @@ class AddFoodViewModel: ObservableObject {
         let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
         request.predicate = NSPredicate(format: "foodDescription == %@", name as CVarArg)
-        return Int(((try? container.viewContext.fetch(request))?.first as? FoodEntry)?.calories ?? 0)
+        return Int(((try? viewContext.fetch(request))?.first as? FoodEntry)?.calories ?? 0)
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {

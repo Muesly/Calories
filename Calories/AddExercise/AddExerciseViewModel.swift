@@ -12,24 +12,24 @@ import SwiftUI
 
 @Observable
 class AddExerciseViewModel {
-    let container: NSPersistentContainer
+    let viewContext: NSManagedObjectContext
     let healthStore: HealthStore
     var suggestions: [Suggestion] = []
     
     init(healthStore: HealthStore,
-         container: NSPersistentContainer = PersistenceController.shared.container) {
+         viewContext: NSManagedObjectContext) {
         self.healthStore = healthStore
-        self.container = container
+        self.viewContext = viewContext
     }
     
     func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws {
         try await healthStore.authorize()
-        let exerciseEntry = ExerciseEntry(context: container.viewContext,
+        let exerciseEntry = ExerciseEntry(context: viewContext,
                                           exerciseDescription: exerciseDescription,
                                           calories: calories,
                                           timeExercised: timeExercised)
         try await healthStore.addExerciseEntry(exerciseEntry)
-        try container.viewContext.save()
+        try viewContext.save()
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
@@ -47,7 +47,7 @@ class AddExerciseViewModel {
 
         if searchText.isEmpty { // Show list of all previous exercises
             request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntry.timeExercised, ascending: false)]
-            guard let results: [ExerciseEntry] = (try? container.viewContext.fetch(request)) else {
+            guard let results: [ExerciseEntry] = (try? viewContext.fetch(request)) else {
                 suggestions = []
                 return
             }
@@ -55,7 +55,7 @@ class AddExerciseViewModel {
             suggestions = orderedSet.map { $0 as! Suggestion }
         } else {    // Show fuzzy matched strings for this search text
             request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntry.timeExercised, ascending: false)]
-            guard let results: [ExerciseEntry] = (try? container.viewContext.fetch(request)) else {
+            guard let results: [ExerciseEntry] = (try? viewContext.fetch(request)) else {
                 suggestions = []
                 return
             }

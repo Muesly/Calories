@@ -151,7 +151,8 @@ struct AddFoodDetailsView: View {
 }
 
 #Preview {
-    AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore()),
+    AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
+                                                   viewContext: PersistenceController.inMemoryContext),
                            defFoodDescription: "Some food",
                            defCalories: 100,
                            defTimeConsumed: .constant(Date()),

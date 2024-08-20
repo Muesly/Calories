@@ -23,7 +23,7 @@ struct AddFoodView: View {
          currentDate: Date = Date()) {
         self.viewModel = viewModel
         self._showingAddEntryView = showingAddEntryView
-        self.mealItemsViewModel = MealItemsViewModel(viewContext: viewModel.container.viewContext,
+        self.mealItemsViewModel = MealItemsViewModel(viewContext: viewModel.viewContext,
                                                      currentDate: currentDate)
     }
 
@@ -102,7 +102,7 @@ struct AddFoodView: View {
 
 #Preview {
     AddFoodView(viewModel: .init(healthStore: MockHealthStore(),
-                                  container: PersistenceController(inMemory: true).container), 
+                                 viewContext: PersistenceController.inMemoryContext),
                  showingAddEntryView: .constant(false),
                  currentDate: Date())
 }

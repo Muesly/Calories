@@ -5,6 +5,7 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
+import CoreData
 import Foundation
 import SwiftUI
 import UserNotifications
@@ -20,6 +21,10 @@ struct CaloriesApp: App {
         isUITesting ? Companion.createNull() : Companion.create()
     }
 
+    var container: NSPersistentContainer {
+        isUITesting ? PersistenceController(inMemory: true).container : PersistenceController.shared.container
+    }
+
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         requestNotificationsPermission()
@@ -27,10 +32,11 @@ struct CaloriesApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
+            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore, viewContext: container.viewContext),
                          weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
                          healthStore: healthStore,
                          companion: companion)
+            .environment(\.managedObjectContext, container.viewContext)
             //DataView()
         }
     }
