@@ -25,3 +25,9 @@ struct PersistenceController {
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 }
+
+extension PersistenceController {
+    static var inMemoryContext: NSManagedObjectContext {
+        PersistenceController(inMemory: true).container.viewContext
+    }
+}

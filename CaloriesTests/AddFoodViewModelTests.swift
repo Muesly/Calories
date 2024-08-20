@@ -14,26 +14,19 @@ import XCTest
 final class AddFoodViewModelTests: XCTestCase {
     var subject: AddFoodViewModel!
     var mockHealthStore: MockHealthStore!
-
-    var controller: PersistenceController!
-    var container: NSPersistentContainer {
-        controller.container
-    }
-    var context: NSManagedObjectContext {
-        container.viewContext
-    }
+    var context: NSManagedObjectContext!
 
     override func setUpWithError() throws {
-        controller = PersistenceController(inMemory: true)
+        context = PersistenceController(inMemory: true).container.viewContext
         mockHealthStore = MockHealthStore()
         subject = AddFoodViewModel(healthStore: mockHealthStore,
-                                        container: container)
+                                   viewContext: context)
     }
 
     override func tearDownWithError() throws {
         subject = nil
         mockHealthStore = nil
-        controller = nil
+        context = nil
     }
 
     func dateFromComponents() -> Date {

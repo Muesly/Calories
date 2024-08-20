@@ -11,16 +11,15 @@ import SwiftUI
 
 @Observable
 class HistoryViewModel {
-    private let container: NSPersistentContainer
+    private let viewContext: NSManagedObjectContext
     private let healthStore: HealthStore
     private var timeFormatter: DateFormatter = DateFormatter()
     var dateForEntries: Date = Date()
     var daySections: [Day] = []
 
-    init(healthStore: HealthStore,
-         container: NSPersistentContainer = PersistenceController.shared.container) {
+    init(healthStore: HealthStore, viewContext: NSManagedObjectContext) {
         self.healthStore = healthStore
-        self.container = container
+        self.viewContext = viewContext
     }
 
     @MainActor
@@ -31,7 +30,7 @@ class HistoryViewModel {
 
         let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
         request.predicate = NSPredicate(format: "timeConsumed >= %@", weekPrior as CVarArg)
-        let foodEntriesForWeek: [FoodEntry] = (try? container.viewContext.fetch(request)) ?? []
+        let foodEntriesForWeek: [FoodEntry] = (try? viewContext.fetch(request)) ?? []
 
         var daySections = [Day]()
         foodEntriesForWeek.forEach { foodEntry in
@@ -62,7 +61,7 @@ class HistoryViewModel {
 
         let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
         request.predicate = NSPredicate(format: "timeConsumed >= %@", startOfDay as CVarArg)
-        return (try? container.viewContext.fetch(request)) ?? []
+        return (try? viewContext.fetch(request)) ?? []
     }
 
     var timeConsumedTimeFormatter: DateFormatter {
@@ -83,10 +82,10 @@ class HistoryViewModel {
         } catch {
             print("Failed to save delete in Health")
         }
-        container.viewContext.delete(foodEntry)
+        viewContext.delete(foodEntry)
 
         do {
-            try container.viewContext.save()
+            try viewContext.save()
         } catch {
             print("Failed to save delete")
         }
