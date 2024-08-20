@@ -23,10 +23,19 @@ final class AddFoodDetailsViewTests: XCTestCase {
     func testWhenNewFoodIsAdded() throws
     {
         let app = runAndReturnApp()
+        goToAddFood(app)
+        addNewFood(app)
+        enterInDetailsOfNewFood(app)
+        addPlantInNewFood(app)
+    }
+
+    private func goToAddFood(_ app: XCUIApplication) {
         let addFoodButton = app.buttons["Add food"]
         XCTAssertTrue(addFoodButton.exists)
         addFoodButton.tap()
+    }
 
+    private func addNewFood(_ app: XCUIApplication) {
         let foodHeader = app.staticTexts["Add new food"]
         XCTAssert(foodHeader.exists)
         let searchBar = app.searchFields["Enter Evening Snack food or drink..."]
@@ -36,11 +45,15 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let addButton = app.collectionViews["Food List"].staticTexts["Add Katsu Chicken & Rice as a new food"]
         XCTAssert(addButton.exists)
         addButton.tap()
+    }
 
+    private func enterInDetailsOfNewFood(_ app: XCUIApplication) {
         let caloriesTextField = app.textFields["Calories Number Field"]
         caloriesTextField.tap()
         caloriesTextField.typeText("450")
+    }
 
+    private func addPlantInNewFood(_ app: XCUIApplication) {
         let addPlantButton = app.buttons["Add Plant Header Button"]
         addPlantButton.tap()
         let addPlantViewHeader = app.navigationBars.staticTexts["Add Plant"]
@@ -51,7 +64,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         plantSearchBar.tap()
         plantSearchBar.typeText("Rice")
 
-        XCTAssert(app.staticTexts["Rice"].exists)
+        let plantAddButton = app.collectionViews["Plant List"].buttons["Add Rice as a new plant"]
+        XCTAssert(plantAddButton.exists)
     }
-
 }
