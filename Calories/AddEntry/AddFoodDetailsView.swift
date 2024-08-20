@@ -18,6 +18,7 @@ struct AddFoodDetailsView: View {
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
+    @State private var showingAddPlantView = false
     private let defFoodDescription: String
     let defCalories: Int
     @Binding var searchText: String
@@ -93,8 +94,8 @@ struct AddFoodDetailsView: View {
                             Text("Plants")
                             Spacer()
                             Button("Add +") {
-
-                            }
+                                showingAddPlantView = true
+                            }.accessibilityIdentifier("Add Plant Header Button")
                         }
                     }
                     .listSectionSeparator(.hidden, edges: .top)
@@ -147,6 +148,9 @@ struct AddFoodDetailsView: View {
         .padding()
         .cornerRadius(10)
         .font(.brand)
+        .sheet(isPresented: $showingAddPlantView) {
+            AddPlantView()
+        }
     }
 }
 

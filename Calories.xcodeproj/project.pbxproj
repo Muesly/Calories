@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */; };
 		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
@@ -132,6 +133,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
 		DD3236802C7106970058BAAE /* Calories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Calories.xctestplan; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseInputFieldsView.swift; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 			isa = PBXGroup;
 			children = (
 				EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */,
+				DD2C70132C73FAAA008193B3 /* AddPlantView.swift */,
 				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
 				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
@@ -740,6 +743,7 @@
 				DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */,
 				EA2C9B9029B4B2BD0019DB36 /* MealBreakdownView.swift in Sources */,
 				DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */,
+				DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */,
 				DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */,
 				EA2D490629944E3000248864 /* AddFoodView.swift in Sources */,
 				EA097DC52993986D00735129 /* Model.xcdatamodeld in Sources */,
