@@ -279,9 +279,9 @@
 				DD3236802C7106970058BAAE /* Calories.xctestplan */,
 				EA097D8629918C9E00735129 /* Calories */,
 				EA097D9C29918CA000735129 /* CaloriesTests */,
+				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
 				EA76757E299D844E00771517 /* Calories Watch App */,
 				EA3146F429A2C6F3002AAA45 /* CaloriesWidget */,
-				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
 				EA3146EF29A2C6F3002AAA45 /* Frameworks */,
 				EA097D8529918C9E00735129 /* Products */,
 			);

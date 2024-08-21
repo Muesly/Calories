@@ -23,6 +23,8 @@ struct AddFoodDetailsView: View {
     let defCalories: Int
     @Binding var searchText: String
     @Binding var foodAddedAtTime: Date?
+    @State var addedPlant: String = ""
+    @State var plants: [Plant] = []
 
     init(viewModel: AddFoodViewModel,
          defFoodDescription: String,
@@ -83,7 +85,7 @@ struct AddFoodDetailsView: View {
 
                 List {
                     Section {
-                        ForEach([Plant(name: "Lettuce")]) {
+                        ForEach(plants) {
                             Text($0.name)
                         }
                         Button("Add new plant") {
@@ -108,9 +110,11 @@ struct AddFoodDetailsView: View {
                         do {
                             descriptionIsFocused = false
                             caloriesIsFocused = false
-                            try await viewModel.addFood(foodDescription: foodDescription,
-                                                        calories: calories,
-                                                        timeConsumed: defTimeConsumed)
+                            try await viewModel.addFood(
+                                foodDescription: foodDescription,
+                                calories: calories,
+                                timeConsumed: defTimeConsumed,
+                                plants: plants)
                             foodDescription = ""
                             calories = 0
                             searchText = ""
@@ -150,7 +154,10 @@ struct AddFoodDetailsView: View {
         .cornerRadius(10)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
-            AddPlantView()
+            AddPlantView(addedPlant: $addedPlant)
+        }
+        .onChange(of: addedPlant) { _, newValue in
+            plants.append(.init(name: newValue))
         }
     }
 }
@@ -158,11 +165,11 @@ struct AddFoodDetailsView: View {
 #Preview {
     AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
                                                    viewContext: PersistenceController.inMemoryContext),
-                           defFoodDescription: "Some food",
-                           defCalories: 100,
-                           defTimeConsumed: .constant(Date()),
-                           searchText: .constant("Some food"),
-                           foodAddedAtTime: .constant(Date()))
+                       defFoodDescription: "Some food",
+                       defCalories: 100,
+                       defTimeConsumed: .constant(Date()),
+                       searchText: .constant("Some food"),
+                       foodAddedAtTime: .constant(Date()))
 }
 
 struct Plant: Identifiable {
