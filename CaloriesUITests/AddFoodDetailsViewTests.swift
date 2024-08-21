@@ -66,6 +66,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let plantAddButton = app.collectionViews["Plant List"].buttons["Add Rice as a new plant"]
         plantAddButton.tap()
         let foodsPlantList = app.collectionViews["Food's Plant List"]
-        XCTAssert(foodsPlantList.exists)
+        let addedPlant = foodsPlantList.staticTexts["Rice"]
+        XCTAssert(addedPlant.exists)
     }
 }

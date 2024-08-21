@@ -74,7 +74,7 @@ class AddFoodViewModel: ObservableObject {
         }
     }
 
-    func addFood(foodDescription: String, calories: Int, timeConsumed: Date) async throws {
+    func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws {
         try await healthStore.authorize()
         let foodEntry = FoodEntry(context: viewContext,
                                   foodDescription: foodDescription,
