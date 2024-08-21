@@ -89,7 +89,7 @@ struct AddFoodDetailsView: View {
                             Text($0.name)
                         }
                         Button("Add new plant") {
-
+                            showingAddPlantView = true
                         }
                     } header: {
                         HStack {

@@ -16,6 +16,7 @@
 		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
 		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
 		DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */; };
+		DD6E0EA12C768C5A0002C83E /* PlantEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6E0EA02C768C5A0002C83E /* PlantEntry.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
@@ -144,6 +145,8 @@
 		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
 		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
 		DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMessage.swift; sourceTree = "<group>"; };
+		DD6E0E942C7685E10002C83E /* Model 0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 0.2.xcdatamodel"; sourceTree = "<group>"; };
+		DD6E0EA02C768C5A0002C83E /* PlantEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEntry.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
@@ -441,6 +444,7 @@
 		EA6655A529939EEA000770F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DD6E0EA02C768C5A0002C83E /* PlantEntry.swift */,
 				EA2201E22B372351007F444B /* FoodEntry.swift */,
 				EA097DC32993986D00735129 /* Model.xcdatamodeld */,
 				EABBF0CD29B1342500C3B1F9 /* Day.swift */,
@@ -733,6 +737,7 @@
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
 				EA2201E32B372351007F444B /* FoodEntry.swift in Sources */,
+				DD6E0EA12C768C5A0002C83E /* PlantEntry.swift in Sources */,
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
@@ -858,7 +863,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.CaloriesUITests;
@@ -886,7 +891,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.CaloriesUITests;
@@ -1039,7 +1044,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1074,7 +1079,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1097,7 +1102,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83K5Y3G266;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1120,7 +1125,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 83K5Y3G266;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1382,6 +1387,7 @@
 		EA097DC32993986D00735129 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				DD6E0E942C7685E10002C83E /* Model 0.2.xcdatamodel */,
 				DD3253FE2C6ABF0E00D9FF1D /* Model 0.1.xcdatamodel */,
 				EA097DC42993986D00735129 /* Model.xcdatamodel */,
 			);
