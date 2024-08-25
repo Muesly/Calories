@@ -18,7 +18,8 @@ class AddFoodViewModel: ObservableObject {
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
     var suggestions: [Suggestion] = []
-    
+    var plants: [Plant] = []
+
     init(healthStore: HealthStore,
          viewContext: NSManagedObjectContext,
          modelContext: ModelContext) {
@@ -44,7 +45,6 @@ class AddFoodViewModel: ObservableObject {
     }
 
     func fetchSuggestions(searchText: String = "") {
-
         let request = FoodEntryCD.fetchRequest()
 
         if searchText.isEmpty { // Show list of suitable suggestions for this time of day
@@ -78,31 +78,33 @@ class AddFoodViewModel: ObservableObject {
         }
     }
 
-    func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws {
+    func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws -> FoodEntry {
         try await healthStore.authorize()
         let foodEntry = FoodEntry(foodDescription: foodDescription,
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed,
-                                  plants: plants.map { PlantEntry(name: $0.name, timeConsumed: timeConsumed) })
+                                  plants: plants.map { PlantEntry($0.name, timeConsumed: timeConsumed) })
         modelContext.insert(foodEntry)
         do {
             try modelContext.save()
         } catch {
             print("Failed to add food: \(error)")
         }
-        let foodEntryCD = FoodEntryCD(context: viewContext,
-                                  foodDescription: foodDescription,
-                                  calories: Double(calories),
-                                  timeConsumed: timeConsumed)
-        try await healthStore.addFoodEntry(foodEntryCD)
+        try await healthStore.addFoodEntry(foodEntry)
+        return foodEntry
     }
 
-    func defCaloriesFor(_ name: String) -> Int {
-        let request = FoodEntryCD.fetchRequest()
-        let sort = NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)
-        request.sortDescriptors = [sort]
-        request.predicate = NSPredicate(format: "foodDescription == %@", name as CVarArg)
-        return Int(((try? viewContext.fetch(request))?.first as? FoodEntryCD)?.calories ?? 0)
+    func addPlant(_ name: String) {
+        plants.append(.init(name: name))
+    }
+
+    func foodTemplateFor(_ name: String) -> FoodEntry {
+        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.foodDescription == name },
+                                                         sortBy: [FoodEntry.mostRecent])
+        guard let previousEntry = try? modelContext.fetch(fetchDescriptor).first else {
+            return FoodEntry(foodDescription: name, calories: 0, timeConsumed: Date(), plants: [])
+        }
+        return previousEntry
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {

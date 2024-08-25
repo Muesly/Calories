@@ -37,7 +37,7 @@ final class AddExerciseViewModelTests: XCTestCase {
         XCTAssertEqual(mockHealthStore.caloriesBurned, 100)
     }
 
-    func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
+    func testDeniedPermissionGrantedCanAddExerciseEntry() async throws {
         mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         do {
             try await subject.addExercise(exerciseDescription: "Ran somewhere",
