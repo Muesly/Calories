@@ -26,7 +26,7 @@ protocol HealthStore {
     func monthlyWeightChange() async throws -> Int
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
-    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws
+    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
     func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws
     func addWeightEntry(_ weightEntry: WeightEntry) async throws
 }
@@ -247,11 +247,11 @@ extension HKHealthStore: HealthStore {
         try await save(caloriesConsumed)
     }
 
-    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws {
-        guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
-              let timeConsumed = foodEntry.timeConsumed else {
+    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
+        guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed) else {
             return
         }
+        let timeConsumed = foodEntry.timeConsumed
 
         return await withCheckedContinuation { continuation in
             let predicate = HKQuery.predicateForSamples(withStart: timeConsumed, end: timeConsumed.addingTimeInterval(1))

@@ -39,7 +39,7 @@ struct CaloriesApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore, viewContext: containerCD.viewContext),
+            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
                          weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
                          healthStore: healthStore,
                          companion: companion)
@@ -112,7 +112,7 @@ class StubbedHealthStore: HealthStore {
         
     }
     
-    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws {
+    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
         
     }
     

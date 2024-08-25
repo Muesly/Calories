@@ -36,7 +36,7 @@ struct HistoryView: View {
         }
     }
 
-    private func deleteItem(atRow row: Int?, inFoodEntries foodEntries: [FoodEntryCD]) {
+    private func deleteItem(atRow row: Int?, inFoodEntries foodEntries: [FoodEntry]) {
         _ = withAnimation {
             Task {
                 await viewModel.deleteEntries(atRow: row, inFoodEntries: foodEntries)
@@ -47,12 +47,12 @@ struct HistoryView: View {
 }
 
 struct FoodEntryView: View {
-    let foodEntry: FoodEntryCD
+    let foodEntry: FoodEntry
     let formatter: DateFormatter
 
     var body: some View {
         HStack {
-            Text("\(foodEntry.timeConsumed ?? Date(), formatter: formatter)").opacity(0.5).font(.brand)
+            Text("\(foodEntry.timeConsumed, formatter: formatter)").opacity(0.5).font(.brand)
             Text("\(foodEntry.foodDescription)").font(.brand)
             Spacer()
             Text("\(Int(foodEntry.calories)) cals").opacity(0.5).font(.brand)

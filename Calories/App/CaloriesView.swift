@@ -89,6 +89,9 @@ struct CaloriesView: View {
             .onChange(of: showingAddExerciseView) { _, isBeingShown in
                 if !isBeingShown { refresh() }
             }
+            .onAppear {
+                historyViewModel.modelContext = modelContext
+            }
         }
     }
 
