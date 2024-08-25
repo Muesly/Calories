@@ -2,30 +2,26 @@
 //  ExerciseEntry.swift
 //  Calories
 //
-//  Created by Tony Short on 16/02/2023.
+//  Created by Tony Short on 25/08/2024.
+//
 //
 
-import CoreData
 import Foundation
+import SwiftData
 
-class ExerciseEntry: NSManagedObject {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<ExerciseEntry> {
-        return NSFetchRequest<ExerciseEntry>(entityName: "ExerciseEntry")
-    }
-
-    @NSManaged public var exerciseDescription: String
-    @NSManaged public var calories: Int
-    @NSManaged public var timeExercised: Date
-
-    convenience init(context: NSManagedObjectContext,
-                     exerciseDescription: String,
-                     calories: Int,
-                     timeExercised: Date
-    ) {
-        self.init(context: context)
-        self.calories = calories
+@Model public class ExerciseEntry {
+    #Index<ExerciseEntry>([])
+    var calories: Int32 = 0.0
+    var exerciseDescription: String
+    var timeExercised: Date
+    public init(exerciseDescription: String, timeExercised: Date) {
         self.exerciseDescription = exerciseDescription
         self.timeExercised = timeExercised
+
     }
+    
+
+#warning("Index on ExerciseEntry:timeExercised is unsupported in SwiftData.")
+
 }

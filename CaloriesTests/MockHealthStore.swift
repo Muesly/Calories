@@ -44,15 +44,15 @@ class MockHealthStore: HealthStore {
         weight
     }
 
-    func addFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
+    func addFoodEntry(_ foodEntry: Calories.FoodEntryCD) async throws {
         caloriesConsumed += Int(foodEntry.calories)
     }
 
-    func deleteFoodEntry(_ foodEntry: Calories.FoodEntry) async throws {
+    func deleteFoodEntry(_ foodEntry: Calories.FoodEntryCD) async throws {
         caloriesConsumed -= Int(foodEntry.calories)
     }
 
-    func addExerciseEntry(_ exerciseEntry: Calories.ExerciseEntry) async throws {
+    func addExerciseEntry(_ exerciseEntry: Calories.ExerciseEntryCD) async throws {
         caloriesBurned += exerciseEntry.calories
     }
 

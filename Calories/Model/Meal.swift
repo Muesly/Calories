@@ -9,9 +9,9 @@ import Foundation
 
 class Meal: Identifiable, Equatable {
     let mealType: MealType
-    var foodEntries = [FoodEntry]()
+    var foodEntries = [FoodEntryCD]()
 
-    init(mealType: MealType, foodEntries: [FoodEntry]) {
+    init(mealType: MealType, foodEntries: [FoodEntryCD]) {
         self.mealType = mealType
         self.foodEntries = foodEntries
     }

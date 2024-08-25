@@ -24,7 +24,7 @@ class AddExerciseViewModel {
     
     func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws {
         try await healthStore.authorize()
-        let exerciseEntry = ExerciseEntry(context: viewContext,
+        let exerciseEntry = ExerciseEntryCD(context: viewContext,
                                           exerciseDescription: exerciseDescription,
                                           calories: calories,
                                           timeExercised: timeExercised)
@@ -43,19 +43,19 @@ class AddExerciseViewModel {
     }
     
     func fetchSuggestions(searchText: String = "") {
-        let request = ExerciseEntry.fetchRequest()
+        let request = ExerciseEntryCD.fetchRequest()
 
         if searchText.isEmpty { // Show list of all previous exercises
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntry.timeExercised, ascending: false)]
-            guard let results: [ExerciseEntry] = (try? viewContext.fetch(request)) else {
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntryCD.timeExercised, ascending: false)]
+            guard let results: [ExerciseEntryCD] = (try? viewContext.fetch(request)) else {
                 suggestions = []
                 return
             }
             let orderedSet = NSOrderedSet(array: results.map { Suggestion(name: $0.exerciseDescription) })
             suggestions = orderedSet.map { $0 as! Suggestion }
         } else {    // Show fuzzy matched strings for this search text
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntry.timeExercised, ascending: false)]
-            guard let results: [ExerciseEntry] = (try? viewContext.fetch(request)) else {
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntryCD.timeExercised, ascending: false)]
+            guard let results: [ExerciseEntryCD] = (try? viewContext.fetch(request)) else {
                 suggestions = []
                 return
             }

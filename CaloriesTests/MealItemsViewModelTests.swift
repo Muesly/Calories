@@ -65,15 +65,15 @@ final class MealItemsViewModelTests: XCTestCase {
                                   month: 1,
                                   day: 1,
                                   hour: 8).date!
-        let _ = FoodEntry(context: context,
+        let _ = FoodEntryCD(context: context,
                                      foodDescription: "Some old food entry",
                                      calories: Double(100),
                                      timeConsumed: date.addingTimeInterval(-secsPerDay))
-        let foodEntry = FoodEntry(context: context,
+        let foodEntry = FoodEntryCD(context: context,
                       foodDescription: "Some food",
                       calories: Double(200),
                       timeConsumed: date)
-        let secondFoodEntry = FoodEntry(context: context,
+        let secondFoodEntry = FoodEntryCD(context: context,
                                         foodDescription: "Some more food",
                                         calories: Double(100),
                                         timeConsumed: date.addingTimeInterval(7199))    // Right at end of breakfast time

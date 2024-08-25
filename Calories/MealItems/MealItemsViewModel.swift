@@ -73,7 +73,7 @@ enum MealType: String, Equatable {
 class MealItemsViewModel {
     private let context: NSManagedObjectContext
     var currentDate: Date
-    var mealFoodEntries: [FoodEntry] = []
+    var mealFoodEntries: [FoodEntryCD] = []
     var mealTitle: String = ""
 
     init(viewContext: NSManagedObjectContext,
@@ -85,8 +85,8 @@ class MealItemsViewModel {
     func fetchMealFoodEntries() {
         let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: currentDate)
 
-        let request = FoodEntry.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)]
+        let request = FoodEntryCD.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)]
         request.predicate = NSPredicate(format: "timeConsumed >= %@ && timeConsumed < %@", startOfPeriod as CVarArg, endOfPeriod as CVarArg)
         let entries = (try? context.fetch(request)) ?? []
 

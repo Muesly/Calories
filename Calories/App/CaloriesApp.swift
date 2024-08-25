@@ -99,15 +99,15 @@ class StubbedHealthStore: HealthStore {
         0
     }
 
-    func addFoodEntry(_ foodEntry: FoodEntry) async throws {
+    func addFoodEntry(_ foodEntry: FoodEntryCD) async throws {
         
     }
     
-    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
+    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws {
         
     }
     
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws {
         
     }
     

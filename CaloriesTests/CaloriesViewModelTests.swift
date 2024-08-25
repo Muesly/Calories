@@ -31,13 +31,13 @@ final class CaloriesViewModelTests: XCTestCase {
     }
 
     func testCanDeleteFoodEntry() async throws {
-        _ = FoodEntry(context: viewContext,
+        _ = FoodEntryCD(context: viewContext,
                       foodDescription: "Some food",
                       calories: Double(100),
                       timeConsumed: dateFromComponents)
         try viewContext.save()
 
-        let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        let fetchRequest: NSFetchRequest<FoodEntryCD> = FoodEntryCD.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
         let preResult = try? viewContext.fetch(fetchRequest)
         guard let foodEntry = preResult?.first else {
@@ -51,11 +51,11 @@ final class CaloriesViewModelTests: XCTestCase {
 
     func testFetchingFoodEntriesSortsMostRecentFirst() async throws {
         subject.dateForEntries = dateFromComponents
-        let entry1 = FoodEntry(context: viewContext,
+        let entry1 = FoodEntryCD(context: viewContext,
                                foodDescription: "Some food",
                                calories: Double(100),
                                timeConsumed: dateFromComponents)
-        let entry2 = FoodEntry(context: viewContext,
+        let entry2 = FoodEntryCD(context: viewContext,
                                foodDescription: "Some more food",
                                calories: Double(200),
                                timeConsumed: dateFromComponents.addingTimeInterval(600))
@@ -68,19 +68,19 @@ final class CaloriesViewModelTests: XCTestCase {
     func testFetchingDaySections() async throws {
         let date = dateFromComponents
         subject.dateForEntries = date
-        let entry1 = FoodEntry(context: viewContext,
+        let entry1 = FoodEntryCD(context: viewContext,
                                foodDescription: "Some food",
                                calories: Double(100),
                                timeConsumed: date)
-        let entry2 = FoodEntry(context: viewContext,
+        let entry2 = FoodEntryCD(context: viewContext,
                                foodDescription: "Some more food",
                                calories: Double(200),
                                timeConsumed: date.addingTimeInterval(90600))
-        let entry3 = FoodEntry(context: viewContext,
+        let entry3 = FoodEntryCD(context: viewContext,
                                foodDescription: "Even more food",
                                calories: Double(100),
                                timeConsumed: date.addingTimeInterval(90700))
-        let entry4 = FoodEntry(context: viewContext,
+        let entry4 = FoodEntryCD(context: viewContext,
                                foodDescription: "Late addition",
                                calories: Double(50),
                                timeConsumed: date.addingTimeInterval(112700))
@@ -99,7 +99,7 @@ final class CaloriesViewModelTests: XCTestCase {
     func testGettingDayTitleAndMealSummaryInHistoryView() async throws {
         subject.dateForEntries = dateFromComponents
 
-        _ = FoodEntry(context: viewContext,
+        _ = FoodEntryCD(context: viewContext,
                       foodDescription: "Some food",
                       calories: Double(100),
                       timeConsumed: dateFromComponents)
