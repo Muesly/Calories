@@ -7,6 +7,7 @@
 
 import CoreData
 import Foundation
+import SwiftData
 import SwiftUI
 import UserNotifications
 
@@ -21,8 +22,14 @@ struct CaloriesApp: App {
         isUITesting ? Companion.createNull() : Companion.create()
     }
 
-    var container: NSPersistentContainer {
+    var containerCD: NSPersistentContainer {
         isUITesting ? PersistenceController(inMemory: true).container : PersistenceController.shared.container
+    }
+
+    var container: ModelContainer {
+        var url = isUITesting ? URL(fileURLWithPath: "/dev/null") : NSPersistentContainer(name: "Model").persistentStoreDescriptions.first!.url!
+        let config = ModelConfiguration(url: url)
+        return try! ModelContainer(for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, configurations: config)
     }
 
     init() {
@@ -32,11 +39,13 @@ struct CaloriesApp: App {
     
     var body: some Scene {
         WindowGroup {
-            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore, viewContext: container.viewContext),
+            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore, viewContext: containerCD.viewContext),
                          weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
                          healthStore: healthStore,
                          companion: companion)
-            .environment(\.managedObjectContext, container.viewContext)
+            .environment(\.managedObjectContext, containerCD.viewContext)
+            .modelContainer(container)
+
             //DataView()
         }
     }

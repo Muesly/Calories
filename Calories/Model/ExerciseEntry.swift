@@ -9,19 +9,15 @@
 import Foundation
 import SwiftData
 
-
 @Model public class ExerciseEntry {
-    #Index<ExerciseEntry>([])
-    var calories: Int32 = 0.0
+    var calories: Int32
     var exerciseDescription: String
     var timeExercised: Date
-    public init(exerciseDescription: String, timeExercised: Date) {
+    public init(exerciseDescription: String,
+                calories: Int,
+                timeExercised: Date) {
         self.exerciseDescription = exerciseDescription
+        self.calories = Int32(calories)
         self.timeExercised = timeExercised
-
     }
-    
-
-#warning("Index on ExerciseEntry:timeExercised is unsupported in SwiftData.")
-
 }

@@ -9,16 +9,12 @@
 import Foundation
 import SwiftData
 
-
 @Model public class PlantEntry {
-    #Index<PlantEntry>([])
     var name: String
     var timeConsumed: Date
     var foodEntries: [FoodEntry]?
     public init(name: String, timeConsumed: Date) {
         self.name = name
         self.timeConsumed = timeConsumed
-
     }
-    
 }

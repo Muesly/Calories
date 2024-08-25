@@ -9,20 +9,18 @@
 import Foundation
 import SwiftData
 
-
 @Model public class FoodEntry {
-    #Index<FoodEntry>([])
     var calories: Double = 0.0
     var foodDescription: String = ""
     var timeConsumed: Date
     @Relationship(inverse: \PlantEntry.foodEntries) var plants: [PlantEntry]?
-    public init(timeConsumed: Date) {
+    public init(foodDescription: String,
+                calories: Double,
+                timeConsumed: Date,
+                plants: [PlantEntry]) {
+        self.foodDescription = foodDescription
+        self.calories = calories
         self.timeConsumed = timeConsumed
-
+        self.plants = plants
     }
-    
-
-#warning("Index on FoodEntry:timeConsumed is unsupported in SwiftData.")
-#warning("The property \"ordered\" on FoodEntry:plants is unsupported in SwiftData.")
-
 }

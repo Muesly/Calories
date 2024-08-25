@@ -163,8 +163,10 @@ struct AddFoodDetailsView: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.modelContext) var modelContext
     AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
-                                                   viewContext: PersistenceController.inMemoryContext),
+                                                   viewContext: PersistenceController.inMemoryContext,
+                                                   modelContext: modelContext),
                        defFoodDescription: "Some food",
                        defCalories: 100,
                        defTimeConsumed: .constant(Date()),

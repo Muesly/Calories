@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 import SwiftUI
 
 struct AddFoodView: View {
@@ -101,8 +102,9 @@ struct AddFoodView: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.modelContext) var modelContext
     AddFoodView(viewModel: .init(healthStore: MockHealthStore(),
-                                 viewContext: PersistenceController.inMemoryContext),
+                                 viewContext: PersistenceController.inMemoryContext, modelContext: modelContext),
                  showingAddEntryView: .constant(false),
                  currentDate: Date())
 }

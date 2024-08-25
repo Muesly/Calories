@@ -11,7 +11,8 @@ import CoreData
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.managedObjectContext) private var viewContext
-
+    @Environment(\.modelContext) private var modelContext
+    
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
     private let healthStore: HealthStore
@@ -58,7 +59,9 @@ struct CaloriesView: View {
             .scrollContentBackground(.hidden)
             .cornerRadius(10)
             .sheet(isPresented: $showingAddEntryView) {
-                AddFoodView(viewModel: AddFoodViewModel(healthStore: healthStore, viewContext: viewContext),
+                AddFoodView(viewModel: AddFoodViewModel(healthStore: healthStore,
+                                                        viewContext: viewContext,
+                                                        modelContext: modelContext),
                              showingAddEntryView: $showingAddEntryView)
             }
             .sheet(isPresented: $showingAddExerciseView) {
