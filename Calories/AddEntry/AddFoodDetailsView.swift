@@ -111,7 +111,6 @@ struct AddFoodDetailsView: View {
                                                                          plants: viewModel.plants)
                             foodDescription = ""
                             calories = 0
-                            //searchText = ""
                             self.isFoodItemsViewPresented = false
                             dismiss()
                         } catch {
@@ -161,7 +160,6 @@ struct AddFoodDetailsView: View {
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
     AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
-                                                   viewContext: PersistenceController.inMemoryContext,
                                                    modelContext: modelContext),
                        foodTemplate: .init(foodDescription: "Some food",
                                            calories: 100,

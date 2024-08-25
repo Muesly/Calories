@@ -61,7 +61,6 @@ struct CaloriesView: View {
             .cornerRadius(10)
             .sheet(isPresented: $showingAddEntryView) {
                 AddFoodView(viewModel: AddFoodViewModel(healthStore: healthStore,
-                                                        viewContext: viewContext,
                                                         modelContext: modelContext),
                              showingAddEntryView: $showingAddEntryView)
             }
