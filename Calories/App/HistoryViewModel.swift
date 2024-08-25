@@ -5,36 +5,32 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
-import CoreData
 import HealthKit
+import SwiftData
 import SwiftUI
 
 @Observable
 class HistoryViewModel {
-    private let viewContext: NSManagedObjectContext
+    var modelContext: ModelContext?
     private let healthStore: HealthStore
     private var timeFormatter: DateFormatter = DateFormatter()
     var dateForEntries: Date = Date()
     var daySections: [Day] = []
 
-    init(healthStore: HealthStore, viewContext: NSManagedObjectContext) {
+    init(healthStore: HealthStore) {
         self.healthStore = healthStore
-        self.viewContext = viewContext
     }
 
     @MainActor
     func fetchDaySections() {
-        let request = FoodEntryCD.fetchRequest()
-        let sort = NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)
-        request.sortDescriptors = [sort]
-
         let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
-        request.predicate = NSPredicate(format: "timeConsumed >= %@", weekPrior as CVarArg)
-        let foodEntriesForWeek: [FoodEntryCD] = (try? viewContext.fetch(request)) ?? []
+        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.timeConsumed >= weekPrior },
+                                                         sortBy: [FoodEntry.mostRecent])
+        let foodEntriesForWeek = (try? modelContext?.fetch(fetchDescriptor)) ?? []
 
         var daySections = [Day]()
         foodEntriesForWeek.forEach { foodEntry in
-            guard let timeConsumed = foodEntry.timeConsumed else { return }
+            let timeConsumed = foodEntry.timeConsumed
             let mealType = MealType.mealTypeForDate(timeConsumed)
             let startOfDay = Calendar.current.startOfDay(for: timeConsumed)
             if let foundDaySection = daySections.first(where: { startOfDay == $0.date }) {
@@ -54,14 +50,11 @@ class HistoryViewModel {
         }
     }
 
-    var foodEntries: [FoodEntryCD] {
-        let request = FoodEntryCD.fetchRequest()
-        let sort = NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)
-        request.sortDescriptors = [sort]
-
+    var foodEntries: [FoodEntry] {
         let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
-        request.predicate = NSPredicate(format: "timeConsumed >= %@", startOfDay as CVarArg)
-        return (try? viewContext.fetch(request)) ?? []
+        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.timeConsumed >= startOfDay },
+                                                         sortBy: [FoodEntry.mostRecent])
+        return (try? modelContext?.fetch(fetchDescriptor)) ?? []
     }
 
     var timeConsumedTimeFormatter: DateFormatter {
@@ -69,23 +62,23 @@ class HistoryViewModel {
         return timeFormatter
     }
 
-    func deleteEntries(atRow row: Int?, inFoodEntries foodEntries: [FoodEntryCD]) async {
+    func deleteEntries(atRow row: Int?, inFoodEntries foodEntries: [FoodEntry]) async {
         guard let row = row else {
             return
         }
         await deleteFoodEntry(foodEntries[row])
     }
 
-    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async {
+    func deleteFoodEntry(_ foodEntry: FoodEntry) async {
         do {
             try await healthStore.deleteFoodEntry(foodEntry)
         } catch {
             print("Failed to save delete in Health")
         }
-        viewContext.delete(foodEntry)
+        modelContext?.delete(foodEntry)
 
         do {
-            try viewContext.save()
+            try modelContext?.save()
         } catch {
             print("Failed to save delete")
         }
