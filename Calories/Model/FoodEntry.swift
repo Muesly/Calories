@@ -1,32 +1,28 @@
 //
-//  FoodEntry+CoreDataProperties.swift
+//  FoodEntry.swift
 //  Calories
 //
-//  Created by Tony Short on 08/02/2023.
+//  Created by Tony Short on 25/08/2024.
 //
 //
 
 import Foundation
-import CoreData
+import SwiftData
 
-class FoodEntry: NSManagedObject, Identifiable {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<FoodEntry> {
-        return NSFetchRequest<FoodEntry>(entityName: "FoodEntry")
-    }
-
-    @NSManaged public var calories: Double
-    @NSManaged public var foodDescription: String
-    @NSManaged public var timeConsumed: Date?
-
-    convenience init(context: NSManagedObjectContext,
-         foodDescription: String,
-         calories: Double,
-         timeConsumed: Date
-    ) {
-        self.init(context: context)
-        self.calories = calories
-        self.foodDescription = foodDescription
+@Model public class FoodEntry {
+    #Index<FoodEntry>([])
+    var calories: Double = 0.0
+    var foodDescription: String = ""
+    var timeConsumed: Date
+    @Relationship(inverse: \PlantEntry.foodEntries) var plants: [PlantEntry]?
+    public init(timeConsumed: Date) {
         self.timeConsumed = timeConsumed
+
     }
+    
+
+#warning("Index on FoodEntry:timeConsumed is unsupported in SwiftData.")
+#warning("The property \"ordered\" on FoodEntry:plants is unsupported in SwiftData.")
+
 }

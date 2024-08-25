@@ -25,9 +25,9 @@ protocol HealthStore {
     func weeklyWeightChange() async throws -> Int
     func monthlyWeightChange() async throws -> Int
 
-    func addFoodEntry(_ foodEntry: FoodEntry) async throws
-    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws
+    func addFoodEntry(_ foodEntry: FoodEntryCD) async throws
+    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws
     func addWeightEntry(_ weightEntry: WeightEntry) async throws
 }
 
@@ -233,7 +233,7 @@ extension HKHealthStore: HealthStore {
         return last.1 - first.1
     }
 
-    func addFoodEntry(_ foodEntry: FoodEntry) async throws {
+    func addFoodEntry(_ foodEntry: FoodEntryCD) async throws {
         guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed) else {
             return
         }
@@ -247,7 +247,7 @@ extension HKHealthStore: HealthStore {
         try await save(caloriesConsumed)
     }
 
-    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
+    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws {
         guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
               let timeConsumed = foodEntry.timeConsumed else {
             return
@@ -283,7 +283,7 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws {
         guard let activeEnergyBurnedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned) else {
             return
         }

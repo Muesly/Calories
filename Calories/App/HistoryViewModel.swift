@@ -24,13 +24,13 @@ class HistoryViewModel {
 
     @MainActor
     func fetchDaySections() {
-        let request = FoodEntry.fetchRequest()
-        let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
+        let request = FoodEntryCD.fetchRequest()
+        let sort = NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
 
         let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
         request.predicate = NSPredicate(format: "timeConsumed >= %@", weekPrior as CVarArg)
-        let foodEntriesForWeek: [FoodEntry] = (try? viewContext.fetch(request)) ?? []
+        let foodEntriesForWeek: [FoodEntryCD] = (try? viewContext.fetch(request)) ?? []
 
         var daySections = [Day]()
         foodEntriesForWeek.forEach { foodEntry in
@@ -54,9 +54,9 @@ class HistoryViewModel {
         }
     }
 
-    var foodEntries: [FoodEntry] {
-        let request = FoodEntry.fetchRequest()
-        let sort = NSSortDescriptor(keyPath: \FoodEntry.timeConsumed, ascending: false)
+    var foodEntries: [FoodEntryCD] {
+        let request = FoodEntryCD.fetchRequest()
+        let sort = NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)
         request.sortDescriptors = [sort]
 
         let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
@@ -69,14 +69,14 @@ class HistoryViewModel {
         return timeFormatter
     }
 
-    func deleteEntries(atRow row: Int?, inFoodEntries foodEntries: [FoodEntry]) async {
+    func deleteEntries(atRow row: Int?, inFoodEntries foodEntries: [FoodEntryCD]) async {
         guard let row = row else {
             return
         }
         await deleteFoodEntry(foodEntries[row])
     }
 
-    func deleteFoodEntry(_ foodEntry: FoodEntry) async {
+    func deleteFoodEntry(_ foodEntry: FoodEntryCD) async {
         do {
             try await healthStore.deleteFoodEntry(foodEntry)
         } catch {

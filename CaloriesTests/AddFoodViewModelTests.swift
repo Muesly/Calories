@@ -39,7 +39,7 @@ final class AddFoodViewModelTests: XCTestCase {
                                   calories: 100,
                                   timeConsumed: dateFromComponents())
 
-        let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        let fetchRequest: NSFetchRequest<FoodEntryCD> = FoodEntryCD.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
         let results = try? context.fetch(fetchRequest)
 
@@ -61,7 +61,7 @@ final class AddFoodViewModelTests: XCTestCase {
             XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
         }
 
-        let fetchRequest: NSFetchRequest<FoodEntry> = FoodEntry.fetchRequest()
+        let fetchRequest: NSFetchRequest<FoodEntryCD> = FoodEntryCD.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
         let results = try? context.fetch(fetchRequest)
         XCTAssertEqual(results, [])
