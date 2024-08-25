@@ -55,6 +55,7 @@ struct AddFoodView: View {
                         }
                     }
                 }
+                .foregroundColor(.white)
                 .accessibilityIdentifier("Food List")
                 MealItemsView(viewModel: mealItemsViewModel)
                 Spacer()

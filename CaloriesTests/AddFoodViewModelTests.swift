@@ -15,23 +15,18 @@ import XCTest
 final class AddFoodViewModelTests: XCTestCase {
     var subject: AddFoodViewModel!
     var mockHealthStore: MockHealthStore!
-    var context: NSManagedObjectContext!
     var modelContext: ModelContext!
 
     @MainActor override func setUpWithError() throws {
-        context = PersistenceController(inMemory: true).container.viewContext
-
-        modelContext = ModelContext(try ModelContainer(for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, configurations: ModelConfiguration(for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, isStoredInMemoryOnly: true)))
+        modelContext = ModelContext(try ModelContainer(for: FoodEntry.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
 
         mockHealthStore = MockHealthStore()
-        subject = AddFoodViewModel(healthStore: mockHealthStore,
-                                   viewContext: context, modelContext: modelContext)
+        subject = AddFoodViewModel(healthStore: mockHealthStore, modelContext: modelContext)
     }
 
     override func tearDownWithError() throws {
         subject = nil
         mockHealthStore = nil
-        context = nil
         modelContext = nil
     }
 
@@ -67,10 +62,9 @@ final class AddFoodViewModelTests: XCTestCase {
             XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
         }
 
-        let fetchRequest: NSFetchRequest<FoodEntryCD> = FoodEntryCD.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
-        let results = try? context.fetch(fetchRequest)
-        XCTAssertEqual(results, [])
+        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.foodDescription == "Some food" },
+                                                         sortBy: [FoodEntry.mostRecent])
+        XCTAssertTrue(try! modelContext.fetch(fetchDescriptor).isEmpty)
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {

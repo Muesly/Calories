@@ -73,6 +73,7 @@ class AddFoodViewModel: ObservableObject {
         }
     }
 
+    @discardableResult
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws -> FoodEntry {
         try await healthStore.authorize()
         let foodEntry = FoodEntry(foodDescription: foodDescription,
@@ -99,6 +100,7 @@ class AddFoodViewModel: ObservableObject {
         guard let previousEntry = try? modelContext.fetch(fetchDescriptor).first else {
             return FoodEntry(foodDescription: name, calories: 0, timeConsumed: Date(), plants: [])
         }
+        previousEntry.timeConsumed = Date()
         return previousEntry
     }
 

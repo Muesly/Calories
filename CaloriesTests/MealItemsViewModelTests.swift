@@ -5,56 +5,50 @@
 //  Created by Tony Short on 11/02/2023.
 //
 
-import CoreData
+import SwiftData
 import XCTest
 @testable import Calories
 
 final class MealItemsViewModelTests: XCTestCase {
-    var controller: PersistenceController!
-    var container: NSPersistentContainer {
-        controller.container
-    }
-    var context: NSManagedObjectContext {
-        container.viewContext
-    }
+    var modelContext: ModelContext!
 
-    override func setUpWithError() throws {
-        controller = PersistenceController(inMemory: true)
+    @MainActor override func setUpWithError() throws {
+        modelContext = ModelContext(try ModelContainer(for: FoodEntry.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
     }
 
     override func tearDownWithError() throws {
-        controller = nil
+        modelContext = nil
     }
 
     func testMealTitlesDependingOnTimeOfDay() async throws {
         var dc = DateComponents(calendar: Calendar.current)
         dc.hour = 8
-        let breakfastSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        let breakfastSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
         breakfastSubject.fetchMealFoodEntries()
         XCTAssertEqual(breakfastSubject.mealTitle, "Breakfast - 0 Calories")
 
         dc.hour = 10
-        let morningSnackSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        let morningSnackSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
         morningSnackSubject.fetchMealFoodEntries()
         XCTAssertEqual(morningSnackSubject.mealTitle, "Morning Snack - 0 Calories")
 
         dc.hour = 12
-        let lunchSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        let lunchSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
         lunchSubject.fetchMealFoodEntries()
         XCTAssertEqual(lunchSubject.mealTitle, "Lunch - 0 Calories")
 
         dc.hour = 14
-        let afternoonSnackSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        let afternoonSnackSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
         afternoonSnackSubject.fetchMealFoodEntries()
         XCTAssertEqual(afternoonSnackSubject.mealTitle, "Afternoon Snack - 0 Calories")
 
         dc.hour = 17
-        let dinnerSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        let dinnerSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
         dinnerSubject.fetchMealFoodEntries()
         XCTAssertEqual(dinnerSubject.mealTitle, "Dinner - 0 Calories")
 
         dc.hour = 20
-        let eveningSnackSubject = MealItemsViewModel(viewContext: context, currentDate: dc.date!)
+        let eveningSnackSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
         eveningSnackSubject.fetchMealFoodEntries()
         XCTAssertEqual(eveningSnackSubject.mealTitle, "Evening Snack - 0 Calories")
     }
@@ -65,20 +59,24 @@ final class MealItemsViewModelTests: XCTestCase {
                                   month: 1,
                                   day: 1,
                                   hour: 8).date!
-        let _ = FoodEntryCD(context: context,
-                                     foodDescription: "Some old food entry",
-                                     calories: Double(100),
-                                     timeConsumed: date.addingTimeInterval(-secsPerDay))
-        let foodEntry = FoodEntryCD(context: context,
-                      foodDescription: "Some food",
-                      calories: Double(200),
-                      timeConsumed: date)
-        let secondFoodEntry = FoodEntryCD(context: context,
-                                        foodDescription: "Some more food",
+
+        let oldEntry = FoodEntry(foodDescription: "Some old food entry",
+                          calories: Double(100),
+                          timeConsumed: date.addingTimeInterval(-secsPerDay),
+                          plants: [])
+        let foodEntry = FoodEntry(foodDescription: "Some food",
+                                  calories: Double(200),
+                                  timeConsumed: date,
+                                  plants: [])
+        let secondFoodEntry = FoodEntry(foodDescription: "Some more food",
                                         calories: Double(100),
-                                        timeConsumed: date.addingTimeInterval(7199))    // Right at end of breakfast time
-        try context.save()
-        let subject = MealItemsViewModel(viewContext: context, currentDate: date)
+                                        timeConsumed: date.addingTimeInterval(7199),    // Right at end of breakfast time
+                                        plants: [])
+        modelContext.insert(oldEntry)
+        modelContext.insert(foodEntry)
+        modelContext.insert(secondFoodEntry)
+
+        let subject = MealItemsViewModel(modelContext: modelContext, currentDate: date)
         subject.fetchMealFoodEntries()
         XCTAssertEqual(subject.mealTitle, "Breakfast - 300 Calories")
         XCTAssertEqual(subject.mealFoodEntries, [secondFoodEntry, foodEntry])
