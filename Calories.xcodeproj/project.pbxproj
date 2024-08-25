@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD258F5D2C7B6AAC007E7754 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */; };
-		DD258F5E2C7B6AAC007E7754 /* PlantEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */; };
-		DD258F5F2C7B6AAC007E7754 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */; };
+		DD258F602C7B6BE0007E7754 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */; };
+		DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */; };
+		DD258F622C7B6BF1007E7754 /* PlantEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */; };
 		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */; };
@@ -727,9 +727,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD258F5D2C7B6AAC007E7754 /* FoodEntry.swift in Sources */,
-				DD258F5E2C7B6AAC007E7754 /* PlantEntry.swift in Sources */,
-				DD258F5F2C7B6AAC007E7754 /* ExerciseEntry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -737,6 +734,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */,
 				EA097D9129918CA000735129 /* Persistence.swift in Sources */,
 				EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */,
 				EA2EA74A2B507A7D00382DC8 /* PlantListView.swift in Sources */,
@@ -773,10 +771,12 @@
 				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
 				EA4EE511299EA53C000FE6AC /* ExerciseEntryCD.swift in Sources */,
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
+				DD258F602C7B6BE0007E7754 /* FoodEntry.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
 				DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */,
 				DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */,
+				DD258F622C7B6BF1007E7754 /* PlantEntry.swift in Sources */,
 				EA42A10029B15EEE003BB1FC /* Helpers.swift in Sources */,
 				EAD2116129A412450007A813 /* WeightEntry.swift in Sources */,
 			);

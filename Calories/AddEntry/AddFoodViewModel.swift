@@ -8,19 +8,23 @@
 import CoreData
 import Foundation
 import HealthKit
+import SwiftData
 import SwiftUI
 
 @Observable
 class AddFoodViewModel: ObservableObject {
     let viewContext: NSManagedObjectContext
+    let modelContext: ModelContext
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
     var suggestions: [Suggestion] = []
     
     init(healthStore: HealthStore,
-         viewContext: NSManagedObjectContext) {
+         viewContext: NSManagedObjectContext,
+         modelContext: ModelContext) {
         self.healthStore = healthStore
         self.viewContext = viewContext
+        self.modelContext = modelContext
     }
 
     func prompt(for date: Date = Date()) -> String {
@@ -76,12 +80,21 @@ class AddFoodViewModel: ObservableObject {
 
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws {
         try await healthStore.authorize()
-        let foodEntry = FoodEntryCD(context: viewContext,
+        let foodEntry = FoodEntry(foodDescription: foodDescription,
+                                  calories: Double(calories),
+                                  timeConsumed: timeConsumed,
+                                  plants: plants.map { PlantEntry(name: $0.name, timeConsumed: timeConsumed) })
+        modelContext.insert(foodEntry)
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to add food: \(error)")
+        }
+        let foodEntryCD = FoodEntryCD(context: viewContext,
                                   foodDescription: foodDescription,
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed)
-        try await healthStore.addFoodEntry(foodEntry)
-        try viewContext.save()
+        try await healthStore.addFoodEntry(foodEntryCD)
     }
 
     func defCaloriesFor(_ name: String) -> Int {
