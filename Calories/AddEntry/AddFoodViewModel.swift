@@ -5,7 +5,6 @@
 //  Created by Tony Short on 11/02/2023.
 //
 
-import CoreData
 import Foundation
 import HealthKit
 import SwiftData
@@ -13,7 +12,6 @@ import SwiftUI
 
 @Observable
 class AddFoodViewModel: ObservableObject {
-    let viewContext: NSManagedObjectContext
     let modelContext: ModelContext
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
@@ -21,10 +19,8 @@ class AddFoodViewModel: ObservableObject {
     var plants: [Plant] = []
 
     init(healthStore: HealthStore,
-         viewContext: NSManagedObjectContext,
          modelContext: ModelContext) {
         self.healthStore = healthStore
-        self.viewContext = viewContext
         self.modelContext = modelContext
     }
 
@@ -45,28 +41,27 @@ class AddFoodViewModel: ObservableObject {
     }
 
     func fetchSuggestions(searchText: String = "") {
-        let request = FoodEntryCD.fetchRequest()
+        var fetchDescriptor = FetchDescriptor<FoodEntry>(sortBy: [FoodEntry.mostRecent])
 
         if searchText.isEmpty { // Show list of suitable suggestions for this time of day
             let mealType = MealType.mealTypeForDate(dateForEntries)
             let range = mealType.rangeOfPeriod()
             let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
-            request.predicate = NSPredicate(format: "timeConsumed < %@", startOfDay as CVarArg)
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)]
-            guard let results: [FoodEntryCD] = (try? viewContext.fetch(request)) else {
+
+            fetchDescriptor.predicate = #Predicate { $0.timeConsumed < startOfDay }
+            guard let results = try? modelContext.fetch(fetchDescriptor) else {
                 suggestions = []
                 return
             }
-            let filteredResults = results.filter { foodEntry in
-                guard let date = foodEntry.timeConsumed else { return false }
-                let dc = Calendar.current.dateComponents([.hour], from: date)
+
+            let filteredResults = results.filter {
+                let dc = Calendar.current.dateComponents([.hour], from: $0.timeConsumed)
                 return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
             }
             let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
             suggestions = orderedSet.map { $0 as! Suggestion }
         } else {    // Show fuzzy matched strings for this search text
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)]
-            guard let results: [FoodEntryCD] = (try? viewContext.fetch(request)) else {
+            guard let results = try? modelContext.fetch(fetchDescriptor) else {
                 suggestions = []
                 return
             }

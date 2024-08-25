@@ -28,7 +28,7 @@ struct AddFoodView: View {
         self.viewModel = viewModel
         self.timeConsumed = timeConsumed
         self._showingAddEntryView = showingAddEntryView
-        self.mealItemsViewModel = MealItemsViewModel(viewContext: viewModel.viewContext,
+        self.mealItemsViewModel = MealItemsViewModel(modelContext: viewModel.modelContext,
                                                      currentDate: timeConsumed)
     }
 
@@ -115,7 +115,7 @@ struct AddFoodView: View {
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
     AddFoodView(viewModel: .init(healthStore: MockHealthStore(),
-                                 viewContext: PersistenceController.inMemoryContext, modelContext: modelContext),
+                                 modelContext: modelContext),
                 showingAddEntryView: .constant(false),
                 timeConsumed: Date())
 }

@@ -5,8 +5,8 @@
 //  Created by Tony Short on 11/02/2023.
 //
 
-import CoreData
 import Foundation
+import SwiftData
 import SwiftUI
 
 enum MealType: String, Equatable {
@@ -71,27 +71,26 @@ enum MealType: String, Equatable {
 
 @Observable
 class MealItemsViewModel {
-    private let context: NSManagedObjectContext
+    private let modelContext: ModelContext
     var currentDate: Date
-    var mealFoodEntries: [FoodEntryCD] = []
+    var mealFoodEntries: [FoodEntry] = []
     var mealTitle: String = ""
 
-    init(viewContext: NSManagedObjectContext,
+    init(modelContext: ModelContext,
          currentDate: Date) {
-        self.context = viewContext
+        self.modelContext = modelContext
         self.currentDate = currentDate
     }
     
     func fetchMealFoodEntries() {
         let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: currentDate)
 
-        let request = FoodEntryCD.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \FoodEntryCD.timeConsumed, ascending: false)]
-        request.predicate = NSPredicate(format: "timeConsumed >= %@ && timeConsumed < %@", startOfPeriod as CVarArg, endOfPeriod as CVarArg)
-        let entries = (try? context.fetch(request)) ?? []
+        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.timeConsumed >= startOfPeriod && $0.timeConsumed < endOfPeriod },
+                                                         sortBy: [FoodEntry.mostRecent])
+        let entries = (try? modelContext.fetch(fetchDescriptor)) ?? []
 
         mealFoodEntries = entries.sorted { entry1, entry2 in
-            entry1.timeConsumed! > entry2.timeConsumed!
+            entry1.timeConsumed > entry2.timeConsumed
         }
         let mealCalories = Int(mealFoodEntries.reduce(0, { $0 + $1.calories }))
         let mealType: String = MealType.mealTypeForDate(currentDate).rawValue
