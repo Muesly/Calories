@@ -25,7 +25,7 @@ protocol HealthStore {
     func weeklyWeightChange() async throws -> Int
     func monthlyWeightChange() async throws -> Int
 
-    func addFoodEntry(_ foodEntry: FoodEntryCD) async throws
+    func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntryCD) async throws
     func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws
     func addWeightEntry(_ weightEntry: WeightEntry) async throws
@@ -233,12 +233,12 @@ extension HKHealthStore: HealthStore {
         return last.1 - first.1
     }
 
-    func addFoodEntry(_ foodEntry: FoodEntryCD) async throws {
+    func addFoodEntry(_ foodEntry: FoodEntry) async throws {
         guard let caloriesConsumedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed) else {
             return
         }
         let quantity = HKQuantity(unit: .largeCalorie(), doubleValue: foodEntry.calories)
-        let timeConsumed = foodEntry.timeConsumed ?? Date()
+        let timeConsumed = foodEntry.timeConsumed
         let caloriesConsumed = HKQuantitySample(type: caloriesConsumedType,
                                                 quantity: quantity,
                                                 start: timeConsumed,

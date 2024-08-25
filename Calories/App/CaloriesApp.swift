@@ -27,7 +27,7 @@ struct CaloriesApp: App {
     }
 
     var container: ModelContainer {
-        var url = isUITesting ? URL(fileURLWithPath: "/dev/null") : NSPersistentContainer(name: "Model").persistentStoreDescriptions.first!.url!
+        let url = isUITesting ? URL(fileURLWithPath: "/dev/null") : NSPersistentContainer(name: "Model").persistentStoreDescriptions.first!.url!
         let config = ModelConfiguration(url: url)
         return try! ModelContainer(for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, configurations: config)
     }
@@ -108,7 +108,7 @@ class StubbedHealthStore: HealthStore {
         0
     }
 
-    func addFoodEntry(_ foodEntry: FoodEntryCD) async throws {
+    func addFoodEntry(_ foodEntry: FoodEntry) async throws {
         
     }
     

@@ -13,7 +13,7 @@ import SwiftData
     var name: String
     var timeConsumed: Date
     var foodEntries: [FoodEntry]?
-    public init(name: String, timeConsumed: Date) {
+    public init(_ name: String, timeConsumed: Date = Date()) {
         self.name = name
         self.timeConsumed = timeConsumed
     }

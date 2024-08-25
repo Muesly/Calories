@@ -24,3 +24,9 @@ import SwiftData
         self.plants = plants
     }
 }
+
+extension FoodEntry {
+    static var mostRecent: SortDescriptor<FoodEntry> {
+        SortDescriptor(\.timeConsumed, order: .reverse)
+    }
+}

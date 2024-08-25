@@ -14,32 +14,27 @@ struct AddFoodDetailsView: View {
     @Environment(\.dismiss) var dismiss
     @State var foodDescription: String
     @State var calories: Int = 0
-    @Binding var defTimeConsumed: Date
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
     @State private var showingAddPlantView = false
-    private let defFoodDescription: String
-    let defCalories: Int
-    @Binding var searchText: String
-    @Binding var foodAddedAtTime: Date?
+    let foodTemplate: FoodEntry?
+    @State var foodAddedAtTime: Date
     @State var addedPlant: String = ""
-    @State var plants: [Plant] = []
+    @Binding var addedFoodEntry: FoodEntry?
+    @Binding var isFoodItemsViewPresented: Bool
 
     init(viewModel: AddFoodViewModel,
-         defFoodDescription: String,
-         defCalories: Int,
-         defTimeConsumed: Binding<Date>,
-         searchText: Binding<String>,
-         foodAddedAtTime: Binding<Date?>) {
+         foodTemplate: FoodEntry?,
+         addedFoodEntry: Binding<FoodEntry?>,
+         isFoodItemsViewPresented: Binding<Bool>) {
         self.viewModel = viewModel
-        self.defFoodDescription = defFoodDescription
-        self.defCalories = defCalories
-        _defTimeConsumed = defTimeConsumed
-        _searchText = searchText
-        _foodDescription = State(initialValue: defFoodDescription)
-        _calories = State(initialValue: defCalories)
-        _foodAddedAtTime = foodAddedAtTime
+        self.foodTemplate = foodTemplate
+        _foodDescription = State(initialValue: foodTemplate?.foodDescription ?? "")
+        _calories = State(initialValue: Int(foodTemplate?.calories ?? 0))
+        _addedFoodEntry = addedFoodEntry
+        _foodAddedAtTime = State(initialValue: foodTemplate?.timeConsumed ?? Date())
+        _isFoodItemsViewPresented = isFoodItemsViewPresented
     }
 
     var numberFormatter: NumberFormatter {
@@ -81,11 +76,11 @@ struct AddFoodDetailsView: View {
                         }
                     }
                 }
-                MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $defTimeConsumed))
+                MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $foodAddedAtTime))
 
                 List {
                     Section {
-                        ForEach(plants) {
+                        ForEach(viewModel.plants) {
                             Text($0.name)
                         }
                         Button("Add new plant") {
@@ -110,16 +105,15 @@ struct AddFoodDetailsView: View {
                         do {
                             descriptionIsFocused = false
                             caloriesIsFocused = false
-                            try await viewModel.addFood(
-                                foodDescription: foodDescription,
-                                calories: calories,
-                                timeConsumed: defTimeConsumed,
-                                plants: plants)
+                            addedFoodEntry = try await viewModel.addFood(foodDescription: foodDescription,
+                                                                         calories: calories,
+                                                                         timeConsumed: foodAddedAtTime,
+                                                                         plants: viewModel.plants)
                             foodDescription = ""
                             calories = 0
-                            searchText = ""
+                            //searchText = ""
+                            self.isFoodItemsViewPresented = false
                             dismiss()
-                            foodAddedAtTime = defTimeConsumed
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }
@@ -137,11 +131,10 @@ struct AddFoodDetailsView: View {
             .cornerRadius(10)
             Spacer()
                 .onChange(of: scenePhase) { _, newPhase in
-                    if AddFoodViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
+                    if AddFoodViewModel.shouldClearFields(phase: newPhase, date: foodAddedAtTime) {
                         Task {
                             foodDescription = ""
                             calories = 0
-                            defTimeConsumed = Date()
                         }
                     }
                 }
@@ -156,8 +149,11 @@ struct AddFoodDetailsView: View {
         .sheet(isPresented: $showingAddPlantView) {
             AddPlantView(addedPlant: $addedPlant)
         }
+        .task {
+            viewModel.plants = (foodTemplate?.plants ?? []).map { Plant(name: $0.name) }
+        }
         .onChange(of: addedPlant) { _, newValue in
-            plants.append(.init(name: newValue))
+            viewModel.addPlant(newValue)
         }
     }
 }
@@ -167,11 +163,12 @@ struct AddFoodDetailsView: View {
     AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
                                                    viewContext: PersistenceController.inMemoryContext,
                                                    modelContext: modelContext),
-                       defFoodDescription: "Some food",
-                       defCalories: 100,
-                       defTimeConsumed: .constant(Date()),
-                       searchText: .constant("Some food"),
-                       foodAddedAtTime: .constant(Date()))
+                       foodTemplate: .init(foodDescription: "Some food",
+                                           calories: 100,
+                                           timeConsumed: Date(),
+                                           plants: [.init("Plant 1"), .init("Plant 2")]),
+                       addedFoodEntry: .constant(nil),
+                       isFoodItemsViewPresented: .constant(true))
 }
 
 struct Plant: Identifiable {
