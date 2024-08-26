@@ -10,12 +10,10 @@ import XCTest
 @testable import Calories
 
 final class DataViewTests: XCTestCase {
-    var controller: PersistenceController!
     var mockHealthStore: MockHealthStore!
     let segmentLength = 10.0 * 86400
     
     override func setUpWithError() throws {
-        controller = PersistenceController(inMemory: true)
         mockHealthStore = MockHealthStore()
     }
     

@@ -21,3 +21,14 @@ import SwiftData
         self.timeExercised = timeExercised
     }
 }
+
+extension ExerciseEntry {
+    static var mostRecent: SortDescriptor<ExerciseEntry> {
+        SortDescriptor(\.timeExercised, order: .reverse)
+    }
+
+    func insert(into modelContext: ModelContext) -> ExerciseEntry {
+        modelContext.insert(self)
+        return self
+    }
+}

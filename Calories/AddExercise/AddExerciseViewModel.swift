@@ -5,31 +5,29 @@
 //  Created by Tony Short on 16/02/2023.
 //
 
-import CoreData
 import Foundation
 import HealthKit
+import SwiftData
 import SwiftUI
 
 @Observable
 class AddExerciseViewModel {
-    let viewContext: NSManagedObjectContext
+    let modelContext: ModelContext
     let healthStore: HealthStore
     var suggestions: [Suggestion] = []
     
     init(healthStore: HealthStore,
-         viewContext: NSManagedObjectContext) {
+         modelContext: ModelContext) {
         self.healthStore = healthStore
-        self.viewContext = viewContext
+        self.modelContext = modelContext
     }
     
     func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws {
         try await healthStore.authorize()
-        let exerciseEntry = ExerciseEntryCD(context: viewContext,
-                                          exerciseDescription: exerciseDescription,
+        let exerciseEntry = ExerciseEntry(exerciseDescription: exerciseDescription,
                                           calories: calories,
-                                          timeExercised: timeExercised)
+                                          timeExercised: timeExercised).insert(into: modelContext)
         try await healthStore.addExerciseEntry(exerciseEntry)
-        try viewContext.save()
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
@@ -43,27 +41,13 @@ class AddExerciseViewModel {
     }
     
     func fetchSuggestions(searchText: String = "") {
-        let request = ExerciseEntryCD.fetchRequest()
-
-        if searchText.isEmpty { // Show list of all previous exercises
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntryCD.timeExercised, ascending: false)]
-            guard let results: [ExerciseEntryCD] = (try? viewContext.fetch(request)) else {
-                suggestions = []
-                return
-            }
-            let orderedSet = NSOrderedSet(array: results.map { Suggestion(name: $0.exerciseDescription) })
-            suggestions = orderedSet.map { $0 as! Suggestion }
-        } else {    // Show fuzzy matched strings for this search text
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \ExerciseEntryCD.timeExercised, ascending: false)]
-            guard let results: [ExerciseEntryCD] = (try? viewContext.fetch(request)) else {
-                suggestions = []
-                return
-            }
-            let filteredResults = results.filter { exerciseEntry in
+        var results = modelContext.exerciseResults()
+        if !searchText.isEmpty { // Show fuzzy matched strings for this search text
+            results = results.filter { exerciseEntry in
                 return exerciseEntry.exerciseDescription.fuzzyMatch(searchText)
             }
-            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.exerciseDescription) })
-            suggestions = orderedSet.map { $0 as! Suggestion }
         }
+        let orderedSet = NSOrderedSet(array: results.map { Suggestion(name: $0.exerciseDescription) })
+        suggestions = orderedSet.map { $0 as! Suggestion }
     }
 }

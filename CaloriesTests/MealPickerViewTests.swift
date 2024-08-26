@@ -5,7 +5,6 @@
 //  Created by Tony Short on 13/01/2024.
 //
 
-import CoreData
 import XCTest
 @testable import Calories
 

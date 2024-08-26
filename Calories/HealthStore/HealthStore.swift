@@ -27,7 +27,7 @@ protocol HealthStore {
 
     func addFoodEntry(_ foodEntry: FoodEntry) async throws
     func deleteFoodEntry(_ foodEntry: FoodEntry) async throws
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws
     func addWeightEntry(_ weightEntry: WeightEntry) async throws
 }
 
@@ -283,7 +283,7 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws {
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
         guard let activeEnergyBurnedType = HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned) else {
             return
         }
