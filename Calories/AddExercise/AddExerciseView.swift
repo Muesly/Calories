@@ -78,8 +78,8 @@ struct AddExerciseView: View {
         }
     }
 
-    private func addExerciseInputFieldsView(description: String) -> AddExerciseInputFieldsView {
-        AddExerciseInputFieldsView(viewModel: viewModel,
+    private func addExerciseInputFieldsView(description: String) -> AddExerciseDetailsView {
+        AddExerciseDetailsView(viewModel: viewModel,
                                    defExerciseDescription: description,
                                    defCalories: 0,
                                    defTimeConsumed: $timeExercised,

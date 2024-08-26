@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct AddExerciseInputFieldsView: View {
+struct AddExerciseDetailsView: View {
     private let viewModel: AddExerciseViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
@@ -124,7 +124,7 @@ struct AddExerciseInputFieldsView: View {
 }
 
 #Preview {
-    AddExerciseInputFieldsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
+    AddExerciseDetailsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
                                                                modelContext: .inMemory),
                                defExerciseDescription: "Some exercise",
                                defCalories: 100,

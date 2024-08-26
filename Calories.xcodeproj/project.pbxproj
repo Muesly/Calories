@@ -12,7 +12,7 @@
 		DD258F622C7B6BF1007E7754 /* PlantEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */; };
 		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
-		DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */; };
+		DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */; };
 		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
 		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
 		DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEA2C6C0CCF007CAD98 /* Companion.swift */; };
@@ -136,7 +136,7 @@
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
 		DD3236802C7106970058BAAE /* Calories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Calories.xctestplan; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
-		DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseInputFieldsView.swift; sourceTree = "<group>"; };
+		DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseDetailsView.swift; sourceTree = "<group>"; };
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		DD538CEA2C6C0CCF007CAD98 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
@@ -426,7 +426,7 @@
 		EA4EE50A299E9D44000FE6AC /* AddExercise */ = {
 			isa = PBXGroup;
 			children = (
-				DD3253FB2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift */,
+				DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */,
 				EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */,
 				EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */,
 			);
@@ -727,7 +727,7 @@
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
-				DD3253FC2C6AB56200D9FF1D /* AddExerciseInputFieldsView.swift in Sources */,
+				DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
 				EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */,
 				EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */,
