@@ -9,34 +9,30 @@ import Foundation
 import SwiftUI
 
 struct AddExerciseDetailsView: View {
-    private let viewModel: AddExerciseViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
+
+    private let viewModel: AddExerciseViewModel
     @State var exerciseDescription: String
     @State var calories: Int = 0
-    @Binding var defTimeConsumed: Date
+    @State var defTimeConsumed: Date
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
-    private let defExerciseDescription: String
-    let defCalories: Int
-    @Binding var searchText: String
-    @Binding var exerciseAdded: Bool
+    @Binding var addedExerciseEntry: ExerciseEntry?
+
+    @Binding var isExerciseDetailsViewPresented: Bool
 
     init(viewModel: AddExerciseViewModel,
-         defExerciseDescription: String,
-         defCalories: Int,
-         defTimeConsumed: Binding<Date>,
-         searchText: Binding<String>,
-         exerciseAdded: Binding<Bool>) {
+         exerciseTemplate: ExerciseEntry,
+         addedExerciseEntry: Binding<ExerciseEntry?>,
+         isExerciseDetailsViewPresented: Binding<Bool>) {
         self.viewModel = viewModel
-        self.defExerciseDescription = defExerciseDescription
-        self.defCalories = defCalories
-        _defTimeConsumed = defTimeConsumed
-        _searchText = searchText
-        _exerciseDescription = State(initialValue: defExerciseDescription)
-        _calories = State(initialValue: defCalories)
-        _exerciseAdded = exerciseAdded
+        _exerciseDescription = State(initialValue: exerciseTemplate.exerciseDescription)
+        _calories = State(initialValue: Int(exerciseTemplate.calories))
+        _defTimeConsumed = State(initialValue: exerciseTemplate.timeExercised)
+        _isExerciseDetailsViewPresented = isExerciseDetailsViewPresented
+        _addedExerciseEntry = addedExerciseEntry
     }
 
     var numberFormatter: NumberFormatter {
@@ -79,14 +75,12 @@ struct AddExerciseDetailsView: View {
                         do {
                             descriptionIsFocused = false
                             caloriesIsFocused = false
-                            try await viewModel.addExercise(exerciseDescription: exerciseDescription,
-                                                            calories: calories,
-                                                            timeExercised: defTimeConsumed)
+                            addedExerciseEntry = try await viewModel.addExercise(exerciseDescription: exerciseDescription,
+                                                                                 calories: calories,
+                                                                                 timeExercised: defTimeConsumed)
                             exerciseDescription = ""
                             calories = 0
-                            searchText = ""
                             dismiss()
-                            exerciseAdded = true
                         } catch {
                             isShowingFailureToAuthoriseAlert = true
                         }
@@ -124,11 +118,12 @@ struct AddExerciseDetailsView: View {
 }
 
 #Preview {
+    @Previewable @Environment(\.modelContext) var modelContext
     AddExerciseDetailsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
-                                                               modelContext: .inMemory),
-                               defExerciseDescription: "Some exercise",
-                               defCalories: 100,
-                               defTimeConsumed: .constant(Date()),
-                               searchText: .constant("Some exercise"),
-                               exerciseAdded: .constant(false))
+                                                           modelContext: .inMemory),
+                           exerciseTemplate: ExerciseEntry(exerciseDescription: "Some exercise",
+                                                           calories: 100,
+                                                           timeExercised: Date()),
+                           addedExerciseEntry: .constant(nil),
+                           isExerciseDetailsViewPresented: .constant(true))
 }

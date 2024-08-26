@@ -21,13 +21,20 @@ class AddExerciseViewModel {
         self.healthStore = healthStore
         self.modelContext = modelContext
     }
-    
-    func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws {
+
+    @discardableResult
+    func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws -> ExerciseEntry {
         try await healthStore.authorize()
         let exerciseEntry = ExerciseEntry(exerciseDescription: exerciseDescription,
                                           calories: calories,
                                           timeExercised: timeExercised).insert(into: modelContext)
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to add exercise: \(error)")
+        }
         try await healthStore.addExerciseEntry(exerciseEntry)
+        return exerciseEntry
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
@@ -49,5 +56,9 @@ class AddExerciseViewModel {
         }
         let orderedSet = NSOrderedSet(array: results.map { Suggestion(name: $0.exerciseDescription) })
         suggestions = orderedSet.map { $0 as! Suggestion }
+    }
+
+    func exerciseTemplateFor(_ name: String) -> ExerciseEntry {
+        ExerciseEntry(exerciseDescription: name, calories: 0, timeExercised: Date())
     }
 }
