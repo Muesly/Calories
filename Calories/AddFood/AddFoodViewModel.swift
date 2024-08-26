@@ -69,8 +69,7 @@ class AddFoodViewModel: ObservableObject {
         let foodEntry = FoodEntry(foodDescription: foodDescription,
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed,
-                                  plants: plants.map { PlantEntry($0.name, timeConsumed: timeConsumed) })
-        modelContext.insert(foodEntry)
+                                  plants: plants.map { PlantEntry($0.name, timeConsumed: timeConsumed) }).insert(into: modelContext)
         do {
             try modelContext.save()
         } catch {

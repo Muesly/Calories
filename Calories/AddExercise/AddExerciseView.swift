@@ -9,48 +9,61 @@ import Foundation
 import SwiftUI
 
 struct AddExerciseView: View {
-    private let viewModel: AddExerciseViewModel
     @Environment(\.dismissSearch) private var dismissSearch
+
+    private let viewModel: AddExerciseViewModel
     @State var searchText = ""
-    @State private var readyToNavigateToAddExerciseInputFields: Bool = false
-    @State var exerciseAdded = false
-    @State private var timeExercised: Date = Date()
+    @State var addedExerciseEntry: ExerciseEntry?
+    @State private var timeExercised: Date
+
+    @State private var showingAddExerciseDetailsView: Bool = false
     @Binding var showingAddExerciseView: Bool
-    
+    @State private var isSearching: Bool = false
+
     init(viewModel: AddExerciseViewModel,
-         showingAddExerciseView: Binding<Bool>) {
+         showingAddExerciseView: Binding<Bool>,
+         timeExercised: Date = Date()) {
         self.viewModel = viewModel
         self._showingAddExerciseView = showingAddExerciseView
+        self.timeExercised = timeExercised
     }
-    
+
     var body: some View {
         NavigationStack {
-            List {
-                if !searchText.isEmpty {
-                    NavigationLink {
-                        addExerciseInputFieldsView(description: searchText)
-                    } label: {
-                        Text("Add \(searchText) as a new exercise").bold()
+            VStack {
+                List {
+                    if !searchText.isEmpty {
+                        Button {
+                            showingAddExerciseDetailsView = true
+                        } label: {
+                            Text("Add \(searchText) as a new exercise").bold()
+                        }
+                    }
+                    Section("Recent exercises") {
+                        ForEach(viewModel.suggestions, id: \.self) { suggestion in
+                            Button {
+                                searchText = suggestion.name
+                                showingAddExerciseDetailsView = true
+                            } label: {
+                                Text(suggestion.name)
+                            }
+                            .listRowBackground(Colours.backgroundSecondary)
+                        }
                     }
                 }
-                Section("Recent exercises") {
-                    ForEach(viewModel.suggestions, id: \.self) { suggestion in
-                        NavigationLink {
-                            addExerciseInputFieldsView(description: suggestion.name)
-                        } label: {
-                            Text(suggestion.name)
-                        }
-                        .listRowBackground(Colours.backgroundSecondary)
-                    }
+                .navigationDestination(isPresented: $showingAddExerciseDetailsView) {
+                    addExerciseInputFieldsView(description: searchText)
                 }
             }
+            .foregroundColor(.white)
             .font(.brand)
             .searchable(text: $searchText,
+                        isPresented: $isSearching,
                         placement:  .navigationBarDrawer(displayMode: .always),
                         prompt: "Enter exercise")
             .onSubmit(of: .search) {
                 dismissSearch()
-                readyToNavigateToAddExerciseInputFields = true
+                showingAddExerciseDetailsView = true
             }
             .accessibilityIdentifier("Exercise List")
             .navigationTitle("Add new exercise")
@@ -67,24 +80,27 @@ struct AddExerciseView: View {
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
             }
-            .onChange(of: exerciseAdded) { _, exerciseAdded in
-                if exerciseAdded {
-                    self.showingAddExerciseView = false
+            .onChange(of: showingAddExerciseDetailsView) { _, isPresented in
+                if !isPresented {
+                    searchText = ""
+                    dismissSearch()
+                    isSearching = false
                 }
             }
-            .navigationDestination(isPresented: $readyToNavigateToAddExerciseInputFields) {
-                addExerciseInputFieldsView(description: searchText)
+            .onChange(of: addedExerciseEntry) { _, addedExerciseEntry in
+                if let addedExerciseEntry {
+                    timeExercised = addedExerciseEntry.timeExercised
+                }
+                viewModel.fetchSuggestions(searchText: searchText)
             }
         }
     }
 
     private func addExerciseInputFieldsView(description: String) -> AddExerciseDetailsView {
         AddExerciseDetailsView(viewModel: viewModel,
-                                   defExerciseDescription: description,
-                                   defCalories: 0,
-                                   defTimeConsumed: $timeExercised,
-                                   searchText: $searchText,
-                                   exerciseAdded: $exerciseAdded)
+                               exerciseTemplate: viewModel.exerciseTemplateFor(description),
+                               addedExerciseEntry: $addedExerciseEntry,
+                               isExerciseDetailsViewPresented: $showingAddExerciseDetailsView)
     }
 }
 
