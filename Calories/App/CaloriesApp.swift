@@ -5,7 +5,6 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
-import CoreData
 import Foundation
 import SwiftData
 import SwiftUI
@@ -22,13 +21,8 @@ struct CaloriesApp: App {
         isUITesting ? Companion.createNull() : Companion.create()
     }
 
-    var containerCD: NSPersistentContainer {
-        isUITesting ? PersistenceController(inMemory: true).container : PersistenceController.shared.container
-    }
-
     var container: ModelContainer {
-        let url = isUITesting ? URL(fileURLWithPath: "/dev/null") : NSPersistentContainer(name: "Model").persistentStoreDescriptions.first!.url!
-        let config = ModelConfiguration(url: url)
+        let config = isUITesting ? ModelConfiguration(url: URL(fileURLWithPath: "/dev/null")) : ModelConfiguration("Model")
         return try! ModelContainer(for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, configurations: config)
     }
 
@@ -43,9 +37,7 @@ struct CaloriesApp: App {
                          weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
                          healthStore: healthStore,
                          companion: companion)
-            .environment(\.managedObjectContext, containerCD.viewContext)
             .modelContainer(container)
-
             //DataView()
         }
     }
@@ -116,7 +108,7 @@ class StubbedHealthStore: HealthStore {
         
     }
     
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntryCD) async throws {
+    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
         
     }
     

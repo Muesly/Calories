@@ -23,14 +23,6 @@
         "identifier" : "EA097D9829918CA000735129",
         "name" : "CaloriesTests"
       }
-    },
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:Calories.xcodeproj",
-        "identifier" : "DDDCA4092C5C157800445F06",
-        "name" : "CaloriesUITests"
-      }
     }
   ],
   "version" : 1

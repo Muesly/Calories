@@ -5,7 +5,6 @@
 //  Created by Tony Short on 05/05/2024.
 //
 
-import CoreData
 import HealthKit
 import SwiftUI
 

@@ -7,11 +7,9 @@
 
 import SwiftData
 import SwiftUI
-import CoreData
 
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
-    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.modelContext) private var modelContext
     
     private let historyViewModel: HistoryViewModel
@@ -66,7 +64,7 @@ struct CaloriesView: View {
             }
             .sheet(isPresented: $showingAddExerciseView) {
                 AddExerciseView(viewModel: AddExerciseViewModel(healthStore: healthStore,
-                                                                viewContext: viewContext),
+                                                                modelContext: modelContext),
                                 showingAddExerciseView: $showingAddExerciseView)
             }
             .sheet(isPresented: $showingRecordWeightView) {

@@ -5,7 +5,6 @@
 //  Created by Tony Short on 11/02/2023.
 //
 
-import CoreData
 import Foundation
 import SwiftData
 import XCTest
