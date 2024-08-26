@@ -84,11 +84,7 @@ class MealItemsViewModel {
     
     func fetchMealFoodEntries() {
         let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: currentDate)
-
-        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { ($0.timeConsumed >= startOfPeriod) && ($0.timeConsumed < endOfPeriod) },
-                                                         sortBy: [FoodEntry.mostRecent])
-        let entries = (try? modelContext.fetch(fetchDescriptor)) ?? []
-
+        let entries = modelContext.foodResults(for: #Predicate { ($0.timeConsumed >= startOfPeriod) && ($0.timeConsumed < endOfPeriod)})
         mealFoodEntries = entries.sorted { entry1, entry2 in
             entry1.timeConsumed > entry2.timeConsumed
         }

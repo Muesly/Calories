@@ -13,7 +13,7 @@ final class MealItemsViewModelTests: XCTestCase {
     var modelContext: ModelContext!
 
     @MainActor override func setUpWithError() throws {
-        modelContext = ModelContext(try ModelContainer(for: FoodEntry.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
+        modelContext = .inMemory
     }
 
     override func tearDownWithError() throws {
@@ -62,16 +62,13 @@ final class MealItemsViewModelTests: XCTestCase {
 
         let oldEntry = FoodEntry(foodDescription: "Some old food entry",
                           calories: Double(100),
-                          timeConsumed: date.addingTimeInterval(-secsPerDay),
-                          plants: [])
+                          timeConsumed: date.addingTimeInterval(-secsPerDay))
         let foodEntry = FoodEntry(foodDescription: "Some food",
                                   calories: Double(200),
-                                  timeConsumed: date,
-                                  plants: [])
+                                  timeConsumed: date)
         let secondFoodEntry = FoodEntry(foodDescription: "Some more food",
                                         calories: Double(100),
-                                        timeConsumed: date.addingTimeInterval(7199),    // Right at end of breakfast time
-                                        plants: [])
+                                        timeConsumed: date.addingTimeInterval(7199))    // Right at end of breakfast time
         modelContext.insert(oldEntry)
         modelContext.insert(foodEntry)
         modelContext.insert(secondFoodEntry)
