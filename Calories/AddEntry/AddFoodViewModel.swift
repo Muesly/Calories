@@ -41,19 +41,12 @@ class AddFoodViewModel: ObservableObject {
     }
 
     func fetchSuggestions(searchText: String = "") {
-        var fetchDescriptor = FetchDescriptor<FoodEntry>(sortBy: [FoodEntry.mostRecent])
-
         if searchText.isEmpty { // Show list of suitable suggestions for this time of day
             let mealType = MealType.mealTypeForDate(dateForEntries)
             let range = mealType.rangeOfPeriod()
             let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
 
-            fetchDescriptor.predicate = #Predicate { $0.timeConsumed < startOfDay }
-            guard let results = try? modelContext.fetch(fetchDescriptor) else {
-                suggestions = []
-                return
-            }
-
+            let results = modelContext.foodResults(for: #Predicate { $0.timeConsumed < startOfDay })
             let filteredResults = results.filter {
                 let dc = Calendar.current.dateComponents([.hour], from: $0.timeConsumed)
                 return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
@@ -61,10 +54,7 @@ class AddFoodViewModel: ObservableObject {
             let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
             suggestions = orderedSet.map { $0 as! Suggestion }
         } else {    // Show fuzzy matched strings for this search text
-            guard let results = try? modelContext.fetch(fetchDescriptor) else {
-                suggestions = []
-                return
-            }
+            let results = modelContext.foodResults()
             let filteredResults = results.filter { foodEntry in
                 return foodEntry.foodDescription.fuzzyMatch(searchText)
             }
@@ -95,10 +85,9 @@ class AddFoodViewModel: ObservableObject {
     }
 
     func foodTemplateFor(_ name: String) -> FoodEntry {
-        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.foodDescription == name },
-                                                         sortBy: [FoodEntry.mostRecent])
-        guard let previousEntry = try? modelContext.fetch(fetchDescriptor).first else {
-            return FoodEntry(foodDescription: name, calories: 0, timeConsumed: Date(), plants: [])
+        let results = modelContext.foodResults(for: #Predicate { $0.foodDescription == name })
+        guard let previousEntry = results.first else {
+            return FoodEntry(foodDescription: name, calories: 0, timeConsumed: Date())
         }
         previousEntry.timeConsumed = Date()
         return previousEntry

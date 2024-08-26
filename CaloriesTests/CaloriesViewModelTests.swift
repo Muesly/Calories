@@ -5,23 +5,22 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
-import CoreData
+import SwiftData
 import XCTest
 @testable import Calories
 
 final class CaloriesViewModelTests: XCTestCase {
-    var controller: PersistenceController!
     var subject: HistoryViewModel!
-
-    var viewContext: NSManagedObjectContext!
+    var modelContext: ModelContext!
 
     override func setUpWithError() throws {
-        viewContext = PersistenceController(inMemory: true).container.viewContext
-        subject = HistoryViewModel(healthStore: MockHealthStore(), viewContext: viewContext)
+        modelContext = .inMemory
+        subject = HistoryViewModel(healthStore: MockHealthStore())
+        subject.modelContext = modelContext
     }
 
     override func tearDownWithError() throws {
-        controller = nil
+        modelContext = nil
         subject = nil
     }
 
@@ -31,35 +30,28 @@ final class CaloriesViewModelTests: XCTestCase {
     }
 
     func testCanDeleteFoodEntry() async throws {
-        _ = FoodEntryCD(context: viewContext,
-                      foodDescription: "Some food",
-                      calories: Double(100),
-                      timeConsumed: dateFromComponents)
-        try viewContext.save()
-
-        let fetchRequest: NSFetchRequest<FoodEntryCD> = FoodEntryCD.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "foodDescription == %@", "Some food")
-        let preResult = try? viewContext.fetch(fetchRequest)
-        guard let foodEntry = preResult?.first else {
+        let _ = FoodEntry(foodDescription: "Some food",
+                                  calories: Double(100),
+                                  timeConsumed: dateFromComponents).insert(into: modelContext)
+        let predicate: Predicate<FoodEntry> = #Predicate { $0.foodDescription == "Some food" }
+        let preResult = modelContext.foodResults(for: predicate)
+        guard let foodEntry = preResult.first else {
             XCTFail("Expected food entry")
             return
         }
         await subject.deleteFoodEntry(foodEntry)
-        let postResult = try? viewContext.fetch(fetchRequest)
-        XCTAssertEqual(postResult?.count, 0)
+        let postResult = modelContext.foodResults(for: predicate)
+        XCTAssertTrue(postResult.isEmpty)
     }
 
     func testFetchingFoodEntriesSortsMostRecentFirst() async throws {
         subject.dateForEntries = dateFromComponents
-        let entry1 = FoodEntryCD(context: viewContext,
-                               foodDescription: "Some food",
+        let entry1 = FoodEntry(foodDescription: "Some food",
                                calories: Double(100),
-                               timeConsumed: dateFromComponents)
-        let entry2 = FoodEntryCD(context: viewContext,
-                               foodDescription: "Some more food",
+                               timeConsumed: dateFromComponents).insert(into: modelContext)
+        let entry2 = FoodEntry(foodDescription: "Some more food",
                                calories: Double(200),
-                               timeConsumed: dateFromComponents.addingTimeInterval(600))
-        try viewContext.save()
+                               timeConsumed: dateFromComponents.addingTimeInterval(600)).insert(into: modelContext)
 
         let foodEntries = subject.foodEntries
         XCTAssertEqual(foodEntries, [entry2, entry1])
@@ -68,23 +60,18 @@ final class CaloriesViewModelTests: XCTestCase {
     func testFetchingDaySections() async throws {
         let date = dateFromComponents
         subject.dateForEntries = date
-        let entry1 = FoodEntryCD(context: viewContext,
-                               foodDescription: "Some food",
+        let entry1 = FoodEntry(foodDescription: "Some food",
                                calories: Double(100),
-                               timeConsumed: date)
-        let entry2 = FoodEntryCD(context: viewContext,
-                               foodDescription: "Some more food",
+                               timeConsumed: date).insert(into: modelContext)
+        let entry2 = FoodEntry(foodDescription: "Some more food",
                                calories: Double(200),
-                               timeConsumed: date.addingTimeInterval(90600))
-        let entry3 = FoodEntryCD(context: viewContext,
-                               foodDescription: "Even more food",
+                               timeConsumed: date.addingTimeInterval(90600)).insert(into: modelContext)
+        let entry3 = FoodEntry(foodDescription: "Even more food",
                                calories: Double(100),
-                               timeConsumed: date.addingTimeInterval(90700))
-        let entry4 = FoodEntryCD(context: viewContext,
-                               foodDescription: "Late addition",
+                               timeConsumed: date.addingTimeInterval(90700)).insert(into: modelContext)
+        let entry4 = FoodEntry(foodDescription: "Late addition",
                                calories: Double(50),
-                               timeConsumed: date.addingTimeInterval(112700))
-        try viewContext.save()
+                               timeConsumed: date.addingTimeInterval(112700)).insert(into: modelContext)
 
         await subject.fetchDaySections()
         let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(secsPerDay)))
@@ -99,11 +86,9 @@ final class CaloriesViewModelTests: XCTestCase {
     func testGettingDayTitleAndMealSummaryInHistoryView() async throws {
         subject.dateForEntries = dateFromComponents
 
-        _ = FoodEntryCD(context: viewContext,
-                      foodDescription: "Some food",
+        _ = FoodEntry(foodDescription: "Some food",
                       calories: Double(100),
-                      timeConsumed: dateFromComponents)
-        try viewContext.save()
+                      timeConsumed: dateFromComponents).insert(into: modelContext)
         await subject.fetchDaySections()
         XCTAssertEqual(subject.daySections.first?.title, "Sunday, Jan 1")
         XCTAssertEqual(subject.daySections.first?.meals.first?.summary, "Morning Snack (100 cals)")

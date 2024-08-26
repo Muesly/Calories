@@ -17,7 +17,7 @@ import SwiftData
     public init(foodDescription: String,
                 calories: Double,
                 timeConsumed: Date,
-                plants: [PlantEntry]) {
+                plants: [PlantEntry] = []) {
         self.foodDescription = foodDescription
         self.calories = calories
         self.timeConsumed = timeConsumed
@@ -28,5 +28,10 @@ import SwiftData
 extension FoodEntry {
     static var mostRecent: SortDescriptor<FoodEntry> {
         SortDescriptor(\.timeConsumed, order: .reverse)
+    }
+
+    func insert(into modelContext: ModelContext) -> FoodEntry {
+        modelContext.insert(self)
+        return self
     }
 }

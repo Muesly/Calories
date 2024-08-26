@@ -18,8 +18,7 @@ final class AddFoodViewModelTests: XCTestCase {
     var modelContext: ModelContext!
 
     @MainActor override func setUpWithError() throws {
-        modelContext = ModelContext(try ModelContainer(for: FoodEntry.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
-
+        modelContext = ModelContext.inMemory
         mockHealthStore = MockHealthStore()
         subject = AddFoodViewModel(healthStore: mockHealthStore, modelContext: modelContext)
     }
@@ -40,10 +39,7 @@ final class AddFoodViewModelTests: XCTestCase {
                                   calories: 100,
                                   timeConsumed: dateFromComponents(),
                                   plants: [])
-
-        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.foodDescription == "Some food" },
-                                                         sortBy: [FoodEntry.mostRecent])
-        guard let foodEntry = try? modelContext.fetch(fetchDescriptor).first else {
+        guard let foodEntry = modelContext.foodResults(for: #Predicate { $0.foodDescription == "Some food" }).first else {
             XCTFail("Expected food entry")
             return
         }
@@ -61,10 +57,7 @@ final class AddFoodViewModelTests: XCTestCase {
         } catch let healthStoreError as HealthStoreError {
             XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
         }
-
-        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.foodDescription == "Some food" },
-                                                         sortBy: [FoodEntry.mostRecent])
-        XCTAssertTrue(try! modelContext.fetch(fetchDescriptor).isEmpty)
+        XCTAssertTrue(modelContext.foodResults(for: #Predicate { $0.foodDescription == "Some food" }).isEmpty)
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {

@@ -24,9 +24,7 @@ class HistoryViewModel {
     @MainActor
     func fetchDaySections() {
         let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
-        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.timeConsumed >= weekPrior },
-                                                         sortBy: [FoodEntry.mostRecent])
-        let foodEntriesForWeek = (try? modelContext?.fetch(fetchDescriptor)) ?? []
+        let foodEntriesForWeek = modelContext?.foodResults(for: #Predicate { $0.timeConsumed >= weekPrior }) ?? []
 
         var daySections = [Day]()
         foodEntriesForWeek.forEach { foodEntry in
@@ -52,9 +50,7 @@ class HistoryViewModel {
 
     var foodEntries: [FoodEntry] {
         let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
-        let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: #Predicate { $0.timeConsumed >= startOfDay },
-                                                         sortBy: [FoodEntry.mostRecent])
-        return (try? modelContext?.fetch(fetchDescriptor)) ?? []
+        return modelContext?.foodResults(for: #Predicate { $0.timeConsumed >= startOfDay }) ?? []
     }
 
     var timeConsumedTimeFormatter: DateFormatter {
