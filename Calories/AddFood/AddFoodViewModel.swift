@@ -83,13 +83,12 @@ class AddFoodViewModel: ObservableObject {
         plants.append(.init(name: name))
     }
 
-    func foodTemplateFor(_ name: String) -> FoodEntry {
+    func foodTemplateFor(_ name: String) -> FoodTemplate {
         let results = modelContext.foodResults(for: #Predicate { $0.foodDescription == name })
         guard let previousEntry = results.first else {
-            return FoodEntry(foodDescription: name, calories: 0, timeConsumed: Date())
+            return FoodTemplate(description: name, calories: 0)
         }
-        previousEntry.timeConsumed = Date()
-        return previousEntry
+        return FoodTemplate(description: previousEntry.foodDescription, calories: Int(previousEntry.calories))
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
@@ -115,4 +114,11 @@ extension String {
         }
         return false
     }
+}
+
+struct FoodTemplate {
+    let description: String
+    let calories: Int
+    let dateTime: Date = Date()
+    let plants: [String] = []
 }
