@@ -82,7 +82,9 @@ struct CaloriesView: View {
                 entryDeleted = false
             }
             .onChange(of: showingAddEntryView) { _, isBeingShown in
-                if !isBeingShown { refresh() }
+                if !isBeingShown {
+                    refresh()
+                }
             }
             .onChange(of: showingAddExerciseView) { _, isBeingShown in
                 if !isBeingShown { refresh() }

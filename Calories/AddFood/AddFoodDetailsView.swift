@@ -18,22 +18,22 @@ struct AddFoodDetailsView: View {
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
     @State private var showingAddPlantView = false
-    let foodTemplate: FoodEntry?
+    @State var foodTemplate: FoodTemplate
     @State var foodAddedAtTime: Date
     @State var addedPlant: String = ""
     @Binding var addedFoodEntry: FoodEntry?
     @Binding var isFoodItemsViewPresented: Bool
 
     init(viewModel: AddFoodViewModel,
-         foodTemplate: FoodEntry?,
+         foodTemplate: FoodTemplate,
          addedFoodEntry: Binding<FoodEntry?>,
          isFoodItemsViewPresented: Binding<Bool>) {
         self.viewModel = viewModel
-        self.foodTemplate = foodTemplate
-        _foodDescription = State(initialValue: foodTemplate?.foodDescription ?? "")
-        _calories = State(initialValue: Int(foodTemplate?.calories ?? 0))
+        _foodTemplate = State(initialValue: foodTemplate)
+        _foodDescription = State(initialValue: foodTemplate.description)
+        _calories = State(initialValue: foodTemplate.calories)
         _addedFoodEntry = addedFoodEntry
-        _foodAddedAtTime = State(initialValue: foodTemplate?.timeConsumed ?? Date())
+        _foodAddedAtTime = State(initialValue: foodTemplate.dateTime)
         _isFoodItemsViewPresented = isFoodItemsViewPresented
     }
 
@@ -149,7 +149,7 @@ struct AddFoodDetailsView: View {
             AddPlantView(addedPlant: $addedPlant)
         }
         .task {
-            viewModel.plants = (foodTemplate?.plants ?? []).map { Plant(name: $0.name) }
+            viewModel.plants = foodTemplate.plants.map { Plant(name: $0) }
         }
         .onChange(of: addedPlant) { _, newValue in
             viewModel.addPlant(newValue)
@@ -161,10 +161,8 @@ struct AddFoodDetailsView: View {
     @Previewable @Environment(\.modelContext) var modelContext
     AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
                                                    modelContext: modelContext),
-                       foodTemplate: .init(foodDescription: "Some food",
-                                           calories: 100,
-                                           timeConsumed: Date(),
-                                           plants: [.init("Plant 1"), .init("Plant 2")]),
+                       foodTemplate: .init(description: "Some food",
+                                           calories: 100),
                        addedFoodEntry: .constant(nil),
                        isFoodItemsViewPresented: .constant(true))
 }

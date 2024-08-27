@@ -15,6 +15,7 @@ struct AddFoodView: View {
     private var viewModel: AddFoodViewModel
     private var mealItemsViewModel: MealItemsViewModel
     @State var searchText = ""
+    @State var template: FoodTemplate?
     @State var addedFoodEntry: FoodEntry?
     @State var timeConsumed: Date
 
@@ -46,7 +47,7 @@ struct AddFoodView: View {
                     Section("Recent foods you've had at this time") {
                         ForEach(viewModel.suggestions, id: \.self) { suggestion in
                             Button {
-                                searchText = suggestion.name
+                                template = viewModel.foodTemplateFor(suggestion.name)
                                 showingAddFoodDetailsView = true
                             } label: {
                                 Text(suggestion.name)
@@ -73,9 +74,12 @@ struct AddFoodView: View {
             }
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
+                template = viewModel.foodTemplateFor(searchText)
             }
             .navigationDestination(isPresented: $showingAddFoodDetailsView) {
-                addFoodInputFieldsView(description: searchText)
+                if let template {
+                    addFoodInputFieldsView(template: template)
+                }
             }
         }
         .font(.brand)
@@ -105,9 +109,9 @@ struct AddFoodView: View {
         }
     }
 
-    private func addFoodInputFieldsView(description: String) -> AddFoodDetailsView {
+    private func addFoodInputFieldsView(template: FoodTemplate) -> AddFoodDetailsView {
         AddFoodDetailsView(viewModel: viewModel,
-                           foodTemplate: viewModel.foodTemplateFor(description),
+                           foodTemplate: template,
                            addedFoodEntry: $addedFoodEntry,
                            isFoodItemsViewPresented: $showingAddFoodDetailsView)
     }

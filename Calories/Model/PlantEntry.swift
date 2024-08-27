@@ -10,7 +10,7 @@ import Foundation
 import SwiftData
 
 @Model public class PlantEntry {
-    var name: String
+    @Attribute(. unique) var name: String
     var timeConsumed: Date
     var foodEntries: [FoodEntry]?
     public init(_ name: String, timeConsumed: Date = Date()) {
