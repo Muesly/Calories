@@ -33,6 +33,12 @@ struct WeeklyStat: Identifiable, Equatable {
     }
 }
 
+struct WeeklyPlantsStat: Identifiable, Equatable {
+    let id = UUID()
+    let numPlants: Int
+    let stat: String
+}
+
 @Observable
 class WeeklyChartViewModel {
     let healthStore: HealthStore
@@ -44,6 +50,7 @@ class WeeklyChartViewModel {
     
     var daysCaloriesData: [CalorieDataPointsType] = []
     var weeklyData: [WeeklyStat] = []
+    var weeklyPlantsData: [WeeklyPlantsStat] = []
     var startOfWeek: String = ""
     var previousWeekEnabled: Bool = false
     var nextWeekEnabled: Bool = false
@@ -151,7 +158,7 @@ class WeeklyChartViewModel {
             weeklyData.append(WeeklyStat(calories: 0, stat: "To Go"))
             weeklyData.append(WeeklyStat(calories: progress - 3500, stat: "Can Eat"))
         }
-        
+        weeklyPlantsData = [WeeklyPlantsStat(numPlants: RandomPicker().pick(fromNumberOfItems: 30), stat: "Num Plants")]
         startOfWeek = findStartOfWeek(data: differenceData)
         
         let croppedBurntData = Array(burntData[..<numberOfDays])

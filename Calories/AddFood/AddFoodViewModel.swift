@@ -88,7 +88,9 @@ class AddFoodViewModel: ObservableObject {
         guard let previousEntry = results.first else {
             return FoodTemplate(description: name, calories: 0)
         }
-        return FoodTemplate(description: previousEntry.foodDescription, calories: Int(previousEntry.calories))
+        return FoodTemplate(description: previousEntry.foodDescription,
+                            calories: Int(previousEntry.calories),
+                            plants: (previousEntry.plants ?? []).map { $0.name })
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
@@ -119,6 +121,16 @@ extension String {
 struct FoodTemplate {
     let description: String
     let calories: Int
-    let dateTime: Date = Date()
-    let plants: [String] = []
+    let dateTime: Date
+    let plants: [String]
+
+    init(description: String,
+         calories: Int,
+         dateTime: Date = Date(),
+         plants: [String] = []) {
+        self.description = description
+        self.calories = calories
+        self.dateTime = dateTime
+        self.plants = plants
+    }
 }

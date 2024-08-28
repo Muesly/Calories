@@ -35,12 +35,6 @@ struct AddExerciseDetailsView: View {
         _addedExerciseEntry = addedExerciseEntry
     }
 
-    var numberFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.zeroSymbol = ""
-        return formatter
-    }
-
     var body: some View {
         VStack {
             VStack(spacing: 20) {
@@ -57,7 +51,7 @@ struct AddExerciseDetailsView: View {
                     VStack(alignment: .leading) {
                         Text("Calories")
                         HStack {
-                            TextField("", value: $calories, formatter: numberFormatter)
+                            TextField("", value: $calories, formatter: .integer)
                                 .frame(maxWidth: 60)
                                 .focused($caloriesIsFocused)
                                 .keyboardType(.numberPad)

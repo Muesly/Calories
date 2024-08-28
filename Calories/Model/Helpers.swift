@@ -38,3 +38,11 @@ extension ModelContext {
         }
     }
 }
+
+extension Formatter {
+    static var integer: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.zeroSymbol = ""
+        return formatter
+    }
+}
