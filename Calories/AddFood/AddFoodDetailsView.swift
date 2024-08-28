@@ -9,9 +9,10 @@ import Foundation
 import SwiftUI
 
 struct AddFoodDetailsView: View {
-    private let viewModel: AddFoodViewModel
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
+
+    private let viewModel: AddFoodViewModel
     @State var foodDescription: String
     @State var calories: Int = 0
     @FocusState private var descriptionIsFocused: Bool
@@ -37,12 +38,6 @@ struct AddFoodDetailsView: View {
         _isFoodItemsViewPresented = isFoodItemsViewPresented
     }
 
-    var numberFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.zeroSymbol = ""
-        return formatter
-    }
-
     var body: some View {
         VStack {
             VStack(spacing: 20) {
@@ -59,7 +54,7 @@ struct AddFoodDetailsView: View {
                     VStack(alignment: .leading) {
                         Text("Calories")
                         HStack {
-                            TextField("", value: $calories, formatter: numberFormatter)
+                            TextField("", value: $calories, formatter: .integer)
                                 .frame(maxWidth: 60)
                                 .focused($caloriesIsFocused)
                                 .keyboardType(.numberPad)
@@ -68,6 +63,15 @@ struct AddFoodDetailsView: View {
                                 .cornerRadius(10)
                                 .foregroundColor(.black)
                                 .accessibilityIdentifier("Calories Number Field")
+                                .toolbar {
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        Spacer()
+                                        Button("Done") {
+                                            caloriesIsFocused = false
+                                        }
+                                        .fontWeight(.bold)
+                                    }
+                                }
                             Button {
                                 UIApplication.shared.open(viewModel.calorieSearchURL(for: foodDescription))
                             } label: {
@@ -77,57 +81,60 @@ struct AddFoodDetailsView: View {
                     }
                 }
                 MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $foodAddedAtTime))
-
-                List {
-                    Section {
-                        ForEach(viewModel.plants) {
-                            Text($0.name)
-                        }
-                        Button("Add new plant") {
-                            showingAddPlantView = true
-                        }
-                    } header: {
-                        HStack {
-                            Text("Plants")
-                            Spacer()
-                            Button("Add +") {
-                                showingAddPlantView = true
-                            }.accessibilityIdentifier("Add Plant Header Button")
-                        }
-                    }
-                    .listSectionSeparator(.hidden, edges: .top)
-                }
-                .accessibilityIdentifier("Food's Plant List")
-                .listStyle(.plain)
-
-                Button {
-                    Task(priority: .high) {
-                        do {
-                            descriptionIsFocused = false
-                            caloriesIsFocused = false
-                            addedFoodEntry = try await viewModel.addFood(foodDescription: foodDescription,
-                                                                         calories: calories,
-                                                                         timeConsumed: foodAddedAtTime,
-                                                                         plants: viewModel.plants)
-                            foodDescription = ""
-                            calories = 0
-                            self.isFoodItemsViewPresented = false
-                            dismiss()
-                        } catch {
-                            isShowingFailureToAuthoriseAlert = true
-                        }
-                    }
-                } label: {
-                    Text("Add \(foodDescription)")
-                        .padding(10)
-                        .bold()
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(calories == 0 || foodDescription.isEmpty)
             }
             .padding()
             .background(Colours.backgroundSecondary)
             .cornerRadius(10)
+            .padding(20)
+
+            List {
+                Section {
+                    ForEach(viewModel.plants) {
+                        Text($0.name)
+                    }
+                    Button("Add new plant") {
+                        showingAddPlantView = true
+                    }
+                } header: {
+                    HStack {
+                        Text("Plants")
+                        Spacer()
+                        Button("Add +") {
+                            showingAddPlantView = true
+                        }.accessibilityIdentifier("Add Plant Header Button")
+                    }
+                }
+                .listSectionSeparator(.hidden, edges: .top)
+                .listRowBackground(Colours.backgroundSecondary)
+            }
+            .accessibilityIdentifier("Food's Plant List")
+            .cornerRadius(10)
+
+            Button {
+                Task(priority: .high) {
+                    do {
+                        descriptionIsFocused = false
+                        caloriesIsFocused = false
+                        addedFoodEntry = try await viewModel.addFood(
+                            foodDescription: foodDescription,
+                            calories: calories,
+                            timeConsumed: foodAddedAtTime,
+                            plants: viewModel.plants)
+                        foodDescription = ""
+                        calories = 0
+                        self.isFoodItemsViewPresented = false
+                        dismiss()
+                    } catch {
+                        isShowingFailureToAuthoriseAlert = true
+                    }
+                }
+            } label: {
+                Text("Add \(foodDescription)")
+                    .padding(10)
+                    .bold()
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(calories == 0 || foodDescription.isEmpty)
             Spacer()
                 .onChange(of: scenePhase) { _, newPhase in
                     if AddFoodViewModel.shouldClearFields(phase: newPhase, date: foodAddedAtTime) {
@@ -142,7 +149,6 @@ struct AddFoodDetailsView: View {
                     Button("OK", role: .cancel) {}
                 }
         }
-        .padding()
         .cornerRadius(10)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {

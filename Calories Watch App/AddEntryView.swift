@@ -19,12 +19,6 @@ struct AddEntryView: View {
         self.viewModel = viewModel
     }
 
-    var numberFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.zeroSymbol = ""
-        return formatter
-    }
-
     var body: some View {
         VStack {
             Button {

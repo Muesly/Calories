@@ -77,6 +77,16 @@ struct WeeklyChartView: View {
                         .chartXScale(domain: 0...viewModel.weeklyData.reduce(0, { $0 + $1.calories }))
                         .chartForegroundStyleScale(["Burnt": .blue, "Can Eat": .green, "To Go": .orange])
                         .padding(.horizontal, 10)
+                        Chart {
+                            ForEach(viewModel.weeklyPlantsData) {
+                                BarMark(
+                                    x: .value("Num Plants", $0.numPlants)
+                                )
+                            }
+                        }
+                        .chartXScale(domain: 0...40)
+                        .chartForegroundStyleScale(["Num Plants": .purple])
+                        .padding(.horizontal, 10)
                     }
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
                 }
@@ -97,7 +107,7 @@ struct WeeklyChartView: View {
                     .cornerRadius(10)
                 }
             }
-            .frame(height: 100)
+            .frame(height: 120)
         }
         .font(.brand)
         .task {
