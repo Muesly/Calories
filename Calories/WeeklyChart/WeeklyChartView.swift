@@ -110,9 +110,6 @@ struct WeeklyChartView: View {
             .frame(height: 120)
         }
         .font(.brand)
-        .task {
-            await viewModel.fetchDaysCalorieData()
-        }
     }
 
     private func showCallout(at location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) {

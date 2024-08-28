@@ -18,3 +18,9 @@ import SwiftData
         self.timeConsumed = timeConsumed
     }
 }
+
+extension PlantEntry: Equatable {
+    public static func == (lhs: PlantEntry, rhs: PlantEntry) -> Bool {
+        lhs.name == rhs.name
+    }
+}
