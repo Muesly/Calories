@@ -35,13 +35,13 @@ struct WeeklyStat: Identifiable, Equatable {
 }
 
 struct WeeklyPlantsStat: Identifiable, Equatable {
-    var id: Date {
-        return date
-    }
-
+    var id = UUID()
     let numPlants: Int
     let stat: String
-    let date: Date
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        (lhs.numPlants == rhs.numPlants) && (lhs.stat == rhs.stat)
+    }
 }
 
 @Observable
@@ -49,6 +49,7 @@ class WeeklyChartViewModel {
     let healthStore: HealthStore
     var modelContext: ModelContext?
     let deficitGoal: Int = -500
+    let plantGoal: Int = 30
     let numberOfDays: Int
     let startOfWeekFormatter = DateFormatter()
     
@@ -162,13 +163,13 @@ class WeeklyChartViewModel {
         // Calculate weekly progres before cropping to e.g. two days for watch app
         let progress = -differenceData.reduce(0, { $0 + $1.calories })
         if progress < 3500 {
-            weeklyData = [WeeklyStat(calories: progress, stat: "Burnt")]
-            weeklyData.append(WeeklyStat(calories: 3500 - progress, stat: "To Go"))
-            weeklyData.append(WeeklyStat(calories: 0, stat: "Can Eat"))
+            weeklyData = [WeeklyStat(calories: progress, stat: "Burnt"),
+                          WeeklyStat(calories: 3500 - progress, stat: "To Go"),
+                          WeeklyStat(calories: 0, stat: "Can Eat")]
         } else if progress > 3500 {
-            weeklyData = [WeeklyStat(calories: 3500, stat: "Burnt")]
-            weeklyData.append(WeeklyStat(calories: 0, stat: "To Go"))
-            weeklyData.append(WeeklyStat(calories: progress - 3500, stat: "Can Eat"))
+            weeklyData = [WeeklyStat(calories: 3500, stat: "Burnt"),
+                          WeeklyStat(calories: 0, stat: "To Go"),
+                          WeeklyStat(calories: progress - 3500, stat: "Can Eat")]
         }
         startOfWeek = findStartOfWeek(data: differenceData)
         
@@ -188,8 +189,11 @@ class WeeklyChartViewModel {
         let endDate = startDate.addingTimeInterval(7 * 86400)
         let foodEntries = modelContext.foodResults(for: #Predicate {
             ($0.timeConsumed >= startDate) && ($0.timeConsumed < endDate)})
-        let uniquePlants = Set(foodEntries.flatMap { $0.plants ?? [] })
-        weeklyPlantsData = [WeeklyPlantsStat(numPlants: uniquePlants.count, stat: "Num Plants", date: startDate)]
+        let numPlants = Set(foodEntries.flatMap { $0.plants ?? [] }).count
+        weeklyPlantsData = [WeeklyPlantsStat(numPlants: numPlants, stat: "Eaten"),
+                            WeeklyPlantsStat(numPlants: max(0, plantGoal - numPlants), stat: "To Go"),
+                            WeeklyPlantsStat(numPlants: max(0, numPlants - plantGoal), stat: "Abundance")]
+        print(weeklyPlantsData.map { "\($0.numPlants) - \($0.stat)" })
     }
 
     private func findStartOfWeek(data: [CalorieDataPoint]) -> String {
@@ -213,29 +217,7 @@ class WeeklyChartViewModel {
         }
         return barColour
     }
-    
-    func calloutViewDetails(for calloutDay: String?) async throws -> CallOutViewDetails {
-        guard let calloutDay = calloutDay,
-              let calloutDayPos = Calendar.current.shortWeekdaySymbols.firstIndex(of: calloutDay),
-              let startDate = startDate else {
-            return CallOutViewDetails()
-        }
-        var offset = calloutDayPos - 1
-        if offset == -1 {
-            offset += 7
-        }
-        let date: Date = startOfWeek(startDate).addingTimeInterval(secsPerDay * Double(offset))
-        let endOfDay = Calendar.current.startOfDay(for: date).addingTimeInterval(secsPerDay - 1)
-        let bmr = try await healthStore.bmr(date: endOfDay)
-        let exercise = try await healthStore.exercise(date: endOfDay)
-        let caloriesConsumed = try await healthStore.caloriesConsumed(date: endOfDay)
-        
-        return CallOutViewDetails(date: date,
-                                  bmr: bmr,
-                                  exercise: exercise,
-                                  caloriesConsumed: caloriesConsumed)
-    }
-    
+
     func previousWeekPressed() {
         Task {
             startDate?.addTimeInterval(-secsPerWeek)
@@ -249,36 +231,4 @@ class WeeklyChartViewModel {
             await fetchData()
         }
     }
-}
-
-struct CallOutViewDetails: Equatable {
-    private let date: Date
-    private static var df: DateFormatter = .init()
-    let bmr: Int
-    let exercise: Int
-    let caloriesConsumed: Int
-    let deficitGoal = 500
-    
-    init(date: Date = Date(),
-         bmr: Int = 0,
-         exercise: Int = 0,
-         caloriesConsumed: Int = 0) {
-        self.date = date
-        self.bmr = bmr
-        self.exercise = exercise
-        self.caloriesConsumed = caloriesConsumed
-    }
-    
-    var dateFormatter: DateFormatter {
-        Self.df.dateFormat = "EEEE, MMM d"
-        return Self.df
-    }
-    
-    var dateStr: String {
-        dateFormatter.string(from: date)
-    }
-    
-    var burnt: Int { bmr + exercise }
-    var difference: Int { burnt - caloriesConsumed }
-    var canEat: Int { difference - deficitGoal }
 }
