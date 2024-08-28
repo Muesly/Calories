@@ -7,6 +7,7 @@
 
 import Foundation
 import HealthKit
+import SwiftData
 import SwiftUI
 
 struct CalorieDataPoint: Identifiable {
@@ -34,14 +35,19 @@ struct WeeklyStat: Identifiable, Equatable {
 }
 
 struct WeeklyPlantsStat: Identifiable, Equatable {
-    let id = UUID()
+    var id: Date {
+        return date
+    }
+
     let numPlants: Int
     let stat: String
+    let date: Date
 }
 
 @Observable
 class WeeklyChartViewModel {
     let healthStore: HealthStore
+    var modelContext: ModelContext?
     let deficitGoal: Int = -500
     let numberOfDays: Int
     let startOfWeekFormatter = DateFormatter()
@@ -91,9 +97,15 @@ class WeeklyChartViewModel {
             return false
         }
     }
-    
+
     @MainActor
-    func fetchDaysCalorieData(currentDate: Date = Date()) async {
+    func fetchData(currentDate: Date = Date()) async {
+        await fetchWeeklyData(currentDate: currentDate)
+        fetchWeeklyPlantsData()
+    }
+
+    @MainActor
+    func fetchWeeklyData(currentDate: Date = Date()) async {
         guard let startDate = startDate else {
             return
         }
@@ -158,7 +170,6 @@ class WeeklyChartViewModel {
             weeklyData.append(WeeklyStat(calories: 0, stat: "To Go"))
             weeklyData.append(WeeklyStat(calories: progress - 3500, stat: "Can Eat"))
         }
-        weeklyPlantsData = [WeeklyPlantsStat(numPlants: RandomPicker().pick(fromNumberOfItems: 30), stat: "Num Plants")]
         startOfWeek = findStartOfWeek(data: differenceData)
         
         let croppedBurntData = Array(burntData[..<numberOfDays])
@@ -171,7 +182,16 @@ class WeeklyChartViewModel {
         previousWeekEnabled = await caloriesConsumedPresentForDate(startDate.addingTimeInterval(-secsPerWeek))
         nextWeekEnabled = startDate.addingTimeInterval(secsPerWeek) < Date()
     }
-    
+
+    func fetchWeeklyPlantsData() {
+        guard let modelContext, let startDate else { return }
+        let endDate = startDate.addingTimeInterval(7 * 86400)
+        let foodEntries = modelContext.foodResults(for: #Predicate {
+            ($0.timeConsumed >= startDate) && ($0.timeConsumed < endDate)})
+        let uniquePlants = Set(foodEntries.flatMap { $0.plants ?? [] })
+        weeklyPlantsData = [WeeklyPlantsStat(numPlants: uniquePlants.count, stat: "Num Plants", date: startDate)]
+    }
+
     private func findStartOfWeek(data: [CalorieDataPoint]) -> String {
         guard let mondayData = data.first(where: { $0.weekdayStr == "Mon" }) else {
             return ""
@@ -219,14 +239,14 @@ class WeeklyChartViewModel {
     func previousWeekPressed() {
         Task {
             startDate?.addTimeInterval(-secsPerWeek)
-            await fetchDaysCalorieData()
+            await fetchData()
         }
     }
     
     func nextWeekPressed() {
         Task {
             startDate?.addTimeInterval(secsPerWeek)
-            await fetchDaysCalorieData()
+            await fetchData()
         }
     }
 }

@@ -91,6 +91,7 @@ struct CaloriesView: View {
             }
             .onAppear {
                 historyViewModel.modelContext = modelContext
+                weeklyChartViewModel.modelContext = modelContext
             }
         }
     }
@@ -98,7 +99,7 @@ struct CaloriesView: View {
     private func refresh() {
         Task {
             historyViewModel.fetchDaySections()
-            await weeklyChartViewModel.fetchDaysCalorieData()
+            await weeklyChartViewModel.fetchData()
             await scheduleTomorrowsMotivationalMessage()
         }
     }
