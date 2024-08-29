@@ -13,6 +13,9 @@ import SwiftData
     @Attribute(. unique) var name: String
     var timeConsumed: Date
     var foodEntries: [FoodEntry]?
+    var numEntries: Int {
+        foodEntries?.count ?? 0
+    }
     public init(_ name: String, timeConsumed: Date = Date()) {
         self.name = name
         self.timeConsumed = timeConsumed

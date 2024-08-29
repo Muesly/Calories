@@ -90,7 +90,7 @@ struct WeeklyProgressChart: View {
                     }
                 }
                 .chartXScale(domain: 0...viewModel.weeklyPlantsData.reduce(0, { $0 + $1.numPlants }))
-                .chartForegroundStyleScale(["Eaten": .blue, "To Go": .orange, "Abundance": .purple])
+                .chartForegroundStyleScale(["Eaten": .blue, "To Go": .orange, "Abundance": .green])
                 .padding(.horizontal, 10)
             }
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))

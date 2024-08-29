@@ -12,7 +12,7 @@ import SwiftUI
 struct AddFoodView: View {
     @Environment(\.dismissSearch) private var dismissSearch
     
-    private var viewModel: AddFoodViewModel
+    private let viewModel: AddFoodViewModel
     private var mealItemsViewModel: MealItemsViewModel
     @State var searchText = ""
     @State var template: FoodTemplate?
@@ -21,7 +21,6 @@ struct AddFoodView: View {
 
     @Binding var showingAddEntryView: Bool
     @State private var showingAddFoodDetailsView: Bool = false
-    @State private var isSearching: Bool = false
 
     init(viewModel: AddFoodViewModel,
          showingAddEntryView: Binding<Bool>,
@@ -84,7 +83,6 @@ struct AddFoodView: View {
         }
         .font(.brand)
         .searchable(text: $searchText,
-                    isPresented: $isSearching,
                     placement:  .navigationBarDrawer(displayMode: .always),
                     prompt: viewModel.prompt(for: timeConsumed))
         .onSubmit(of: .search) {
@@ -95,7 +93,6 @@ struct AddFoodView: View {
             if !isPresented {
                 searchText = ""
                 dismissSearch()
-                isSearching = false
             }
         }
         .onChange(of: addedFoodEntry) { _, addedFoodEntry in

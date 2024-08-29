@@ -34,13 +34,25 @@ struct WeeklyStat: Identifiable, Equatable {
     }
 }
 
+protocol IDGeneratorType {
+    func generate() -> String
+}
+
+struct IDGenerator: IDGeneratorType {
+    func generate() -> String {
+        UUID().uuidString
+    }
+}
+
 struct WeeklyPlantsStat: Identifiable, Equatable {
-    var id = UUID()
+    let id: String
     let numPlants: Int
     let stat: String
 
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        (lhs.numPlants == rhs.numPlants) && (lhs.stat == rhs.stat)
+    init(id: String, numPlants: Int, stat: String) {
+        self.id = id
+        self.numPlants = numPlants
+        self.stat = stat
     }
 }
 
@@ -48,8 +60,10 @@ struct WeeklyPlantsStat: Identifiable, Equatable {
 class WeeklyChartViewModel {
     let healthStore: HealthStore
     var modelContext: ModelContext?
+    let idGenerator: IDGeneratorType
+
     let deficitGoal: Int = -500
-    let plantGoal: Int = 30
+    var plantGoal: Int = 30
     let numberOfDays: Int
     let startOfWeekFormatter = DateFormatter()
     
@@ -63,9 +77,11 @@ class WeeklyChartViewModel {
     var nextWeekEnabled: Bool = false
     
     init(healthStore: HealthStore,
-         numberOfDays: Int = 7) {
+         numberOfDays: Int = 7,
+         idGenerator: IDGeneratorType = IDGenerator()) {
         self.healthStore = healthStore
         self.numberOfDays = numberOfDays
+        self.idGenerator = idGenerator
         self.startDate = startOfWeek()
     }
     
@@ -162,17 +178,15 @@ class WeeklyChartViewModel {
         
         // Calculate weekly progres before cropping to e.g. two days for watch app
         let progress = -differenceData.reduce(0, { $0 + $1.calories })
-        if progress < 3500 {
-            weeklyData = [WeeklyStat(calories: progress, stat: "Burnt"),
-                          WeeklyStat(calories: 3500 - progress, stat: "To Go"),
-                          WeeklyStat(calories: 0, stat: "Can Eat")]
-        } else if progress > 3500 {
-            weeklyData = [WeeklyStat(calories: 3500, stat: "Burnt"),
-                          WeeklyStat(calories: 0, stat: "To Go"),
-                          WeeklyStat(calories: progress - 3500, stat: "Can Eat")]
-        }
+        let canEat = max(0, progress - 3500)
+        let burnt = progress - canEat
+        let toGo = max(0, 3500 - progress)
+        weeklyData = [WeeklyStat(calories: burnt, stat: "Burnt"),
+                      WeeklyStat(calories: toGo, stat: "To Go"),
+                      WeeklyStat(calories: canEat, stat: "Can Eat")]
+
         startOfWeek = findStartOfWeek(data: differenceData)
-        
+
         let croppedBurntData = Array(burntData[..<numberOfDays])
         let croppedCaloriesConsumedData = Array(caloriesConsumedData[..<numberOfDays])
         let croppedDifferenceData = Array(differenceData[..<numberOfDays])
@@ -190,10 +204,12 @@ class WeeklyChartViewModel {
         let foodEntries = modelContext.foodResults(for: #Predicate {
             ($0.timeConsumed >= startDate) && ($0.timeConsumed < endDate)})
         let numPlants = Set(foodEntries.flatMap { $0.plants ?? [] }).count
-        weeklyPlantsData = [WeeklyPlantsStat(numPlants: numPlants, stat: "Eaten"),
-                            WeeklyPlantsStat(numPlants: max(0, plantGoal - numPlants), stat: "To Go"),
-                            WeeklyPlantsStat(numPlants: max(0, numPlants - plantGoal), stat: "Abundance")]
-        print(weeklyPlantsData.map { "\($0.numPlants) - \($0.stat)" })
+        let abundance = max(0, numPlants - plantGoal)
+        let eaten = numPlants - abundance
+        let toGo = max(0, plantGoal - numPlants)
+        weeklyPlantsData = [WeeklyPlantsStat(id: idGenerator.generate(), numPlants: eaten, stat: "Eaten"),
+                            WeeklyPlantsStat(id: idGenerator.generate(), numPlants: toGo, stat: "To Go"),
+                            WeeklyPlantsStat(id: idGenerator.generate(), numPlants: abundance, stat: "Abundance")]
     }
 
     private func findStartOfWeek(data: [CalorieDataPoint]) -> String {
