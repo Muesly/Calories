@@ -30,9 +30,9 @@ class AddFoodViewModel: ObservableObject {
     }
 
     func calorieSearchURL(for foodDescription: String) -> URL {
-        let hostName = "https://www.myfitnesspal.com/nutrition-facts-calories"
+        let hostName = "https://www.google.co.uk/search"
         let foodDescriptionPercentEncoded = foodDescription.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
-        let combinedString = "\(hostName)/\(foodDescriptionPercentEncoded)"
+        let combinedString = "\(hostName)?q=calories+in+a+\(foodDescriptionPercentEncoded)"
         return URL(string: combinedString)!
     }
 

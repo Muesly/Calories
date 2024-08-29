@@ -17,23 +17,6 @@ final class WeeklyChartViewModelTests: XCTestCase {
     override func tearDownWithError() throws {
     }
 
-    func testCalloutViewDetails() async throws {
-        let mockHealthStore = MockHealthStore()
-        mockHealthStore.bmr = 1900
-        mockHealthStore.exercise = 800
-        mockHealthStore.caloriesConsumed = 2400
-        let subject = WeeklyChartViewModel(healthStore: mockHealthStore)
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 0, minute: 0)
-        subject.startDate = dc.date!
-        let calloutViewDetails = try await subject.calloutViewDetails(for: "Mon")
-        XCTAssertEqual(calloutViewDetails, CallOutViewDetails(date: dc.date!.startOfWeek,
-                                                              bmr: 1900,
-                                                              exercise: 800,
-                                                              caloriesConsumed: 2400))
-        XCTAssertEqual(calloutViewDetails.difference, 300)
-        XCTAssertEqual(calloutViewDetails.canEat, -200)
-    }
-
     func testWeeklyDetailsBelowTarger() async throws {
         let mockHealthStore = MockHealthStore()
         mockHealthStore.bmr = 1900
@@ -77,7 +60,27 @@ final class WeeklyChartViewModelTests: XCTestCase {
         XCTAssertEqual(colour, .green)
     }
 
-    func testWeeksPlantData() {
+    func testWeeksPlantData() throws {
+        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let modelContext = ModelContext.inMemory
+        let _ = FoodEntry(foodDescription: "Salmon & Rice",
+                          calories: 350,
+                          timeConsumed: dc.date!, plants: [.init("Rice")]).insert(into: modelContext)
+        let _ = FoodEntry(foodDescription: "Beans & Rice",
+                          calories: 250,
+                          timeConsumed: dc.date!, plants: [.init("Rice"), .init("Black Beans")]).insert(into: modelContext)
+        try modelContext.save()
+        let mockIDGenerator = MockIDGenerator()
+        let subject = WeeklyChartViewModel(healthStore: MockHealthStore(), idGenerator: mockIDGenerator)
+        subject.modelContext = modelContext
+        subject.startDate = dc.date!
+        subject.fetchWeeklyPlantsData()
+        XCTAssertEqual(subject.weeklyPlantsData, [WeeklyPlantsStat(id: "1", numPlants: 2, stat: "Eaten"),
+                                                  WeeklyPlantsStat(id: "2", numPlants: 28, stat: "To Go"),
+                                                  WeeklyPlantsStat(id: "3", numPlants: 0, stat: "Abundance")])
+    }
+
+    func testWeeksPlantDataWithAbundance() throws {
         let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         let modelContext = ModelContext.inMemory
         let _ = FoodEntry(foodDescription: "Salmon & Rice",
@@ -86,10 +89,25 @@ final class WeeklyChartViewModelTests: XCTestCase {
         let _ = FoodEntry(foodDescription: "Beans & Rice",
                                   calories: 250,
                                   timeConsumed: dc.date!, plants: [.init("Rice"), .init("Black Beans")]).insert(into: modelContext)
-        let subject = WeeklyChartViewModel(healthStore: MockHealthStore())
+        try modelContext.save()
+        let mockIDGenerator = MockIDGenerator()
+        let subject = WeeklyChartViewModel(healthStore: MockHealthStore(), idGenerator: mockIDGenerator)
         subject.modelContext = modelContext
-        subject.fetchWeeklyPlantsData()
+        subject.plantGoal = 0
         subject.startDate = dc.date!
-        XCTAssertEqual(subject.weeklyPlantsData, [WeeklyPlantsStat(numPlants: 2, stat: "Num Plants", date: dc.date!)])
+        subject.fetchWeeklyPlantsData()
+        XCTAssertEqual(subject.weeklyPlantsData, [WeeklyPlantsStat(id: "1", numPlants: 0, stat: "Eaten"),
+                                                  WeeklyPlantsStat(id: "2", numPlants: 0, stat: "To Go"),
+                                                  WeeklyPlantsStat(id: "3", numPlants: 2, stat: "Abundance")])
     }
+}
+
+class MockIDGenerator: IDGeneratorType {
+    var currentID = 0
+    func generate() -> String {
+        currentID += 1
+        return "\(currentID)"
+    }
+    
+
 }

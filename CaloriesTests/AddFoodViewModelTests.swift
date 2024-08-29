@@ -138,6 +138,6 @@ final class AddFoodViewModelTests: XCTestCase {
     }
 
     func testCalorieSearchURL() {
-        XCTAssertEqual(subject.calorieSearchURL(for: "Banana Cake").absoluteString, "https://www.myfitnesspal.com/nutrition-facts-calories/Banana%20Cake")
+        XCTAssertEqual(subject.calorieSearchURL(for: "Banana Cake").absoluteString, "https://www.google.co.uk/search?q=calories+in+a+Banana%20Cake")
     }
 }
