@@ -11,6 +11,7 @@ import SwiftUI
 struct AddFoodDetailsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
 
     private let viewModel: AddFoodViewModel
     @State var foodDescription: String
@@ -152,13 +153,15 @@ struct AddFoodDetailsView: View {
         .cornerRadius(10)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
-            AddPlantView(addedPlant: $addedPlant)
+            AddPlantView(viewModel: AddPlantViewModel(modelContext: modelContext), addedPlant: $addedPlant)
         }
         .task {
             viewModel.plants = foodTemplate.plants.map { Plant(name: $0) }
         }
         .onChange(of: addedPlant) { _, newValue in
-            viewModel.addPlant(newValue)
+            if !newValue.isEmpty {
+                viewModel.addPlant(newValue)
+            }
         }
     }
 }

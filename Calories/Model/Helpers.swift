@@ -27,6 +27,17 @@ extension ModelContext {
         }
     }
 
+    func plantResults(for predicate: Predicate<PlantEntry>? = nil,
+                     sortBy: [SortDescriptor<PlantEntry>] = []) -> [PlantEntry] {
+        let fetchDescriptor = FetchDescriptor<PlantEntry>(predicate: predicate,
+                                                         sortBy: sortBy)
+        do {
+            return try fetch(fetchDescriptor)
+        } catch {
+            return []
+        }
+    }
+
     func exerciseResults(for predicate: Predicate<ExerciseEntry>? = nil,
                  sortBy: [SortDescriptor<ExerciseEntry>] = [ExerciseEntry.mostRecent]) -> [ExerciseEntry] {
         let fetchDescriptor = FetchDescriptor<ExerciseEntry>(predicate: predicate,

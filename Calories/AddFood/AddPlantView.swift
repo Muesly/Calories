@@ -8,31 +8,69 @@
 import SwiftUI
 
 struct AddPlantView: View {
+    @Environment(\.dismissSearch) private var dismissSearch
     @Environment(\.dismiss) var dismiss
+    @State var viewModel: AddPlantViewModel
     @State var searchText = ""
     @Binding var addedPlant: String
+    @State private var isSearching: Bool = true
 
-    init(addedPlant: Binding<String>) {
+    init(viewModel: AddPlantViewModel,
+         addedPlant: Binding<String>) {
+        self.viewModel = viewModel
         self._addedPlant = addedPlant
     }
     
     var body: some View {
         NavigationStack {
-            List {
-                if !searchText.isEmpty {
-                    Button {
-                        addedPlant = searchText
-                        dismiss()
-                    } label: {
-                        Text("Add \(searchText) as a new plant").bold()
+            VStack {
+                List {
+                    if !searchText.isEmpty {
+                        Button {
+                            addedPlant = searchText
+                            dismiss()
+                        } label: {
+                            Text("Add \(searchText) as a new plant").bold()
+                        }
+                    }
+                    Section("Common plants") {
+                        ForEach(viewModel.suggestions, id: \.self) { suggestion in
+                            Button {
+                                addedPlant = suggestion.name
+                                dismiss()
+                            } label: {
+                                Text(suggestion.name)
+                            }
+                            .listRowBackground(Colours.backgroundSecondary)
+                        }
                     }
                 }
+                .foregroundColor(.white)
+                .accessibilityIdentifier("Plant List")
+                .navigationTitle("Add Plant")
             }
-            .accessibilityIdentifier("Plant List")
-            .navigationTitle("Add Plant")
-            .searchable(text: $searchText,
-                        placement:  .navigationBarDrawer(displayMode: .always),
-                        prompt: "Enter name of plant")
+        }
+        .toolbar {
+            ToolbarItem {
+                Button("Close") {
+                    dismiss()
+                }
+            }
+        }
+        .font(.brand)
+        .onAppear {
+            viewModel.fetchSuggestions(searchText: searchText)
+        }
+        .onChange(of: searchText) { _, searchText in
+            viewModel.fetchSuggestions(searchText: searchText)
+        }
+        .searchable(text: $searchText,
+                    isPresented: $isSearching,
+                    placement:  .navigationBarDrawer(displayMode: .always),
+                    prompt: "Enter Plant")
+        .onSubmit(of: .search) {
+            addedPlant = searchText
+            dismiss()
         }
     }
 }
