@@ -46,7 +46,7 @@ struct AddFoodView: View {
                     Section("Recent foods you've had at this time") {
                         ForEach(viewModel.suggestions, id: \.self) { suggestion in
                             Button {
-                                template = viewModel.foodTemplateFor(suggestion.name)
+                                template = viewModel.foodTemplateFor(suggestion.name, timeConsumed: timeConsumed)
                                 showingAddFoodDetailsView = true
                             } label: {
                                 Text(suggestion.name)
@@ -73,7 +73,7 @@ struct AddFoodView: View {
             }
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
-                template = viewModel.foodTemplateFor(searchText)
+                template = viewModel.foodTemplateFor(searchText, timeConsumed: timeConsumed)
             }
             .navigationDestination(isPresented: $showingAddFoodDetailsView) {
                 if let template {
