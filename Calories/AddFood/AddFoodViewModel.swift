@@ -83,13 +83,14 @@ class AddFoodViewModel: ObservableObject {
         plants.append(.init(name: name))
     }
 
-    func foodTemplateFor(_ name: String) -> FoodTemplate {
+    func foodTemplateFor(_ name: String, timeConsumed: Date) -> FoodTemplate {
         let results = modelContext.foodResults(for: #Predicate { $0.foodDescription == name })
         guard let previousEntry = results.first else {
             return FoodTemplate(description: name, calories: 0)
         }
         return FoodTemplate(description: previousEntry.foodDescription,
                             calories: Int(previousEntry.calories),
+                            dateTime: timeConsumed,
                             plants: (previousEntry.plants ?? []).map { $0.name })
     }
 

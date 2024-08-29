@@ -127,7 +127,7 @@ final class AddFoodViewModelTests: XCTestCase {
                                   calories: 200,
                                   timeConsumed: date.addingTimeInterval(-3600),
                                   plants: [])
-        let defCalories = subject.foodTemplateFor("Cornflakes").calories
+        let defCalories = subject.foodTemplateFor("Cornflakes", timeConsumed: date).calories
 
         XCTAssertEqual(defCalories, 100)
     }
