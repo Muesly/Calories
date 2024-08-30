@@ -13,6 +13,8 @@ import UserNotifications
 @main
 struct CaloriesApp: App {
     let isUITesting: Bool
+    let isUnitTesting: Bool
+
     var healthStore: HealthStore {
         isUITesting ? HealthStoreFactory.createNull() : HealthStoreFactory.create()
     }
@@ -28,17 +30,20 @@ struct CaloriesApp: App {
 
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
+        self.isUnitTesting = ProcessInfo.processInfo.arguments.contains("UNIT_TESTING")
         requestNotificationsPermission()
     }
     
     var body: some Scene {
         WindowGroup {
-            CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                         weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
-                         healthStore: healthStore,
-                         companion: companion)
-            .modelContainer(container)
-            //DataView()
+            if !isUnitTesting {
+                CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
+                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
+                             healthStore: healthStore,
+                             companion: companion)
+                .modelContainer(container)
+                //DataView()
+            }
         }
     }
 

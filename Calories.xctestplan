@@ -9,6 +9,11 @@
     }
   ],
   "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "UNIT_TESTING"
+      }
+    ],
     "environmentVariableEntries" : [
       {
         "key" : "SIMULATOR_KEYBOARD_CONNECT",
