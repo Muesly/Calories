@@ -176,14 +176,21 @@ class WeeklyChartViewModel {
             nextDate.addTimeInterval(secsPerDay)
         }
         
-        // Calculate weekly progres before cropping to e.g. two days for watch app
-        let progress = -differenceData.reduce(0, { $0 + $1.calories })
-        let canEat = max(0, progress - 3500)
-        let burnt = progress - canEat
-        let toGo = max(0, 3500 - progress)
-        weeklyData = [WeeklyStat(calories: burnt, stat: "Burnt"),
-                      WeeklyStat(calories: toGo, stat: "To Go"),
-                      WeeklyStat(calories: canEat, stat: "Can Eat")]
+        // Calculate weekly progress
+        let burnt = -differenceData.reduce(0, { $0 + $1.calories })
+        if burnt > 0 {
+            let goodBurn = min(3500, burnt)
+            let canEat = max(0, burnt - 3500)
+            let toGo = max(0, 3500 - goodBurn)
+            weeklyData = [WeeklyStat(calories: goodBurn, stat: "Good"),
+                          WeeklyStat(calories: toGo, stat: "To Go"),
+                          WeeklyStat(calories: canEat, stat: "Can Eat")]
+        } else {
+            let badBurn = burnt
+            let toGo = 3500
+            weeklyData = [WeeklyStat(calories: badBurn, stat: "Bad"),
+                          WeeklyStat(calories: toGo, stat: "To Go")]
+        }
 
         startOfWeek = findStartOfWeek(data: differenceData)
 
@@ -198,6 +205,21 @@ class WeeklyChartViewModel {
         nextWeekEnabled = startDate.addingTimeInterval(secsPerWeek) < Date()
     }
 
+    var weeklyDataMinX: Int {
+        weeklyData.map { $0.calories }.min() ?? 0
+    }
+
+    var weeklyDataMaxX: Int {
+        var maxX = 3500
+        if weeklyData.count == 3 {
+            let burnt = weeklyData[0].calories + weeklyData[2].calories
+            if burnt > 0 {
+                maxX = max(burnt, 3500)
+            }
+        }
+        return maxX
+    }
+
     func fetchWeeklyPlantsData() {
         guard let modelContext, let startDate else { return }
         let endDate = startDate.addingTimeInterval(7 * 86400)
@@ -210,6 +232,10 @@ class WeeklyChartViewModel {
         weeklyPlantsData = [WeeklyPlantsStat(id: idGenerator.generate(), numPlants: eaten, stat: "Eaten"),
                             WeeklyPlantsStat(id: idGenerator.generate(), numPlants: toGo, stat: "To Go"),
                             WeeklyPlantsStat(id: idGenerator.generate(), numPlants: abundance, stat: "Abundance")]
+    }
+
+    var weeklyPlantsDataMaxX: Int {
+        weeklyPlantsData.reduce(0, { $0 + $1.numPlants })
     }
 
     private func findStartOfWeek(data: [CalorieDataPoint]) -> String {

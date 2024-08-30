@@ -78,9 +78,8 @@ struct WeeklyProgressChart: View {
                         .foregroundStyle(by: .value("Bar Colour", $0.stat))
                     }
                 }
-                .chartXScale(domain: 0...viewModel.weeklyData.reduce(0, { $0 + $1.calories }))
-                .chartForegroundStyleScale(["Burnt": .blue, "To Go": .orange, "Can Eat": .green])
-                .padding(.horizontal, 10)
+                .chartXScale(domain: viewModel.weeklyDataMinX...viewModel.weeklyDataMaxX, range: .plotDimension(padding: 20))
+                .chartForegroundStyleScale(["Bad": .red, "Good": .green, "To Go": .gray, "Can Eat": .blue])
                 Chart {
                     ForEach(viewModel.weeklyPlantsData) {
                         BarMark(
@@ -89,9 +88,8 @@ struct WeeklyProgressChart: View {
                         .foregroundStyle(by: .value("Bar Colour", $0.stat))
                     }
                 }
-                .chartXScale(domain: 0...viewModel.weeklyPlantsData.reduce(0, { $0 + $1.numPlants }))
-                .chartForegroundStyleScale(["Eaten": .blue, "To Go": .orange, "Abundance": .green])
-                .padding(.horizontal, 10)
+                .chartXScale(domain: 0...viewModel.weeklyPlantsDataMaxX, range: .plotDimension(padding: 20))
+                .chartForegroundStyleScale(["Eaten": Color.yellow, "To Go": .gray, "Abundance": .green])
             }
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
         }
