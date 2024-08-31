@@ -13,7 +13,7 @@ struct AddFoodDetailsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var modelContext
 
-    private let viewModel: AddFoodViewModel
+    @State private var viewModel: AddFoodViewModel
     @State var foodDescription: String
     @State var calories: Int = 0
     @FocusState private var descriptionIsFocused: Bool

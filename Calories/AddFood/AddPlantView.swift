@@ -5,6 +5,7 @@
 //  Created by Tony Short on 19/08/2024.
 //
 
+import SwiftData
 import SwiftUI
 
 struct AddPlantView: View {
@@ -14,13 +15,23 @@ struct AddPlantView: View {
     @State var searchText = ""
     @Binding var addedPlant: String
     @State private var isSearching: Bool = true
+    @State private var actionSheetShown = false
+    @State private var takeAPhotoOption = false
+    @State private var chooseFromLibraryOption = false
+    @State private var image: UIImage?
 
     init(viewModel: AddPlantViewModel,
          addedPlant: Binding<String>) {
         self.viewModel = viewModel
         self._addedPlant = addedPlant
     }
-    
+
+    let columns = [
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+            GridItem(.flexible())
+        ]
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -34,16 +45,25 @@ struct AddPlantView: View {
                         }
                     }
                     Section("Common plants") {
-                        ForEach(viewModel.suggestions, id: \.self) { suggestion in
-                            Button {
-                                addedPlant = suggestion.name
-                                dismiss()
-                            } label: {
-                                Text(suggestion.name)
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(viewModel.suggestions, id: \.self) { suggestion in
+                                Button {
+                                    addedPlant = suggestion.name
+                                    dismiss()
+                                } label: {
+                                    ZStack {
+                                        VStack(alignment: .leading) {
+                                            Spacer()
+                                            Text(suggestion.name)
+                                        }
+                                        Image(systemName: "photo.badge.plus")
+                                    }
+                                    .frame(width: 80, height: 80)
+                                }
                             }
-                            .listRowBackground(Colours.backgroundSecondary)
                         }
                     }
+                    .listRowBackground(Colours.backgroundSecondary)
                 }
                 .foregroundColor(.white)
                 .accessibilityIdentifier("Plant List")
@@ -73,4 +93,11 @@ struct AddPlantView: View {
             dismiss()
         }
     }
+}
+
+#Preview {
+    let modelContext = ModelContext.inMemory
+    let _ = [PlantEntry("Corn"), PlantEntry("Rice"), PlantEntry("Broccoli")].forEach { $0.insert(into: modelContext)}
+    AddPlantView(viewModel: .init(modelContext: modelContext),
+                 addedPlant: .constant(""))
 }
