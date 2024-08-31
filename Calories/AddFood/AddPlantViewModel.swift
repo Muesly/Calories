@@ -24,7 +24,7 @@ class AddPlantViewModel: ObservableObject {
             results = results.filter { $0.name.fuzzyMatch(searchText) }
         }
         suggestions = results.sorted(by: { s1, s2 in
-            s1.numEntries > s2.numEntries
+            s1.name < s2.name
         }).map { Suggestion(name: $0.name) }
     }
 }
