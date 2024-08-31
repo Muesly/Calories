@@ -7,22 +7,22 @@
 
 import Foundation
 import SwiftData
-import XCTest
+import Testing
 
 @testable import Calories
 
-final class AddFoodViewModelTests: XCTestCase {
+final class AddFoodViewModelTests {
     var subject: AddFoodViewModel!
     var mockHealthStore: MockHealthStore!
     var modelContext: ModelContext!
 
-    @MainActor override func setUpWithError() throws {
+    init() {
         modelContext = ModelContext.inMemory
         mockHealthStore = MockHealthStore()
         subject = AddFoodViewModel(healthStore: mockHealthStore, modelContext: modelContext)
     }
 
-    override func tearDownWithError() throws {
+    deinit {
         subject = nil
         mockHealthStore = nil
         modelContext = nil
@@ -33,20 +33,17 @@ final class AddFoodViewModelTests: XCTestCase {
         return dc.date!
     }
 
-    func testGivenPermissionGrantedCanAddCalories() async throws {
+    @Test func givenPermissionGrantedCanAddCalories() async throws {
         try await subject.addFood(foodDescription: "Some food",
                                   calories: 100,
                                   timeConsumed: dateFromComponents(),
                                   plants: [])
-        guard let foodEntry = modelContext.foodResults(for: #Predicate { $0.foodDescription == "Some food" }).first else {
-            XCTFail("Expected food entry")
-            return
-        }
-
-        XCTAssertEqual(foodEntry.foodDescription, "Some food")
+        let foodEntry = modelContext.foodResults(for: #Predicate { $0.foodDescription == "Some food" }).first
+        try #require(foodEntry != nil)
+        #expect(foodEntry?.foodDescription == "Some food")
     }
 
-    func testDeniedPermissionGrantedCanAddFoodEntry() async throws {
+    @Test func deniedPermissionGrantedCanAddFoodEntry() async throws {
         mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         do {
             try await subject.addFood(foodDescription: "Some food",
@@ -54,22 +51,22 @@ final class AddFoodViewModelTests: XCTestCase {
                                       timeConsumed: dateFromComponents(),
                                       plants: [])
         } catch let healthStoreError as HealthStoreError {
-            XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
+            #expect(healthStoreError == HealthStoreError.errorNoHealthDataAvailable)
         }
-        XCTAssertTrue(modelContext.foodResults(for: #Predicate { $0.foodDescription == "Some food" }).isEmpty)
+        #expect(modelContext.foodResults(for: #Predicate { $0.foodDescription == "Some food" }).isEmpty)
     }
 
-    func testClearDownOfInProgressDetailsAfterDay() async {
-        let result = AddFoodViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
-        XCTAssertTrue(result)
+    @Test func clearDownOfInProgressDetailsAfterDay() async {
+        let shouldClear = AddFoodViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
+        #expect(shouldClear)
     }
 
-    func testNoClearDownOfInProgressDetailsOnSameDay() async {
-        let result = AddFoodViewModel.shouldClearFields(phase: .active, date: Date())
-        XCTAssertFalse(result)
+    @Test func noClearDownOfInProgressDetailsOnSameDay() async {
+        let shouldClear = AddFoodViewModel.shouldClearFields(phase: .active, date: Date())
+        #expect(!shouldClear)
     }
 
-    func testWhenNoSuggestionsShownForAFoodEntryWhenFoodFromToday() async throws {
+    @Test func whenNoSuggestionsShownForAFoodEntryWhenFoodFromToday() async throws {
         let date = dateFromComponents()
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
@@ -77,10 +74,10 @@ final class AddFoodViewModelTests: XCTestCase {
                                   timeConsumed: date,
                                   plants: [])
         subject.fetchSuggestions()
-        XCTAssertEqual(subject.suggestions, [])
+        #expect(subject.suggestions.isEmpty)
     }
 
-    func testWhenNoSuggestionsShownForAFoodEntryWhenFoodNotInSameMealTime() async throws {
+    @Test func whenNoSuggestionsShownForAFoodEntryWhenFoodNotInSameMealTime() async throws {
         let date = dateFromComponents()
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
@@ -88,10 +85,10 @@ final class AddFoodViewModelTests: XCTestCase {
                                   timeConsumed: date.addingTimeInterval(-secsPerDay - (3 * 3600)),
                                   plants: [])
         subject.fetchSuggestions()
-        XCTAssertEqual(subject.suggestions, [])
+        #expect(subject.suggestions.isEmpty)
     }
 
-    func testWhenSuggestionsShownForAFoodEntryWhenFoodInSameMealTime() async throws {
+    @Test func whenSuggestionsShownForAFoodEntryWhenFoodInSameMealTime() async throws {
         let date = dateFromComponents()
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
@@ -99,10 +96,10 @@ final class AddFoodViewModelTests: XCTestCase {
                                   timeConsumed: date.addingTimeInterval(-secsPerDay),
                                   plants: [])
         subject.fetchSuggestions()
-        XCTAssertEqual(subject.suggestions, [Suggestion(name: "Some more food")])
+        #expect(subject.suggestions == [Suggestion(name: "Some more food")])
     }
 
-    func testSuggestionsFuzzyMatched() async throws {
+    @Test func suggestionsFuzzyMatched() async throws {
         let date = dateFromComponents()
         subject.setDateForEntries(date)
         try await subject.addFood(foodDescription: "Some more food",
@@ -110,34 +107,35 @@ final class AddFoodViewModelTests: XCTestCase {
                                   timeConsumed: date.addingTimeInterval(-secsPerDay),
                                   plants: [])
         subject.fetchSuggestions(searchText: "more")
-        XCTAssertEqual(subject.suggestions, [Suggestion(name: "Some more food")])
+        #expect(subject.suggestions == [Suggestion(name: "Some more food")])
 
         subject.fetchSuggestions(searchText: "mxe")  // Shouldn't return results
-        XCTAssertEqual(subject.suggestions, [])
+        #expect(subject.suggestions.isEmpty)
     }
 
-    func testDefaultCaloriesForTwoSimilarFoodEntriesReturnsLatest() async throws {
+    @Test func defaultCaloriesForTwoSimilarFoodEntriesReturnsLatest() async throws {
         let date = dateFromComponents()
         subject.setDateForEntries(date)
-        try await subject.addFood(foodDescription: "Cornflakes",
-                                  calories: 100,
-                                  timeConsumed: date.addingTimeInterval(-1800),
-                                  plants: [])
         try await subject.addFood(foodDescription: "Cornflakes",
                                   calories: 200,
                                   timeConsumed: date.addingTimeInterval(-3600),
                                   plants: [])
+        try await subject.addFood(foodDescription: "Cornflakes",
+                                  calories: 100,
+                                  timeConsumed: date.addingTimeInterval(-1800),
+                                  plants: [])
         let defCalories = subject.foodTemplateFor("Cornflakes", timeConsumed: date).calories
 
-        XCTAssertEqual(defCalories, 100)
+        #expect(defCalories == 100)
+        #expect(subject.modelContext.foodResults().count == 2)
     }
 
-    func testPrompt() {
+    @Test func prompt() {
         let date = dateFromComponents()
-        XCTAssertEqual(subject.prompt(for: date), "Enter Morning Snack food or drink...")
+        #expect(subject.prompt(for: date) == "Enter Morning Snack food or drink...")
     }
 
-    func testCalorieSearchURL() {
-        XCTAssertEqual(subject.calorieSearchURL(for: "Banana Cake").absoluteString, "https://www.google.co.uk/search?q=calories+in+a+Banana%20Cake")
+    @Test func calorieSearchURL() {
+        #expect(subject.calorieSearchURL(for: "Banana Cake").absoluteString == "https://www.google.co.uk/search?q=calories+in+a+Banana%20Cake")
     }
 }
