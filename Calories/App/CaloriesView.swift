@@ -52,7 +52,7 @@ struct CaloriesView: View {
                 }
                 HistoryView(viewModel: historyViewModel, entryDeleted: $entryDeleted)
             }
-            .navigationTitle("Today's Calories")
+            .navigationTitle("Calories")
             .background(Colours.backgroundPrimary)
             .font(.brand)
             .scrollContentBackground(.hidden)

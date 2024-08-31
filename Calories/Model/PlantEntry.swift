@@ -26,4 +26,10 @@ extension PlantEntry: Equatable {
     public static func == (lhs: PlantEntry, rhs: PlantEntry) -> Bool {
         lhs.name == rhs.name
     }
+
+    @discardableResult
+    func insert(into modelContext: ModelContext) -> PlantEntry {
+        modelContext.insert(self)
+        return self
+    }
 }

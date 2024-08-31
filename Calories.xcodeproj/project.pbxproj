@@ -20,6 +20,7 @@
 		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
 		DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */; };
 		DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */; };
+		DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
@@ -145,6 +146,7 @@
 		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
 		DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMessage.swift; sourceTree = "<group>"; };
 		DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModel.swift; sourceTree = "<group>"; };
+		DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModelTests.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 			children = (
 				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
 				EA2D49132998166500248864 /* AddFoodViewModelTests.swift */,
+				DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */,
 				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
 				DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */,
 				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
@@ -770,6 +773,7 @@
 				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */,
 				DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */,
+				DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
 				DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,

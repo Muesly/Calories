@@ -28,9 +28,9 @@ final class WeeklyChartViewModelTests: XCTestCase {
 
         await subject.fetchWeeklyData(currentDate: dc.date!.addingTimeInterval(secsPerWeek))
 
-        XCTAssertEqual(subject.weeklyData, [.init(calories: 2100, stat: "Burnt"),
-                                            .init(calories: 1400, stat: "To Go"),
-                                            .init(calories: 0, stat: "Can Eat")])
+        XCTAssertEqual(subject.weeklyData, [.init(weightLossInLbs: 0.6, stat: "Good"),
+                                            .init(weightLossInLbs: 0.4, stat: "To Go"),
+                                            .init(weightLossInLbs: 0, stat: "Can Eat")])
     }
 
     func testWeeklyDetailsAboveTarger() async throws {
@@ -44,9 +44,9 @@ final class WeeklyChartViewModelTests: XCTestCase {
 
         await subject.fetchWeeklyData(currentDate: dc.date!.addingTimeInterval(secsPerWeek))
 
-        XCTAssertEqual(subject.weeklyData, [.init(calories: 3500, stat: "Burnt"),
-                                            .init(calories: 0, stat: "To Go"),
-                                            .init(calories: 5600, stat: "Can Eat")])
+        XCTAssertEqual(subject.weeklyData, [.init(weightLossInLbs: 1.0, stat: "Good"),
+                                            .init(weightLossInLbs: 0, stat: "To Go"),
+                                            .init(weightLossInLbs: 1.6, stat: "Can Eat")])
     }
 
     func testColourForDifference() async throws {

@@ -26,11 +26,11 @@ struct CalorieDataPointsType: Identifiable {
 
 struct WeeklyStat: Identifiable, Equatable {
     let id = UUID()
-    let calories: Int
+    let weightLossInLbs: Double
     let stat: String
     
     static func == (lhs: Self, rhs: Self) -> Bool {
-        (lhs.calories == rhs.calories) && (lhs.stat == rhs.stat)
+        (lhs.weightLossInLbs == rhs.weightLossInLbs) && (lhs.stat == rhs.stat)
     }
 }
 
@@ -84,7 +84,23 @@ class WeeklyChartViewModel {
         self.idGenerator = idGenerator
         self.startDate = startOfWeek()
     }
-    
+
+    func dayStr(forDate date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d"
+        let day = Int(dateFormatter.string(from: date))?.ordinal ?? ""
+
+        dateFormatter.dateFormat = "MMM"
+        let month = dateFormatter.string(from: date)
+
+        return "\(day) \(month)"
+    }
+
+    var weekStr: String {
+        let date = startOfWeek(startDate ?? Date())
+        return "\(dayStr(forDate: date)) to \(dayStr(forDate: date.addingTimeInterval(7 * 86400)))"
+    }
+
     private func startOfWeek(_ date: Date = Date()) -> Date {
         var weekday = Calendar.current.dateComponents([.weekday], from: date).weekday!
         if weekday == 1 {
@@ -177,19 +193,19 @@ class WeeklyChartViewModel {
         }
         
         // Calculate weekly progress
-        let burnt = -differenceData.reduce(0, { $0 + $1.calories })
+        let burnt = -differenceData.reduce(0.0, { $0 + Double($1.calories) })
         if burnt > 0 {
-            let goodBurn = min(3500, burnt)
-            let canEat = max(0, burnt - 3500)
-            let toGo = max(0, 3500 - goodBurn)
-            weeklyData = [WeeklyStat(calories: goodBurn, stat: "Good"),
-                          WeeklyStat(calories: toGo, stat: "To Go"),
-                          WeeklyStat(calories: canEat, stat: "Can Eat")]
+            let goodBurn = Double(min(3500, burnt))
+            let canEat = Double(max(0, burnt - 3500))
+            let toGo = Double(max(0, 3500 - goodBurn))
+            weeklyData = [WeeklyStat(weightLossInLbs: goodBurn / 3500, stat: "Good"),
+                          WeeklyStat(weightLossInLbs: toGo / 3500, stat: "To Go"),
+                          WeeklyStat(weightLossInLbs: canEat / 3500, stat: "Can Eat")]
         } else {
-            let badBurn = burnt
-            let toGo = 3500
-            weeklyData = [WeeklyStat(calories: badBurn, stat: "Bad"),
-                          WeeklyStat(calories: toGo, stat: "To Go")]
+            let badBurn = burnt / 3500
+            let toGo = 1.0
+            weeklyData = [WeeklyStat(weightLossInLbs: badBurn, stat: "Bad"),
+                          WeeklyStat(weightLossInLbs: toGo, stat: "To Go")]
         }
 
         startOfWeek = findStartOfWeek(data: differenceData)
@@ -205,16 +221,16 @@ class WeeklyChartViewModel {
         nextWeekEnabled = startDate.addingTimeInterval(secsPerWeek) < Date()
     }
 
-    var weeklyDataMinX: Int {
-        weeklyData.map { $0.calories }.min() ?? 0
+    var weeklyDataMinX: Double {
+        weeklyData.map { $0.weightLossInLbs }.min() ?? 0
     }
 
-    var weeklyDataMaxX: Int {
-        var maxX = 3500
+    var weeklyDataMaxX: Double {
+        var maxX = 1.0
         if weeklyData.count == 3 {
-            let burnt = weeklyData[0].calories + weeklyData[2].calories
+            let burnt = weeklyData[0].weightLossInLbs + weeklyData[2].weightLossInLbs
             if burnt > 0 {
-                maxX = max(burnt, 3500)
+                maxX = max(burnt, maxX)
             }
         }
         return maxX
@@ -272,5 +288,13 @@ class WeeklyChartViewModel {
             startDate?.addTimeInterval(secsPerWeek)
             await fetchData()
         }
+    }
+}
+
+extension Int {
+    var ordinal: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .ordinal
+        return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
     }
 }
