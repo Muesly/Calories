@@ -6,7 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct Suggestion: Hashable {
+struct Suggestion: Equatable {
     let name: String
+    var uiImage: UIImage?
+
+    init(name: String, uiImage: UIImage? = nil) {
+        self.name = name
+        self.uiImage = uiImage
+    }
 }

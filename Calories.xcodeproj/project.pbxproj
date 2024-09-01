@@ -15,6 +15,8 @@
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */; };
 		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
 		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
+		DD5134D42C83BE3400027855 /* PlantImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */; };
+		DD5134D62C83BF7600027855 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DD5134D52C83BF7600027855 /* Config.xcconfig */; };
 		DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEA2C6C0CCF007CAD98 /* Companion.swift */; };
 		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
 		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
@@ -47,7 +49,6 @@
 		EA2D49122998142100248864 /* AddFoodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49112998142100248864 /* AddFoodViewModel.swift */; };
 		EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49132998166500248864 /* AddFoodViewModelTests.swift */; };
 		EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EA7472B50776400382DC8 /* MealPickerView.swift */; };
-		EA2EA74A2B507A7D00382DC8 /* PlantListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EA7492B507A7D00382DC8 /* PlantListView.swift */; };
 		EA3146F129A2C6F3002AAA45 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */; };
 		EA3146F329A2C6F3002AAA45 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */; };
 		EA3146F629A2C6F3002AAA45 /* CaloriesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3146F529A2C6F3002AAA45 /* CaloriesWidget.swift */; };
@@ -141,6 +142,8 @@
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseDetailsView.swift; sourceTree = "<group>"; };
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
 		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
+		DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantImageGenerator.swift; sourceTree = "<group>"; };
+		DD5134D52C83BF7600027855 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		DD538CEA2C6C0CCF007CAD98 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
 		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
 		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
@@ -177,7 +180,6 @@
 		EA2D49112998142100248864 /* AddFoodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodViewModel.swift; sourceTree = "<group>"; };
 		EA2D49132998166500248864 /* AddFoodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodViewModelTests.swift; sourceTree = "<group>"; };
 		EA2EA7472B50776400382DC8 /* MealPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerView.swift; sourceTree = "<group>"; };
-		EA2EA7492B507A7D00382DC8 /* PlantListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantListView.swift; sourceTree = "<group>"; };
 		EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CaloriesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -276,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				DD3236802C7106970058BAAE /* Calories.xctestplan */,
+				DD5134D52C83BF7600027855 /* Config.xcconfig */,
 				EA097D8629918C9E00735129 /* Calories */,
 				EA097D9C29918CA000735129 /* CaloriesTests */,
 				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
@@ -367,10 +370,10 @@
 				EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */,
 				DD2C70132C73FAAA008193B3 /* AddPlantView.swift */,
 				DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */,
+				DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */,
 				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
 				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
-				EA2EA7492B507A7D00382DC8 /* PlantListView.swift */,
 			);
 			path = AddFood;
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD5134D62C83BF7600027855 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,7 +727,6 @@
 			files = (
 				DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */,
 				EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */,
-				EA2EA74A2B507A7D00382DC8 /* PlantListView.swift in Sources */,
 				EABBF0CE29B1342500C3B1F9 /* Day.swift in Sources */,
 				DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */,
 				EAD2115D29A390E80007A813 /* RecordWeightViewModel.swift in Sources */,
@@ -752,6 +755,7 @@
 				EA097DB82991909500735129 /* HistoryViewModel.swift in Sources */,
 				DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */,
 				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
+				DD5134D42C83BE3400027855 /* PlantImageGenerator.swift in Sources */,
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
 				DD258F602C7B6BE0007E7754 /* FoodEntry.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
@@ -1020,6 +1024,7 @@
 		};
 		EA097DAE29918CA000735129 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD5134D52C83BF7600027855 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1055,6 +1060,7 @@
 		};
 		EA097DAF29918CA000735129 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD5134D52C83BF7600027855 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -8,17 +8,31 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
+import UIKit
 
 @Model public class PlantEntry {
     @Attribute(. unique) var name: String
     var timeConsumed: Date
+    var imageData: Data?
+
     var foodEntries: [FoodEntry]?
     var numEntries: Int {
         foodEntries?.count ?? 0
     }
-    public init(_ name: String, timeConsumed: Date = Date()) {
+
+    var uiImage: UIImage? {
+        guard let imageData,
+              let uiImage = UIImage(data: imageData) else {
+            return nil
+        }
+        return uiImage
+    }
+
+    public init(_ name: String, timeConsumed: Date = Date(), imageData: Data? = nil) {
         self.name = name
         self.timeConsumed = timeConsumed
+        self.imageData = imageData
     }
 }
 

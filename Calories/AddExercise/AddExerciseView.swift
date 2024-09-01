@@ -40,7 +40,7 @@ struct AddExerciseView: View {
                         }
                     }
                     Section("Recent exercises") {
-                        ForEach(viewModel.suggestions, id: \.self) { suggestion in
+                        ForEach(viewModel.suggestions, id: \.name) { suggestion in
                             Button {
                                 searchText = suggestion.name
                                 showingAddExerciseDetailsView = true
