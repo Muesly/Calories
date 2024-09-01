@@ -25,6 +25,13 @@
     {
       "target" : {
         "containerPath" : "container:Calories.xcodeproj",
+        "identifier" : "DDDCA4092C5C157800445F06",
+        "name" : "CaloriesUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Calories.xcodeproj",
         "identifier" : "EA097D9829918CA000735129",
         "name" : "CaloriesTests"
       }

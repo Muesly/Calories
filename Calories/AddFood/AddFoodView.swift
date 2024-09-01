@@ -44,7 +44,7 @@ struct AddFoodView: View {
                         }
                     }
                     Section("Recent foods you've had at this time") {
-                        ForEach(viewModel.suggestions, id: \.self) { suggestion in
+                        ForEach(viewModel.suggestions, id: \.name) { suggestion in
                             Button {
                                 template = viewModel.foodTemplateFor(suggestion.name, timeConsumed: timeConsumed)
                                 showingAddFoodDetailsView = true

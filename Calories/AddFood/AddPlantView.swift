@@ -46,7 +46,7 @@ struct AddPlantView: View {
                     }
                     Section("Common plants") {
                         LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(viewModel.suggestions, id: \.self) { suggestion in
+                            ForEach(viewModel.suggestions, id: \.name) { suggestion in
                                 Button {
                                     addedPlant = suggestion.name
                                     dismiss()
@@ -56,9 +56,23 @@ struct AddPlantView: View {
                                             Spacer()
                                             Text(suggestion.name)
                                         }
-                                        Image(systemName: "photo.badge.plus")
+                                        if let uiImage = suggestion.uiImage {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                        } else {
+                                            Image(systemName: "photo.badge.plus")
+                                        }
                                     }
                                     .frame(width: 80, height: 80)
+                                }
+                                .onLongPressGesture {
+                                    Task {
+                                        do {
+                                            try await viewModel.fetchImagesForSuggestion(suggestion)
+                                        } catch {
+                                            print(error)
+                                        }
+                                    }
                                 }
                             }
                         }
