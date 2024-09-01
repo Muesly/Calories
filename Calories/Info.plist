@@ -4,5 +4,7 @@
 <dict>
 	<key>GPT API Key</key>
 	<string>$(GPT_API_KEY)</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
 </dict>
 </plist>

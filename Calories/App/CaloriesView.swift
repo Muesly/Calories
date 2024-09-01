@@ -94,7 +94,6 @@ struct CaloriesView: View {
                 weeklyChartViewModel.modelContext = modelContext
             }
         }
-        .preferredColorScheme(.dark)
     }
 
     private func refresh() {

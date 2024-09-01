@@ -57,10 +57,18 @@ struct CaloriesApp: App {
 }
 
 class StubbedHealthStore: HealthStore {
+    var initialWeight = 200
+    var caloriesConsumedReads = 0
+
     func authorize() async throws {}
     
     func caloriesConsumed(date: Date) async throws -> Int {
-        2000
+        caloriesConsumedReads += 1
+        if caloriesConsumedReads > 100 {
+            return 0
+        } else {
+            return 1800
+        }
     }
     
     func bmr(date: Date) async throws -> Int {
@@ -72,8 +80,9 @@ class StubbedHealthStore: HealthStore {
     }
     
     func weight(fromDate: Date, toDate: Date) async throws -> Int? {
-        sleep(1)
-        return 200
+        usleep(10000)
+        initialWeight += 1
+        return initialWeight
     }
     
     func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {

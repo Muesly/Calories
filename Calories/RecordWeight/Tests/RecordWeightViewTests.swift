@@ -16,7 +16,7 @@ final class RecordWeightViewTests: XCTestCase {
     override func tearDownWithError() throws {
     }
 
-    func testSpinnerShownWhenLoadingWeightChart() throws {
+    func testShowingRecordWeightScreen() throws {
         let app = XCUIApplication()
         app.launchArguments.append("UI_TESTING")
         app.launch()
@@ -25,5 +25,18 @@ final class RecordWeightViewTests: XCTestCase {
         recordWeightButton.tap()
         let spinner = app.activityIndicators["Loading Weight Chart"]
         XCTAssertTrue(spinner.exists)
+
+        let weightHeader = app.staticTexts["Weight over time"]
+        XCTAssert(weightHeader.exists)
+
+        let decreaseWeightButton = app.buttons["Report Decrease of 1 pound in weight"]
+        decreaseWeightButton.tap()
+
+        let newWeight = app.staticTexts["14 st, 4 lbs"]
+        XCTAssert(newWeight.waitForExistence(timeout: 1))
+
+        let applyButton = app.buttons["Apply"]
+        applyButton.tap()
+        sleep(1)
     }
 }
