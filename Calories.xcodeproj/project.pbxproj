@@ -260,6 +260,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD5134E32C846EE800027855 /* Add Plant */ = {
+			isa = PBXGroup;
+			children = (
+				DD2C70132C73FAAA008193B3 /* AddPlantView.swift */,
+				DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */,
+				DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */,
+			);
+			path = "Add Plant";
+			sourceTree = "<group>";
+		};
 		DDB7FF8C2C724EB6000FE006 /* Companion */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,6 +318,7 @@
 				EA2D491529981AE800248864 /* App */,
 				EA4EE50A299E9D44000FE6AC /* AddExercise */,
 				EA2D491629981AFD00248864 /* AddFood */,
+				DD5134E32C846EE800027855 /* Add Plant */,
 				DDB7FF8C2C724EB6000FE006 /* Companion */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				EA2D491829981B3C00248864 /* HealthStore */,
@@ -354,9 +365,6 @@
 			isa = PBXGroup;
 			children = (
 				EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */,
-				DD2C70132C73FAAA008193B3 /* AddPlantView.swift */,
-				DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */,
-				DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */,
 				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
 				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
