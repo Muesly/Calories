@@ -85,6 +85,7 @@ struct AddFoodView: View {
         .searchable(text: $searchText,
                     placement:  .navigationBarDrawer(displayMode: .always),
                     prompt: viewModel.prompt(for: timeConsumed))
+        .accessibilityIdentifier("Enter Food")
         .onSubmit(of: .search) {
             dismissSearch()
             showingAddFoodDetailsView = true

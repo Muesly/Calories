@@ -38,11 +38,11 @@ final class AddFoodDetailsViewTests: XCTestCase {
     private func addNewFood(_ app: XCUIApplication) {
         let foodHeader = app.staticTexts["Add new food"]
         XCTAssert(foodHeader.exists)
-        let searchBar = app.searchFields["Enter Evening Snack food or drink..."]
+        let searchBar = app.searchFields.firstMatch
         XCTAssert(searchBar.exists)
         searchBar.tap()
         searchBar.typeText("Katsu Chicken & Rice")
-        let addButton = app.collectionViews["Food List"].staticTexts["Add Katsu Chicken & Rice as a new food"]
+        let addButton = app.collectionViews["Food List"].buttons["Add Katsu Chicken & Rice as a new food"]
         XCTAssert(addButton.exists)
         addButton.tap()
     }
@@ -59,7 +59,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let addPlantViewHeader = app.navigationBars.staticTexts["Add Plant"]
         XCTAssert(addPlantViewHeader.exists)
 
-        let plantSearchBar = app.searchFields["Enter name of plant"]
+        let plantSearchBar = app.searchFields["Enter Plant"]
         plantSearchBar.tap()
         plantSearchBar.typeText("Rice")
 
