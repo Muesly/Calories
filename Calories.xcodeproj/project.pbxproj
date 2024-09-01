@@ -37,8 +37,6 @@
 		EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */; };
 		EA097DB82991909500735129 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097DB72991909500735129 /* HistoryViewModel.swift */; };
 		EA16CEFF2B53418B00E01122 /* MealPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */; };
-		EA2C9B8E29B4B2AC0019DB36 /* MealBreakdownViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C9B8D29B4B2AC0019DB36 /* MealBreakdownViewModel.swift */; };
-		EA2C9B9029B4B2BD0019DB36 /* MealBreakdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2C9B8F29B4B2BD0019DB36 /* MealBreakdownView.swift */; };
 		EA2D49042994394900248864 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA2D49032994394900248864 /* Colours.xcassets */; };
 		EA2D490629944E3000248864 /* AddFoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490529944E3000248864 /* AddFoodView.swift */; };
 		EA2D490829945C9400248864 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490729945C9400248864 /* HealthStore.swift */; };
@@ -168,8 +166,6 @@
 		EA097DB62991901700735129 /* Calories.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Calories.entitlements; sourceTree = "<group>"; };
 		EA097DB72991909500735129 /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerViewTests.swift; sourceTree = "<group>"; };
-		EA2C9B8D29B4B2AC0019DB36 /* MealBreakdownViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealBreakdownViewModel.swift; sourceTree = "<group>"; };
-		EA2C9B8F29B4B2BD0019DB36 /* MealBreakdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealBreakdownView.swift; sourceTree = "<group>"; };
 		EA2D49032994394900248864 /* Colours.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colours.xcassets; sourceTree = "<group>"; };
 		EA2D490529944E3000248864 /* AddFoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodView.swift; sourceTree = "<group>"; };
 		EA2D490729945C9400248864 /* HealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStore.swift; sourceTree = "<group>"; };
@@ -315,7 +311,6 @@
 				DDB7FF8C2C724EB6000FE006 /* Companion */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				EA2D491829981B3C00248864 /* HealthStore */,
-				EA2C9B8C29B4B2990019DB36 /* MealBreakdown */,
 				EAD2115929A38F730007A813 /* RecordWeight */,
 				EA3EDC16299D6E8D005070D3 /* WeeklyChart */,
 			);
@@ -338,15 +333,6 @@
 				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
 			);
 			path = CaloriesTests;
-			sourceTree = "<group>";
-		};
-		EA2C9B8C29B4B2990019DB36 /* MealBreakdown */ = {
-			isa = PBXGroup;
-			children = (
-				EA2C9B8F29B4B2BD0019DB36 /* MealBreakdownView.swift */,
-				EA2C9B8D29B4B2AC0019DB36 /* MealBreakdownViewModel.swift */,
-			);
-			path = MealBreakdown;
 			sourceTree = "<group>";
 		};
 		EA2D491529981AE800248864 /* App */ = {
@@ -732,7 +718,6 @@
 				EAD2115D29A390E80007A813 /* RecordWeightViewModel.swift in Sources */,
 				EABBF0D029B1343800C3B1F9 /* Meal.swift in Sources */,
 				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
-				EA2C9B8E29B4B2AC0019DB36 /* MealBreakdownViewModel.swift in Sources */,
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
 				EA085450299BED050029DD42 /* Theme.swift in Sources */,
@@ -743,7 +728,6 @@
 				EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */,
 				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,
 				DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */,
-				EA2C9B9029B4B2BD0019DB36 /* MealBreakdownView.swift in Sources */,
 				DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */,
 				DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */,
 				DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */,
