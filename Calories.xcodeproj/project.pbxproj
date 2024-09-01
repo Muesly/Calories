@@ -13,8 +13,6 @@
 		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */; };
-		DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13DE2BE78AAE00D9926C /* DataView.swift */; };
-		DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3E13E02BE78AC400D9926C /* DataViewTests.swift */; };
 		DD5134D42C83BE3400027855 /* PlantImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */; };
 		DD5134D62C83BF7600027855 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DD5134D52C83BF7600027855 /* Config.xcconfig */; };
 		DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEA2C6C0CCF007CAD98 /* Companion.swift */; };
@@ -140,8 +138,6 @@
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseDetailsView.swift; sourceTree = "<group>"; };
-		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
-		DD3E13E02BE78AC400D9926C /* DataViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewTests.swift; sourceTree = "<group>"; };
 		DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantImageGenerator.swift; sourceTree = "<group>"; };
 		DD5134D52C83BF7600027855 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		DD538CEA2C6C0CCF007CAD98 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
@@ -325,23 +321,6 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		DD7DC8902C8471BB0021FA09 /* DataView */ = {
-			isa = PBXGroup;
-			children = (
-				DD7DC8912C8471CB0021FA09 /* Tests */,
-				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
-			);
-			path = DataView;
-			sourceTree = "<group>";
-		};
-		DD7DC8912C8471CB0021FA09 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
 		DD7DC8922C8471D90021FA09 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,7 +386,6 @@
 				EA2D491629981AFD00248864 /* AddFood */,
 				DD5134E32C846EE800027855 /* Add Plant */,
 				DDB7FF8C2C724EB6000FE006 /* Companion */,
-				DD7DC8902C8471BB0021FA09 /* DataView */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				EA2D491829981B3C00248864 /* HealthStore */,
 				EAD2115929A38F730007A813 /* RecordWeight */,
@@ -798,7 +776,6 @@
 				DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */,
 				EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */,
 				EABBF0CE29B1342500C3B1F9 /* Day.swift in Sources */,
-				DD3E13DF2BE78AAE00D9926C /* DataView.swift in Sources */,
 				EAD2115D29A390E80007A813 /* RecordWeightViewModel.swift in Sources */,
 				EABBF0D029B1343800C3B1F9 /* Meal.swift in Sources */,
 				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
@@ -847,7 +824,6 @@
 				DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */,
 				DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
-				DD3E13E12BE78AC400D9926C /* DataViewTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
 				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,
 				EA16CEFF2B53418B00E01122 /* MealPickerViewTests.swift in Sources */,

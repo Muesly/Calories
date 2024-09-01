@@ -42,7 +42,6 @@ struct CaloriesApp: App {
                              healthStore: healthStore,
                              companion: companion)
                 .modelContainer(container)
-                //DataView()
             }
         }
     }
