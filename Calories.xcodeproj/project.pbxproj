@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -21,6 +21,9 @@
 		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
 		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
 		DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */; };
+		DD7DC8872C84707D0021FA09 /* AddExerciseViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */; };
+		DD7DC8882C84707D0021FA09 /* AddFoodDetailsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */; };
+		DD7DC8892C84707D0021FA09 /* RecordWeightViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */; };
 		DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */; };
 		DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
@@ -135,7 +138,6 @@
 		DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
 		DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEntry.swift; sourceTree = "<group>"; };
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
-		DD3236802C7106970058BAAE /* Calories.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Calories.xctestplan; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseDetailsView.swift; sourceTree = "<group>"; };
 		DD3E13DE2BE78AAE00D9926C /* DataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataView.swift; sourceTree = "<group>"; };
@@ -146,6 +148,10 @@
 		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
 		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
 		DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMessage.swift; sourceTree = "<group>"; };
+		DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewTests.swift; sourceTree = "<group>"; };
+		DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodDetailsViewTests.swift; sourceTree = "<group>"; };
+		DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightViewTests.swift; sourceTree = "<group>"; };
+		DD7DC8952C8472DD0021FA09 /* CaloriesTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CaloriesTestPlan.xctestplan; path = ../CaloriesTestPlan.xctestplan; sourceTree = "<group>"; };
 		DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModel.swift; sourceTree = "<group>"; };
 		DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModelTests.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
@@ -208,10 +214,6 @@
 		EAFC439E29A1525B00945E70 /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		DDDCA40B2C5C157800445F06 /* CaloriesUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CaloriesUITests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		DDDCA4072C5C157800445F06 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -263,6 +265,7 @@
 		DD5134E32C846EE800027855 /* Add Plant */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC88C2C84714C0021FA09 /* Tests */,
 				DD2C70132C73FAAA008193B3 /* AddPlantView.swift */,
 				DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */,
 				DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */,
@@ -270,9 +273,95 @@
 			path = "Add Plant";
 			sourceTree = "<group>";
 		};
+		DD7DC88A2C8470DB0021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
+				DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC88B2C8471100021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EA2D49132998166500248864 /* AddFoodViewModelTests.swift */,
+				DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */,
+				EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC88C2C84714C0021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC88D2C8471640021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC88E2C8471810021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC88F2C8471980021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
+				DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC8902C8471BB0021FA09 /* DataView */ = {
+			isa = PBXGroup;
+			children = (
+				DD7DC8912C8471CB0021FA09 /* Tests */,
+				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
+			);
+			path = DataView;
+			sourceTree = "<group>";
+		};
+		DD7DC8912C8471CB0021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC8922C8471D90021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DD7DC8932C8471EC0021FA09 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		DDB7FF8C2C724EB6000FE006 /* Companion */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC88D2C8471640021FA09 /* Tests */,
 				DD538CEA2C6C0CCF007CAD98 /* Companion.swift */,
 				DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */,
 				DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */,
@@ -283,11 +372,9 @@
 		EA097D7B29918C9E00735129 = {
 			isa = PBXGroup;
 			children = (
-				DD3236802C7106970058BAAE /* Calories.xctestplan */,
+				DD7DC8952C8472DD0021FA09 /* CaloriesTestPlan.xctestplan */,
 				DD5134D52C83BF7600027855 /* Config.xcconfig */,
 				EA097D8629918C9E00735129 /* Calories */,
-				EA097D9C29918CA000735129 /* CaloriesTests */,
-				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
 				EA76757E299D844E00771517 /* Calories Watch App */,
 				EA3146F429A2C6F3002AAA45 /* CaloriesWidget */,
 				EA3146EF29A2C6F3002AAA45 /* Frameworks */,
@@ -320,6 +407,7 @@
 				EA2D491629981AFD00248864 /* AddFood */,
 				DD5134E32C846EE800027855 /* Add Plant */,
 				DDB7FF8C2C724EB6000FE006 /* Companion */,
+				DD7DC8902C8471BB0021FA09 /* DataView */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				EA2D491829981B3C00248864 /* HealthStore */,
 				EAD2115929A38F730007A813 /* RecordWeight */,
@@ -328,30 +416,12 @@
 			path = Calories;
 			sourceTree = "<group>";
 		};
-		EA097D9C29918CA000735129 /* CaloriesTests */ = {
-			isa = PBXGroup;
-			children = (
-				EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */,
-				EA2D49132998166500248864 /* AddFoodViewModelTests.swift */,
-				DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */,
-				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
-				DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */,
-				DD3E13E02BE78AC400D9926C /* DataViewTests.swift */,
-				EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */,
-				EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */,
-				DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */,
-				EAD2115E29A391960007A813 /* RecordWeightViewModelTests.swift */,
-				EA3EDC17299D74DA005070D3 /* WeeklyChartViewModelTests.swift */,
-			);
-			path = CaloriesTests;
-			sourceTree = "<group>";
-		};
 		EA2D491529981AE800248864 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC8932C8471EC0021FA09 /* Tests */,
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
-				DD3E13DE2BE78AAE00D9926C /* DataView.swift */,
 				EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */,
 				EA2D490929970B8A00248864 /* HistoryView.swift */,
 				EA097DB72991909500735129 /* HistoryViewModel.swift */,
@@ -364,6 +434,7 @@
 		EA2D491629981AFD00248864 /* AddFood */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC88B2C8471100021FA09 /* Tests */,
 				EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */,
 				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
@@ -375,6 +446,7 @@
 		EA2D491729981B0F00248864 /* MealItems */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC88E2C8471810021FA09 /* Tests */,
 				EA2D490B2997D60200248864 /* MealItemsView.swift */,
 				EA2D490D2997D62000248864 /* MealItemsViewModel.swift */,
 			);
@@ -385,6 +457,7 @@
 			isa = PBXGroup;
 			children = (
 				EA2D490729945C9400248864 /* HealthStore.swift */,
+				DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */,
 			);
 			path = HealthStore;
 			sourceTree = "<group>";
@@ -420,6 +493,7 @@
 		EA3EDC16299D6E8D005070D3 /* WeeklyChart */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC8922C8471D90021FA09 /* Tests */,
 				EA085451299C01350029DD42 /* WeeklyChartView.swift */,
 				EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */,
 			);
@@ -429,6 +503,7 @@
 		EA4EE50A299E9D44000FE6AC /* AddExercise */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC88A2C8470DB0021FA09 /* Tests */,
 				DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */,
 				EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */,
 				EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */,
@@ -470,6 +545,7 @@
 		EAD2115929A38F730007A813 /* RecordWeight */ = {
 			isa = PBXGroup;
 			children = (
+				DD7DC88F2C8471980021FA09 /* Tests */,
 				DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */,
 				EAD2115A29A38F860007A813 /* RecordWeightView.swift */,
 				EAD2115C29A390E80007A813 /* RecordWeightViewModel.swift */,
@@ -493,9 +569,6 @@
 			);
 			dependencies = (
 				DDDCA4112C5C157800445F06 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				DDDCA40B2C5C157800445F06 /* CaloriesUITests */,
 			);
 			name = CaloriesUITests;
 			packageProductDependencies = (
@@ -712,6 +785,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD7DC8872C84707D0021FA09 /* AddExerciseViewTests.swift in Sources */,
+				DD7DC8882C84707D0021FA09 /* AddFoodDetailsViewTests.swift in Sources */,
+				DD7DC8892C84707D0021FA09 /* RecordWeightViewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -37,7 +37,7 @@
       </EnvironmentVariables>
       <TestPlans>
          <TestPlanReference
-            reference = "container:Calories.xctestplan"
+            reference = "container:../CaloriesTestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
