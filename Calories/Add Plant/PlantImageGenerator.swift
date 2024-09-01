@@ -14,31 +14,29 @@ protocol PlantImageGenerating {
 
 enum PlantImageGeneratorError: Error {
     case failedToDecodeImageFromResponse
-    case failedToFindContentInResponse
-    case failedToDecodeImageFromGPTSuggestion
+    case noURLsReturned
+    case invalidURLReturned
+    case failedToLoadImageAtURL
 }
 
 struct PlantImageGenerator: PlantImageGenerating {
+    let apiKey: String
+    let urlSession: URLSession
+
     private func promptText(for plantName: String) -> String {
         return "Photo of \(plantName) in a white bowl"
     }
 
-    func generate(for plantName: String) async throws -> Data {
-        let apiKey = Bundle.main.infoDictionary!["GPT API Key"]!
-        var request = URLRequest(url: URL(string: "https://api.openai.com/v1/images/generations")!)
-        request.httpMethod = "POST"
-        request.allHTTPHeaderFields = [
-            "Content-Type": "application/json",
-            "Authorization": "Bearer \(apiKey)"
-        ]
-        let prompt = promptText(for: plantName)
-        let parameters: [String : Any] = ["model": "dall-e-3",
-                                          "prompt": prompt,
-                                          "n": 1,
-                                          "size": "1024x1024"]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
+    init(apiKey: String,
+         urlSession: URLSession = .shared) {
+        self.apiKey = apiKey
+        self.urlSession = urlSession
+    }
 
-        let (data, _) = try await URLSession.shared.data(for: request)
+    func generate(for plantName: String) async throws -> Data {
+        let prompt = promptText(for: plantName)
+        let request = makeRequest(prompt: prompt)
+        let (data, _) = try await urlSession.data(for: request)
         let response: GPTResponse
         do {
             let decoder = JSONDecoder()
@@ -46,18 +44,46 @@ struct PlantImageGenerator: PlantImageGenerating {
         } catch {
             throw PlantImageGeneratorError.failedToDecodeImageFromResponse
         }
-        if let imageURL = response.data.first?.url {
-            let (data, _) = try await URLSession.shared.data(from: URL(string: imageURL)!)
-            return data
-        } else {
-            throw PlantImageGeneratorError.failedToFindContentInResponse
+
+        guard let imageURL = response.data.first?.url else {
+            throw PlantImageGeneratorError.noURLsReturned
         }
+        guard let url = URL(string: imageURL) else {
+            throw PlantImageGeneratorError.invalidURLReturned
+        }
+        do {
+            let (data, _) = try await urlSession.data(from: url)
+            return data
+        } catch {
+            throw PlantImageGeneratorError.failedToLoadImageAtURL
+        }
+    }
+
+    private func makeRequest(prompt: String) -> URLRequest {
+        var request = URLRequest(url: URL(string: "https://api.openai.com/v1/images/generations")!)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        let parameters: [String : Any] = ["model": "dall-e-3",
+                                          "prompt": prompt,
+                                          "n": 1,
+                                          "size": "1024x1024"]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
+        return request
     }
 }
 
-struct GPTResponse: Decodable {
-    struct GPTImage: Decodable {
+struct GPTResponse: Codable {
+    struct GPTImage: Codable {
         let url: String
     }
     let data: [GPTImage]
+}
+
+struct StubbedPlantGenerator: PlantImageGenerating {
+    func generate(for plantName: String) async throws -> Data {
+        return Data()
+    }
 }

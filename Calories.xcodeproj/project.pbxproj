@@ -22,6 +22,7 @@
 		DD7DC8872C84707D0021FA09 /* AddExerciseViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */; };
 		DD7DC8882C84707D0021FA09 /* AddFoodDetailsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */; };
 		DD7DC8892C84707D0021FA09 /* RecordWeightViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */; };
+		DD946C242C847526001A36EE /* PlantImageGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD946C232C847526001A36EE /* PlantImageGeneratorTests.swift */; };
 		DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */; };
 		DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
@@ -148,6 +149,7 @@
 		DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodDetailsViewTests.swift; sourceTree = "<group>"; };
 		DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightViewTests.swift; sourceTree = "<group>"; };
 		DD7DC8952C8472DD0021FA09 /* CaloriesTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CaloriesTestPlan.xctestplan; path = ../CaloriesTestPlan.xctestplan; sourceTree = "<group>"; };
+		DD946C232C847526001A36EE /* PlantImageGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantImageGeneratorTests.swift; sourceTree = "<group>"; };
 		DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModel.swift; sourceTree = "<group>"; };
 		DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModelTests.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
@@ -292,6 +294,7 @@
 			isa = PBXGroup;
 			children = (
 				DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */,
+				DD946C232C847526001A36EE /* PlantImageGeneratorTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -825,6 +828,7 @@
 				DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
+				DD946C242C847526001A36EE /* PlantImageGeneratorTests.swift in Sources */,
 				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,
 				EA16CEFF2B53418B00E01122 /* MealPickerViewTests.swift in Sources */,
 			);

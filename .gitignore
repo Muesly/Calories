@@ -92,7 +92,5 @@ iOSInjectionProject/
 .vscode/settings.json
 
 .DSStore
-
 Config.xcconfig
-.DS_Store
 Calories/.DS_Store
