@@ -51,17 +51,16 @@ struct AddPlantView: View {
                                     addedPlant = suggestion.name
                                     dismiss()
                                 } label: {
-                                    ZStack {
-                                        VStack(alignment: .leading) {
-                                            Spacer()
-                                            Text(suggestion.name)
-                                        }
+                                    VStack {
                                         if let uiImage = suggestion.uiImage {
                                             Image(uiImage: uiImage)
                                                 .resizable()
+                                                .scaledToFill()
                                         } else {
                                             Image(systemName: "photo.badge.plus")
                                         }
+                                        Text(suggestion.name)
+                                            .frame(height: 20)
                                     }
                                     .frame(width: 80, height: 80)
                                 }
@@ -111,7 +110,9 @@ struct AddPlantView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    let _ = [PlantEntry("Corn"), PlantEntry("Rice"), PlantEntry("Broccoli")].forEach { $0.insert(into: modelContext)}
+    let _ = [PlantEntry("Corn", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9)),
+             PlantEntry("Rice", imageData: UIImage(named: "Rice")?.jpegData(compressionQuality: 0.9)),
+             PlantEntry("Broccoli", imageData: UIImage(named: "Broccoli")?.jpegData(compressionQuality: 0.9))].forEach { $0.insert(into: modelContext)}
     let viewModel = AddPlantViewModel(modelContext: modelContext,
                                       plantImageGenerator: StubbedPlantGenerator())
     AddPlantView(viewModel: viewModel, addedPlant: .constant(""))

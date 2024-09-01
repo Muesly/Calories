@@ -118,6 +118,7 @@ struct RecordWeightView: View {
                             Image(systemName: "minus.circle")
                                 .tint(Colours.foregroundPrimary)
                                 .padding(5)
+                                .accessibilityLabel("Report Decrease of 1 pound in weight")
                         }
                         RevealingTextView(text: Binding(get: { viewModel.currentWeight }, set: { _ in }))
                             .lineLimit(1)
@@ -128,6 +129,7 @@ struct RecordWeightView: View {
                             Image(systemName: "plus.circle")
                                 .tint(Colours.foregroundPrimary)
                                 .padding(5)
+                                .accessibilityLabel("Report Increase of 1 pound in weight")
                         }
                     }
                     Button {
