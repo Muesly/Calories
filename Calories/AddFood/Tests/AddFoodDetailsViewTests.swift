@@ -27,6 +27,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         addNewFood(app)
         enterInDetailsOfNewFood(app)
         addPlantInNewFood(app)
+        addFoodAndSeeInHistory(app)
     }
 
     private func goToAddFood(_ app: XCUIApplication) {
@@ -68,5 +69,22 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let foodsPlantList = app.collectionViews["Food's Plant List"]
         let addedPlant = foodsPlantList.staticTexts["Rice"]
         XCTAssert(addedPlant.exists)
+    }
+
+    private func addFoodAndSeeInHistory(_ app: XCUIApplication) {
+        let addButton = app.buttons["Add Katsu Chicken & Rice"]
+        addButton.tap()
+
+        let cancelSearchButton = app.buttons["Cancel"]
+        cancelSearchButton.tap()
+
+        let closeAddingFoodButton = app.buttons["Close"]
+        closeAddingFoodButton.tap()
+
+        let homeScreenScrollview = app.collectionViews.firstMatch
+        homeScreenScrollview.swipeUp()
+
+        let lunchHistoryLabel = app.staticTexts["Lunch (450 cals)"]
+        XCTAssert(lunchHistoryLabel.exists)
     }
 }
