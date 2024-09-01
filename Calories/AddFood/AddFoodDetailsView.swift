@@ -25,6 +25,7 @@ struct AddFoodDetailsView: View {
     @State var addedPlant: String = ""
     @Binding var addedFoodEntry: FoodEntry?
     @Binding var isFoodItemsViewPresented: Bool
+    @State private var openAIAPIKey: String
 
     init(viewModel: AddFoodViewModel,
          foodTemplate: FoodTemplate,
@@ -37,6 +38,7 @@ struct AddFoodDetailsView: View {
         _addedFoodEntry = addedFoodEntry
         _foodAddedAtTime = State(initialValue: foodTemplate.dateTime)
         _isFoodItemsViewPresented = isFoodItemsViewPresented
+        openAIAPIKey = Bundle.main.infoDictionary!["GPT API Key"]! as! String
     }
 
     var body: some View {
@@ -153,7 +155,8 @@ struct AddFoodDetailsView: View {
         .cornerRadius(10)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
-            AddPlantView(viewModel: AddPlantViewModel(modelContext: modelContext), addedPlant: $addedPlant)
+            let viewModel = AddPlantViewModel(modelContext: modelContext,                                       plantImageGenerator: PlantImageGenerator(apiKey: openAIAPIKey))
+            AddPlantView(viewModel: viewModel, addedPlant: $addedPlant)
         }
         .task {
             viewModel.plants = foodTemplate.plants.map { Plant(name: $0) }

@@ -12,10 +12,13 @@ import SwiftUI
 @Observable
 class AddPlantViewModel: ObservableObject {
     let modelContext: ModelContext
+    let plantImageGenerator: PlantImageGenerating
     var suggestions: [Suggestion] = []
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext,
+         plantImageGenerator: PlantImageGenerating) {
         self.modelContext = modelContext
+        self.plantImageGenerator = plantImageGenerator
     }
 
     func fetchSuggestions(searchText: String = "") {
@@ -30,7 +33,7 @@ class AddPlantViewModel: ObservableObject {
 
     func fetchImagesForSuggestion(_ suggestion: Suggestion) async throws {
         let name = suggestion.name
-        let uiImageData = try await PlantImageGenerator().generate(for: suggestion.name)
+        let uiImageData = try await plantImageGenerator.generate(for: suggestion.name)
         let uiImage = UIImage(data: uiImageData)
         let suggestionWithImage = Suggestion(name: suggestion.name, uiImage: uiImage)
 

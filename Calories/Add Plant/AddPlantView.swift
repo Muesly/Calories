@@ -112,6 +112,7 @@ struct AddPlantView: View {
 #Preview {
     let modelContext = ModelContext.inMemory
     let _ = [PlantEntry("Corn"), PlantEntry("Rice"), PlantEntry("Broccoli")].forEach { $0.insert(into: modelContext)}
-    AddPlantView(viewModel: .init(modelContext: modelContext),
-                 addedPlant: .constant(""))
+    let viewModel = AddPlantViewModel(modelContext: modelContext,
+                                      plantImageGenerator: StubbedPlantGenerator())
+    AddPlantView(viewModel: viewModel, addedPlant: .constant(""))
 }
