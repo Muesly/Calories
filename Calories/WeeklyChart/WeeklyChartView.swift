@@ -95,13 +95,14 @@ struct WeekSelector: View {
 
 struct WeeklyProgressChart: View {
     let viewModel: WeeklyChartViewModel
+    let chartTitleFont = Font.custom("Avenir Next", size: 10)
 
     var body: some View {
         VStack {
             ZStack {
                 VStack {
                     Text("Estimated Weight Loss")
-                        .font(.smallHeading)
+                        .font(chartTitleFont)
                     Chart {
                         ForEach(viewModel.weeklyData) {
                             BarMark(
@@ -113,7 +114,7 @@ struct WeeklyProgressChart: View {
                     .chartXScale(domain: viewModel.weeklyDataMinX...viewModel.weeklyDataMaxX, range: .plotDimension(padding: 20))
                     .chartForegroundStyleScale(["Bad": .red, "Good": .green, "To Go": .gray, "Can Eat": .blue])
                     Text("Different Plants Eaten")
-                        .font(.smallHeading)
+                        .font(chartTitleFont)
                         .padding(.top, 5)
                     Chart {
                         ForEach(viewModel.weeklyPlantsData) {
