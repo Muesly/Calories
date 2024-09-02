@@ -38,6 +38,12 @@ extension ModelContext {
         }
     }
 
+    func findPlant(_ plant: String) -> PlantEntry? {
+        let fetchDescriptor = FetchDescriptor<PlantEntry>(predicate: #Predicate { $0.name == plant })
+        let firstMatch = try? fetch(fetchDescriptor).first
+        return firstMatch
+    }
+
     func exerciseResults(for predicate: Predicate<ExerciseEntry>? = nil,
                  sortBy: [SortDescriptor<ExerciseEntry>] = [ExerciseEntry.mostRecent]) -> [ExerciseEntry] {
         let fetchDescriptor = FetchDescriptor<ExerciseEntry>(predicate: predicate,

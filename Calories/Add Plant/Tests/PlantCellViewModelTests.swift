@@ -1,0 +1,43 @@
+//
+//  PlantCellViewModelTests.swift
+//  Calories
+//
+//  Created by Tony Short on 02/09/2024.
+//
+
+import SwiftData
+import Testing
+import UIKit
+
+@testable import Calories
+
+struct PlantCellViewModelTests {
+    @Test func cellImageToBeSetWithPlantThatHasImage() async throws {
+        let modelContext = ModelContext.inMemory
+        let plantEntry = PlantEntry("Rice",
+                                    imageData: UIImage(systemName: "plus")?.pngData())
+        plantEntry.insert(into: modelContext)
+
+        let sut = PlantCellViewModel(plant: "Rice",
+                                     plantImageGenerator: StubbedPlantGenerator(),
+                                     modelContext: modelContext)
+        #expect(sut.uiImage != nil)
+    }
+
+    @Test func cellImageToBeSetWhenImageGeneratedForPlantWithNoImage() async throws {
+        let modelContext = ModelContext.inMemory
+        let plantEntry = PlantEntry("Rice")
+        plantEntry.insert(into: modelContext)
+
+        let plantGenerator = StubbedPlantGenerator()
+        plantGenerator.returnedData = UIImage(systemName: "plus")!.pngData()!
+        let sut = PlantCellViewModel(plant: "Rice",
+                                     plantImageGenerator: plantGenerator,
+                                     modelContext: modelContext)
+        try await sut.fetchImagesForSuggestion()
+        #expect(sut.uiImage != nil)
+
+        let modifiedPlantEntry = modelContext.findPlant("Rice")
+        #expect(modifiedPlantEntry?.uiImage != nil)
+    }
+}
