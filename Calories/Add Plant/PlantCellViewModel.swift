@@ -9,17 +9,29 @@ import Foundation
 import SwiftData
 import UIKit
 
+struct PlantSelection {
+    let name: String
+    let isSelected: Bool
+
+    init(_ name: String, isSelected: Bool = false) {
+        self.name = name
+        self.isSelected = isSelected
+    }
+}
+
 @Observable
 class PlantCellViewModel {
     let plant: String
+    var isSelected: Bool
     let plantImageGenerator: PlantImageGenerating
     let modelContext: ModelContext
     var uiImage: UIImage?
 
-    init(plant: String,
+    init(plantSelection: PlantSelection,
          plantImageGenerator: PlantImageGenerating,
          modelContext: ModelContext) {
-        self.plant = plant
+        self.plant = plantSelection.name
+        self.isSelected = plantSelection.isSelected
         self.plantImageGenerator = plantImageGenerator
         self.modelContext = modelContext
 

@@ -26,12 +26,6 @@ struct AddPlantView: View {
         self._addedPlant = addedPlant
     }
 
-    let columns = [
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-            GridItem(.flexible())
-        ]
-
     var body: some View {
         NavigationStack {
             VStack {
@@ -45,36 +39,10 @@ struct AddPlantView: View {
                         }
                     }
                     Section("Common plants") {
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(viewModel.suggestions, id: \.name) { suggestion in
-                                Button {
-                                    addedPlant = suggestion.name
-                                    dismiss()
-                                } label: {
-                                    VStack {
-                                        if let uiImage = suggestion.uiImage {
-                                            Image(uiImage: uiImage)
-                                                .resizable()
-                                                .scaledToFill()
-                                        } else {
-                                            Image(systemName: "photo.badge.plus")
-                                        }
-                                        Text(suggestion.name)
-                                            .frame(height: 20)
-                                    }
-                                    .frame(width: 80, height: 80)
-                                }
-                                .onLongPressGesture {
-                                    Task {
-                                        do {
-                                            try await viewModel.fetchImagesForSuggestion(suggestion)
-                                        } catch {
-                                            print(error)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        PlantGridView(plantSelections: viewModel.suggestions.map { .init($0.name) },
+                                  added: { plant in
+                                    addedPlant = plant
+                                    dismiss() })
                     }
                     .listRowBackground(Colours.backgroundSecondary)
                 }
@@ -112,8 +80,9 @@ struct AddPlantView: View {
     let modelContext = ModelContext.inMemory
     let _ = [PlantEntry("Corn", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9)),
              PlantEntry("Rice", imageData: UIImage(named: "Rice")?.jpegData(compressionQuality: 0.9)),
-             PlantEntry("Broccoli", imageData: UIImage(named: "Broccoli")?.jpegData(compressionQuality: 0.9))].forEach { $0.insert(into: modelContext)}
-    let viewModel = AddPlantViewModel(modelContext: modelContext,
-                                      plantImageGenerator: StubbedPlantGenerator())
+             PlantEntry("Broccoli", imageData: UIImage(named: "Broccoli")?.jpegData(compressionQuality: 0.9)),
+             PlantEntry("Unidentified"),
+             PlantEntry("Corn 2", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9))].forEach { $0.insert(into: modelContext)}
+    let viewModel = AddPlantViewModel(modelContext: modelContext)
     AddPlantView(viewModel: viewModel, addedPlant: .constant(""))
 }
