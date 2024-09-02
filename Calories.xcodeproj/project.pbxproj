@@ -19,6 +19,10 @@
 		DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */; };
 		DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF22C6E9377007CAD98 /* RandomPicker.swift */; };
 		DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */; };
+		DD72D7912C84B3B600E75FB5 /* PlantGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7902C84B3B600E75FB5 /* PlantGridView.swift */; };
+		DD72D7932C84EDEB00E75FB5 /* PlantCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */; };
+		DD72D7952C8508A600E75FB5 /* PlantCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7942C8508A600E75FB5 /* PlantCellView.swift */; };
+		DD72D7972C8635F000E75FB5 /* PlantCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7962C8635F000E75FB5 /* PlantCellViewModelTests.swift */; };
 		DD7DC8872C84707D0021FA09 /* AddExerciseViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */; };
 		DD7DC8882C84707D0021FA09 /* AddFoodDetailsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */; };
 		DD7DC8892C84707D0021FA09 /* RecordWeightViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */; };
@@ -145,6 +149,10 @@
 		DD538CEC2C6C0CFD007CAD98 /* CompanionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionTests.swift; sourceTree = "<group>"; };
 		DD538CF22C6E9377007CAD98 /* RandomPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomPicker.swift; sourceTree = "<group>"; };
 		DD538CF42C6E939B007CAD98 /* CompanionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMessage.swift; sourceTree = "<group>"; };
+		DD72D7902C84B3B600E75FB5 /* PlantGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGridView.swift; sourceTree = "<group>"; };
+		DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellViewModel.swift; sourceTree = "<group>"; };
+		DD72D7942C8508A600E75FB5 /* PlantCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellView.swift; sourceTree = "<group>"; };
+		DD72D7962C8635F000E75FB5 /* PlantCellViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellViewModelTests.swift; sourceTree = "<group>"; };
 		DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewTests.swift; sourceTree = "<group>"; };
 		DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodDetailsViewTests.swift; sourceTree = "<group>"; };
 		DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightViewTests.swift; sourceTree = "<group>"; };
@@ -265,6 +273,9 @@
 			children = (
 				DD7DC88C2C84714C0021FA09 /* Tests */,
 				DD2C70132C73FAAA008193B3 /* AddPlantView.swift */,
+				DD72D7902C84B3B600E75FB5 /* PlantGridView.swift */,
+				DD72D7942C8508A600E75FB5 /* PlantCellView.swift */,
+				DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */,
 				DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */,
 				DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */,
 			);
@@ -295,6 +306,7 @@
 			children = (
 				DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */,
 				DD946C232C847526001A36EE /* PlantImageGeneratorTests.swift */,
+				DD72D7962C8635F000E75FB5 /* PlantCellViewModelTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -796,6 +808,7 @@
 				DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */,
 				DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */,
 				EA2D490629944E3000248864 /* AddFoodView.swift in Sources */,
+				DD72D7952C8508A600E75FB5 /* PlantCellView.swift in Sources */,
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
 				EA2D49122998142100248864 /* AddFoodViewModel.swift in Sources */,
 				DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */,
@@ -813,6 +826,8 @@
 				DD258F622C7B6BF1007E7754 /* PlantEntry.swift in Sources */,
 				EA42A10029B15EEE003BB1FC /* Helpers.swift in Sources */,
 				DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */,
+				DD72D7912C84B3B600E75FB5 /* PlantGridView.swift in Sources */,
+				DD72D7932C84EDEB00E75FB5 /* PlantCellViewModel.swift in Sources */,
 				EAD2116129A412450007A813 /* WeightEntry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -828,6 +843,7 @@
 				DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
+				DD72D7972C8635F000E75FB5 /* PlantCellViewModelTests.swift in Sources */,
 				DD946C242C847526001A36EE /* PlantImageGeneratorTests.swift in Sources */,
 				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,
 				EA16CEFF2B53418B00E01122 /* MealPickerViewTests.swift in Sources */,

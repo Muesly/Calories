@@ -90,7 +90,7 @@ struct AddFoodDetailsView: View {
 
             List {
                 Section {
-                    PlantGrid(plants: viewModel.plants.map { $0.name },
+                    PlantGridView(plantSelections: viewModel.plants.map { .init($0.name) },
                               added: { _ in })
                 } header: {
                     HStack {

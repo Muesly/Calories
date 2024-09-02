@@ -1,5 +1,5 @@
 //
-//  PlantCell.swift
+//  PlantCellView.swift
 //  Calories
 //
 //  Created by Tony Short on 01/09/2024.
@@ -8,11 +8,11 @@
 import Foundation
 import SwiftUI
 
-struct PlantCell: View {
+struct PlantCellView: View {
     let added: (() -> Void)
     let viewModel: PlantCellViewModel
     @State var isGeneratingImage: Bool = false
-
+    private static let imageSize = CGSize(width: 130, height: 110)
     init(viewModel: PlantCellViewModel,
          added: @escaping () -> Void) {
         self.viewModel = viewModel
@@ -24,22 +24,34 @@ struct PlantCell: View {
             added()
         } label: {
             VStack(spacing: 0) {
-                if isGeneratingImage {
-                    ProgressView()
-                        .frame(width: 100, height: 80)
-                } else {
-                    if let uiImage = viewModel.uiImage {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .frame(width: 100, height: 80)
-                            .aspectRatio(contentMode: .fill)
-                            .clipped()
+                ZStack {
+                    if isGeneratingImage {
+                        ProgressView()
+                            .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
                     } else {
-                        VStack{
+                        if let uiImage = viewModel.uiImage {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                                .aspectRatio(contentMode: .fill)
+                                .clipped()
+                        } else {
+                            VStack{
+                                Spacer()
+                                Image(systemName: "photo.badge.plus")
+                                Spacer()
+                            }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                        }
+                    }
+                    if viewModel.isSelected {
+                        VStack {
+                            HStack(alignment: .top) {
+                                Spacer()
+                                Image(systemName: "checkmark.circle.fill")
+                                    .padding(2)
+                            }
                             Spacer()
-                            Image(systemName: "photo.badge.plus")
-                            Spacer()
-                        }.frame(width: 100, height: 80)
+                        }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
                     }
                 }
                 ZStack {
@@ -47,7 +59,6 @@ struct PlantCell: View {
                         .font(Font.custom("Avenir Next", size: 13))
                         .lineLimit(1)
                         .padding(.horizontal, 5)
-                        .frame(maxWidth: .infinity)
                     HStack {
                         Spacer()
                         Button {
@@ -68,6 +79,7 @@ struct PlantCell: View {
                         }
                     }
                 }
+                .frame(height: 30)
             }
             .background(Color.backgroundSecondary)
             .foregroundColor(Color.foregroundPrimary)
