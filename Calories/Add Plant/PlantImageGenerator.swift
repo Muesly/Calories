@@ -82,8 +82,10 @@ struct GPTResponse: Codable {
     let data: [GPTImage]
 }
 
-struct StubbedPlantGenerator: PlantImageGenerating {
+class StubbedPlantGenerator: PlantImageGenerating {
+    var returnedData = Data()
+
     func generate(for plantName: String) async throws -> Data {
-        return Data()
+        return returnedData
     }
 }
