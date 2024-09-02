@@ -25,7 +25,6 @@ struct AddFoodDetailsView: View {
     @State var addedPlant: String = ""
     @Binding var addedFoodEntry: FoodEntry?
     @Binding var isFoodItemsViewPresented: Bool
-    @State private var openAIAPIKey: String
 
     init(viewModel: AddFoodViewModel,
          foodTemplate: FoodTemplate,
@@ -38,7 +37,6 @@ struct AddFoodDetailsView: View {
         _addedFoodEntry = addedFoodEntry
         _foodAddedAtTime = State(initialValue: foodTemplate.dateTime)
         _isFoodItemsViewPresented = isFoodItemsViewPresented
-        openAIAPIKey = Bundle.main.infoDictionary!["GPT API Key"]! as! String
     }
 
     var body: some View {
@@ -92,12 +90,8 @@ struct AddFoodDetailsView: View {
 
             List {
                 Section {
-                    ForEach(viewModel.plants) {
-                        Text($0.name)
-                    }
-                    Button("Add new plant") {
-                        showingAddPlantView = true
-                    }
+                    PlantGrid(plants: viewModel.plants.map { $0.name },
+                              added: { _ in })
                 } header: {
                     HStack {
                         Text("Plants")
@@ -155,7 +149,7 @@ struct AddFoodDetailsView: View {
         .cornerRadius(10)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
-            let viewModel = AddPlantViewModel(modelContext: modelContext,                                       plantImageGenerator: PlantImageGenerator(apiKey: openAIAPIKey))
+            let viewModel = AddPlantViewModel(modelContext: modelContext)
             AddPlantView(viewModel: viewModel, addedPlant: $addedPlant)
         }
         .task {
