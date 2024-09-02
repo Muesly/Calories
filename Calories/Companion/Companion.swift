@@ -81,7 +81,8 @@ struct Companion {
         CompanionMessage(message: "Stress in ourselves is damaging, and contagious to others 😫", timeOfDay: .midMorning),
         CompanionMessage(message: "Take a couple of minutes to meditate 🧘"),
         CompanionMessage(message: "You’ve done so well to lose another bit of weight! Keep going 📉", validScenario: .weeklyWeightLoss),
-        CompanionMessage(message: "Don’t worry about the blip yesterday. It’s a marathon, not a sprint.", validScenario: .weeklyWeightGain),
+        CompanionMessage(message: "Don’t worry about the blip in weight gain last week. It’s a marathon, not a sprint.", validScenario: .weeklyWeightGain),
+//        CompanionMessage(message: "Don’t worry about the calorie deficit yesterday. Just have a better day today.", validScenario: .yesterdayDeficit),
         CompanionMessage(message: "You’ve done really well over the last month 👏", validScenario: .monthlyWeightLoss),
     ]
 
