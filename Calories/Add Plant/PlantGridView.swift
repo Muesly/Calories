@@ -10,9 +10,9 @@ import SwiftUI
 import UIKit
 
 let columns = [
-    GridItem(.fixed(130), spacing: 0),
-    GridItem(.fixed(130), spacing: 0),
-    GridItem(.fixed(130), spacing: 0)
+    GridItem(.fixed(110), spacing: 0),
+    GridItem(.fixed(110), spacing: 0),
+    GridItem(.fixed(110), spacing: 0)
 ]
 
 struct PlantGridView: View {
@@ -29,7 +29,7 @@ struct PlantGridView: View {
     }
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 0) {
+        LazyVGrid(columns: columns, spacing: 10) {
             ForEach(plantSelections, id: \.self) { plantSelection in
                 let viewModel = PlantCellViewModel(
                     plantSelection: plantSelection,

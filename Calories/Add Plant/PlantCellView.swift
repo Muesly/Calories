@@ -11,7 +11,8 @@ import SwiftUI
 struct PlantCellView: View {
     let viewModel: PlantCellViewModel
     @State var isGeneratingImage: Bool = false
-    private static let imageSize = CGSize(width: 130, height: 110)
+    private static let width = 100.0
+    private static let imageSize = CGSize(width: width, height: 85)
     @Binding var addedPlant: String
 
     init(viewModel: PlantCellViewModel,
@@ -39,6 +40,7 @@ struct PlantCellView: View {
                             Image(systemName: "photo.badge.plus")
                             Spacer()
                         }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                            .background(Color.backgroundSecondary).opacity(0.5)
                     }
                 }
                 if viewModel.isSelected {
@@ -57,15 +59,14 @@ struct PlantCellView: View {
             }
             ZStack {
                 Text(viewModel.plant)
-                    .font(Font.custom("Avenir Next", size: 13))
+                    .font(Font.custom("Avenir Next", size: 11))
                     .lineLimit(1)
-                    .padding(.horizontal, 5)
                 HStack {
                     Spacer()
                     Image(systemName: "arrow.trianglehead.clockwise.rotate.90")
                         .resizable()
                         .frame(width: 12, height: 12)
-                        .padding(2)
+                        .padding(5)
                         .onTapGesture {
                             Task {
                                 do {
@@ -79,10 +80,10 @@ struct PlantCellView: View {
                         }
                 }
             }
-            .frame(height: 30)
+            .frame(width: Self.width, height: 25)
             .background(Color.backgroundSecondary)
             .foregroundColor(Color.foregroundPrimary)
-            .frame(maxWidth: .infinity)
         }
+        .cornerRadius(5)
     }
 }
