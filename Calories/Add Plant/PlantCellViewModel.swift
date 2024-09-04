@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import UIKit
 
-struct PlantSelection {
+struct PlantSelection: Hashable {
     let name: String
     let isSelected: Bool
 

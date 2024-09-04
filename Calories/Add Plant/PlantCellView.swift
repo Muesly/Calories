@@ -9,59 +9,64 @@ import Foundation
 import SwiftUI
 
 struct PlantCellView: View {
-    let added: (() -> Void)
     let viewModel: PlantCellViewModel
     @State var isGeneratingImage: Bool = false
     private static let imageSize = CGSize(width: 130, height: 110)
+    @Binding var addedPlant: String
+
     init(viewModel: PlantCellViewModel,
-         added: @escaping () -> Void) {
+         addedPlant: Binding<String>) {
         self.viewModel = viewModel
-        self.added = added
+        self._addedPlant = addedPlant
     }
 
     var body: some View {
-        Button {
-            added()
-        } label: {
-            VStack(spacing: 0) {
-                ZStack {
-                    if isGeneratingImage {
-                        ProgressView()
+        VStack(spacing: 0) {
+            ZStack {
+                if isGeneratingImage {
+                    ProgressView()
+                        .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                } else {
+                    if let uiImage = viewModel.uiImage {
+                        Image(uiImage: uiImage)
+                            .resizable()
                             .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                            .aspectRatio(contentMode: .fill)
+                            .clipped()
                     } else {
-                        if let uiImage = viewModel.uiImage {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
-                                .aspectRatio(contentMode: .fill)
-                                .clipped()
-                        } else {
-                            VStack{
-                                Spacer()
-                                Image(systemName: "photo.badge.plus")
-                                Spacer()
-                            }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
-                        }
-                    }
-                    if viewModel.isSelected {
-                        VStack {
-                            HStack(alignment: .top) {
-                                Spacer()
-                                Image(systemName: "checkmark.circle.fill")
-                                    .padding(2)
-                            }
+                        VStack{
+                            Spacer()
+                            Image(systemName: "photo.badge.plus")
                             Spacer()
                         }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
                     }
                 }
-                ZStack {
-                    Text(viewModel.plant)
-                        .font(Font.custom("Avenir Next", size: 13))
-                        .lineLimit(1)
-                        .padding(.horizontal, 5)
-                    HStack {
+                if viewModel.isSelected {
+                    VStack {
+                        HStack(alignment: .top) {
+                            Spacer()
+                            Image(systemName: "checkmark.circle.fill")
+                                .padding(2)
+                        }
                         Spacer()
-                        Button {
+                    }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                }
+            }
+            .onTapGesture {     // Using a button exhibited strange behaviour
+                addedPlant = viewModel.plant
+            }
+            ZStack {
+                Text(viewModel.plant)
+                    .font(Font.custom("Avenir Next", size: 13))
+                    .lineLimit(1)
+                    .padding(.horizontal, 5)
+                HStack {
+                    Spacer()
+                    Image(systemName: "arrow.trianglehead.clockwise.rotate.90")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+                        .padding(2)
+                        .onTapGesture {
                             Task {
                                 do {
                                     isGeneratingImage = true
@@ -71,16 +76,10 @@ struct PlantCellView: View {
                                     print(error)
                                 }
                             }
-                        } label: {
-                            Image(systemName: "arrow.trianglehead.clockwise.rotate.90")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                                .padding(2)
                         }
-                    }
                 }
-                .frame(height: 30)
             }
+            .frame(height: 30)
             .background(Color.backgroundSecondary)
             .foregroundColor(Color.foregroundPrimary)
             .frame(maxWidth: .infinity)

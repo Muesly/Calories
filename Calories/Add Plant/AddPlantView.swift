@@ -33,16 +33,13 @@ struct AddPlantView: View {
                     if !searchText.isEmpty {
                         Button {
                             addedPlant = searchText
-                            dismiss()
                         } label: {
                             Text("Add \(searchText) as a new plant").bold()
                         }
                     }
                     Section("Common plants") {
-                        PlantGridView(plantSelections: viewModel.suggestions.map { .init($0.name) },
-                                  added: { plant in
-                                    addedPlant = plant
-                                    dismiss() })
+                        PlantGridView(plantSelections: viewModel.suggestions,
+                                      addedPlant: $addedPlant)
                     }
                     .listRowBackground(Colours.backgroundSecondary)
                 }
@@ -71,7 +68,11 @@ struct AddPlantView: View {
                     prompt: "Enter Plant")
         .onSubmit(of: .search) {
             addedPlant = searchText
-            dismiss()
+        }
+        .onChange(of: addedPlant) {
+            if !addedPlant.isEmpty {
+                dismiss()
+            }
         }
     }
 }

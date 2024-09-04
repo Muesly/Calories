@@ -17,29 +17,26 @@ let columns = [
 
 struct PlantGridView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var plantImageGenerator: PlantImageGenerating
-    @State var plantSelections: [PlantSelection]
-    @State var added: ((String) -> Void)
+    let plantImageGenerator: PlantImageGenerating
+    let plantSelections: [PlantSelection]
+    @Binding var addedPlant: String
 
-    init(plantSelections: [PlantSelection], added: @escaping (String) -> Void) {
+    init(plantSelections: [PlantSelection], addedPlant: Binding<String>) {
         self.plantSelections = plantSelections
-        self.added = added
+        self._addedPlant = addedPlant
         let openAIAPIKey = Bundle.main.infoDictionary!["GPT API Key"]! as! String
         plantImageGenerator = PlantImageGenerator(apiKey: openAIAPIKey)
     }
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 0) {
-            ForEach(plantSelections, id: \.name) { plantSelection in
+            ForEach(plantSelections, id: \.self) { plantSelection in
                 let viewModel = PlantCellViewModel(
                     plantSelection: plantSelection,
                     plantImageGenerator: plantImageGenerator,
                     modelContext: modelContext)
                 PlantCellView(viewModel: viewModel,
-                          added: {
-
-                    added(plantSelection.name)
-                })
+                              addedPlant: $addedPlant)
             }
         }
     }
@@ -54,9 +51,9 @@ struct PlantGridView: View {
              PlantEntry("Corn 2", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9))].forEach { modelContext.insert($0)
     }
     VStack {
-        PlantGridView(plantSelections: ["Corn", "Rice", "Broccoli", "Unidentified", "Corn 2"].map { PlantSelection($0) }, added: { _ in })
+        PlantGridView(plantSelections: ["Corn", "Rice", "Broccoli", "Unidentified", "Corn 2"].map { PlantSelection($0) }, addedPlant: .constant(""))
 
-        PlantGridView(plantSelections: [PlantSelection("Corn", isSelected: true)], added: { _ in })
+        PlantGridView(plantSelections: [PlantSelection("Corn", isSelected: true)], addedPlant: .constant(""))
     }
     .modelContext(modelContext)
 }

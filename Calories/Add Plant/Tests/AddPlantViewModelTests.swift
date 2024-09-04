@@ -11,11 +11,11 @@ import Testing
 @testable import Calories
 
 struct AddPlantViewModelTests {
-    @Test func previousPlantsReturnedAlphabetically() async throws {
+    @Test func previousPlantsReturnedAlphabeticallyAndExcludes() async throws {
         let modelContext = ModelContext.inMemory
         let sut = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext, excludedSuggestions: ["Oranges"]))
         let _ = [PlantEntry("Pears"), PlantEntry("Apples"), PlantEntry("Oranges")].forEach { $0.insert(into: modelContext) }
         sut.fetchSuggestions()
-        #expect(sut.suggestions == ["Apples", "Pears"])
+        #expect(sut.suggestions == [.init("Apples"), .init("Pears")])
     }
 }
