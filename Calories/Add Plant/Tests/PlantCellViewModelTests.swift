@@ -18,7 +18,7 @@ struct PlantCellViewModelTests {
                                     imageData: UIImage(systemName: "plus")?.pngData())
         plantEntry.insert(into: modelContext)
 
-        let sut = PlantCellViewModel(plant: "Rice",
+        let sut = PlantCellViewModel(plantSelection: .init("Rice"),
                                      plantImageGenerator: StubbedPlantGenerator(),
                                      modelContext: modelContext)
         #expect(sut.uiImage != nil)
@@ -31,7 +31,7 @@ struct PlantCellViewModelTests {
 
         let plantGenerator = StubbedPlantGenerator()
         plantGenerator.returnedData = UIImage(systemName: "plus")!.pngData()!
-        let sut = PlantCellViewModel(plant: "Rice",
+        let sut = PlantCellViewModel(plantSelection: .init("Rice"),
                                      plantImageGenerator: plantGenerator,
                                      modelContext: modelContext)
         try await sut.fetchImagesForSuggestion()

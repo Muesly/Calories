@@ -11,13 +11,13 @@ import SwiftUI
 @Observable
 class AddPlantViewModel: ObservableObject {
     private let suggestionFetcher: SuggestionFetcher
-    var suggestions: [String] = []
+    var suggestions: [PlantSelection] = []
 
     init(suggestionFetcher: SuggestionFetcher) {
         self.suggestionFetcher = suggestionFetcher
     }
 
     func fetchSuggestions(searchText: String = "") {
-        suggestions = suggestionFetcher.fetchSuggestions(searchText: searchText)
+        suggestions = suggestionFetcher.fetchSuggestions(searchText: searchText).map { .init($0) }
     }
 }

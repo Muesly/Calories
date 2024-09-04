@@ -32,6 +32,7 @@ struct AddFoodDetailsView: View {
          isFoodItemsViewPresented: Binding<Bool>) {
         self.viewModel = viewModel
         _foodTemplate = State(initialValue: foodTemplate)
+        viewModel.plants = foodTemplate.plants.map { Plant(name: $0) }
         _foodDescription = State(initialValue: foodTemplate.description)
         _calories = State(initialValue: foodTemplate.calories)
         _addedFoodEntry = addedFoodEntry
@@ -91,7 +92,7 @@ struct AddFoodDetailsView: View {
             List {
                 Section {
                     PlantGridView(plantSelections: viewModel.plants.map { .init($0.name) },
-                              added: { _ in })
+                                  addedPlant: $addedPlant)
                 } header: {
                     HStack {
                         Text("Plants")
@@ -149,10 +150,11 @@ struct AddFoodDetailsView: View {
         .cornerRadius(10)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
-            let viewModel = AddPlantViewModel(modelContext: modelContext)
+            let viewModel = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext,
+                                                                                   excludedSuggestions: viewModel.plants.map { $0.name} ))
             AddPlantView(viewModel: viewModel, addedPlant: $addedPlant)
         }
-        .task {
+        .onAppear {
             viewModel.plants = foodTemplate.plants.map { Plant(name: $0) }
         }
         .onChange(of: addedPlant) { _, newValue in
