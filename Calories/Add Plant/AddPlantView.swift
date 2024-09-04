@@ -86,4 +86,5 @@ struct AddPlantView: View {
              PlantEntry("Corn 2", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9))].forEach { $0.insert(into: modelContext)}
     let viewModel = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext, excludedSuggestions: ["Corn 2"]))
     AddPlantView(viewModel: viewModel, addedPlant: .constant(""))
+        .modelContext(modelContext)
 }
