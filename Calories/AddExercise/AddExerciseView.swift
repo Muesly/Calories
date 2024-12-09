@@ -13,19 +13,16 @@ struct AddExerciseView: View {
 
     private let viewModel: AddExerciseViewModel
     @State var searchText = ""
-    @State var addedExerciseEntry: ExerciseEntry?
-    @State private var timeExercised: Date
+    @State var timeExerciseAdded: Date?
 
     @State private var showingAddExerciseDetailsView: Bool = false
     @Binding var showingAddExerciseView: Bool
     @State private var isSearching: Bool = false
 
     init(viewModel: AddExerciseViewModel,
-         showingAddExerciseView: Binding<Bool>,
-         timeExercised: Date = Date()) {
+         showingAddExerciseView: Binding<Bool>) {
         self.viewModel = viewModel
         self._showingAddExerciseView = showingAddExerciseView
-        self.timeExercised = timeExercised
     }
 
     var body: some View {
@@ -87,10 +84,7 @@ struct AddExerciseView: View {
                     isSearching = false
                 }
             }
-            .onChange(of: addedExerciseEntry) { _, addedExerciseEntry in
-                if let addedExerciseEntry {
-                    timeExercised = addedExerciseEntry.timeExercised
-                }
+            .onChange(of: timeExerciseAdded) { _, _ in
                 viewModel.fetchSuggestions(searchText: searchText)
             }
         }
@@ -99,7 +93,7 @@ struct AddExerciseView: View {
     private func addExerciseInputFieldsView(description: String) -> AddExerciseDetailsView {
         AddExerciseDetailsView(viewModel: viewModel,
                                exerciseTemplate: viewModel.exerciseTemplateFor(description),
-                               addedExerciseEntry: $addedExerciseEntry,
+                               timeExerciseAdded: $timeExerciseAdded,
                                isExerciseDetailsViewPresented: $showingAddExerciseDetailsView)
     }
 }

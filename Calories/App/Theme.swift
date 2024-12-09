@@ -14,7 +14,7 @@ enum Colours {
 }
 
 extension Font {
-    static var brand = Font.custom("Avenir Next",
+    static let brand = Font.custom("Avenir Next",
                                    size: UIFont.preferredFont(forTextStyle: .body).pointSize)
 }
 
