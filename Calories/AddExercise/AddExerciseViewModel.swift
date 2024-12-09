@@ -11,7 +11,7 @@ import SwiftData
 import SwiftUI
 
 @Observable
-class AddExerciseViewModel {
+final class AddExerciseViewModel {
     let modelContext: ModelContext
     let healthStore: HealthStore
     var suggestions: [Suggestion] = []
@@ -23,7 +23,7 @@ class AddExerciseViewModel {
     }
 
     @discardableResult
-    func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws -> ExerciseEntry {
+    func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws {
         try await healthStore.authorize()
         let exerciseEntry = ExerciseEntry(exerciseDescription: exerciseDescription,
                                           calories: calories,
@@ -34,7 +34,6 @@ class AddExerciseViewModel {
             print("Failed to add exercise: \(error)")
         }
         try await healthStore.addExerciseEntry(exerciseEntry)
-        return exerciseEntry
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {

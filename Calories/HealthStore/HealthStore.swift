@@ -252,6 +252,8 @@ extension HKHealthStore: HealthStore {
             return
         }
         let timeConsumed = foodEntry.timeConsumed
+        let calories = foodEntry.calories
+        let description = foodEntry.foodDescription
 
         return await withCheckedContinuation { continuation in
             let predicate = HKQuery.predicateForSamples(withStart: timeConsumed, end: timeConsumed.addingTimeInterval(1))
@@ -260,8 +262,8 @@ extension HKHealthStore: HealthStore {
                                            limit: HKObjectQueryNoLimit,
                                            sortDescriptors: nil) { [weak self] (query, results, error) in
                 guard let result = (results as? [HKQuantitySample])?.first(where: { result in
-                    if result.quantity.doubleValue(for: .largeCalorie()) == foodEntry.calories,
-                       result.metadata?[HKMetadataKeyFoodType] as? String == foodEntry.foodDescription {
+                    if result.quantity.doubleValue(for: .largeCalorie()) == calories,
+                       result.metadata?[HKMetadataKeyFoodType] as? String == description {
                         return true
                     } else {
                         return false
@@ -312,7 +314,8 @@ extension HKHealthStore: HealthStore {
     }
 }
 
-private struct HealthStoreKey: EnvironmentKey {
+private struct HealthStoreKey: @preconcurrency EnvironmentKey {
+    @MainActor
     static let defaultValue: HealthStore = HKHealthStore()
 }
 

@@ -20,7 +20,7 @@ struct PlantSelection: Hashable {
 }
 
 @Observable
-class PlantCellViewModel {
+final class PlantCellViewModel {
     let plant: String
     var isSelected: Bool
     let plantImageGenerator: PlantImageGenerating

@@ -19,20 +19,20 @@ struct AddExerciseDetailsView: View {
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
-    @Binding var addedExerciseEntry: ExerciseEntry?
+    @Binding var timeExerciseAdded: Date?
 
     @Binding var isExerciseDetailsViewPresented: Bool
 
     init(viewModel: AddExerciseViewModel,
          exerciseTemplate: ExerciseEntry,
-         addedExerciseEntry: Binding<ExerciseEntry?>,
+         timeExerciseAdded: Binding<Date?>,
          isExerciseDetailsViewPresented: Binding<Bool>) {
         self.viewModel = viewModel
         _exerciseDescription = State(initialValue: exerciseTemplate.exerciseDescription)
         _calories = State(initialValue: Int(exerciseTemplate.calories))
         _defTimeConsumed = State(initialValue: exerciseTemplate.timeExercised)
         _isExerciseDetailsViewPresented = isExerciseDetailsViewPresented
-        _addedExerciseEntry = addedExerciseEntry
+        _timeExerciseAdded = timeExerciseAdded
     }
 
     var body: some View {
@@ -69,9 +69,10 @@ struct AddExerciseDetailsView: View {
                         do {
                             descriptionIsFocused = false
                             caloriesIsFocused = false
-                            addedExerciseEntry = try await viewModel.addExercise(exerciseDescription: exerciseDescription,
+                            _ = try await viewModel.addExercise(exerciseDescription: exerciseDescription,
                                                                                  calories: calories,
                                                                                  timeExercised: defTimeConsumed)
+                            timeExerciseAdded = defTimeConsumed
                             exerciseDescription = ""
                             calories = 0
                             dismiss()
@@ -118,6 +119,6 @@ struct AddExerciseDetailsView: View {
                            exerciseTemplate: ExerciseEntry(exerciseDescription: "Some exercise",
                                                            calories: 100,
                                                            timeExercised: Date()),
-                           addedExerciseEntry: .constant(nil),
+                           timeExerciseAdded: .constant(nil),
                            isExerciseDetailsViewPresented: .constant(true))
 }
