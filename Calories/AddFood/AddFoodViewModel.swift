@@ -64,6 +64,7 @@ class AddFoodViewModel: ObservableObject {
     }
 
     @discardableResult
+    @MainActor
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws -> FoodEntry {
         try await healthStore.authorize()
         let foodEntry = FoodEntry(foodDescription: foodDescription,

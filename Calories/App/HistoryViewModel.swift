@@ -10,6 +10,7 @@ import SwiftData
 import SwiftUI
 
 @Observable
+@MainActor
 class HistoryViewModel {
     var modelContext: ModelContext?
     private let healthStore: HealthStore
