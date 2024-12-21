@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 protocol PlantImageGenerating {
     func generate(for plantName: String) async throws -> Data
 }

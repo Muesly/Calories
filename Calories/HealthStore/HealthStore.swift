@@ -9,6 +9,7 @@ import Foundation
 import HealthKit
 import SwiftUI
 
+@MainActor
 protocol HealthStore {
     func authorize() async throws
     func caloriesConsumed(date: Date) async throws -> Int

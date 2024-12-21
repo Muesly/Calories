@@ -22,7 +22,6 @@ class HistoryViewModel {
         self.healthStore = healthStore
     }
 
-    @MainActor
     func fetchDaySections() {
         let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
         let foodEntriesForWeek = modelContext?.foodResults(for: #Predicate { $0.timeConsumed >= weekPrior }) ?? []
