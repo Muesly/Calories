@@ -47,12 +47,12 @@ struct CaloriesApp: App {
     }
 
     private func requestNotificationsPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
-            if granted {
-            } else if let error = error {
-                print("Permission denied: \(error.localizedDescription)")
-            }
-        }
+//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
+//            if granted {
+//            } else if let error = error {
+//                print("Permission denied: \(error.localizedDescription)")
+//            }
+//        }
     }
 }
 
