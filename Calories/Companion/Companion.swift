@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 struct Companion {
     private let messageDetails: [CompanionMessage]
     let notificationSender: NotificationSenderType
@@ -23,10 +24,13 @@ struct Companion {
                   notificationSender: NotificationSender())
     }
 
-    @MainActor
     static func createNull() -> Companion {
         Companion(messageDetails: Self.defaultMessages,
                   notificationSender: StubbedNotificationSender())
+    }
+
+    func requestNotificationsPermission() {
+        notificationSender.requestNotificationsPermission()
     }
 
     func nextMotivationalMessage(weekday: Int,
@@ -87,7 +91,6 @@ struct Companion {
         CompanionMessage(message: "You’ve done really well over the last month 👏", validScenario: .monthlyWeightLoss),
     ]
 
-    @MainActor
     func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
         guard await notificationSender.numPendingRequests() == 0 else {
             return
