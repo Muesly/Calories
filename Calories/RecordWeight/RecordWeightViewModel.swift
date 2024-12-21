@@ -41,7 +41,6 @@ class RecordWeightViewModel: ObservableObject {
         return date.startOfWeek
     }
 
-    @MainActor
     func fetchWeightData(date: Date = Date(), numWeeks: Int? = nil) async throws {
         try await healthStore.authorize()
         var endDate = date

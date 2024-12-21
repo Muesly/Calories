@@ -22,7 +22,7 @@ final class AddExerciseViewModel {
         self.modelContext = modelContext
     }
 
-    @discardableResult
+    @MainActor
     func addExercise(exerciseDescription: String, calories: Int, timeExercised: Date) async throws {
         try await healthStore.authorize()
         let exerciseEntry = ExerciseEntry(exerciseDescription: exerciseDescription,
