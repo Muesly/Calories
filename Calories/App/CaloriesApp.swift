@@ -31,7 +31,6 @@ struct CaloriesApp: App {
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         self.isUnitTesting = ProcessInfo.processInfo.arguments.contains("UNIT_TESTING")
-        requestNotificationsPermission()
     }
     
     var body: some Scene {
@@ -44,15 +43,6 @@ struct CaloriesApp: App {
                 .modelContainer(container)
             }
         }
-    }
-
-    private func requestNotificationsPermission() {
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
-//            if granted {
-//            } else if let error = error {
-//                print("Permission denied: \(error.localizedDescription)")
-//            }
-//        }
     }
 }
 

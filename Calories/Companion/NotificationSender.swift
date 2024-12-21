@@ -10,11 +10,21 @@ import SwiftUI
 
 @MainActor
 protocol NotificationSenderType {
+    func requestNotificationsPermission()
     func numPendingRequests() async -> Int
     func add(_ request: UNNotificationRequest) async throws
 }
 
 class NotificationSender: NotificationSenderType {
+    func requestNotificationsPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
+            if granted {
+            } else if let error = error {
+                print("Permission denied: \(error.localizedDescription)")
+            }
+        }
+    }
+
     func numPendingRequests() async -> Int {
         let requests = await withCheckedContinuation { continuation in
             UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
@@ -39,10 +49,16 @@ class NotificationSender: NotificationSenderType {
 
 class StubbedNotificationSender: NotificationSenderType {
     private var requests = [UNNotificationRequest]()
+    var requestedPermission = false
+
     var requestDates: [DateComponents] {
         requests.compactMap { ($0.trigger as? UNCalendarNotificationTrigger)?.dateComponents }
     }
-    
+
+    func requestNotificationsPermission() {
+        requestedPermission = true
+    }
+
     func numPendingRequests() async -> Int {
         requests.count
     }
