@@ -8,24 +8,47 @@
 import Foundation
 import SwiftUI
 
-protocol NotificationSender {
-    func pendingNotificationRequests() async -> [UNNotificationRequest]
+@MainActor
+protocol NotificationSenderType {
+    func numPendingRequests() async -> Int
     func add(_ request: UNNotificationRequest) async throws
 }
 
-extension UNUserNotificationCenter: NotificationSender {}
+class NotificationSender: NotificationSenderType {
+    func numPendingRequests() async -> Int {
+        let requests = await withCheckedContinuation { continuation in
+            UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                Task {
+                    continuation.resume(returning: requests)
+                }
+            }
+        }
+        return requests.count
+    }
+    
+    func add(_ request: UNNotificationRequest) async throws {
+        let _ = await withCheckedContinuation { continuation in
+            UNUserNotificationCenter.current().add(request) { _ in
+                Task {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+}
 
-class StubbedNotificationSender: NotificationSender {
+class StubbedNotificationSender: NotificationSenderType {
     private var requests = [UNNotificationRequest]()
     var requestDates: [DateComponents] {
         requests.compactMap { ($0.trigger as? UNCalendarNotificationTrigger)?.dateComponents }
     }
-
-    func pendingNotificationRequests() async -> [UNNotificationRequest] {
-        requests
+    
+    func numPendingRequests() async -> Int {
+        requests.count
     }
     
     func add(_ request: UNNotificationRequest) async throws {
         requests.append(request)
     }
 }
+
