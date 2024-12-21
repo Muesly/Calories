@@ -13,32 +13,30 @@ import Testing
 @MainActor
 final class PlantImageGeneratorTests {
     var sut: PlantImageGenerator!
+    var mockNetworkClient: MockNetworkClient!
 
     init() {
-        let configuration: URLSessionConfiguration = .ephemeral
-        configuration.protocolClasses = [MockURLProtocol.self]
-        let urlSession = URLSession(configuration: configuration)
-
-        let response = GPTResponse(data: [.init(url: "https://www.example.com/plantImage")])
-        MockURLProtocol.promptResponse = try! JSONEncoder().encode(response)
-        MockURLProtocol.imageResponseThrows = false
-
-        sut = PlantImageGenerator(apiKey: "some key",
-                                  urlSession: urlSession)
+        mockNetworkClient = MockNetworkClient()
+        sut = PlantImageGenerator(apiKey: "some key", networkClient: mockNetworkClient)
     }
 
     deinit {
+        mockNetworkClient = nil
         sut = nil
     }
 
+    @Test func promptText() {
+        #expect(sut.promptText(for: "Rice") == "Photo of Rice in a white bowl")
+    }
+
     @Test func plantImageGeneratorSucceeds() async throws {
-        let response = GPTResponse(data: [.init(url: "https://www.example.com/plantImage")])
-        MockURLProtocol.promptResponse = try! JSONEncoder().encode(response)
+        let response = GPTResponse(data: [GPTResponse.GPTImage(url: "https://www.example.com/plantImage")])
+        mockNetworkClient.promptResponse = try JSONEncoder().encode(response)
         #expect(try await sut.generate(for: "Rice") == Data())
     }
 
     @Test func plantImageGeneratorFailsOnDecoding() async throws {
-        MockURLProtocol.promptResponse = "{\"some broken api response\":\"true\"}".data(using: .utf8)
+        mockNetworkClient.promptResponse = "{\"some broken api response\":\"true\"}".data(using: .utf8)
         await #expect(performing: {
             try await sut.generate(for: "Rice")
         }, throws: { error in
@@ -48,7 +46,7 @@ final class PlantImageGeneratorTests {
 
     @Test func plantImageGeneratorFailsOnNoImages() async throws {
         let response = GPTResponse(data: [])
-        MockURLProtocol.promptResponse = try! JSONEncoder().encode(response)
+        mockNetworkClient.promptResponse = try! JSONEncoder().encode(response)
         await #expect(performing: {
             try await sut.generate(for: "Rice")
         }, throws: { error in
@@ -58,7 +56,7 @@ final class PlantImageGeneratorTests {
 
     @Test func plantImageGeneratorFailsOnInvalidURL() async throws {
         let response = GPTResponse(data: [.init(url: "")])
-        MockURLProtocol.promptResponse = try! JSONEncoder().encode(response)
+        mockNetworkClient.promptResponse = try! JSONEncoder().encode(response)
         await #expect(performing: {
             try await sut.generate(for: "Rice")
         }, throws: { error in
@@ -67,7 +65,9 @@ final class PlantImageGeneratorTests {
     }
 
     @Test func plantImageGeneratorFailsOnFailedImageURL() async throws {
-        MockURLProtocol.imageResponseThrows = true
+        let response = GPTResponse(data: [GPTResponse.GPTImage(url: "https://www.example.com/plantImage")])
+        mockNetworkClient.promptResponse = try JSONEncoder().encode(response)
+        mockNetworkClient.imageResponseThrows = true
         await #expect(performing: {
             try await sut.generate(for: "Rice")
         }, throws: { error in
@@ -76,50 +76,23 @@ final class PlantImageGeneratorTests {
     }
 }
 
-private class MockURLProtocol: URLProtocol {
-    static var promptResponse: Data!
-    static var imageResponseThrows: Bool = false
+class MockNetworkClient: NetworkClientType {
+    var promptResponse: Data!
+    var imageResponse: Data!
+    var imageResponseThrows: Bool = false
 
-    private static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))? = { request in
+    func data(fromRequest request: URLRequest) async throws -> Data {
         let urlStr = request.url?.absoluteString
         if urlStr == "https://api.openai.com/v1/images/generations" {
-            return (HTTPURLResponse(), promptResponse)
+            return promptResponse
         } else if urlStr == "https://www.example.com/plantImage" {
             if imageResponseThrows {
                 throw NSError(domain: "", code: 404)
             } else {
-                return (HTTPURLResponse(), Data())
+                return Data()
             }
         } else {
             throw NSError(domain: "", code: 404)
         }
-    }
-
-    override class func canInit(with request: URLRequest) -> Bool {
-        true
-    }
-
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-        request
-    }
-
-    override func startLoading() {
-        guard let handler = MockURLProtocol.requestHandler else {
-            assertionFailure("Received unexpected request with no handler set")
-            return
-        }
-
-        do {
-            let (response, data) = try handler(request)
-            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-            client?.urlProtocol(self, didLoad: data)
-            client?.urlProtocolDidFinishLoading(self)
-        } catch {
-            client?.urlProtocol(self, didFailWithError: error)
-        }
-    }
-
-    override func stopLoading() {
-        // TODO: Andd stop loading here
     }
 }
