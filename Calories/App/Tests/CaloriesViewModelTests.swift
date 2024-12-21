@@ -9,6 +9,7 @@ import SwiftData
 import XCTest
 @testable import Calories
 
+@MainActor
 final class CaloriesViewModelTests: XCTestCase {
     var subject: HistoryViewModel!
     var modelContext: ModelContext!
@@ -73,7 +74,7 @@ final class CaloriesViewModelTests: XCTestCase {
                                calories: Double(50),
                                timeConsumed: date.addingTimeInterval(112700)).insert(into: modelContext)
 
-        await subject.fetchDaySections()
+        subject.fetchDaySections()
         let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(secsPerDay)))
         expectedDay1.meals.append(Meal(mealType: .dinner, foodEntries: [entry4]))
         expectedDay1.meals.append(Meal(mealType: .lunch, foodEntries: [entry3, entry2]))
@@ -89,7 +90,7 @@ final class CaloriesViewModelTests: XCTestCase {
         _ = FoodEntry(foodDescription: "Some food",
                       calories: Double(100),
                       timeConsumed: dateFromComponents).insert(into: modelContext)
-        await subject.fetchDaySections()
+        subject.fetchDaySections()
         XCTAssertEqual(subject.daySections.first?.title, "Sunday, Jan 1")
         XCTAssertEqual(subject.daySections.first?.meals.first?.summary, "Morning Snack (100 cals)")
     }

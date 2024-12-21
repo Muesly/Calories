@@ -10,6 +10,7 @@ import XCTest
 
 @testable import Calories
 
+@MainActor
 final class RecordWeightViewModelTests: XCTestCase {
     override func setUpWithError() throws {
     }

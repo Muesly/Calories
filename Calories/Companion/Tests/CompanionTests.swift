@@ -123,7 +123,7 @@ struct CompanionTests {
         await #expect(sut.notificationSender.numPendingRequests() == 1)
         let currentWeekday = Calendar.current.dateComponents([.weekday], from: dateFromComponents()).weekday!
         #expect(currentWeekday == 2)
-        let scheduledWeekday = await (sut.notificationSender as? StubbedNotificationSender)?.requestDates.first?.weekday
+        let scheduledWeekday = (sut.notificationSender as? StubbedNotificationSender)?.requestDates.first?.weekday
         #expect(scheduledWeekday == 3)
     }
 
@@ -139,7 +139,7 @@ struct CompanionTests {
                                                                           monthlyWeightChange: 0))
 
         await #expect(sut.notificationSender.numPendingRequests() == 1)
-        #expect(await (sut.notificationSender as? StubbedNotificationSender)?.requestDates.count == 1)
+        #expect((sut.notificationSender as? StubbedNotificationSender)?.requestDates.count == 1)
     }
 
     private func createCompanionSubject() -> Companion {

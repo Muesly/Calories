@@ -9,6 +9,7 @@ import SwiftData
 import XCTest
 @testable import Calories
 
+@MainActor
 final class WeeklyChartViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {

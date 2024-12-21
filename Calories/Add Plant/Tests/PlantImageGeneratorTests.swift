@@ -10,6 +10,7 @@ import Testing
 
 @testable import Calories
 
+@MainActor
 final class PlantImageGeneratorTests {
     var sut: PlantImageGenerator!
 
@@ -33,7 +34,7 @@ final class PlantImageGeneratorTests {
     @Test func plantImageGeneratorSucceeds() async throws {
         let response = GPTResponse(data: [.init(url: "https://www.example.com/plantImage")])
         MockURLProtocol.promptResponse = try! JSONEncoder().encode(response)
-        #expect(try await sut.generate(for: "Rice") != nil)
+        #expect(try await sut.generate(for: "Rice") == Data())
     }
 
     @Test func plantImageGeneratorFailsOnDecoding() async throws {

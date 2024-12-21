@@ -10,6 +10,7 @@ import XCTest
 
 @testable import Calories
 
+@MainActor
 final class AddExerciseViewModelTests: XCTestCase {
     var subject: AddExerciseViewModel!
     var mockHealthStore: MockHealthStore!

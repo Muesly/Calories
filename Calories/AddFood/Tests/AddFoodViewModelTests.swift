@@ -11,6 +11,7 @@ import Testing
 
 @testable import Calories
 
+@MainActor
 final class AddFoodViewModelTests {
     var subject: AddFoodViewModel!
     var mockHealthStore: MockHealthStore!
