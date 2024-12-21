@@ -27,6 +27,7 @@ struct WeightDataPoint: Identifiable, Equatable {
 }
 
 @Observable
+@MainActor
 class RecordWeightViewModel: ObservableObject {
     let healthStore: HealthStore
     var weightData: [WeightDataPoint] = []

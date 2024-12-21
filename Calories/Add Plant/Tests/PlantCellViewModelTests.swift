@@ -11,6 +11,7 @@ import UIKit
 
 @testable import Calories
 
+@MainActor
 struct PlantCellViewModelTests {
     @Test func cellImageToBeSetWithPlantThatHasImage() async throws {
         let modelContext = ModelContext.inMemory

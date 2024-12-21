@@ -20,6 +20,7 @@ struct PlantSelection: Hashable {
 }
 
 @Observable
+@MainActor
 final class PlantCellViewModel {
     let plant: String
     var isSelected: Bool

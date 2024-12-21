@@ -57,6 +57,7 @@ struct WeeklyPlantsStat: Identifiable, Equatable {
 }
 
 @Observable
+@MainActor
 class WeeklyChartViewModel {
     let healthStore: HealthStore
     var modelContext: ModelContext?
