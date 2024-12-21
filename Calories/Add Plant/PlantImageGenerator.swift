@@ -22,22 +22,23 @@ enum PlantImageGeneratorError: Error {
 
 struct PlantImageGenerator: PlantImageGenerating {
     let apiKey: String
-    let urlSession: URLSession
+    let networkClient: NetworkClientType
 
-    private func promptText(for plantName: String) -> String {
+    func promptText(for plantName: String) -> String {
         return "Photo of \(plantName) in a white bowl"
     }
 
     init(apiKey: String,
-         urlSession: URLSession = .shared) {
+         networkClient: NetworkClientType = NetworkClient()) {
         self.apiKey = apiKey
-        self.urlSession = urlSession
+        self.networkClient = networkClient
     }
 
     func generate(for plantName: String) async throws -> Data {
         let prompt = promptText(for: plantName)
         let request = makeRequest(prompt: prompt)
-        let (data, _) = try await urlSession.data(for: request)
+        let data = try await networkClient.data(fromRequest: request)
+
         let response: GPTResponse
         do {
             let decoder = JSONDecoder()
@@ -53,8 +54,7 @@ struct PlantImageGenerator: PlantImageGenerating {
             throw PlantImageGeneratorError.invalidURLReturned
         }
         do {
-            let (data, _) = try await urlSession.data(from: url)
-            return data
+            return try await networkClient.data(fromRequest: URLRequest(url: url))
         } catch {
             throw PlantImageGeneratorError.failedToLoadImageAtURL
         }
