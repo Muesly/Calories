@@ -10,19 +10,20 @@ import SwiftUI
 
 struct Companion {
     private let messageDetails: [CompanionMessage]
-    let notificationSender: NotificationSender
+    let notificationSender: NotificationSenderType
 
     init(messageDetails: [CompanionMessage],
-         notificationSender: NotificationSender) {
+         notificationSender: NotificationSenderType) {
         self.messageDetails = messageDetails
         self.notificationSender = notificationSender
     }
 
     static func create() -> Companion {
         Companion(messageDetails: Self.defaultMessages,
-                  notificationSender: UNUserNotificationCenter.current())
+                  notificationSender: NotificationSender())
     }
 
+    @MainActor
     static func createNull() -> Companion {
         Companion(messageDetails: Self.defaultMessages,
                   notificationSender: StubbedNotificationSender())
@@ -86,8 +87,9 @@ struct Companion {
         CompanionMessage(message: "You’ve done really well over the last month 👏", validScenario: .monthlyWeightLoss),
     ]
 
+    @MainActor
     func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
-        guard await notificationSender.pendingNotificationRequests().count == 0 else {
+        guard await notificationSender.numPendingRequests() == 0 else {
             return
         }
 

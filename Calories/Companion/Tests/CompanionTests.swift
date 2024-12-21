@@ -9,6 +9,7 @@ import Foundation
 import Testing
 @testable import Calories
 
+@MainActor
 struct CompanionTests {
     @Test func companionReturnsMessageForEarlyMorning() throws {
         let sut = createCompanionSubject()
@@ -113,22 +114,22 @@ struct CompanionTests {
 
     @Test func schedulesNotificationForTomorrow() async throws {
         let sut = createCompanionSubject()
-        await #expect(sut.notificationSender.pendingNotificationRequests().count == 0)
+        await #expect(sut.notificationSender.numPendingRequests() == 0)
 
         try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
                                                                           weeklyWeightChange: 0,
                                                                           monthlyWeightChange: 0))
 
-        await #expect(sut.notificationSender.pendingNotificationRequests().count == 1)
+        await #expect(sut.notificationSender.numPendingRequests() == 1)
         let currentWeekday = Calendar.current.dateComponents([.weekday], from: dateFromComponents()).weekday!
         #expect(currentWeekday == 2)
-        let scheduledWeekday = (sut.notificationSender as? StubbedNotificationSender)?.requestDates.first?.weekday
+        let scheduledWeekday = await (sut.notificationSender as? StubbedNotificationSender)?.requestDates.first?.weekday
         #expect(scheduledWeekday == 3)
     }
 
     @Test func doesNotSchedulesNotificationIfAlreadyOneScheduled() async throws {
         let sut = createCompanionSubject()
-        await #expect(sut.notificationSender.pendingNotificationRequests().count == 0)
+        await #expect(sut.notificationSender.numPendingRequests() == 0)
 
         try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
                                                                           weeklyWeightChange: 0,
@@ -137,8 +138,8 @@ struct CompanionTests {
                                                                           weeklyWeightChange: 0,
                                                                           monthlyWeightChange: 0))
 
-        await #expect(sut.notificationSender.pendingNotificationRequests().count == 1)
-        #expect((sut.notificationSender as? StubbedNotificationSender)?.requestDates.count == 1)
+        await #expect(sut.notificationSender.numPendingRequests() == 1)
+        #expect(await (sut.notificationSender as? StubbedNotificationSender)?.requestDates.count == 1)
     }
 
     private func createCompanionSubject() -> Companion {
