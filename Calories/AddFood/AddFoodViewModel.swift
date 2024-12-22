@@ -67,10 +67,18 @@ class AddFoodViewModel: ObservableObject {
     @MainActor
     func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws -> FoodEntry {
         try await healthStore.authorize()
+        let plantModels: [PlantEntry] = plants.map { plant in
+            // Find image data to put back in
+            var imageData: Data?
+            if let existingPlantEntry = modelContext.findPlant(plant.name) {
+                imageData = existingPlantEntry.imageData
+            }
+            return PlantEntry(plant.name, timeConsumed: Date(), imageData: imageData)
+        }
         let foodEntry = FoodEntry(foodDescription: foodDescription,
                                   calories: Double(calories),
                                   timeConsumed: timeConsumed,
-                                  plants: plants.map { PlantEntry($0.name, timeConsumed: timeConsumed) }).insert(into: modelContext)
+                                  plants: plantModels).insert(into: modelContext)
         do {
             try modelContext.save()
         } catch {

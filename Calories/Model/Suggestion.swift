@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Suggestion: Equatable {
+struct Suggestion: Hashable {
     let name: String
     var uiImage: UIImage?
 
