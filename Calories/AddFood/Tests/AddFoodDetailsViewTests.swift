@@ -52,6 +52,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let caloriesTextField = app.textFields["Calories Number Field"]
         caloriesTextField.tap()
         caloriesTextField.typeText("450")
+        app.buttons["Lunch"].tap()
     }
 
     private func addPlantInNewFood(_ app: XCUIApplication) {
