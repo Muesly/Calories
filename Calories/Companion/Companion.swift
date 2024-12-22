@@ -30,7 +30,9 @@ struct Companion {
     }
 
     func requestNotificationsPermission() {
-        notificationSender.requestNotificationsPermission()
+        Task {
+            await notificationSender.requestNotificationsPermission()
+        }
     }
 
     func nextMotivationalMessage(weekday: Int,
@@ -92,7 +94,7 @@ struct Companion {
     ]
 
     func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
-        guard await notificationSender.numPendingRequests() == 0 else {
+        guard await !notificationSender.hasPendingRequests() else {
             return
         }
 

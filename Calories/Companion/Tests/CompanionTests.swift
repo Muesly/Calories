@@ -114,13 +114,13 @@ struct CompanionTests {
 
     @Test func schedulesNotificationForTomorrow() async throws {
         let sut = createCompanionSubject()
-        await #expect(sut.notificationSender.numPendingRequests() == 0)
+        #expect(await !sut.notificationSender.hasPendingRequests())
 
         try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
                                                                           weeklyWeightChange: 0,
                                                                           monthlyWeightChange: 0))
 
-        await #expect(sut.notificationSender.numPendingRequests() == 1)
+        #expect(await sut.notificationSender.hasPendingRequests())
         let currentWeekday = Calendar.current.dateComponents([.weekday], from: dateFromComponents()).weekday!
         #expect(currentWeekday == 2)
         let scheduledWeekday = (sut.notificationSender as? StubbedNotificationSender)?.requestDates.first?.weekday
@@ -129,7 +129,7 @@ struct CompanionTests {
 
     @Test func doesNotSchedulesNotificationIfAlreadyOneScheduled() async throws {
         let sut = createCompanionSubject()
-        await #expect(sut.notificationSender.numPendingRequests() == 0)
+        #expect(await !sut.notificationSender.hasPendingRequests())
 
         try await sut.scheduleTomorrowsMotivationalMessage(context: .init(date: dateFromComponents(),
                                                                           weeklyWeightChange: 0,
@@ -138,7 +138,7 @@ struct CompanionTests {
                                                                           weeklyWeightChange: 0,
                                                                           monthlyWeightChange: 0))
 
-        await #expect(sut.notificationSender.numPendingRequests() == 1)
+        #expect(await sut.notificationSender.hasPendingRequests())
         #expect((sut.notificationSender as? StubbedNotificationSender)?.requestDates.count == 1)
     }
 
