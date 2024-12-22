@@ -25,8 +25,9 @@ final class RecordWeightViewTests: XCTestCase {
         recordWeightButton.tap()
         let spinner = app.activityIndicators["Loading Weight Chart"]
         XCTAssertTrue(spinner.exists)
-
+        XCTAssert(spinner.waitForNonExistence(timeout: 2))
         let weightHeader = app.staticTexts["Weight over time"]
+        XCTAssert(weightHeader.waitForExistence(timeout: 2))
         XCTAssert(weightHeader.exists)
 
         let decreaseWeightButton = app.buttons["Report Decrease of 1 pound in weight"]

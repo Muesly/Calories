@@ -68,10 +68,19 @@ class StubbedHealthStore: HealthStore {
     func exercise(date: Date) async throws -> Int {
         600
     }
-    
+
+    private func waitForResult() async {
+        let _ = await withCheckedContinuation { continuation in
+            Task.detached {
+                try? await Task.sleep(for: .seconds(0.01))
+                return continuation.resume()
+            }
+        }
+    }
+
     func weight(fromDate: Date, toDate: Date) async throws -> Int? {
-        usleep(10000)
-        initialWeight += 1
+        await waitForResult()
+        self.initialWeight += 1
         return initialWeight
     }
     

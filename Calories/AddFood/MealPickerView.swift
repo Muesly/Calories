@@ -29,6 +29,7 @@ struct MealPickerView: View {
                     }
                     .background(isSelected ? Color.green : Color.clear)
                     .font(.system(size: isSelected ? 56 : 40))
+                    .accessibilityLabel(mealToPick.name)
                     .cornerRadius(8.0)
                 }
             }
