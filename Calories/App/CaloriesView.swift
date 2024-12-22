@@ -92,6 +92,7 @@ struct CaloriesView: View {
             .onAppear {
                 historyViewModel.modelContext = modelContext
                 weeklyChartViewModel.modelContext = modelContext
+                companion.requestNotificationsPermission()
             }
         }
     }

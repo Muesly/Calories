@@ -10,40 +10,37 @@ import SwiftUI
 
 @MainActor
 protocol NotificationSenderType {
-    func requestNotificationsPermission()
-    func numPendingRequests() async -> Int
+    func requestNotificationsPermission() async
+    func hasPendingRequests() async -> Bool
     func add(_ request: UNNotificationRequest) async throws
 }
 
 class NotificationSender: NotificationSenderType {
-    func requestNotificationsPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { granted, error in
+    func requestNotificationsPermission() async {
+        do {
+            let granted = try await UNUserNotificationCenter.current().requestAuthorization()
             if granted {
-            } else if let error = error {
-                print("Permission denied: \(error.localizedDescription)")
+                // No need to report anything
             }
+        } catch {
+                print("Permission denied: \(error.localizedDescription)")
         }
     }
 
-    func numPendingRequests() async -> Int {
-        let requests = await withCheckedContinuation { continuation in
-            UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-                Task {
-                    continuation.resume(returning: requests)
-                }
-            }
-        }
-        return requests.count
+    func hasPendingRequests() async -> Bool {
+        await UNUserNotificationCenter.current().hasPendingRequests()
     }
-    
+
     func add(_ request: UNNotificationRequest) async throws {
-        let _ = await withCheckedContinuation { continuation in
-            UNUserNotificationCenter.current().add(request) { _ in
-                Task {
-                    continuation.resume()
-                }
-            }
+        Task { @MainActor in
+            try await UNUserNotificationCenter.current().add(request)
         }
+    }
+}
+
+extension UNUserNotificationCenter {
+    func hasPendingRequests() async -> Bool {
+        await pendingNotificationRequests().count > 0
     }
 }
 
@@ -59,8 +56,8 @@ class StubbedNotificationSender: NotificationSenderType {
         requestedPermission = true
     }
 
-    func numPendingRequests() async -> Int {
-        requests.count
+    func hasPendingRequests() async -> Bool {
+        requests.count > 0
     }
     
     func add(_ request: UNNotificationRequest) async throws {
