@@ -14,7 +14,7 @@ import UIKit
 @Model public class PlantEntry {
     @Attribute(. unique) var name: String
     var timeConsumed: Date
-    var imageData: Data?
+    @Attribute(.externalStorage) var imageData: Data?
 
     var foodEntries: [FoodEntry]?
     var numEntries: Int {

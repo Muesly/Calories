@@ -16,6 +16,6 @@ struct AddPlantViewModelTests {
         let sut = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext, excludedSuggestions: ["Oranges"]))
         let _ = [PlantEntry("Pears"), PlantEntry("Apples"), PlantEntry("Oranges")].forEach { $0.insert(into: modelContext) }
         sut.fetchSuggestions()
-        #expect(sut.suggestions == [.init("Apples"), .init("Pears")])
+        #expect(sut.suggestions.map { $0.name } == ["Apples", "Pears"])
     }
 }

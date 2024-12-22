@@ -10,6 +10,7 @@ import SwiftData
 import UIKit
 
 struct PlantSelection: Hashable {
+    let id = UUID()
     let name: String
     let isSelected: Bool
 
