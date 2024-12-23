@@ -93,6 +93,8 @@ struct CaloriesView: View {
                 historyViewModel.modelContext = modelContext
                 weeklyChartViewModel.modelContext = modelContext
                 companion.requestNotificationsPermission()
+                refresh()
+
             }
         }
     }
@@ -117,4 +119,12 @@ struct CaloriesView: View {
             fatalError("Failed to fetch weight changes: \(error)")
         }
     }
+}
+
+#Preview {
+    let healthStore = HealthStoreFactory.createNull()
+    CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
+                 weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
+                 healthStore: healthStore,
+                 companion: Companion.createNull())
 }
