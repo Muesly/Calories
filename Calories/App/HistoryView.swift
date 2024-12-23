@@ -25,7 +25,7 @@ struct HistoryView: View {
                     DisclosureGroup(meal.summary) {
                         ForEach(meal.foodEntries) { foodEntry in
                             FoodEntryView(foodEntry: foodEntry,
-                                          formatter: viewModel.timeConsumedTimeFormatter)
+                                          formatter: HistoryViewModel.timeConsumedTimeFormatter)
                         }
                         .onDelete { indexSet in
                             self.deleteItem(atRow: indexSet.first, inFoodEntries: meal.foodEntries)
@@ -51,12 +51,35 @@ struct FoodEntryView: View {
     let formatter: DateFormatter
 
     var body: some View {
-        HStack {
-            Text("\(foodEntry.timeConsumed, formatter: formatter)").opacity(0.5).font(.brand)
-            Text("\(foodEntry.foodDescription)").font(.brand)
-            Spacer()
-            Text("\(Int(foodEntry.calories)) cals").opacity(0.5).font(.brand)
+        VStack(alignment: .leading) {
+            HStack {
+                Text("\(foodEntry.timeConsumed, formatter: formatter)").opacity(0.5).font(.brand)
+                Text("\(foodEntry.foodDescription)").font(.brand)
+                Spacer()
+                Text("\(Int(foodEntry.calories)) cals").opacity(0.5).font(.brand)
+            }
+            HStack {
+                ForEach(foodEntry.plants ?? []) { plant in
+                    if let image = plant.uiImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                    }
+                }
+            }
         }
         .listRowBackground(Colours.backgroundSecondary)
     }
+}
+
+#Preview {
+    let plants: [PlantEntry] = [PlantEntry("Corn", imageName: "Corn"),
+                                PlantEntry("Rice", imageName: "Rice"),
+                                PlantEntry("Broccoli", imageName: "Broccoli")]
+    FoodEntryView(foodEntry: .init(foodDescription: "Veggie Chilli",
+                                   calories: 400,
+                                   timeConsumed: Date(),
+                                   plants: plants),
+                  formatter: HistoryViewModel.timeConsumedTimeFormatter)
+    .padding()
 }

@@ -14,7 +14,7 @@ import SwiftUI
 class HistoryViewModel {
     var modelContext: ModelContext?
     private let healthStore: HealthStore
-    private var timeFormatter: DateFormatter = DateFormatter()
+    private static var timeFormatter: DateFormatter = DateFormatter()
     var dateForEntries: Date = Date()
     var daySections: [Day] = []
 
@@ -53,7 +53,7 @@ class HistoryViewModel {
         return modelContext?.foodResults(for: #Predicate { $0.timeConsumed >= startOfDay }) ?? []
     }
 
-    var timeConsumedTimeFormatter: DateFormatter {
+    static var timeConsumedTimeFormatter: DateFormatter {
         timeFormatter.timeStyle = .short
         return timeFormatter
     }

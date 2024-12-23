@@ -34,6 +34,12 @@ import UIKit
         self.timeConsumed = timeConsumed
         self.imageData = imageData
     }
+
+    public init(_ name: String, timeConsumed: Date = Date(), imageName: String) {
+        self.name = name
+        self.timeConsumed = timeConsumed
+        self.imageData = UIImage(named: imageName)?.jpegData(compressionQuality: 0.9)
+    }
 }
 
 extension PlantEntry: Equatable {

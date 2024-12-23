@@ -44,11 +44,11 @@ struct PlantGridView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    let _ = [PlantEntry("Corn", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9)),
-             PlantEntry("Rice", imageData: UIImage(named: "Rice")?.jpegData(compressionQuality: 0.9)),
-             PlantEntry("Broccoli", imageData: UIImage(named: "Broccoli")?.jpegData(compressionQuality: 0.9)),
+    let _ = [PlantEntry("Corn", imageName: "Corn"),
+             PlantEntry("Rice", imageName: "Rice"),
+             PlantEntry("Broccoli", imageName: "Broccoli"),
              PlantEntry("Unidentified"),
-             PlantEntry("Corn 2", imageData: UIImage(named: "Corn")?.jpegData(compressionQuality: 0.9))].forEach { modelContext.insert($0)
+             PlantEntry("Corn 2", imageName: "Corn")].forEach { modelContext.insert($0)
     }
     VStack {
         PlantGridView(plantSelections: ["Corn", "Rice", "Broccoli", "Unidentified", "Corn 2"].map { PlantSelection($0) }, addedPlant: .constant(""))
