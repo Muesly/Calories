@@ -11,25 +11,22 @@ import SwiftUI
 
 struct AddFoodView: View {
     @Environment(\.dismissSearch) private var dismissSearch
-    
+    @Environment(\.currentDate) var currentDate
+
     private let viewModel: AddFoodViewModel
     private var mealItemsViewModel: MealItemsViewModel
     @State var searchText = ""
     @State var template: FoodTemplate?
     @State var addedFoodEntry: FoodEntry?
-    @State var timeConsumed: Date
 
     @Binding var showingAddEntryView: Bool
     @State private var showingAddFoodDetailsView: Bool = false
 
     init(viewModel: AddFoodViewModel,
-         showingAddEntryView: Binding<Bool>,
-         timeConsumed: Date = Date()) {
+         showingAddEntryView: Binding<Bool>) {
         self.viewModel = viewModel
-        self.timeConsumed = timeConsumed
         self._showingAddEntryView = showingAddEntryView
-        self.mealItemsViewModel = MealItemsViewModel(modelContext: viewModel.modelContext,
-                                                     currentDate: timeConsumed)
+        self.mealItemsViewModel = MealItemsViewModel(modelContext: viewModel.modelContext)
     }
 
     var body: some View {
@@ -46,7 +43,7 @@ struct AddFoodView: View {
                     Section("Recent foods you've had at this time") {
                         ForEach(viewModel.suggestions, id: \.name) { suggestion in
                             Button {
-                                template = viewModel.foodTemplateFor(suggestion.name, timeConsumed: timeConsumed)
+                                template = viewModel.foodTemplateFor(suggestion.name, timeConsumed: currentDate)
                                 showingAddFoodDetailsView = true
                             } label: {
                                 Text(suggestion.name)
@@ -73,7 +70,7 @@ struct AddFoodView: View {
             }
             .onChange(of: searchText) { _, searchText in
                 viewModel.fetchSuggestions(searchText: searchText)
-                template = viewModel.foodTemplateFor(searchText, timeConsumed: timeConsumed)
+                template = viewModel.foodTemplateFor(searchText, timeConsumed: currentDate)
             }
             .navigationDestination(isPresented: $showingAddFoodDetailsView) {
                 if let template {
@@ -84,7 +81,7 @@ struct AddFoodView: View {
         .font(.brand)
         .searchable(text: $searchText,
                     placement:  .navigationBarDrawer(displayMode: .always),
-                    prompt: viewModel.prompt(for: timeConsumed))
+                    prompt: viewModel.prompt(for: currentDate))
         .accessibilityIdentifier("Enter Food")
         .onSubmit(of: .search) {
             dismissSearch()
@@ -98,10 +95,9 @@ struct AddFoodView: View {
         }
         .onChange(of: addedFoodEntry) { _, addedFoodEntry in
             if let addedFoodEntry {
-                mealItemsViewModel.fetchMealFoodEntries()
-                timeConsumed = addedFoodEntry.timeConsumed
+                let timeConsumed = addedFoodEntry.timeConsumed
+                mealItemsViewModel.fetchMealFoodEntries(date: timeConsumed)
                 viewModel.setDateForEntries(timeConsumed)
-                mealItemsViewModel.currentDate = timeConsumed
             }
             viewModel.fetchSuggestions(searchText: searchText)
         }
@@ -119,6 +115,5 @@ struct AddFoodView: View {
     @Previewable @Environment(\.modelContext) var modelContext
     AddFoodView(viewModel: .init(healthStore: MockHealthStore(),
                                  modelContext: modelContext),
-                showingAddEntryView: .constant(false),
-                timeConsumed: Date())
+                showingAddEntryView: .constant(false))
 }

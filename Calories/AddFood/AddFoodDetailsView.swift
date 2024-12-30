@@ -170,7 +170,8 @@ struct AddFoodDetailsView: View {
     AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
                                                    modelContext: modelContext),
                        foodTemplate: .init(description: "Some food",
-                                           calories: 100),
+                                           calories: 100,
+                                           dateTime: Date()),
                        addedFoodEntry: .constant(nil),
                        isFoodItemsViewPresented: .constant(true))
 }

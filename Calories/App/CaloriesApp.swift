@@ -14,6 +14,7 @@ import UserNotifications
 struct CaloriesApp: App {
     let isUITesting: Bool
     let isUnitTesting: Bool
+    let currentDate: Date
 
     var healthStore: HealthStore {
         isUITesting ? HealthStoreFactory.createNull() : HealthStoreFactory.create()
@@ -31,6 +32,14 @@ struct CaloriesApp: App {
     init() {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         self.isUnitTesting = ProcessInfo.processInfo.arguments.contains("UNIT_TESTING")
+
+        if let currentDateStr = ProcessInfo.processInfo.environment["CURRENT_DATE"] {
+            let df = DateFormatter()
+            df.dateFormat = "dd/MM/yyyy"
+            currentDate = df.date(from: currentDateStr)!
+        } else {
+            currentDate = Date()
+        }
     }
     
     var body: some Scene {
@@ -41,9 +50,14 @@ struct CaloriesApp: App {
                              healthStore: healthStore,
                              companion: companion)
                 .modelContainer(container)
+                .environment(\.currentDate, currentDate)
             }
         }
     }
+}
+
+extension EnvironmentValues {
+    @Entry var currentDate = Date()
 }
 
 class StubbedHealthStore: HealthStore {

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct MealItemsView: View {
+    @Environment(\.currentDate) var currentDate
     var viewModel: MealItemsViewModel
 
     init(viewModel: MealItemsViewModel) {
@@ -25,7 +26,7 @@ struct MealItemsView: View {
         .cornerRadius(10)
         .padding()
         .onAppear {
-            viewModel.fetchMealFoodEntries()
+            viewModel.fetchMealFoodEntries(date: currentDate)
         }
     }
 }

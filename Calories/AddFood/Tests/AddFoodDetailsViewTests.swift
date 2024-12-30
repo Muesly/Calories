@@ -16,6 +16,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
     private func runAndReturnApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments.append("UI_TESTING")
+        app.launchEnvironment["CURRENT_DATE"] = "01/01/2025"
         app.launch()
         return app
     }
@@ -53,6 +54,10 @@ final class AddFoodDetailsViewTests: XCTestCase {
         caloriesTextField.tap()
         caloriesTextField.typeText("450")
         app.buttons["Lunch"].tap()
+
+        app.buttons["Date Picker"].tap()
+        app.buttons["Thursday 2 January"].tap()
+        app.buttons["PopoverDismissRegion"].tap()
     }
 
     private func addPlantInNewFood(_ app: XCUIApplication) {
@@ -85,7 +90,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         let homeScreenScrollview = app.collectionViews.firstMatch
         homeScreenScrollview.swipeUp()
 
-        let lunchHistoryLabel = app.staticTexts["Lunch (450 cals)"]
-        XCTAssert(lunchHistoryLabel.exists)
+        XCTAssert(app.staticTexts["Lunch (450 cals)"].exists)
+        XCTAssert(app.staticTexts["Thursday, Jan 2"].exists)
     }
 }

@@ -95,7 +95,7 @@ class AddFoodViewModel: ObservableObject {
     func foodTemplateFor(_ name: String, timeConsumed: Date) -> FoodTemplate {
         let results = modelContext.foodResults(for: #Predicate { $0.foodDescription == name })
         guard let previousEntry = results.first else {
-            return FoodTemplate(description: name, calories: 0)
+            return FoodTemplate(description: name, calories: 0, dateTime: timeConsumed)
         }
         return FoodTemplate(description: previousEntry.foodDescription,
                             calories: Int(previousEntry.calories),
@@ -136,7 +136,7 @@ struct FoodTemplate {
 
     init(description: String,
          calories: Int,
-         dateTime: Date = Date(),
+         dateTime: Date,
          plants: [String] = []) {
         self.description = description
         self.calories = calories

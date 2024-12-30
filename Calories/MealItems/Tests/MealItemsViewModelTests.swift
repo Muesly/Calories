@@ -23,33 +23,33 @@ final class MealItemsViewModelTests: XCTestCase {
     func testMealTitlesDependingOnTimeOfDay() async throws {
         var dc = DateComponents(calendar: Calendar.current)
         dc.hour = 8
-        let breakfastSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
-        breakfastSubject.fetchMealFoodEntries()
+        let breakfastSubject = MealItemsViewModel(modelContext: modelContext)
+        breakfastSubject.fetchMealFoodEntries(date: dc.date!)
         XCTAssertEqual(breakfastSubject.mealTitle, "Breakfast - 0 Calories")
 
         dc.hour = 10
-        let morningSnackSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
-        morningSnackSubject.fetchMealFoodEntries()
+        let morningSnackSubject = MealItemsViewModel(modelContext: modelContext)
+        morningSnackSubject.fetchMealFoodEntries(date: dc.date!)
         XCTAssertEqual(morningSnackSubject.mealTitle, "Morning Snack - 0 Calories")
 
         dc.hour = 12
-        let lunchSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
-        lunchSubject.fetchMealFoodEntries()
+        let lunchSubject = MealItemsViewModel(modelContext: modelContext)
+        lunchSubject.fetchMealFoodEntries(date: dc.date!)
         XCTAssertEqual(lunchSubject.mealTitle, "Lunch - 0 Calories")
 
         dc.hour = 14
-        let afternoonSnackSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
-        afternoonSnackSubject.fetchMealFoodEntries()
+        let afternoonSnackSubject = MealItemsViewModel(modelContext: modelContext)
+        afternoonSnackSubject.fetchMealFoodEntries(date: dc.date!)
         XCTAssertEqual(afternoonSnackSubject.mealTitle, "Afternoon Snack - 0 Calories")
 
         dc.hour = 17
-        let dinnerSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
-        dinnerSubject.fetchMealFoodEntries()
+        let dinnerSubject = MealItemsViewModel(modelContext: modelContext)
+        dinnerSubject.fetchMealFoodEntries(date: dc.date!)
         XCTAssertEqual(dinnerSubject.mealTitle, "Dinner - 0 Calories")
 
         dc.hour = 20
-        let eveningSnackSubject = MealItemsViewModel(modelContext: modelContext, currentDate: dc.date!)
-        eveningSnackSubject.fetchMealFoodEntries()
+        let eveningSnackSubject = MealItemsViewModel(modelContext: modelContext)
+        eveningSnackSubject.fetchMealFoodEntries(date: dc.date!)
         XCTAssertEqual(eveningSnackSubject.mealTitle, "Evening Snack - 0 Calories")
     }
 
@@ -73,8 +73,8 @@ final class MealItemsViewModelTests: XCTestCase {
         modelContext.insert(foodEntry)
         modelContext.insert(secondFoodEntry)
 
-        let subject = MealItemsViewModel(modelContext: modelContext, currentDate: date)
-        subject.fetchMealFoodEntries()
+        let subject = MealItemsViewModel(modelContext: modelContext)
+        subject.fetchMealFoodEntries(date: date)
         XCTAssertEqual(subject.mealTitle, "Breakfast - 300 Calories")
         XCTAssertEqual(subject.mealFoodEntries, [secondFoodEntry, foodEntry])
     }
