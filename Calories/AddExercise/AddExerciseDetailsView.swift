@@ -11,11 +11,11 @@ import SwiftUI
 struct AddExerciseDetailsView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.dismiss) var dismiss
+    @Environment(\.currentDate) var currentDate
 
     private let viewModel: AddExerciseViewModel
     @State var exerciseDescription: String
     @State var calories: Int = 0
-    @State var defTimeConsumed: Date
     @FocusState private var descriptionIsFocused: Bool
     @FocusState private var caloriesIsFocused: Bool
     @State private var isShowingFailureToAuthoriseAlert = false
@@ -30,7 +30,6 @@ struct AddExerciseDetailsView: View {
         self.viewModel = viewModel
         _exerciseDescription = State(initialValue: exerciseTemplate.exerciseDescription)
         _calories = State(initialValue: Int(exerciseTemplate.calories))
-        _defTimeConsumed = State(initialValue: exerciseTemplate.timeExercised)
         _isExerciseDetailsViewPresented = isExerciseDetailsViewPresented
         _timeExerciseAdded = timeExerciseAdded
     }
@@ -63,7 +62,12 @@ struct AddExerciseDetailsView: View {
                         }
                     }
                 }
- 
+                DatePicker("Date:", selection: Binding(get: {
+                    viewModel.timeExercised
+                }, set: { newTime in
+                    viewModel.timeExercised = newTime
+                }), displayedComponents: .date)
+
                 Button {
                     Task(priority: .high) {
                         do {
@@ -71,8 +75,8 @@ struct AddExerciseDetailsView: View {
                             caloriesIsFocused = false
                             _ = try await viewModel.addExercise(exerciseDescription: exerciseDescription,
                                                                                  calories: calories,
-                                                                                 timeExercised: defTimeConsumed)
-                            timeExerciseAdded = defTimeConsumed
+                                                                                 timeExercised: viewModel.timeExercised)
+                            timeExerciseAdded = viewModel.timeExercised
                             exerciseDescription = ""
                             calories = 0
                             dismiss()
@@ -93,11 +97,11 @@ struct AddExerciseDetailsView: View {
             .cornerRadius(10)
             Spacer()
                 .onChange(of: scenePhase) { _, newPhase in
-                    if AddFoodViewModel.shouldClearFields(phase: newPhase, date: defTimeConsumed) {
+                    if AddFoodViewModel.shouldClearFields(phase: newPhase, date: viewModel.timeExercised) {
                         Task {
                             exerciseDescription = ""
                             calories = 0
-                            defTimeConsumed = Date()
+                            viewModel.timeExercised = currentDate
                         }
                     }
                 }
@@ -115,7 +119,8 @@ struct AddExerciseDetailsView: View {
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
     AddExerciseDetailsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
-                                                           modelContext: .inMemory),
+                                                           modelContext: .inMemory,
+                                                           timeExercised: Date()),
                            exerciseTemplate: ExerciseEntry(exerciseDescription: "Some exercise",
                                                            calories: 100,
                                                            timeExercised: Date()),

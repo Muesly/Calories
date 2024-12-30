@@ -15,11 +15,14 @@ final class AddExerciseViewModel {
     let modelContext: ModelContext
     let healthStore: HealthStore
     var suggestions: [Suggestion] = []
-    
+    var timeExercised: Date
+
     init(healthStore: HealthStore,
-         modelContext: ModelContext) {
+         modelContext: ModelContext,
+         timeExercised: Date) {
         self.healthStore = healthStore
         self.modelContext = modelContext
+        self.timeExercised = timeExercised
     }
 
     @MainActor

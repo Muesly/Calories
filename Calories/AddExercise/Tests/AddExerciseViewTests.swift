@@ -16,6 +16,7 @@ final class AddExerciseViewTests: XCTestCase {
     private func runAndReturnApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments.append("UI_TESTING")
+        app.launchEnvironment["CURRENT_DATE"] = "01/01/2025"
         app.launch()
         return app
     }
@@ -36,6 +37,11 @@ final class AddExerciseViewTests: XCTestCase {
         let caloriesTextField = app.textFields["Calories Number Field"]
         caloriesTextField.tap()
         caloriesTextField.typeText("100")
+
+        app.buttons["Date Picker"].tap()
+        app.buttons["Thursday 2 January"].tap()
+        app.buttons["PopoverDismissRegion"].tap()
+
         let confirmationButton = app.buttons["Add Weights"]
         confirmationButton.tap()
         XCTAssertTrue(addExerciseButton.exists)

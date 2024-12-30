@@ -49,7 +49,10 @@ struct AddExerciseView: View {
                     }
                 }
                 .navigationDestination(isPresented: $showingAddExerciseDetailsView) {
-                    addExerciseInputFieldsView(description: searchText)
+                    AddExerciseDetailsView(viewModel: viewModel,
+                                           exerciseTemplate: viewModel.exerciseTemplateFor(searchText),
+                                           timeExerciseAdded: $timeExerciseAdded,
+                                           isExerciseDetailsViewPresented: $showingAddExerciseDetailsView)
                 }
             }
             .foregroundColor(.white)
@@ -89,12 +92,12 @@ struct AddExerciseView: View {
             }
         }
     }
-
-    private func addExerciseInputFieldsView(description: String) -> AddExerciseDetailsView {
-        AddExerciseDetailsView(viewModel: viewModel,
-                               exerciseTemplate: viewModel.exerciseTemplateFor(description),
-                               timeExerciseAdded: $timeExerciseAdded,
-                               isExerciseDetailsViewPresented: $showingAddExerciseDetailsView)
-    }
 }
 
+#Preview {
+    @Previewable @Environment(\.modelContext) var modelContext
+    AddExerciseView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
+                                                    modelContext: modelContext,
+                                                    timeExercised: Date()),
+                    showingAddExerciseView: .constant(false))
+}

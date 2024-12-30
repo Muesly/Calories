@@ -18,7 +18,8 @@ final class AddExerciseViewModelTests: XCTestCase {
     override func setUpWithError() throws {
         mockHealthStore = MockHealthStore()
         subject = AddExerciseViewModel(healthStore: mockHealthStore,
-                                       modelContext: .inMemory)
+                                       modelContext: .inMemory,
+                                       timeExercised: Date())
     }
 
     override func tearDownWithError() throws {

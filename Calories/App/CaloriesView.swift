@@ -11,7 +11,8 @@ import SwiftUI
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) private var modelContext
-    
+    @Environment(\.currentDate) var currentDate
+
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
     private let healthStore: HealthStore
@@ -64,7 +65,8 @@ struct CaloriesView: View {
             }
             .sheet(isPresented: $showingAddExerciseView) {
                 AddExerciseView(viewModel: AddExerciseViewModel(healthStore: healthStore,
-                                                                modelContext: modelContext),
+                                                                modelContext: modelContext,
+                                                                timeExercised: currentDate),
                                 showingAddExerciseView: $showingAddExerciseView)
             }
             .sheet(isPresented: $showingRecordWeightView) {
