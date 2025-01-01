@@ -9,13 +9,6 @@ import XCTest
 
 final class RecordWeightViewTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-    }
-
-    override func tearDownWithError() throws {
-    }
-
     func testShowingRecordWeightScreen() throws {
         let app = XCUIApplication()
         app.launchArguments.append("UI_TESTING")

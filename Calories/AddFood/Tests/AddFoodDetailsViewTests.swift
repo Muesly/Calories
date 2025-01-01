@@ -9,10 +9,6 @@ import XCTest
 
 final class AddFoodDetailsViewTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-    }
-
     private func runAndReturnApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments.append("UI_TESTING")
