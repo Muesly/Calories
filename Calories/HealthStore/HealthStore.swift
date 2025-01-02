@@ -314,15 +314,3 @@ extension HKHealthStore: HealthStore {
         try await save(newBodyMass)
     }
 }
-
-private struct HealthStoreKey: @preconcurrency EnvironmentKey {
-    @MainActor
-    static let defaultValue: HealthStore = HKHealthStore()
-}
-
-extension EnvironmentValues {
-    var healthStore: HealthStore {
-        get { self[HealthStoreKey.self] }
-        set { self[HealthStoreKey.self] = newValue }
-    }
-}

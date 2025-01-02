@@ -46,7 +46,7 @@ struct CaloriesApp: App {
         WindowGroup {
             if !isUnitTesting {
                 CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
+                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore, currentDate: currentDate),
                              healthStore: healthStore,
                              companion: companion)
                 .modelContainer(container)

@@ -104,7 +104,7 @@ struct CaloriesView: View {
     private func refresh() {
         Task {
             historyViewModel.fetchDaySections()
-            await weeklyChartViewModel.fetchData()
+            await weeklyChartViewModel.fetchData(currentDate: currentDate)
             await scheduleTomorrowsMotivationalMessage()
         }
     }
@@ -126,7 +126,7 @@ struct CaloriesView: View {
 #Preview {
     let healthStore = HealthStoreFactory.createNull()
     CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                 weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
+                 weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore, currentDate: Date()),
                  healthStore: healthStore,
                  companion: Companion.createNull())
 }
