@@ -41,7 +41,7 @@
 		EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097D8729918C9E00735129 /* CaloriesApp.swift */; };
 		EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097D8929918C9E00735129 /* CaloriesView.swift */; };
 		EA097D8C29918CA000735129 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA097D8B29918CA000735129 /* Assets.xcassets */; };
-		EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */; };
+		EA097D9E29918CA000735129 /* HistoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097D9D29918CA000735129 /* HistoryViewModelTests.swift */; };
 		EA097DB82991909500735129 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097DB72991909500735129 /* HistoryViewModel.swift */; };
 		EA16CEFF2B53418B00E01122 /* MealPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */; };
 		EA2D49042994394900248864 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA2D49032994394900248864 /* Colours.xcassets */; };
@@ -178,7 +178,7 @@
 		EA097D8929918C9E00735129 /* CaloriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesView.swift; sourceTree = "<group>"; };
 		EA097D8B29918CA000735129 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA097D9929918CA000735129 /* CaloriesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaloriesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaloriesViewModelTests.swift; sourceTree = "<group>"; };
+		EA097D9D29918CA000735129 /* HistoryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModelTests.swift; sourceTree = "<group>"; };
 		EA097DB72991909500735129 /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		EA16CEFE2B53418B00E01122 /* MealPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerViewTests.swift; sourceTree = "<group>"; };
 		EA2D49032994394900248864 /* Colours.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colours.xcassets; sourceTree = "<group>"; };
@@ -350,7 +350,7 @@
 		DD7DC8932C8471EC0021FA09 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				EA097D9D29918CA000735129 /* CaloriesViewModelTests.swift */,
+				EA097D9D29918CA000735129 /* HistoryViewModelTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -854,7 +854,7 @@
 				DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */,
 				DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
-				EA097D9E29918CA000735129 /* CaloriesViewModelTests.swift in Sources */,
+				EA097D9E29918CA000735129 /* HistoryViewModelTests.swift in Sources */,
 				DD72D7972C8635F000E75FB5 /* PlantCellViewModelTests.swift in Sources */,
 				DD946C242C847526001A36EE /* PlantImageGeneratorTests.swift in Sources */,
 				EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */,

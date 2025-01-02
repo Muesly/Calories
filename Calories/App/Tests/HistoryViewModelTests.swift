@@ -1,5 +1,5 @@
 //
-//  CaloriesTests.swift
+//  HistoryViewModelTests.swift
 //  CaloriesTests
 //
 //  Created by Tony Short on 06/02/2023.
@@ -10,7 +10,7 @@ import XCTest
 @testable import Calories
 
 @MainActor
-final class CaloriesViewModelTests: XCTestCase {
+final class HistoryViewModelTests: XCTestCase {
     var subject: HistoryViewModel!
     var modelContext: ModelContext!
 
