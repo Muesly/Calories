@@ -984,6 +984,7 @@
 		};
 		EA097DAB29918CA000735129 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD7A57DB2D19F51700CBF055 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1045,6 +1046,7 @@
 		};
 		EA097DAC29918CA000735129 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD7A57DB2D19F51700CBF055 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

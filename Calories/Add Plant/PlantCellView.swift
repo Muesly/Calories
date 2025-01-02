@@ -72,10 +72,10 @@ struct PlantCellView: View {
                                 do {
                                     isGeneratingImage = true
                                     try await viewModel.fetchImagesForSuggestion()
-                                    isGeneratingImage = false
                                 } catch {
                                     print(error)
                                 }
+                                isGeneratingImage = false
                             }
                         }
                 }
