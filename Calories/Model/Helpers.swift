@@ -16,6 +16,7 @@ extension ModelContext {
         ModelContext(try! ModelContainer(for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
     }
 
+    @MainActor
     func foodResults(for predicate: Predicate<FoodEntry>? = nil,
                      sortBy: [SortDescriptor<FoodEntry>] = [FoodEntry.mostRecent]) -> [FoodEntry] {
         let fetchDescriptor = FetchDescriptor<FoodEntry>(predicate: predicate,

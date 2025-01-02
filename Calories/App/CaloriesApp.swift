@@ -12,9 +12,10 @@ import UserNotifications
 
 @main
 struct CaloriesApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     let isUITesting: Bool
     let isUnitTesting: Bool
-    let currentDate: Date
+    @State var currentDate: Date
 
     var healthStore: HealthStore {
         isUITesting ? HealthStoreFactory.createNull() : HealthStoreFactory.create()
@@ -33,24 +34,39 @@ struct CaloriesApp: App {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         self.isUnitTesting = ProcessInfo.processInfo.arguments.contains("UNIT_TESTING")
 
-        if let currentDateStr = ProcessInfo.processInfo.environment["CURRENT_DATE"] {
+        if let overriddenDateStr = Self.overriddenDate() {
             let df = DateFormatter()
             df.dateFormat = "dd/MM/yyyy"
-            currentDate = df.date(from: currentDateStr)!
+            currentDate = df.date(from: overriddenDateStr)!
         } else {
             currentDate = Date()
         }
     }
-    
+
+    private static func overriddenDate() -> String? {
+        ProcessInfo.processInfo.environment["CURRENT_DATE"]
+    }
+
     var body: some Scene {
         WindowGroup {
             if !isUnitTesting {
                 CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore),
+                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore,
+                                                                        currentDate: currentDate),
                              healthStore: healthStore,
                              companion: companion)
                 .modelContainer(container)
                 .environment(\.currentDate, currentDate)
+                .onChange(of: scenePhase) { _, newPhase in
+                    switch newPhase {
+                    case .active:
+                        if Self.overriddenDate() == nil {
+                            currentDate = Date()
+                        }
+                    default:
+                        break
+                    }
+                }
             }
         }
     }

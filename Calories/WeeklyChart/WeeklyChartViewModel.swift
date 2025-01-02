@@ -76,13 +76,16 @@ class WeeklyChartViewModel {
     var startOfWeek: String = ""
     var previousWeekEnabled: Bool = false
     var nextWeekEnabled: Bool = false
-    
+    let currentDate: Date
+
     init(healthStore: HealthStore,
          numberOfDays: Int = 7,
-         idGenerator: IDGeneratorType = IDGenerator()) {
+         idGenerator: IDGeneratorType = IDGenerator(),
+         currentDate: Date) {
         self.healthStore = healthStore
         self.numberOfDays = numberOfDays
         self.idGenerator = idGenerator
+        self.currentDate = currentDate
         self.startDate = startOfWeek()
     }
 
@@ -133,13 +136,13 @@ class WeeklyChartViewModel {
     }
 
     @MainActor
-    func fetchData(currentDate: Date = Date()) async {
+    func fetchData(currentDate: Date) async {
         await fetchWeeklyData(currentDate: currentDate)
         fetchWeeklyPlantsData()
     }
 
     @MainActor
-    func fetchWeeklyData(currentDate: Date = Date()) async {
+    func fetchWeeklyData(currentDate: Date) async {
         guard let startDate = startDate else {
             return
         }
@@ -280,14 +283,14 @@ class WeeklyChartViewModel {
     func previousWeekPressed() {
         Task {
             startDate?.addTimeInterval(-secsPerWeek)
-            await fetchData()
+            await fetchData(currentDate: currentDate)
         }
     }
     
     func nextWeekPressed() {
         Task {
             startDate?.addTimeInterval(secsPerWeek)
-            await fetchData()
+            await fetchData(currentDate: currentDate)
         }
     }
 }

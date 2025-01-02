@@ -32,5 +32,7 @@ final class RecordWeightViewTests: XCTestCase {
         let applyButton = app.buttons["Apply"]
         applyButton.tap()
         sleep(1)
+
+        XCTAssert(app.staticTexts["14 st, 4 lbs"].exists)
     }
 }

@@ -11,6 +11,7 @@ import SwiftData
 import SwiftUI
 
 @Observable
+@MainActor
 class AddFoodViewModel: ObservableObject {
     let modelContext: ModelContext
     let healthStore: HealthStore

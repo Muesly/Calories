@@ -70,6 +70,7 @@ enum MealType: String, Equatable {
 }
 
 @Observable
+@MainActor
 class MealItemsViewModel {
     private let modelContext: ModelContext
     var mealFoodEntries: [FoodEntry] = []
