@@ -14,7 +14,7 @@ import UserNotifications
 struct CaloriesApp: App {
     let isUITesting: Bool
     let isUnitTesting: Bool
-    let currentDate: Date
+    let overriddenCurrentDate: Date?
 
     var healthStore: HealthStore {
         isUITesting ? HealthStoreFactory.createNull() : HealthStoreFactory.create()
@@ -33,12 +33,12 @@ struct CaloriesApp: App {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         self.isUnitTesting = ProcessInfo.processInfo.arguments.contains("UNIT_TESTING")
 
-        if let currentDateStr = ProcessInfo.processInfo.environment["CURRENT_DATE"] {
+        if let overriddenDateStr = ProcessInfo.processInfo.environment["CURRENT_DATE"] {
             let df = DateFormatter()
             df.dateFormat = "dd/MM/yyyy"
-            currentDate = df.date(from: currentDateStr)!
+            overriddenCurrentDate = df.date(from: overriddenDateStr)!
         } else {
-            currentDate = Date()
+            overriddenCurrentDate = nil
         }
     }
     
@@ -46,11 +46,10 @@ struct CaloriesApp: App {
         WindowGroup {
             if !isUnitTesting {
                 CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore, currentDate: currentDate),
                              healthStore: healthStore,
-                             companion: companion)
+                             companion: companion,
+                             overriddenCurrentDate: overriddenCurrentDate)
                 .modelContainer(container)
-                .environment(\.currentDate, currentDate)
             }
         }
     }

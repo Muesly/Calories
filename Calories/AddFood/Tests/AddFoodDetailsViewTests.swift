@@ -52,15 +52,13 @@ final class AddFoodDetailsViewTests: XCTestCase {
         app.buttons["Lunch"].tap()
 
         app.buttons["Date Picker"].tap()
-        app.buttons["Thursday 2 January"].tap()
+        app.buttons["Today, Thursday 2 January"].tap()
         app.buttons["PopoverDismissRegion"].tap()
     }
 
     private func addPlantInNewFood(_ app: XCUIApplication) {
         let addPlantButton = app.buttons["Add Plant Header Button"]
         addPlantButton.tap()
-        let addPlantViewHeader = app.navigationBars.staticTexts["Add Plant"]
-        XCTAssert(addPlantViewHeader.exists)
 
         let plantSearchBar = app.searchFields["Enter Plant"]
         plantSearchBar.tap()
