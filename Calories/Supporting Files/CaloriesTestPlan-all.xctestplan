@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "79F4BE3F-69A6-478D-9F07-1281A757B2C1",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Calories.xcodeproj",
+        "identifier" : "EA097D9829918CA000735129",
+        "name" : "CaloriesTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Calories.xcodeproj",
+        "identifier" : "DDDCA4092C5C157800445F06",
+        "name" : "CaloriesUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

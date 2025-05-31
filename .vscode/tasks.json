@@ -103,6 +103,31 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Run All Tests",
+            "type": "shell",
+            "command": "xcrun xcodebuild test -scheme Calories -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -testPlan 'CaloriesTestPlan-all' | xcpretty",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Unit Tests",
+            "type": "shell",
+            "command": "xcrun xcodebuild test -scheme Calories -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -testPlan 'CaloriesTestPlan-unit' | xcpretty",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
         }
     ]
 } 
