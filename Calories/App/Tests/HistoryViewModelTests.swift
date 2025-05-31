@@ -46,7 +46,6 @@ final class HistoryViewModelTests: XCTestCase {
     }
 
     func testFetchingFoodEntriesSortsMostRecentFirst() async throws {
-        subject.dateForEntries = dateFromComponents
         let entry1 = FoodEntry(foodDescription: "Some food",
                                calories: Double(100),
                                timeConsumed: dateFromComponents).insert(into: modelContext)
@@ -54,13 +53,12 @@ final class HistoryViewModelTests: XCTestCase {
                                calories: Double(200),
                                timeConsumed: dateFromComponents.addingTimeInterval(600)).insert(into: modelContext)
 
-        let foodEntries = subject.foodEntries
+        let foodEntries = subject.foodEntries(forDate: dateFromComponents)
         XCTAssertEqual(foodEntries, [entry2, entry1])
     }
 
     func testFetchingDaySections() async throws {
         let date = dateFromComponents
-        subject.dateForEntries = date
         let entry1 = FoodEntry(foodDescription: "Some food",
                                calories: Double(100),
                                timeConsumed: date).insert(into: modelContext)
@@ -74,7 +72,7 @@ final class HistoryViewModelTests: XCTestCase {
                                calories: Double(50),
                                timeConsumed: date.addingTimeInterval(112700)).insert(into: modelContext)
 
-        subject.fetchDaySections()
+        subject.fetchDaySections(forDate: dateFromComponents)
         let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(secsPerDay)))
         expectedDay1.meals.append(Meal(mealType: .dinner, foodEntries: [entry4]))
         expectedDay1.meals.append(Meal(mealType: .lunch, foodEntries: [entry3, entry2]))
@@ -85,12 +83,10 @@ final class HistoryViewModelTests: XCTestCase {
     }
 
     func testGettingDayTitleAndMealSummaryInHistoryView() async throws {
-        subject.dateForEntries = dateFromComponents
-
         _ = FoodEntry(foodDescription: "Some food",
                       calories: Double(100),
                       timeConsumed: dateFromComponents).insert(into: modelContext)
-        subject.fetchDaySections()
+        subject.fetchDaySections(forDate: dateFromComponents)
         XCTAssertEqual(subject.daySections.first?.title, "Sunday, Jan 1")
         XCTAssertEqual(subject.daySections.first?.meals.first?.summary, "Morning Snack (100 cals)")
     }

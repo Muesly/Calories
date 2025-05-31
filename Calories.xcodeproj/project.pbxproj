@@ -138,6 +138,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "CaloriesTestPlan-all.xctestplan"; path = "Calories/Supporting Files/CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
 		DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
 		DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEntry.swift; sourceTree = "<group>"; };
@@ -165,6 +166,7 @@
 		DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModelTests.swift; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
+		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "CaloriesTestPlan-unit.xctestplan"; path = "Calories/Supporting Files/CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
@@ -379,6 +381,8 @@
 		EA097D7B29918C9E00735129 = {
 			isa = PBXGroup;
 			children = (
+				DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */,
+				DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */,
 				EA097D8629918C9E00735129 /* Calories */,
 				EA76757E299D844E00771517 /* Calories Watch App */,
 				EA3146F429A2C6F3002AAA45 /* CaloriesWidget */,
@@ -984,6 +988,7 @@
 		};
 		EA097DAB29918CA000735129 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD7A57DB2D19F51700CBF055 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1045,6 +1050,7 @@
 		};
 		EA097DAC29918CA000735129 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD7A57DB2D19F51700CBF055 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

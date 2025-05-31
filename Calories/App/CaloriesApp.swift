@@ -15,7 +15,7 @@ struct CaloriesApp: App {
     @Environment(\.scenePhase) private var scenePhase
     let isUITesting: Bool
     let isUnitTesting: Bool
-    @State var currentDate: Date
+    let overriddenCurrentDate: Date?
 
     var healthStore: HealthStore {
         isUITesting ? HealthStoreFactory.createNull() : HealthStoreFactory.create()
@@ -34,12 +34,12 @@ struct CaloriesApp: App {
         self.isUITesting = ProcessInfo.processInfo.arguments.contains("UI_TESTING")
         self.isUnitTesting = ProcessInfo.processInfo.arguments.contains("UNIT_TESTING")
 
-        if let overriddenDateStr = Self.overriddenDate() {
+        if let overriddenDateStr = ProcessInfo.processInfo.environment["CURRENT_DATE"] {
             let df = DateFormatter()
             df.dateFormat = "dd/MM/yyyy"
-            currentDate = df.date(from: overriddenDateStr)!
+            overriddenCurrentDate = df.date(from: overriddenDateStr)!
         } else {
-            currentDate = Date()
+            overriddenCurrentDate = nil
         }
     }
 
@@ -50,23 +50,10 @@ struct CaloriesApp: App {
     var body: some Scene {
         WindowGroup {
             if !isUnitTesting {
-                CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                             weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore,
-                                                                        currentDate: currentDate),
-                             healthStore: healthStore,
-                             companion: companion)
+                CaloriesView(healthStore: healthStore,
+                             companion: companion,
+                             overriddenCurrentDate: overriddenCurrentDate)
                 .modelContainer(container)
-                .environment(\.currentDate, currentDate)
-                .onChange(of: scenePhase) { _, newPhase in
-                    switch newPhase {
-                    case .active:
-                        if Self.overriddenDate() == nil {
-                            currentDate = Date()
-                        }
-                    default:
-                        break
-                    }
-                }
             }
         }
     }

@@ -148,6 +148,7 @@ struct AddFoodDetailsView: View {
                 }
         }
         .cornerRadius(10)
+        .ignoresSafeArea(.keyboard)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
             let viewModel = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext,

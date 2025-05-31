@@ -11,7 +11,6 @@ import SwiftUI
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.currentDate) var currentDate
 
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
@@ -23,14 +22,19 @@ struct CaloriesView: View {
     @State var showingRecordWeightView = false
     @State var entryDeleted = false
 
-    init(historyViewModel: HistoryViewModel,
-         weeklyChartViewModel: WeeklyChartViewModel,
-         healthStore: HealthStore,
-         companion: Companion) {
-        self.historyViewModel = historyViewModel
-        self.weeklyChartViewModel = weeklyChartViewModel
+    @State private var currentDate: Date
+    private let overriddenCurrentDate: Date?
+
+    init(healthStore: HealthStore,
+         companion: Companion,
+         overriddenCurrentDate: Date? = nil) {
+        self.overriddenCurrentDate = overriddenCurrentDate
+        let currentDate = overriddenCurrentDate ?? Date()
+        self.weeklyChartViewModel = WeeklyChartViewModel(healthStore: healthStore, currentDate: currentDate)
         self.healthStore = healthStore
         self.companion = companion
+        self.currentDate = currentDate
+        self.historyViewModel = HistoryViewModel(healthStore: healthStore)
     }
 
     var body: some View {
@@ -62,12 +66,14 @@ struct CaloriesView: View {
                 AddFoodView(viewModel: AddFoodViewModel(healthStore: healthStore,
                                                         modelContext: modelContext),
                              showingAddEntryView: $showingAddEntryView)
+                    .environment(\.currentDate, currentDate)
             }
             .sheet(isPresented: $showingAddExerciseView) {
                 AddExerciseView(viewModel: AddExerciseViewModel(healthStore: healthStore,
                                                                 modelContext: modelContext,
                                                                 timeExercised: currentDate),
                                 showingAddExerciseView: $showingAddExerciseView)
+                    .environment(\.currentDate, currentDate)
             }
             .sheet(isPresented: $showingRecordWeightView) {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
@@ -75,6 +81,7 @@ struct CaloriesView: View {
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {
                     refresh()
+                    currentDate = overriddenCurrentDate ?? Date()
                 }
             }
             .onChange(of: entryDeleted) { _, isDeleted in
@@ -103,7 +110,8 @@ struct CaloriesView: View {
 
     private func refresh() {
         Task {
-            historyViewModel.fetchDaySections()
+            historyViewModel.fetchDaySections(forDate: currentDate)
+            await weeklyChartViewModel.fetchData(currentDate: currentDate)
             await scheduleTomorrowsMotivationalMessage()
             await weeklyChartViewModel.fetchData(currentDate: currentDate)
         }
@@ -125,8 +133,6 @@ struct CaloriesView: View {
 
 #Preview {
     let healthStore = HealthStoreFactory.createNull()
-    CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                 weeklyChartViewModel: WeeklyChartViewModel(healthStore: healthStore, currentDate: Date()),
-                 healthStore: healthStore,
+    CaloriesView(healthStore: healthStore,
                  companion: Companion.createNull())
 }

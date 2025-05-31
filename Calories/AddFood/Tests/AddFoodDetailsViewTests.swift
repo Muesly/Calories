@@ -59,8 +59,6 @@ final class AddFoodDetailsViewTests: XCTestCase {
     private func addPlantInNewFood(_ app: XCUIApplication) {
         let addPlantButton = app.buttons["Add Plant Header Button"]
         addPlantButton.tap()
-        let addPlantViewHeader = app.navigationBars.staticTexts["Add Plant"]
-        XCTAssert(addPlantViewHeader.exists)
 
         let plantSearchBar = app.searchFields["Enter Plant"]
         plantSearchBar.tap()

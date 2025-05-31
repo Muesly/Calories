@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "EE6D821C-453A-4BCD-B48B-353CC69F2DA1",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "UNIT_TESTING"
+      }
+    ],
+    "environmentVariableEntries" : [
+      {
+        "key" : "SIMULATOR_KEYBOARD_CONNECT",
+        "value" : "0"
+      }
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Calories.xcodeproj",
+        "identifier" : "EA097D9829918CA000735129",
+        "name" : "CaloriesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

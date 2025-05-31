@@ -23,9 +23,10 @@ final class WeeklyChartViewModelTests: XCTestCase {
         mockHealthStore.bmr = 1900
         mockHealthStore.exercise = 800
         mockHealthStore.caloriesConsumed = 2400
-        let subject = WeeklyChartViewModel(healthStore: mockHealthStore)
         let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
-        subject.startDate = dc.date!
+        let date = dc.date!
+        let subject = WeeklyChartViewModel(healthStore: mockHealthStore, currentDate: date)
+        subject.startDate = date
 
         await subject.fetchWeeklyData(currentDate: dc.date!.addingTimeInterval(secsPerWeek))
 
@@ -39,8 +40,9 @@ final class WeeklyChartViewModelTests: XCTestCase {
         mockHealthStore.bmr = 1900
         mockHealthStore.exercise = 800
         mockHealthStore.caloriesConsumed = 1400
-        let subject = WeeklyChartViewModel(healthStore: mockHealthStore)
         let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let date = dc.date!
+        let subject = WeeklyChartViewModel(healthStore: mockHealthStore, currentDate: date)
         subject.startDate = dc.date!
 
         await subject.fetchWeeklyData(currentDate: dc.date!.addingTimeInterval(secsPerWeek))
@@ -72,9 +74,10 @@ final class WeeklyChartViewModelTests: XCTestCase {
                           timeConsumed: dc.date!, plants: [.init("Rice"), .init("Black Beans")]).insert(into: modelContext)
         try modelContext.save()
         let mockIDGenerator = MockIDGenerator()
-        let subject = WeeklyChartViewModel(healthStore: MockHealthStore(), idGenerator: mockIDGenerator)
+        let date = dc.date!
+        let subject = WeeklyChartViewModel(healthStore: MockHealthStore(), idGenerator: mockIDGenerator, currentDate: date)
         subject.modelContext = modelContext
-        subject.startDate = dc.date!
+        subject.startDate = date
         subject.fetchWeeklyPlantsData()
         XCTAssertEqual(subject.weeklyPlantsData, [WeeklyPlantsStat(id: "1", numPlants: 2, stat: "Eaten"),
                                                   WeeklyPlantsStat(id: "2", numPlants: 28, stat: "To Go"),
@@ -92,10 +95,11 @@ final class WeeklyChartViewModelTests: XCTestCase {
                                   timeConsumed: dc.date!, plants: [.init("Rice"), .init("Black Beans")]).insert(into: modelContext)
         try modelContext.save()
         let mockIDGenerator = MockIDGenerator()
-        let subject = WeeklyChartViewModel(healthStore: MockHealthStore(), idGenerator: mockIDGenerator)
+        let date = dc.date!
+        let subject = WeeklyChartViewModel(healthStore: MockHealthStore(), idGenerator: mockIDGenerator, currentDate: date)
         subject.modelContext = modelContext
         subject.plantGoal = 0
-        subject.startDate = dc.date!
+        subject.startDate = date
         subject.fetchWeeklyPlantsData()
         XCTAssertEqual(subject.weeklyPlantsData, [WeeklyPlantsStat(id: "1", numPlants: 0, stat: "Eaten"),
                                                   WeeklyPlantsStat(id: "2", numPlants: 0, stat: "To Go"),

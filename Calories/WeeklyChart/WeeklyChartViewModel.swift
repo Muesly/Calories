@@ -135,13 +135,11 @@ class WeeklyChartViewModel {
         }
     }
 
-    @MainActor
     func fetchData(currentDate: Date) async {
         await fetchWeeklyData(currentDate: currentDate)
         fetchWeeklyPlantsData()
     }
 
-    @MainActor
     func fetchWeeklyData(currentDate: Date) async {
         guard let startDate = startDate else {
             return
