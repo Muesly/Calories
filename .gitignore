@@ -91,6 +91,6 @@ iOSInjectionProject/
 
 .vscode/settings.json
 
-Calories/Config.xcconfig
 Calories/.DS_Store
 .DS_Store
+Calories/Supporting Files/Config.xcconfig
