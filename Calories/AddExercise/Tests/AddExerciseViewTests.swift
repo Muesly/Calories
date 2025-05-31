@@ -35,7 +35,7 @@ final class AddExerciseViewTests: XCTestCase {
         caloriesTextField.typeText("100")
 
         app.buttons["Date Picker"].tap()
-        app.buttons["Today, Thursday 2 January"].tap()
+        app.buttons["Thursday 2 January"].tap()
         app.buttons["PopoverDismissRegion"].tap()
 
         let confirmationButton = app.buttons["Add Weights"]

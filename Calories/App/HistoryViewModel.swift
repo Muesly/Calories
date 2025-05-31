@@ -15,14 +15,13 @@ class HistoryViewModel {
     var modelContext: ModelContext?
     private let healthStore: HealthStore
     private static var timeFormatter: DateFormatter = DateFormatter()
-    var dateForEntries: Date = Date()
     var daySections: [Day] = []
 
     init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
 
-    func fetchDaySections() {
+    func fetchDaySections(forDate dateForEntries: Date) {
         let weekPrior: Date = Calendar.current.startOfDay(for: dateForEntries).addingTimeInterval(-Double(secsPerWeek))
         let foodEntriesForWeek = modelContext?.foodResults(for: #Predicate { $0.timeConsumed >= weekPrior }) ?? []
 
@@ -48,7 +47,7 @@ class HistoryViewModel {
         }
     }
 
-    var foodEntries: [FoodEntry] {
+    func foodEntries(forDate dateForEntries: Date) -> [FoodEntry] {
         let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
         return modelContext?.foodResults(for: #Predicate { $0.timeConsumed >= startOfDay }) ?? []
     }

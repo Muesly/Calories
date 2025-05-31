@@ -45,8 +45,7 @@ struct CaloriesApp: App {
     var body: some Scene {
         WindowGroup {
             if !isUnitTesting {
-                CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                             healthStore: healthStore,
+                CaloriesView(healthStore: healthStore,
                              companion: companion,
                              overriddenCurrentDate: overriddenCurrentDate)
                 .modelContainer(container)

@@ -25,17 +25,16 @@ struct CaloriesView: View {
     @State private var currentDate: Date
     private let overriddenCurrentDate: Date?
 
-    init(historyViewModel: HistoryViewModel,
-         healthStore: HealthStore,
+    init(healthStore: HealthStore,
          companion: Companion,
          overriddenCurrentDate: Date? = nil) {
-        self.historyViewModel = historyViewModel
         self.overriddenCurrentDate = overriddenCurrentDate
         let currentDate = overriddenCurrentDate ?? Date()
         self.weeklyChartViewModel = WeeklyChartViewModel(healthStore: healthStore, currentDate: currentDate)
         self.healthStore = healthStore
         self.companion = companion
         self.currentDate = currentDate
+        self.historyViewModel = HistoryViewModel(healthStore: healthStore)
     }
 
     var body: some View {
@@ -111,7 +110,7 @@ struct CaloriesView: View {
 
     private func refresh() {
         Task {
-            historyViewModel.fetchDaySections()
+            historyViewModel.fetchDaySections(forDate: currentDate)
             await weeklyChartViewModel.fetchData(currentDate: currentDate)
             await scheduleTomorrowsMotivationalMessage()
         }
@@ -133,7 +132,6 @@ struct CaloriesView: View {
 
 #Preview {
     let healthStore = HealthStoreFactory.createNull()
-    CaloriesView(historyViewModel: HistoryViewModel(healthStore: healthStore),
-                 healthStore: healthStore,
+    CaloriesView(healthStore: healthStore,
                  companion: Companion.createNull())
 }

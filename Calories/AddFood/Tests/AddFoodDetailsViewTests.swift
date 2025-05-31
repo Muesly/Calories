@@ -52,7 +52,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         app.buttons["Lunch"].tap()
 
         app.buttons["Date Picker"].tap()
-        app.buttons["Today, Thursday 2 January"].tap()
+        app.buttons["Thursday 2 January"].tap()
         app.buttons["PopoverDismissRegion"].tap()
     }
 
