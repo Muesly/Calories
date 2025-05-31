@@ -1,0 +1,108 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build iOS App",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-scheme",
+                "Calories",
+                "-configuration",
+                "Debug",
+                "-destination",
+                "'platform=iOS Simulator,name=iPhone 16'",
+                "BUILD_DIR=\"${workspaceFolder}/build\""
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "Run iOS App",
+            "type": "shell",
+            "command": "xcrun",
+            "args": [
+                "simctl",
+                "install",
+                "booted",
+                "${workspaceFolder}/build/Debug-iphonesimulator/Calories.app"
+            ],
+            "dependsOn": [
+                "Build iOS App"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Build and Run iOS App",
+            "type": "shell",
+            "command": "xcrun",
+            "args": [
+                "simctl",
+                "launch",
+                "booted",
+                "com.tonyshort.nutritionapp"
+            ],
+            "dependsOn": [
+                "Run iOS App"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Focus Simulator",
+            "type": "shell",
+            "command": "open",
+            "args": [
+                "-a",
+                "Simulator"
+            ],
+            "dependsOn": [
+                "Build and Run iOS App"
+            ],
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+        {
+            "label": "Build, Run and Focus",
+            "dependsOn": [
+                "Focus Simulator"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ]
+} 
