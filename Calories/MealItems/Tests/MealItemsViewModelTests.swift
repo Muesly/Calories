@@ -9,6 +9,7 @@ import SwiftData
 import XCTest
 @testable import Calories
 
+@MainActor
 final class MealItemsViewModelTests: XCTestCase {
     var modelContext: ModelContext!
 

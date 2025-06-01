@@ -38,7 +38,7 @@ final class PlantImageGeneratorTests {
     @Test func plantImageGeneratorFailsOnDecoding() async throws {
         mockNetworkClient.promptResponse = "{\"some broken api response\":\"true\"}".data(using: .utf8)
         await #expect(performing: {
-            try await sut.generate(for: "Rice")
+            try await self.sut.generate(for: "Rice")
         }, throws: { error in
             error as! PlantImageGeneratorError == PlantImageGeneratorError.failedToDecodeImageFromResponse
         })
@@ -48,7 +48,7 @@ final class PlantImageGeneratorTests {
         let response = GPTResponse(data: [])
         mockNetworkClient.promptResponse = try! JSONEncoder().encode(response)
         await #expect(performing: {
-            try await sut.generate(for: "Rice")
+            try await self.sut.generate(for: "Rice")
         }, throws: { error in
             error as! PlantImageGeneratorError == PlantImageGeneratorError.noURLsReturned
         })
@@ -58,7 +58,7 @@ final class PlantImageGeneratorTests {
         let response = GPTResponse(data: [.init(url: "")])
         mockNetworkClient.promptResponse = try! JSONEncoder().encode(response)
         await #expect(performing: {
-            try await sut.generate(for: "Rice")
+            try await self.sut.generate(for: "Rice")
         }, throws: { error in
             error as! PlantImageGeneratorError == PlantImageGeneratorError.invalidURLReturned
         })
@@ -69,7 +69,7 @@ final class PlantImageGeneratorTests {
         mockNetworkClient.promptResponse = try JSONEncoder().encode(response)
         mockNetworkClient.imageResponseThrows = true
         await #expect(performing: {
-            try await sut.generate(for: "Rice")
+            try await self.sut.generate(for: "Rice")
         }, throws: { error in
             error as! PlantImageGeneratorError == PlantImageGeneratorError.failedToLoadImageAtURL
         })
