@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD258F602C7B6BE0007E7754 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */; };
 		DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */; };
-		DD258F622C7B6BF1007E7754 /* PlantEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */; };
 		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */; };
@@ -30,6 +28,7 @@
 		DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */; };
 		DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */; };
 		DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */; };
+		DD9F3C192DEC6A9F00417F73 /* EntryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9F3C182DEC6A9F00417F73 /* EntryModels.swift */; };
 		DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
@@ -141,8 +140,6 @@
 /* Begin PBXFileReference section */
 		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "CaloriesTestPlan-all.xctestplan"; path = "Calories/Supporting Files/CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
 		DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
-		DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
-		DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEntry.swift; sourceTree = "<group>"; };
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseDetailsView.swift; sourceTree = "<group>"; };
@@ -161,11 +158,13 @@
 		DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewTests.swift; sourceTree = "<group>"; };
 		DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodDetailsViewTests.swift; sourceTree = "<group>"; };
 		DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordWeightViewTests.swift; sourceTree = "<group>"; };
-		DD7DC8952C8472DD0021FA09 /* CaloriesTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CaloriesTestPlan.xctestplan; path = ../../../CaloriesTestPlan.xctestplan; sourceTree = "<group>"; };
 		DD946C232C847526001A36EE /* PlantImageGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantImageGeneratorTests.swift; sourceTree = "<group>"; };
 		DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModel.swift; sourceTree = "<group>"; };
 		DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModelTests.swift; sourceTree = "<group>"; };
 		DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Extensions.swift"; sourceTree = "<group>"; };
+		DD9F3C182DEC6A9F00417F73 /* EntryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryModels.swift; sourceTree = "<group>"; };
+		DD9F3C1A2DEC6AB700417F73 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
+		DD9F3C1B2DEC6AB700417F73 /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "CaloriesTestPlan-unit.xctestplan"; path = "Calories/Supporting Files/CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
@@ -362,9 +361,10 @@
 		DD883E962D19F47200A15A62 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DD9F3C1A2DEC6AB700417F73 /* CaloriesTestPlan-all.xctestplan */,
+				DD9F3C1B2DEC6AB700417F73 /* CaloriesTestPlan-unit.xctestplan */,
 				DD7A57DA2D19F51700CBF055 /* Calories.entitlements */,
 				DD7A57DB2D19F51700CBF055 /* Config.xcconfig */,
-				DD7DC8952C8472DD0021FA09 /* CaloriesTestPlan.xctestplan */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -525,12 +525,11 @@
 		EA6655A529939EEA000770F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DD9F3C182DEC6A9F00417F73 /* EntryModels.swift */,
 				EABBF0CD29B1342500C3B1F9 /* Day.swift */,
 				DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */,
-				DD258F5B2C7B6AAC007E7754 /* FoodEntry.swift */,
 				EA42A0FF29B15EEE003BB1FC /* Helpers.swift */,
 				EABBF0CF29B1343800C3B1F9 /* Meal.swift */,
-				DD258F5C2C7B6AAC007E7754 /* PlantEntry.swift */,
 				DD3253F92C6A89D300D9FF1D /* Suggestion.swift */,
 				EAD2116029A412450007A813 /* WeightEntry.swift */,
 			);
@@ -838,12 +837,11 @@
 				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
 				DD5134D42C83BE3400027855 /* PlantImageGenerator.swift in Sources */,
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
-				DD258F602C7B6BE0007E7754 /* FoodEntry.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
 				DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */,
+				DD9F3C192DEC6A9F00417F73 /* EntryModels.swift in Sources */,
 				DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */,
-				DD258F622C7B6BF1007E7754 /* PlantEntry.swift in Sources */,
 				EA42A10029B15EEE003BB1FC /* Helpers.swift in Sources */,
 				DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */,
 				DD72D7912C84B3B600E75FB5 /* PlantGridView.swift in Sources */,
