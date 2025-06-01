@@ -12,7 +12,6 @@ import UserNotifications
 
 @main
 struct CaloriesApp: App {
-    @Environment(\.scenePhase) private var scenePhase
     let isUITesting: Bool
     let isUnitTesting: Bool
     let overriddenCurrentDate: Date?
@@ -42,11 +41,7 @@ struct CaloriesApp: App {
             overriddenCurrentDate = nil
         }
     }
-
-    private static func overriddenDate() -> String? {
-        ProcessInfo.processInfo.environment["CURRENT_DATE"]
-    }
-
+    
     var body: some Scene {
         WindowGroup {
             if !isUnitTesting {

@@ -113,7 +113,6 @@ struct CaloriesView: View {
             historyViewModel.fetchDaySections(forDate: currentDate)
             await weeklyChartViewModel.fetchData(currentDate: currentDate)
             await scheduleTomorrowsMotivationalMessage()
-            await weeklyChartViewModel.fetchData(currentDate: currentDate)
         }
     }
 
