@@ -15,7 +15,6 @@ class MockHealthStore: HealthStore {
     var caloriesBurned: Int = 0
     var weight: Int = 0
     var weightBetweenDatesIndex = 0
-    var weightBetweenDates = [Int]()
     var caloriesConsumedAllDataPoints = [(Date, Int)]()
     var bmrAllDataPoints = [(Date, Int)]()
     var activeCaloriesAllDataPoints = [(Date, Int)]()
@@ -57,13 +56,10 @@ class MockHealthStore: HealthStore {
     }
 
     func weight(fromDate: Date, toDate: Date) async throws -> Int? {
-        if weightBetweenDates.isEmpty {
-            return weight
-        } else {
-            let weight = weightBetweenDates.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
-            weightBetweenDatesIndex += 1
-            return weight
-        }
+        guard weightBetweenDatesIndex < weightAllDataPoints.count else { return nil }
+        let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
+        weightBetweenDatesIndex += 1
+        return weight.1
     }
 
     func weeklyWeightChange() async throws -> Int {
@@ -75,7 +71,7 @@ class MockHealthStore: HealthStore {
     }
 
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
-        weight = weightEntry.weight
+        weightAllDataPoints.append((weightEntry.timeRecorded, weightEntry.weight))
     }
 
     func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {

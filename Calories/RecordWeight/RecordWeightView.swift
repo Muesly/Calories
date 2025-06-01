@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 struct RecordWeightView: View {
+    @Environment(\.currentDate) var currentDate
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
     var viewModel: RecordWeightViewModel
@@ -135,7 +136,7 @@ struct RecordWeightView: View {
                     Button {
                         Task {
                             do {
-                                try await viewModel.applyNewWeight()
+                                try await viewModel.applyNewWeight(date: currentDate)
                                 applied = !applied
                                 showConfetti = viewModel.hasLostWeight
                                 refresh()
@@ -188,7 +189,7 @@ struct RecordWeightView: View {
     private func refresh() {
         Task {
             do {
-                try await viewModel.fetchWeightData()
+                try await viewModel.fetchWeightData(date: currentDate)
             } catch {
                 isShowingFailureToAuthoriseAlert = true
             }

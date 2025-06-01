@@ -23,16 +23,18 @@ final class RecordWeightViewTests: XCTestCase {
         XCTAssert(weightHeader.waitForExistence(timeout: 2))
         XCTAssert(weightHeader.exists)
 
+        XCTAssert(app.staticTexts["14 st, 2 lbs"].waitForExistence(timeout: 1))
+
         let decreaseWeightButton = app.buttons["Report Decrease of 1 pound in weight"]
         decreaseWeightButton.tap()
 
-        let newWeight = app.staticTexts["14 st, 4 lbs"]
+        let newWeight = app.staticTexts["14 st, 1 lbs"]
         XCTAssert(newWeight.waitForExistence(timeout: 1))
 
         let applyButton = app.buttons["Apply"]
         applyButton.tap()
         sleep(1)
 
-        XCTAssert(app.staticTexts["14 st, 4 lbs"].exists)
+        XCTAssert(newWeight.exists)
     }
 }

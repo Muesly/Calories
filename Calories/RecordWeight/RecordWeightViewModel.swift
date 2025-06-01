@@ -42,7 +42,7 @@ class RecordWeightViewModel: ObservableObject {
         return date.startOfWeek
     }
 
-    func fetchWeightData(date: Date = Date(), numWeeks: Int? = nil) async throws {
+    func fetchWeightData(date: Date, numWeeks: Int? = nil) async throws {
         try await healthStore.authorize()
         var endDate = date
         var startDate = startOfWeek(date)
@@ -66,6 +66,8 @@ class RecordWeightViewModel: ObservableObject {
                 } catch {
                     break
                 }
+            } else {
+                break
             }
             if let numWeeks {
                 numWeeksReported += 1
@@ -130,8 +132,8 @@ class RecordWeightViewModel: ObservableObject {
         latestWeight += 1
     }
 
-    func applyNewWeight() async throws {
-        try await healthStore.addWeightEntry(WeightEntry(weight: latestWeight, timeRecorded: Date()))
+    func applyNewWeight(date: Date) async throws {
+        try await healthStore.addWeightEntry(WeightEntry(weight: latestWeight, timeRecorded: date))
     }
 
     func fetchWeeklyDeficit(forDate: Date) async throws -> Int {

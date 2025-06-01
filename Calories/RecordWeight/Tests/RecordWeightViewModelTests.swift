@@ -29,21 +29,25 @@ final class RecordWeightViewModelTests: XCTestCase {
         mockHealthStore.caloriesConsumed = 2500
         mockHealthStore.bmr = 1900
         mockHealthStore.exercise = 900
+        let date = dateFromComponents()
+        mockHealthStore.weightAllDataPoints = [(date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+                                               (date.startOfWeek.addingTimeInterval(-1), 190),
+                                               (date, 180)]
 
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
-        let date = dateFromComponents()
         try await subject.fetchWeightData(date: date, numWeeks: 3)
-        XCTAssertEqual(subject.weightData, [WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 194, deficit: -2100),
-                                            WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-1), weight: 194, deficit: -2100),
-                                            WeightDataPoint(date: date, weight: 194, deficit: -2100)])
+        XCTAssertEqual(subject.weightData, [WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 200, deficit: -2100),
+                                            WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-1), weight: 190, deficit: -2100),
+                                            WeightDataPoint(date: date, weight: 180, deficit: -2100)])
     }
 
     func testNoPermissionGrantedCannotReadWeight() async throws {
         let mockHealthStore = MockHealthStore()
         mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
+        let date = dateFromComponents()
         do {
-            try await subject.fetchWeightData()
+            try await subject.fetchWeightData(date: date)
             XCTFail("Expects to fail")
         } catch {
         }
@@ -58,18 +62,40 @@ final class RecordWeightViewModelTests: XCTestCase {
         subject.weightData = [weightDataPoint, weightDataPoint2]
         XCTAssertEqual(subject.weekStr(forDataPoint: weightDataPoint2), "16 Jan 23")
     }
-    
+
     func testProgressShownInStonesAndPounds() async throws {
         let mockHealthStore = MockHealthStore()
         mockHealthStore.caloriesConsumed = 2000
         mockHealthStore.caloriesBurned = 2200
-        mockHealthStore.weightBetweenDates = [200, 190, 180]
-        let subject = RecordWeightViewModel(healthStore: mockHealthStore)
-
         let date = dateFromComponents()
+        mockHealthStore.weightAllDataPoints = [(date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+                                               (date.startOfWeek.addingTimeInterval(-1), 190),
+                                               (date, 180)]
+        let subject = RecordWeightViewModel(healthStore: mockHealthStore)
         try await subject.fetchWeightData(date: date, numWeeks: 3)
 
         XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 6 lbs \u{2193}")
+    }
+
+    func testWeightChange() async throws {
+        let mockHealthStore = MockHealthStore()
+        mockHealthStore.caloriesConsumed = 2000
+        mockHealthStore.caloriesBurned = 2200
+        let date = dateFromComponents()
+        mockHealthStore.weightAllDataPoints = [(date.addingTimeInterval(-21*86400), 200),
+                                               (date.addingTimeInterval(-14*86400), 190),
+                                               (date.addingTimeInterval(-7*86400), 180)]
+        let subject = RecordWeightViewModel(healthStore: mockHealthStore)
+
+        try await subject.fetchWeightData(date: date.addingTimeInterval(-7*86400), numWeeks: 7)
+        XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 6 lbs \u{2193}")
+
+        subject.latestWeight -= 1
+        try await subject.applyNewWeight(date: date)
+        mockHealthStore.weightBetweenDatesIndex = 0
+        try await subject.fetchWeightData(date: date, numWeeks: 7)
+
+        XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 7 lbs \u{2193}")
     }
 }
 

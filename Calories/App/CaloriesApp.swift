@@ -61,9 +61,13 @@ extension EnvironmentValues {
 class StubbedHealthStore: HealthStore {
     var initialWeight = 200
     var caloriesConsumedReads = 0
+    var weightBetweenDatesIndex = 0
+    var weightAllDataPoints: [(Date, Int)] = [(Date().startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+                               (Date().startOfWeek.addingTimeInterval(-1), 199),
+                               (Date(), 198)]
 
     func authorize() async throws {}
-    
+
     func caloriesConsumed(date: Date) async throws -> Int {
         caloriesConsumedReads += 1
         if caloriesConsumedReads > 100 {
@@ -92,10 +96,12 @@ class StubbedHealthStore: HealthStore {
 
     func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         await waitForResult()
-        self.initialWeight += 1
-        return initialWeight
+        guard weightBetweenDatesIndex < weightAllDataPoints.count else { return nil }
+        let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
+        weightBetweenDatesIndex += 1
+        return weight.1
     }
-    
+
     func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
         []
     }
@@ -137,6 +143,7 @@ class StubbedHealthStore: HealthStore {
     }
     
     func addWeightEntry(_ weightEntry: WeightEntry) async throws {
-        
+        weightAllDataPoints.append((weightEntry.timeRecorded, weightEntry.weight))
+        weightBetweenDatesIndex = 0
     }
 }
