@@ -19,7 +19,8 @@ class MockHealthStore: HealthStore {
     var bmrAllDataPoints = [(Date, Int)]()
     var activeCaloriesAllDataPoints = [(Date, Int)]()
     var weightAllDataPoints = [(Date, Int)]()
-    
+    var addDelayFetchingWeights = false
+
     func authorize() async throws {
         guard let error = authorizeError else {
             return
@@ -55,7 +56,20 @@ class MockHealthStore: HealthStore {
         caloriesBurned += Int(exerciseEntry.calories)
     }
 
+    private func waitForResult() async {
+        let _ = await withCheckedContinuation { continuation in
+            Task.detached {
+                try? await Task.sleep(for: .seconds(0.01))
+                return continuation.resume()
+            }
+        }
+    }
+
     func weight(fromDate: Date, toDate: Date) async throws -> Int? {
+        if addDelayFetchingWeights {
+            await waitForResult()
+        }
+
         guard weightBetweenDatesIndex < weightAllDataPoints.count else { return nil }
         let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
         weightBetweenDatesIndex += 1
@@ -72,6 +86,7 @@ class MockHealthStore: HealthStore {
 
     func addWeightEntry(_ weightEntry: Calories.WeightEntry) async throws {
         weightAllDataPoints.append((weightEntry.timeRecorded, weightEntry.weight))
+        weightBetweenDatesIndex = 0
     }
 
     func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
@@ -81,16 +96,28 @@ class MockHealthStore: HealthStore {
     func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         caloriesConsumedAllDataPoints
     }
-    
+
     func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         bmrAllDataPoints
     }
-    
+
     func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
         activeCaloriesAllDataPoints
     }
-    
+
     func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         weightAllDataPoints
+    }
+
+    static var uiTests: MockHealthStore {
+        let healthStore = MockHealthStore()
+        healthStore.addDelayFetchingWeights = true
+        healthStore.weightAllDataPoints = [(Date().startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+                                           (Date().startOfWeek.addingTimeInterval(-1), 199),
+                                           (Date(), 198)]
+        healthStore.bmr = 1500
+        healthStore.exercise = 600
+        healthStore.caloriesConsumed = 1800
+        return healthStore
     }
 }

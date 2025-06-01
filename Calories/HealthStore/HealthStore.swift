@@ -32,13 +32,14 @@ protocol HealthStore {
     func addWeightEntry(_ weightEntry: WeightEntry) async throws
 }
 
+@MainActor
 struct HealthStoreFactory {
     static func create() -> HealthStore {
         HKHealthStore()
     }
 
     static func createNull() -> HealthStore {
-        StubbedHealthStore()
+        MockHealthStore.uiTests
     }
 }
 enum HealthStoreError: Error {

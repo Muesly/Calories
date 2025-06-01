@@ -96,7 +96,7 @@ struct AddExerciseView: View {
 
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
-    AddExerciseView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
+    AddExerciseView(viewModel: AddExerciseViewModel(healthStore: MockHealthStore(),
                                                     modelContext: modelContext,
                                                     timeExercised: Date()),
                     showingAddExerciseView: .constant(false))
