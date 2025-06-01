@@ -13,12 +13,8 @@ struct SuggestionFetcher {
     let excludedSuggestions: [String]
 
     func fetchSuggestions(searchText: String = "") -> [String] {
-        var results = modelContext.plantResults()
-        if !searchText.isEmpty { // Show fuzzy matched strings for this search text
-            results = results.filter { $0.name.fuzzyMatch(searchText) }
-        }
-        return results.filter { !excludedSuggestions.contains($0.name) }.sorted(by: { s1, s2 in
-            s1.name < s2.name
-        }).map { $0.name }
+        guard searchText.count > 1 else { return [] }
+        let predicate = #Predicate<PlantEntry> { $0.name.localizedStandardContains(searchText) && !excludedSuggestions.contains($0.name) }
+        return modelContext.plantResults(for: predicate, sortBy: [SortDescriptor(\.name)]).map { $0.name }
     }
 }

@@ -36,7 +36,8 @@ extension FoodEntry {
 }
 
 @Model public class PlantEntry {
-    @Attribute(. unique) var name: String
+    @Attribute(.unique) var name: String
+    #Index<PlantEntry>([\.name])
     var timeConsumed: Date
     @Attribute(.externalStorage) var imageData: Data?
 

@@ -193,7 +193,7 @@ extension HKHealthStore: HealthStore {
                     return (date, weight)
                 })
             }
-            execute (query)
+            execute(query)
         }
     }
 
@@ -214,7 +214,7 @@ extension HKHealthStore: HealthStore {
                 }
                 continuation.resume(returning: Int(round(result.doubleValue(for: HKUnit.pound()))))
             }
-            execute (query)
+            execute(query)
         }
     }
 
