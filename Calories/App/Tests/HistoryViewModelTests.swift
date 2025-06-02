@@ -7,6 +7,7 @@
 
 import SwiftData
 import XCTest
+
 @testable import Calories
 
 @MainActor
@@ -26,14 +27,17 @@ final class HistoryViewModelTests: XCTestCase {
     }
 
     private var dateFromComponents: Date {
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let dc = DateComponents(
+            calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         return dc.date!
     }
 
     func testCanDeleteFoodEntry() async throws {
-        let _ = FoodEntry(foodDescription: "Some food",
-                                  calories: Double(100),
-                                  timeConsumed: dateFromComponents).insert(into: modelContext)
+        let _ = FoodEntry(
+            foodDescription: "Some food",
+            calories: Double(100),
+            timeConsumed: dateFromComponents
+        ).insert(into: modelContext)
         let predicate: Predicate<FoodEntry> = #Predicate { $0.foodDescription == "Some food" }
         let preResult = modelContext.foodResults(for: predicate)
         guard let foodEntry = preResult.first else {
@@ -46,12 +50,16 @@ final class HistoryViewModelTests: XCTestCase {
     }
 
     func testFetchingFoodEntriesSortsMostRecentFirst() async throws {
-        let entry1 = FoodEntry(foodDescription: "Some food",
-                               calories: Double(100),
-                               timeConsumed: dateFromComponents).insert(into: modelContext)
-        let entry2 = FoodEntry(foodDescription: "Some more food",
-                               calories: Double(200),
-                               timeConsumed: dateFromComponents.addingTimeInterval(600)).insert(into: modelContext)
+        let entry1 = FoodEntry(
+            foodDescription: "Some food",
+            calories: Double(100),
+            timeConsumed: dateFromComponents
+        ).insert(into: modelContext)
+        let entry2 = FoodEntry(
+            foodDescription: "Some more food",
+            calories: Double(200),
+            timeConsumed: dateFromComponents.addingTimeInterval(600)
+        ).insert(into: modelContext)
 
         let foodEntries = subject.foodEntries(forDate: dateFromComponents)
         XCTAssertEqual(foodEntries, [entry2, entry1])
@@ -59,21 +67,30 @@ final class HistoryViewModelTests: XCTestCase {
 
     func testFetchingDaySections() async throws {
         let date = dateFromComponents
-        let entry1 = FoodEntry(foodDescription: "Some food",
-                               calories: Double(100),
-                               timeConsumed: date).insert(into: modelContext)
-        let entry2 = FoodEntry(foodDescription: "Some more food",
-                               calories: Double(200),
-                               timeConsumed: date.addingTimeInterval(90600)).insert(into: modelContext)
-        let entry3 = FoodEntry(foodDescription: "Even more food",
-                               calories: Double(100),
-                               timeConsumed: date.addingTimeInterval(90700)).insert(into: modelContext)
-        let entry4 = FoodEntry(foodDescription: "Late addition",
-                               calories: Double(50),
-                               timeConsumed: date.addingTimeInterval(112700)).insert(into: modelContext)
+        let entry1 = FoodEntry(
+            foodDescription: "Some food",
+            calories: Double(100),
+            timeConsumed: date
+        ).insert(into: modelContext)
+        let entry2 = FoodEntry(
+            foodDescription: "Some more food",
+            calories: Double(200),
+            timeConsumed: date.addingTimeInterval(90600)
+        ).insert(into: modelContext)
+        let entry3 = FoodEntry(
+            foodDescription: "Even more food",
+            calories: Double(100),
+            timeConsumed: date.addingTimeInterval(90700)
+        ).insert(into: modelContext)
+        let entry4 = FoodEntry(
+            foodDescription: "Late addition",
+            calories: Double(50),
+            timeConsumed: date.addingTimeInterval(112700)
+        ).insert(into: modelContext)
 
         subject.fetchDaySections(forDate: dateFromComponents)
-        let expectedDay1 = Day(date: Calendar.current.startOfDay(for: date.addingTimeInterval(secsPerDay)))
+        let expectedDay1 = Day(
+            date: Calendar.current.startOfDay(for: date.addingTimeInterval(secsPerDay)))
         expectedDay1.meals.append(Meal(mealType: .dinner, foodEntries: [entry4]))
         expectedDay1.meals.append(Meal(mealType: .lunch, foodEntries: [entry3, entry2]))
         let expectedDay2 = Day(date: Calendar.current.startOfDay(for: date))
@@ -83,9 +100,11 @@ final class HistoryViewModelTests: XCTestCase {
     }
 
     func testGettingDayTitleAndMealSummaryInHistoryView() async throws {
-        _ = FoodEntry(foodDescription: "Some food",
-                      calories: Double(100),
-                      timeConsumed: dateFromComponents).insert(into: modelContext)
+        _ = FoodEntry(
+            foodDescription: "Some food",
+            calories: Double(100),
+            timeConsumed: dateFromComponents
+        ).insert(into: modelContext)
         subject.fetchDaySections(forDate: dateFromComponents)
         XCTAssertEqual(subject.daySections.first?.title, "Sunday, Jan 1")
         XCTAssertEqual(subject.daySections.first?.meals.first?.summary, "Morning Snack (100 cals)")

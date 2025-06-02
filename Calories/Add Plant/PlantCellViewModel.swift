@@ -29,9 +29,11 @@ final class PlantCellViewModel {
     let modelContext: ModelContext
     var uiImage: UIImage?
 
-    init(plantSelection: PlantSelection,
-         plantImageGenerator: PlantImageGenerating,
-         modelContext: ModelContext) {
+    init(
+        plantSelection: PlantSelection,
+        plantImageGenerator: PlantImageGenerating,
+        modelContext: ModelContext
+    ) {
         self.plant = plantSelection.name
         self.isSelected = plantSelection.isSelected
         self.plantImageGenerator = plantImageGenerator

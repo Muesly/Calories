@@ -17,8 +17,7 @@ final class AddFoodDetailsViewTests: XCTestCase {
         return app
     }
 
-    func testWhenNewFoodIsAdded() throws
-    {
+    func testWhenNewFoodIsAdded() throws {
         let app = runAndReturnApp()
         goToAddFood(app)
         addNewFood(app)
@@ -40,7 +39,8 @@ final class AddFoodDetailsViewTests: XCTestCase {
         XCTAssert(searchBar.exists)
         searchBar.tap()
         searchBar.typeText("Katsu Chicken & Rice")
-        let addButton = app.collectionViews["Food List"].buttons["Add Katsu Chicken & Rice as a new food"]
+        let addButton = app.collectionViews["Food List"].buttons[
+            "Add Katsu Chicken & Rice as a new food"]
         XCTAssert(addButton.exists)
         addButton.tap()
     }

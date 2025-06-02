@@ -22,8 +22,10 @@ struct AddFoodView: View {
     @Binding var showingAddEntryView: Bool
     @State private var showingAddFoodDetailsView: Bool = false
 
-    init(viewModel: AddFoodViewModel,
-         showingAddEntryView: Binding<Bool>) {
+    init(
+        viewModel: AddFoodViewModel,
+        showingAddEntryView: Binding<Bool>
+    ) {
         self.viewModel = viewModel
         self._showingAddEntryView = showingAddEntryView
         self.mealItemsViewModel = MealItemsViewModel(modelContext: viewModel.modelContext)
@@ -43,7 +45,8 @@ struct AddFoodView: View {
                     Section("Recent foods you've had at this time") {
                         ForEach(viewModel.suggestions, id: \.name) { suggestion in
                             Button {
-                                template = viewModel.foodTemplateFor(suggestion.name, timeConsumed: currentDate)
+                                template = viewModel.foodTemplateFor(
+                                    suggestion.name, timeConsumed: currentDate)
                                 showingAddFoodDetailsView = true
                             } label: {
                                 Text(suggestion.name)
@@ -79,9 +82,11 @@ struct AddFoodView: View {
             }
         }
         .font(.brand)
-        .searchable(text: $searchText,
-                    placement:  .navigationBarDrawer(displayMode: .always),
-                    prompt: viewModel.prompt(for: currentDate))
+        .searchable(
+            text: $searchText,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: viewModel.prompt(for: currentDate)
+        )
         .accessibilityIdentifier("Enter Food")
         .onSubmit(of: .search) {
             dismissSearch()
@@ -104,16 +109,19 @@ struct AddFoodView: View {
     }
 
     private func addFoodInputFieldsView(template: FoodTemplate) -> AddFoodDetailsView {
-        AddFoodDetailsView(viewModel: viewModel,
-                           foodTemplate: template,
-                           addedFoodEntry: $addedFoodEntry,
-                           isFoodItemsViewPresented: $showingAddFoodDetailsView)
+        AddFoodDetailsView(
+            viewModel: viewModel,
+            foodTemplate: template,
+            addedFoodEntry: $addedFoodEntry,
+            isFoodItemsViewPresented: $showingAddFoodDetailsView)
     }
 }
 
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
-    AddFoodView(viewModel: .init(healthStore: MockHealthStore(),
-                                 modelContext: modelContext),
-                showingAddEntryView: .constant(false))
+    AddFoodView(
+        viewModel: .init(
+            healthStore: MockHealthStore(),
+            modelContext: modelContext),
+        showingAddEntryView: .constant(false))
 }

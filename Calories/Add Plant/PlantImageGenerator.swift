@@ -28,8 +28,10 @@ struct PlantImageGenerator: PlantImageGenerating {
         return "Photo of \(plantName) in a white bowl"
     }
 
-    init(apiKey: String,
-         networkClient: NetworkClientType = NetworkClient()) {
+    init(
+        apiKey: String,
+        networkClient: NetworkClientType = NetworkClient()
+    ) {
         self.apiKey = apiKey
         self.networkClient = networkClient
     }
@@ -65,12 +67,14 @@ struct PlantImageGenerator: PlantImageGenerating {
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json",
-            "Authorization": "Bearer \(apiKey)"
+            "Authorization": "Bearer \(apiKey)",
         ]
-        let parameters: [String : Any] = ["model": "dall-e-3",
-                                          "prompt": prompt,
-                                          "n": 1,
-                                          "size": "1024x1024"]
+        let parameters: [String: Any] = [
+            "model": "dall-e-3",
+            "prompt": prompt,
+            "n": 1,
+            "size": "1024x1024",
+        ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
         return request
     }

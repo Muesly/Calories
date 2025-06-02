@@ -19,8 +19,10 @@ class AddFoodViewModel: ObservableObject {
     var suggestions: [Suggestion] = []
     var plants: [Plant] = []
 
-    init(healthStore: HealthStore,
-         modelContext: ModelContext) {
+    init(
+        healthStore: HealthStore,
+        modelContext: ModelContext
+    ) {
         self.healthStore = healthStore
         self.modelContext = modelContext
     }
@@ -32,7 +34,8 @@ class AddFoodViewModel: ObservableObject {
 
     func calorieSearchURL(for foodDescription: String) -> URL {
         let hostName = "https://www.google.co.uk/search"
-        let foodDescriptionPercentEncoded = foodDescription.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+        let foodDescriptionPercentEncoded = foodDescription.addingPercentEncoding(
+            withAllowedCharacters: .urlPathAllowed)!
         let combinedString = "\(hostName)?q=calories+in+a+\(foodDescriptionPercentEncoded)"
         return URL(string: combinedString)!
     }
@@ -42,31 +45,35 @@ class AddFoodViewModel: ObservableObject {
     }
 
     func fetchSuggestions(searchText: String = "") {
-        if searchText.isEmpty { // Show list of suitable suggestions for this time of day
+        if searchText.isEmpty {  // Show list of suitable suggestions for this time of day
             let mealType = MealType.mealTypeForDate(dateForEntries)
             let range = mealType.rangeOfPeriod()
-            let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries) // Find entries earlier than today as today's result are part of current meal
+            let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)  // Find entries earlier than today as today's result are part of current meal
 
             let results = modelContext.foodResults(for: #Predicate { $0.timeConsumed < startOfDay })
             let filteredResults = results.filter {
                 let dc = Calendar.current.dateComponents([.hour], from: $0.timeConsumed)
                 return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
             }
-            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
+            let orderedSet = NSOrderedSet(
+                array: filteredResults.map { Suggestion(name: $0.foodDescription) })
             suggestions = orderedSet.map { $0 as! Suggestion }
-        } else {    // Show fuzzy matched strings for this search text
+        } else {  // Show fuzzy matched strings for this search text
             let results = modelContext.foodResults()
             let filteredResults = results.filter { foodEntry in
                 return foodEntry.foodDescription.fuzzyMatch(searchText)
             }
-            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
+            let orderedSet = NSOrderedSet(
+                array: filteredResults.map { Suggestion(name: $0.foodDescription) })
             suggestions = orderedSet.map { $0 as! Suggestion }
         }
     }
 
     @discardableResult
     @MainActor
-    func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant]) async throws -> FoodEntry {
+    func addFood(foodDescription: String, calories: Int, timeConsumed: Date, plants: [Plant])
+        async throws -> FoodEntry
+    {
         try await healthStore.authorize()
         let plantModels: [PlantEntry] = plants.map { plant in
             // Find image data to put back in
@@ -76,10 +83,12 @@ class AddFoodViewModel: ObservableObject {
             }
             return PlantEntry(plant.name, timeConsumed: Date(), imageData: imageData)
         }
-        let foodEntry = FoodEntry(foodDescription: foodDescription,
-                                  calories: Double(calories),
-                                  timeConsumed: timeConsumed,
-                                  plants: plantModels).insert(into: modelContext)
+        let foodEntry = FoodEntry(
+            foodDescription: foodDescription,
+            calories: Double(calories),
+            timeConsumed: timeConsumed,
+            plants: plantModels
+        ).insert(into: modelContext)
         do {
             try modelContext.save()
         } catch {
@@ -98,15 +107,17 @@ class AddFoodViewModel: ObservableObject {
         guard let previousEntry = results.first else {
             return FoodTemplate(description: name, calories: 0, dateTime: timeConsumed)
         }
-        return FoodTemplate(description: previousEntry.foodDescription,
-                            calories: Int(previousEntry.calories),
-                            dateTime: timeConsumed,
-                            plants: (previousEntry.plants ?? []).map { $0.name })
+        return FoodTemplate(
+            description: previousEntry.foodDescription,
+            calories: Int(previousEntry.calories),
+            dateTime: timeConsumed,
+            plants: (previousEntry.plants ?? []).map { $0.name })
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {
         if phase == .active {
-            guard let dayDiff = Calendar.current.dateComponents([.day], from: date, to: Date()).day else {
+            guard let dayDiff = Calendar.current.dateComponents([.day], from: date, to: Date()).day
+            else {
                 return false
             }
             return dayDiff > 0 ? true : false
@@ -135,10 +146,12 @@ struct FoodTemplate {
     let dateTime: Date
     let plants: [String]
 
-    init(description: String,
-         calories: Int,
-         dateTime: Date,
-         plants: [String] = []) {
+    init(
+        description: String,
+        calories: Int,
+        dateTime: Date,
+        plants: [String] = []
+    ) {
         self.description = description
         self.calories = calories
         self.dateTime = dateTime

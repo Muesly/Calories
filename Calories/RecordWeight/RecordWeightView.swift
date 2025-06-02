@@ -18,38 +18,38 @@ struct RecordWeightView: View {
     @State private var isRefreshing = false
     @State private var applied = false
     @State private var showConfetti = false
-    
+
     init(viewModel: RecordWeightViewModel) {
         self.viewModel = viewModel
     }
-    
+
     private var xAxisMarks: [String] {
         let count = viewModel.weightData.count
         guard count > 2 else { return [] }
-        
+
         let numMarks = 4
         let gap = (count - 2) / (numMarks - 1)
         var markIDs = [Int]()
-        for markID in 0 ..< numMarks {
+        for markID in 0..<numMarks {
             markIDs.append((markID * gap) + 1)
         }
         return markIDs.map { viewModel.weekStr(forDataPoint: viewModel.weightData[$0]) }
     }
-    
+
     private var yAxisMarks: [Int] {
         let weights = viewModel.weightData.map { $0.weight }
         let weightsMin = Int(weights.min() ?? 0)
         let weightsMax = Int(weights.max() ?? 0)
-        
+
         let numMarks = 4
         let gap = (weightsMax - weightsMin) / 3
         var markIDs = [Int]()
-        for markID in 0 ..< numMarks {
+        for markID in 0..<numMarks {
             markIDs.append((gap * markID) + weightsMin)
         }
         return markIDs.map { Int($0) }
     }
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -62,8 +62,10 @@ struct RecordWeightView: View {
                     let deficitsMax = deficits.max() ?? 0
                     Chart {
                         ForEach(viewModel.weightData) { weightDataPoint in
-                            BarMark(x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
-                                    y: .value("Calories", weightDataPoint.deficit))
+                            BarMark(
+                                x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
+                                y: .value("Calories", weightDataPoint.deficit)
+                            )
                             .clipShape(Capsule())
                             .foregroundStyle(Color.blue)
                         }
@@ -77,23 +79,27 @@ struct RecordWeightView: View {
                     .chartXAxis {
                         AxisMarks(preset: .aligned, values: xAxisMarks) { mark in
                             AxisValueLabel()
-                            AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 1, dash: [5]))
-                                .foregroundStyle(.blue.opacity(0.3))
+                            AxisGridLine(
+                                centered: true, stroke: StrokeStyle(lineWidth: 1, dash: [5])
+                            )
+                            .foregroundStyle(.blue.opacity(0.3))
                         }
                     }
                     .opacity(isRefreshing ? 0 : 1)
-                    
+
                     Chart {
                         ForEach(viewModel.weightData) { weightDataPoint in
-                            LineMark(x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
-                                     y: .value("Stones", Int(weightDataPoint.weight)))
+                            LineMark(
+                                x: .value("Week", viewModel.weekStr(forDataPoint: weightDataPoint)),
+                                y: .value("Stones", Int(weightDataPoint.weight))
+                            )
                             .foregroundStyle(Color.green)
                         }
                         .interpolationMethod(.cardinal)
                     }
                     .padding(.bottom, 25)
                     .chartYScale(domain: weightsMin...weightsMax)
-                    .chartYAxis() {
+                    .chartYAxis {
                         AxisMarks(preset: .aligned, values: yAxisMarks) {
                             let value = $0.as(Double.self)!
                             let weightStr = viewModel.weightStr(value)
@@ -121,9 +127,11 @@ struct RecordWeightView: View {
                                 .padding(5)
                                 .accessibilityLabel("Report Decrease of 1 pound in weight")
                         }
-                        RevealingTextView(text: Binding(get: { viewModel.currentWeight }, set: { _ in }))
-                            .lineLimit(1)
-                            .bold()
+                        RevealingTextView(
+                            text: Binding(get: { viewModel.currentWeight }, set: { _ in })
+                        )
+                        .lineLimit(1)
+                        .bold()
                         Button {
                             viewModel.increaseWeight()
                         } label: {
@@ -179,13 +187,15 @@ struct RecordWeightView: View {
                     refresh()
                 }
             }
-            .alert("Failed to access vehicle health",
-                   isPresented: $isShowingFailureToAuthoriseAlert) {
+            .alert(
+                "Failed to access vehicle health",
+                isPresented: $isShowingFailureToAuthoriseAlert
+            ) {
                 Button("OK", role: .cancel) {}
             }
         }
     }
-    
+
     private func refresh() {
         Task {
             do {

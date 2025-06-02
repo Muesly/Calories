@@ -30,49 +30,64 @@ final class PlantImageGeneratorTests {
     }
 
     @Test func plantImageGeneratorSucceeds() async throws {
-        let response = GPTResponse(data: [GPTResponse.GPTImage(url: "https://www.example.com/plantImage")])
+        let response = GPTResponse(data: [
+            GPTResponse.GPTImage(url: "https://www.example.com/plantImage")
+        ])
         mockNetworkClient.promptResponse = try JSONEncoder().encode(response)
         #expect(try await sut.generate(for: "Rice") == Data())
     }
 
     @Test func plantImageGeneratorFailsOnDecoding() async throws {
-        mockNetworkClient.promptResponse = "{\"some broken api response\":\"true\"}".data(using: .utf8)
-        await #expect(performing: {
-            try await self.sut.generate(for: "Rice")
-        }, throws: { error in
-            error as! PlantImageGeneratorError == PlantImageGeneratorError.failedToDecodeImageFromResponse
-        })
+        mockNetworkClient.promptResponse = "{\"some broken api response\":\"true\"}".data(
+            using: .utf8)
+        await #expect(
+            performing: {
+                try await self.sut.generate(for: "Rice")
+            },
+            throws: { error in
+                error as! PlantImageGeneratorError
+                    == PlantImageGeneratorError.failedToDecodeImageFromResponse
+            })
     }
 
     @Test func plantImageGeneratorFailsOnNoImages() async throws {
         let response = GPTResponse(data: [])
         mockNetworkClient.promptResponse = try! JSONEncoder().encode(response)
-        await #expect(performing: {
-            try await self.sut.generate(for: "Rice")
-        }, throws: { error in
-            error as! PlantImageGeneratorError == PlantImageGeneratorError.noURLsReturned
-        })
+        await #expect(
+            performing: {
+                try await self.sut.generate(for: "Rice")
+            },
+            throws: { error in
+                error as! PlantImageGeneratorError == PlantImageGeneratorError.noURLsReturned
+            })
     }
 
     @Test func plantImageGeneratorFailsOnInvalidURL() async throws {
         let response = GPTResponse(data: [.init(url: "")])
         mockNetworkClient.promptResponse = try! JSONEncoder().encode(response)
-        await #expect(performing: {
-            try await self.sut.generate(for: "Rice")
-        }, throws: { error in
-            error as! PlantImageGeneratorError == PlantImageGeneratorError.invalidURLReturned
-        })
+        await #expect(
+            performing: {
+                try await self.sut.generate(for: "Rice")
+            },
+            throws: { error in
+                error as! PlantImageGeneratorError == PlantImageGeneratorError.invalidURLReturned
+            })
     }
 
     @Test func plantImageGeneratorFailsOnFailedImageURL() async throws {
-        let response = GPTResponse(data: [GPTResponse.GPTImage(url: "https://www.example.com/plantImage")])
+        let response = GPTResponse(data: [
+            GPTResponse.GPTImage(url: "https://www.example.com/plantImage")
+        ])
         mockNetworkClient.promptResponse = try JSONEncoder().encode(response)
         mockNetworkClient.imageResponseThrows = true
-        await #expect(performing: {
-            try await self.sut.generate(for: "Rice")
-        }, throws: { error in
-            error as! PlantImageGeneratorError == PlantImageGeneratorError.failedToLoadImageAtURL
-        })
+        await #expect(
+            performing: {
+                try await self.sut.generate(for: "Rice")
+            },
+            throws: { error in
+                error as! PlantImageGeneratorError
+                    == PlantImageGeneratorError.failedToLoadImageAtURL
+            })
     }
 }
 

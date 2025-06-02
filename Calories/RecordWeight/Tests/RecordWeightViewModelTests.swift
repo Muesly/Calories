@@ -19,7 +19,8 @@ final class RecordWeightViewModelTests: XCTestCase {
     }
 
     func dateFromComponents() -> Date {
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let dc = DateComponents(
+            calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         return dc.date!
     }
 
@@ -30,15 +31,24 @@ final class RecordWeightViewModelTests: XCTestCase {
         mockHealthStore.bmr = 1900
         mockHealthStore.exercise = 900
         let date = dateFromComponents()
-        mockHealthStore.weightAllDataPoints = [(date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
-                                               (date.startOfWeek.addingTimeInterval(-1), 190),
-                                               (date, 180)]
+        mockHealthStore.weightAllDataPoints = [
+            (date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+            (date.startOfWeek.addingTimeInterval(-1), 190),
+            (date, 180),
+        ]
 
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
         try await subject.fetchWeightData(date: date, numWeeks: 3)
-        XCTAssertEqual(subject.weightData, [WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 200, deficit: -2100),
-                                            WeightDataPoint(date: date.startOfWeek.addingTimeInterval(-1), weight: 190, deficit: -2100),
-                                            WeightDataPoint(date: date, weight: 180, deficit: -2100)])
+        XCTAssertEqual(
+            subject.weightData,
+            [
+                WeightDataPoint(
+                    date: date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), weight: 200,
+                    deficit: -2100),
+                WeightDataPoint(
+                    date: date.startOfWeek.addingTimeInterval(-1), weight: 190, deficit: -2100),
+                WeightDataPoint(date: date, weight: 180, deficit: -2100),
+            ])
     }
 
     func testNoPermissionGrantedCannotReadWeight() async throws {
@@ -58,7 +68,8 @@ final class RecordWeightViewModelTests: XCTestCase {
         mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
         let weightDataPoint = WeightDataPoint(date: dateFromComponents(), weight: 192, deficit: 0)
-        let weightDataPoint2 = WeightDataPoint(date: dateFromComponents().addingTimeInterval(20 * secsPerDay), weight: 188, deficit: 0)
+        let weightDataPoint2 = WeightDataPoint(
+            date: dateFromComponents().addingTimeInterval(20 * secsPerDay), weight: 188, deficit: 0)
         subject.weightData = [weightDataPoint, weightDataPoint2]
         XCTAssertEqual(subject.weekStr(forDataPoint: weightDataPoint2), "16 Jan 23")
     }
@@ -68,9 +79,11 @@ final class RecordWeightViewModelTests: XCTestCase {
         mockHealthStore.caloriesConsumed = 2000
         mockHealthStore.caloriesBurned = 2200
         let date = dateFromComponents()
-        mockHealthStore.weightAllDataPoints = [(date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
-                                               (date.startOfWeek.addingTimeInterval(-1), 190),
-                                               (date, 180)]
+        mockHealthStore.weightAllDataPoints = [
+            (date.startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+            (date.startOfWeek.addingTimeInterval(-1), 190),
+            (date, 180),
+        ]
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
         try await subject.fetchWeightData(date: date, numWeeks: 3)
 
@@ -82,12 +95,14 @@ final class RecordWeightViewModelTests: XCTestCase {
         mockHealthStore.caloriesConsumed = 2000
         mockHealthStore.caloriesBurned = 2200
         let date = dateFromComponents()
-        mockHealthStore.weightAllDataPoints = [(date.addingTimeInterval(-21*86400), 200),
-                                               (date.addingTimeInterval(-14*86400), 190),
-                                               (date.addingTimeInterval(-7*86400), 180)]
+        mockHealthStore.weightAllDataPoints = [
+            (date.addingTimeInterval(-21 * 86400), 200),
+            (date.addingTimeInterval(-14 * 86400), 190),
+            (date.addingTimeInterval(-7 * 86400), 180),
+        ]
         let subject = RecordWeightViewModel(healthStore: mockHealthStore)
 
-        try await subject.fetchWeightData(date: date.addingTimeInterval(-7*86400), numWeeks: 7)
+        try await subject.fetchWeightData(date: date.addingTimeInterval(-7 * 86400), numWeeks: 7)
         XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 6 lbs \u{2193}")
 
         subject.latestWeight -= 1
@@ -98,4 +113,3 @@ final class RecordWeightViewModelTests: XCTestCase {
         XCTAssertEqual(subject.totalLoss, "Progress: 1 stone 7 lbs \u{2193}")
     }
 }
-

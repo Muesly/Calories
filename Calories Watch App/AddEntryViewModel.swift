@@ -17,17 +17,19 @@ class AddEntryViewModel {
     }
 
     func addFood(calories: Int, timeConsumed: Date) async throws {
-        let foodEntry = FoodEntry(calories: Double(calories),
-                                  foodDescription: "",
-                                  timeConsumed: timeConsumed)
+        let foodEntry = FoodEntry(
+            calories: Double(calories),
+            foodDescription: "",
+            timeConsumed: timeConsumed)
         try await healthStore.authorize()
         try await healthStore.addFoodEntry(foodEntry)
     }
 
     func addExercise(calories: Int, timeExercised: Date) async throws {
-        let exerciseEntry = ExerciseEntry(exerciseDescription: "",
-                                          calories: calories,
-                                          timeExercised: timeExercised)
+        let exerciseEntry = ExerciseEntry(
+            exerciseDescription: "",
+            calories: calories,
+            timeExercised: timeExercised)
         try await healthStore.authorize()
         try await healthStore.addExerciseEntry(exerciseEntry)
     }

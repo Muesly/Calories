@@ -71,7 +71,7 @@ class MockHealthStore: HealthStore {
         }
 
         guard weightBetweenDatesIndex < weightAllDataPoints.count else { return nil }
-        let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex] // The concrete function returns most recent first then goes back, so we reverse here.
+        let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex]  // The concrete function returns most recent first then goes back, so we reverse here.
         weightBetweenDatesIndex += 1
         return weight.1
     }
@@ -93,15 +93,21 @@ class MockHealthStore: HealthStore {
         caloriesConsumedAllDataPoints
     }
 
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
+    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool)
+        async throws -> [(Date, Int)]
+    {
         caloriesConsumedAllDataPoints
     }
 
-    func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
+    func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(
+        Date, Int
+    )] {
         bmrAllDataPoints
     }
 
-    func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(Date, Int)] {
+    func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(
+        Date, Int
+    )] {
         activeCaloriesAllDataPoints
     }
 
@@ -112,9 +118,11 @@ class MockHealthStore: HealthStore {
     static var uiTests: MockHealthStore {
         let healthStore = MockHealthStore()
         healthStore.addDelayFetchingWeights = true
-        healthStore.weightAllDataPoints = [(Date().startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
-                                           (Date().startOfWeek.addingTimeInterval(-1), 199),
-                                           (Date(), 198)]
+        healthStore.weightAllDataPoints = [
+            (Date().startOfWeek.addingTimeInterval(-(7 * 86400) - 1), 200),
+            (Date().startOfWeek.addingTimeInterval(-1), 199),
+            (Date(), 198),
+        ]
         healthStore.bmr = 1500
         healthStore.exercise = 600
         healthStore.caloriesConsumed = 1800

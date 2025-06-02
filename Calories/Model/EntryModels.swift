@@ -13,10 +13,12 @@ import SwiftData
     var foodDescription: String = ""
     var timeConsumed: Date
     @Relationship public var plants: [PlantEntry]?
-    public init(foodDescription: String,
-                calories: Double,
-                timeConsumed: Date,
-                plants: [PlantEntry] = []) {
+    public init(
+        foodDescription: String,
+        calories: Double,
+        timeConsumed: Date,
+        plants: [PlantEntry] = []
+    ) {
         self.foodDescription = foodDescription
         self.calories = calories
         self.timeConsumed = timeConsumed
@@ -63,4 +65,4 @@ extension PlantEntry: Equatable {
         modelContext.insert(self)
         return self
     }
-} 
+}

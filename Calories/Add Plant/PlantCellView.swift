@@ -15,8 +15,10 @@ struct PlantCellView: View {
     private static let imageSize = CGSize(width: width, height: 85)
     @Binding var addedPlant: String
 
-    init(viewModel: PlantCellViewModel,
-         addedPlant: Binding<String>) {
+    init(
+        viewModel: PlantCellViewModel,
+        addedPlant: Binding<String>
+    ) {
         self.viewModel = viewModel
         self._addedPlant = addedPlant
     }
@@ -26,21 +28,29 @@ struct PlantCellView: View {
             ZStack {
                 if isGeneratingImage {
                     ProgressView()
-                        .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                        .frame(
+                            width: PlantCellView.imageSize.width,
+                            height: PlantCellView.imageSize.height)
                 } else {
                     if let uiImage = viewModel.uiImage {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                            .frame(
+                                width: PlantCellView.imageSize.width,
+                                height: PlantCellView.imageSize.height
+                            )
                             .aspectRatio(contentMode: .fill)
                             .clipped()
                     } else {
-                        VStack{
+                        VStack {
                             Spacer()
                             Image(systemName: "photo.badge.plus")
                             Spacer()
-                        }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
-                            .background(Color.backgroundSecondary).opacity(0.5)
+                        }.frame(
+                            width: PlantCellView.imageSize.width,
+                            height: PlantCellView.imageSize.height
+                        )
+                        .background(Color.backgroundSecondary).opacity(0.5)
                     }
                 }
                 if viewModel.isSelected {
@@ -51,10 +61,12 @@ struct PlantCellView: View {
                                 .padding(2)
                         }
                         Spacer()
-                    }.frame(width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height)
+                    }.frame(
+                        width: PlantCellView.imageSize.width, height: PlantCellView.imageSize.height
+                    )
                 }
             }
-            .onTapGesture {     // Using a button exhibited strange behaviour
+            .onTapGesture {  // Using a button exhibited strange behaviour
                 addedPlant = viewModel.plant
             }
             ZStack {

@@ -20,8 +20,10 @@ struct AddPlantView: View {
     @State private var chooseFromLibraryOption = false
     @State private var image: UIImage?
 
-    init(viewModel: AddPlantViewModel,
-         addedPlant: Binding<String>) {
+    init(
+        viewModel: AddPlantViewModel,
+        addedPlant: Binding<String>
+    ) {
         self.viewModel = viewModel
         self._addedPlant = addedPlant
     }
@@ -38,8 +40,9 @@ struct AddPlantView: View {
                         }
                     }
                     Section("Common plants") {
-                        PlantGridView(plantSelections: viewModel.suggestions,
-                                      addedPlant: $addedPlant)
+                        PlantGridView(
+                            plantSelections: viewModel.suggestions,
+                            addedPlant: $addedPlant)
                     }
                     .listRowBackground(Colours.backgroundSecondary)
                 }
@@ -62,10 +65,12 @@ struct AddPlantView: View {
         .onChange(of: searchText) { _, searchText in
             viewModel.fetchSuggestions(searchText: searchText)
         }
-        .searchable(text: $searchText,
-                    isPresented: $isSearching,
-                    placement:  .navigationBarDrawer(displayMode: .always),
-                    prompt: "Enter Plant")
+        .searchable(
+            text: $searchText,
+            isPresented: $isSearching,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: "Enter Plant"
+        )
         .onSubmit(of: .search) {
             addedPlant = searchText
         }
@@ -79,12 +84,16 @@ struct AddPlantView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    let _ = [PlantEntry("Corn", imageName: "Corn"),
-             PlantEntry("Rice", imageName: "Rice"),
-             PlantEntry("Broccoli", imageName: "Broccoli"),
-             PlantEntry("Unidentified"),
-             PlantEntry("Corn 2", imageName: "Corn")].forEach { $0.insert(into: modelContext)}
-    let viewModel = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext, excludedSuggestions: ["Corn 2"]))
+    let _ = [
+        PlantEntry("Corn", imageName: "Corn"),
+        PlantEntry("Rice", imageName: "Rice"),
+        PlantEntry("Broccoli", imageName: "Broccoli"),
+        PlantEntry("Unidentified"),
+        PlantEntry("Corn 2", imageName: "Corn"),
+    ].forEach { $0.insert(into: modelContext) }
+    let viewModel = AddPlantViewModel(
+        suggestionFetcher: SuggestionFetcher(
+            modelContext: modelContext, excludedSuggestions: ["Corn 2"]))
     AddPlantView(viewModel: viewModel, addedPlant: .constant(""))
         .modelContext(modelContext)
 }

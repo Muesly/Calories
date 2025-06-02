@@ -23,10 +23,12 @@ struct AddExerciseDetailsView: View {
 
     @Binding var isExerciseDetailsViewPresented: Bool
 
-    init(viewModel: AddExerciseViewModel,
-         exerciseTemplate: ExerciseEntry,
-         timeExerciseAdded: Binding<Date?>,
-         isExerciseDetailsViewPresented: Binding<Bool>) {
+    init(
+        viewModel: AddExerciseViewModel,
+        exerciseTemplate: ExerciseEntry,
+        timeExerciseAdded: Binding<Date?>,
+        isExerciseDetailsViewPresented: Binding<Bool>
+    ) {
         self.viewModel = viewModel
         _exerciseDescription = State(initialValue: exerciseTemplate.exerciseDescription)
         _calories = State(initialValue: Int(exerciseTemplate.calories))
@@ -62,20 +64,25 @@ struct AddExerciseDetailsView: View {
                         }
                     }
                 }
-                DatePicker("Date:", selection: Binding(get: {
-                    viewModel.timeExercised
-                }, set: { newTime in
-                    viewModel.timeExercised = newTime
-                }), displayedComponents: .date)
+                DatePicker(
+                    "Date:",
+                    selection: Binding(
+                        get: {
+                            viewModel.timeExercised
+                        },
+                        set: { newTime in
+                            viewModel.timeExercised = newTime
+                        }), displayedComponents: .date)
 
                 Button {
                     Task(priority: .high) {
                         do {
                             descriptionIsFocused = false
                             caloriesIsFocused = false
-                            _ = try await viewModel.addExercise(exerciseDescription: exerciseDescription,
-                                                                                 calories: calories,
-                                                                                 timeExercised: viewModel.timeExercised)
+                            _ = try await viewModel.addExercise(
+                                exerciseDescription: exerciseDescription,
+                                calories: calories,
+                                timeExercised: viewModel.timeExercised)
                             timeExerciseAdded = viewModel.timeExercised
                             exerciseDescription = ""
                             calories = 0
@@ -97,7 +104,9 @@ struct AddExerciseDetailsView: View {
             .cornerRadius(10)
             Spacer()
                 .onChange(of: scenePhase) { _, newPhase in
-                    if AddFoodViewModel.shouldClearFields(phase: newPhase, date: viewModel.timeExercised) {
+                    if AddFoodViewModel.shouldClearFields(
+                        phase: newPhase, date: viewModel.timeExercised)
+                    {
                         Task {
                             exerciseDescription = ""
                             calories = 0
@@ -105,8 +114,10 @@ struct AddExerciseDetailsView: View {
                         }
                     }
                 }
-                .alert("Failed to access vehicle health",
-                       isPresented: $isShowingFailureToAuthoriseAlert) {
+                .alert(
+                    "Failed to access vehicle health",
+                    isPresented: $isShowingFailureToAuthoriseAlert
+                ) {
                     Button("OK", role: .cancel) {}
                 }
         }
@@ -118,12 +129,15 @@ struct AddExerciseDetailsView: View {
 
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
-    AddExerciseDetailsView(viewModel: AddExerciseViewModel(healthStore: StubbedHealthStore(),
-                                                           modelContext: .inMemory,
-                                                           timeExercised: Date()),
-                           exerciseTemplate: ExerciseEntry(exerciseDescription: "Some exercise",
-                                                           calories: 100,
-                                                           timeExercised: Date()),
-                           timeExerciseAdded: .constant(nil),
-                           isExerciseDetailsViewPresented: .constant(true))
+    AddExerciseDetailsView(
+        viewModel: AddExerciseViewModel(
+            healthStore: StubbedHealthStore(),
+            modelContext: .inMemory,
+            timeExercised: Date()),
+        exerciseTemplate: ExerciseEntry(
+            exerciseDescription: "Some exercise",
+            calories: 100,
+            timeExercised: Date()),
+        timeExerciseAdded: .constant(nil),
+        isExerciseDetailsViewPresented: .constant(true))
 }

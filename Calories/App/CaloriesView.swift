@@ -25,12 +25,15 @@ struct CaloriesView: View {
     @State private var currentDate: Date
     private let overriddenCurrentDate: Date?
 
-    init(healthStore: HealthStore,
-         companion: Companion,
-         overriddenCurrentDate: Date? = nil) {
+    init(
+        healthStore: HealthStore,
+        companion: Companion,
+        overriddenCurrentDate: Date? = nil
+    ) {
         self.overriddenCurrentDate = overriddenCurrentDate
         let currentDate = overriddenCurrentDate ?? Date()
-        self.weeklyChartViewModel = WeeklyChartViewModel(healthStore: healthStore, currentDate: currentDate)
+        self.weeklyChartViewModel = WeeklyChartViewModel(
+            healthStore: healthStore, currentDate: currentDate)
         self.healthStore = healthStore
         self.companion = companion
         self.currentDate = currentDate
@@ -45,13 +48,25 @@ struct CaloriesView: View {
                         WeeklyChartView(viewModel: weeklyChartViewModel)
                         VStack(spacing: 10) {
                             HStack {
-                                Button { showingAddExerciseView = true } label: { Text("Add exercise").modifier(ButtonText()) }
-                                    .buttonStyle(.borderedProminent)
-                                Button { showingAddEntryView = true } label: { Text("Add food").modifier(ButtonText()) }
-                                    .buttonStyle(.borderedProminent)
+                                Button {
+                                    showingAddExerciseView = true
+                                } label: {
+                                    Text("Add exercise").modifier(ButtonText())
+                                }
+                                .buttonStyle(.borderedProminent)
+                                Button {
+                                    showingAddEntryView = true
+                                } label: {
+                                    Text("Add food").modifier(ButtonText())
+                                }
+                                .buttonStyle(.borderedProminent)
                             }
-                            Button { showingRecordWeightView = true } label: { Text("Record weight").modifier(ButtonText()) }
-                                .buttonStyle(.bordered)
+                            Button {
+                                showingRecordWeightView = true
+                            } label: {
+                                Text("Record weight").modifier(ButtonText())
+                            }
+                            .buttonStyle(.bordered)
                         }
                     }
                 }
@@ -63,17 +78,23 @@ struct CaloriesView: View {
             .scrollContentBackground(.hidden)
             .cornerRadius(10)
             .sheet(isPresented: $showingAddEntryView) {
-                AddFoodView(viewModel: AddFoodViewModel(healthStore: healthStore,
-                                                        modelContext: modelContext),
-                             showingAddEntryView: $showingAddEntryView)
-                    .environment(\.currentDate, currentDate)
+                AddFoodView(
+                    viewModel: AddFoodViewModel(
+                        healthStore: healthStore,
+                        modelContext: modelContext),
+                    showingAddEntryView: $showingAddEntryView
+                )
+                .environment(\.currentDate, currentDate)
             }
             .sheet(isPresented: $showingAddExerciseView) {
-                AddExerciseView(viewModel: AddExerciseViewModel(healthStore: healthStore,
-                                                                modelContext: modelContext,
-                                                                timeExercised: currentDate),
-                                showingAddExerciseView: $showingAddExerciseView)
-                    .environment(\.currentDate, currentDate)
+                AddExerciseView(
+                    viewModel: AddExerciseViewModel(
+                        healthStore: healthStore,
+                        modelContext: modelContext,
+                        timeExercised: currentDate),
+                    showingAddExerciseView: $showingAddExerciseView
+                )
+                .environment(\.currentDate, currentDate)
             }
             .sheet(isPresented: $showingRecordWeightView) {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
@@ -120,9 +141,10 @@ struct CaloriesView: View {
         do {
             let weeklyWeightChange = try await healthStore.weeklyWeightChange()
             let monthlyWeightChange = try await healthStore.monthlyWeightChange()
-            let context = MotivationalContext(date: Date(),
-                                              weeklyWeightChange: weeklyWeightChange,
-                                              monthlyWeightChange: monthlyWeightChange)
+            let context = MotivationalContext(
+                date: Date(),
+                weeklyWeightChange: weeklyWeightChange,
+                monthlyWeightChange: monthlyWeightChange)
             try? await companion.scheduleTomorrowsMotivationalMessage(context: context)
         } catch {
             fatalError("Failed to fetch weight changes: \(error)")
@@ -132,6 +154,7 @@ struct CaloriesView: View {
 
 #Preview {
     let healthStore = HealthStoreFactory.createNull()
-    CaloriesView(healthStore: healthStore,
-                 companion: Companion.createNull())
+    CaloriesView(
+        healthStore: healthStore,
+        companion: Companion.createNull())
 }

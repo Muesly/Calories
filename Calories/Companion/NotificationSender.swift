@@ -23,7 +23,7 @@ class NotificationSender: NotificationSenderType {
                 // No need to report anything
             }
         } catch {
-                print("Permission denied: \(error.localizedDescription)")
+            print("Permission denied: \(error.localizedDescription)")
         }
     }
 
@@ -59,9 +59,8 @@ class StubbedNotificationSender: NotificationSenderType {
     func hasPendingRequests() async -> Bool {
         requests.count > 0
     }
-    
+
     func add(_ request: UNNotificationRequest) async throws {
         requests.append(request)
     }
 }
-

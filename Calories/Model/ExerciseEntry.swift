@@ -13,9 +13,11 @@ import SwiftData
     var calories: Int32
     var exerciseDescription: String
     var timeExercised: Date
-    public init(exerciseDescription: String,
-                calories: Int,
-                timeExercised: Date) {
+    public init(
+        exerciseDescription: String,
+        calories: Int,
+        timeExercised: Date
+    ) {
         self.exerciseDescription = exerciseDescription
         self.calories = Int32(calories)
         self.timeExercised = timeExercised

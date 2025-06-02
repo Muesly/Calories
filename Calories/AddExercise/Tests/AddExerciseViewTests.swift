@@ -8,7 +8,7 @@
 import XCTest
 
 final class AddExerciseViewTests: XCTestCase {
-    
+
     private func runAndReturnApp() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments.append("UI_TESTING")
@@ -17,8 +17,7 @@ final class AddExerciseViewTests: XCTestCase {
         return app
     }
 
-    func testWhenNewExerciseIsAdded() throws
-    {
+    func testWhenNewExerciseIsAdded() throws {
         let app = runAndReturnApp()
         let addExerciseButton = app.buttons["Add exercise"]
         XCTAssertTrue(addExerciseButton.exists)
@@ -27,7 +26,8 @@ final class AddExerciseViewTests: XCTestCase {
         XCTAssert(searchBar.waitForExistence(timeout: 5))
         searchBar.tap()
         searchBar.typeText("Weights")
-        let addButton = app.collectionViews["Exercise List"].buttons["Add Weights as a new exercise"]
+        let addButton = app.collectionViews["Exercise List"].buttons[
+            "Add Weights as a new exercise"]
         XCTAssert(addButton.exists)
         addButton.tap()
         let caloriesTextField = app.textFields["Calories Number Field"]

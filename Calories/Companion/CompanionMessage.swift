@@ -13,10 +13,12 @@ struct CompanionMessage {
     let validDay: DayOfWeek?
     let validScenario: Scenario?
 
-    init(message: String,
-         timeOfDay: TimeOfDay? = nil,
-         validDay: DayOfWeek? = nil,
-         validScenario: Scenario? = nil) {
+    init(
+        message: String,
+        timeOfDay: TimeOfDay? = nil,
+        validDay: DayOfWeek? = nil,
+        validScenario: Scenario? = nil
+    ) {
         self.message = message
         self.timeOfDay = timeOfDay
         self.validDay = validDay

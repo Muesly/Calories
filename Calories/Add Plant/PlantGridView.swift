@@ -12,7 +12,7 @@ import UIKit
 let columns = [
     GridItem(.fixed(110), spacing: 0),
     GridItem(.fixed(110), spacing: 0),
-    GridItem(.fixed(110), spacing: 0)
+    GridItem(.fixed(110), spacing: 0),
 ]
 
 struct PlantGridView: View {
@@ -35,8 +35,9 @@ struct PlantGridView: View {
                     plantSelection: plantSelection,
                     plantImageGenerator: plantImageGenerator,
                     modelContext: modelContext)
-                PlantCellView(viewModel: viewModel,
-                              addedPlant: $addedPlant)
+                PlantCellView(
+                    viewModel: viewModel,
+                    addedPlant: $addedPlant)
             }
         }
     }
@@ -44,16 +45,23 @@ struct PlantGridView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    let _ = [PlantEntry("Corn", imageName: "Corn"),
-             PlantEntry("Rice", imageName: "Rice"),
-             PlantEntry("Broccoli", imageName: "Broccoli"),
-             PlantEntry("Unidentified"),
-             PlantEntry("Corn 2", imageName: "Corn")].forEach { modelContext.insert($0)
+    let _ = [
+        PlantEntry("Corn", imageName: "Corn"),
+        PlantEntry("Rice", imageName: "Rice"),
+        PlantEntry("Broccoli", imageName: "Broccoli"),
+        PlantEntry("Unidentified"),
+        PlantEntry("Corn 2", imageName: "Corn"),
+    ].forEach {
+        modelContext.insert($0)
     }
     VStack {
-        PlantGridView(plantSelections: ["Corn", "Rice", "Broccoli", "Unidentified", "Corn 2"].map { PlantSelection($0) }, addedPlant: .constant(""))
+        PlantGridView(
+            plantSelections: ["Corn", "Rice", "Broccoli", "Unidentified", "Corn 2"].map {
+                PlantSelection($0)
+            }, addedPlant: .constant(""))
 
-        PlantGridView(plantSelections: [PlantSelection("Corn", isSelected: true)], addedPlant: .constant(""))
+        PlantGridView(
+            plantSelections: [PlantSelection("Corn", isSelected: true)], addedPlant: .constant(""))
     }
     .modelContext(modelContext)
 }

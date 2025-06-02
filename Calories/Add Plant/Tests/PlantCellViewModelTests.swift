@@ -15,13 +15,15 @@ import UIKit
 struct PlantCellViewModelTests {
     @Test func cellImageToBeSetWithPlantThatHasImage() async throws {
         let modelContext = ModelContext.inMemory
-        let plantEntry = PlantEntry("Rice",
-                                    imageData: UIImage(systemName: "plus")?.pngData())
+        let plantEntry = PlantEntry(
+            "Rice",
+            imageData: UIImage(systemName: "plus")?.pngData())
         plantEntry.insert(into: modelContext)
 
-        let sut = PlantCellViewModel(plantSelection: .init("Rice"),
-                                     plantImageGenerator: StubbedPlantGenerator(),
-                                     modelContext: modelContext)
+        let sut = PlantCellViewModel(
+            plantSelection: .init("Rice"),
+            plantImageGenerator: StubbedPlantGenerator(),
+            modelContext: modelContext)
         #expect(sut.uiImage != nil)
     }
 
@@ -32,9 +34,10 @@ struct PlantCellViewModelTests {
 
         let plantGenerator = StubbedPlantGenerator()
         plantGenerator.returnedData = UIImage(systemName: "plus")!.pngData()!
-        let sut = PlantCellViewModel(plantSelection: .init("Rice"),
-                                     plantImageGenerator: plantGenerator,
-                                     modelContext: modelContext)
+        let sut = PlantCellViewModel(
+            plantSelection: .init("Rice"),
+            plantImageGenerator: plantGenerator,
+            modelContext: modelContext)
         try await sut.fetchImagesForSuggestion()
         #expect(sut.uiImage != nil)
 

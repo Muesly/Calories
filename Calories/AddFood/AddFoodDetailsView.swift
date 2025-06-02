@@ -26,10 +26,12 @@ struct AddFoodDetailsView: View {
     @Binding var addedFoodEntry: FoodEntry?
     @Binding var isFoodItemsViewPresented: Bool
 
-    init(viewModel: AddFoodViewModel,
-         foodTemplate: FoodTemplate,
-         addedFoodEntry: Binding<FoodEntry?>,
-         isFoodItemsViewPresented: Binding<Bool>) {
+    init(
+        viewModel: AddFoodViewModel,
+        foodTemplate: FoodTemplate,
+        addedFoodEntry: Binding<FoodEntry?>,
+        isFoodItemsViewPresented: Binding<Bool>
+    ) {
         self.viewModel = viewModel
         _foodTemplate = State(initialValue: foodTemplate)
         viewModel.plants = foodTemplate.plants.map { Plant(name: $0) }
@@ -75,7 +77,8 @@ struct AddFoodDetailsView: View {
                                     }
                                 }
                             Button {
-                                UIApplication.shared.open(viewModel.calorieSearchURL(for: foodDescription))
+                                UIApplication.shared.open(
+                                    viewModel.calorieSearchURL(for: foodDescription))
                             } label: {
                                 Image(systemName: "magnifyingglass")
                             }
@@ -91,8 +94,9 @@ struct AddFoodDetailsView: View {
 
             List {
                 Section {
-                    PlantGridView(plantSelections: viewModel.plants.map { .init($0.name) },
-                                  addedPlant: $addedPlant)
+                    PlantGridView(
+                        plantSelections: viewModel.plants.map { .init($0.name) },
+                        addedPlant: $addedPlant)
                 } header: {
                     HStack {
                         Text("Plants")
@@ -142,8 +146,10 @@ struct AddFoodDetailsView: View {
                         }
                     }
                 }
-                .alert("Failed to access vehicle health",
-                       isPresented: $isShowingFailureToAuthoriseAlert) {
+                .alert(
+                    "Failed to access vehicle health",
+                    isPresented: $isShowingFailureToAuthoriseAlert
+                ) {
                     Button("OK", role: .cancel) {}
                 }
         }
@@ -151,8 +157,10 @@ struct AddFoodDetailsView: View {
         .ignoresSafeArea(.keyboard)
         .font(.brand)
         .sheet(isPresented: $showingAddPlantView) {
-            let viewModel = AddPlantViewModel(suggestionFetcher: SuggestionFetcher(modelContext: modelContext,
-                                                                                   excludedSuggestions: viewModel.plants.map { $0.name} ))
+            let viewModel = AddPlantViewModel(
+                suggestionFetcher: SuggestionFetcher(
+                    modelContext: modelContext,
+                    excludedSuggestions: viewModel.plants.map { $0.name }))
             AddPlantView(viewModel: viewModel, addedPlant: $addedPlant)
         }
         .onAppear {
@@ -168,13 +176,16 @@ struct AddFoodDetailsView: View {
 
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
-    AddFoodDetailsView(viewModel: AddFoodViewModel(healthStore: StubbedHealthStore(),
-                                                   modelContext: modelContext),
-                       foodTemplate: .init(description: "Some food",
-                                           calories: 100,
-                                           dateTime: Date()),
-                       addedFoodEntry: .constant(nil),
-                       isFoodItemsViewPresented: .constant(true))
+    AddFoodDetailsView(
+        viewModel: AddFoodViewModel(
+            healthStore: StubbedHealthStore(),
+            modelContext: modelContext),
+        foodTemplate: .init(
+            description: "Some food",
+            calories: 100,
+            dateTime: Date()),
+        addedFoodEntry: .constant(nil),
+        isFoodItemsViewPresented: .constant(true))
 }
 
 struct Plant: Identifiable {

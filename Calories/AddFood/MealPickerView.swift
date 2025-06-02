@@ -23,7 +23,9 @@ struct MealPickerView: View {
                 ForEach(viewModel.meals, id: \.self) { mealToPick in
                     let isSelected = viewModel.isMealSelected(mealToPick)
                     Button(mealToPick.icon) {
-                        withAnimation(.spring(response: 0.5, dampingFraction: 0.5, blendDuration: 1)) {
+                        withAnimation(
+                            .spring(response: 0.5, dampingFraction: 0.5, blendDuration: 1)
+                        ) {
                             viewModel.selectMeal(mealToPick)
                         }
                     }
@@ -51,12 +53,14 @@ struct MealPickerView_Previews: PreviewProvider {
 
 class MealPickerViewModel {
     @Binding var timeConsumed: Date
-    let meals: [MealToPick] = [.init(name: "Breakfast", icon: "🥣", hour: 8),
-                               .init(name: "Morning Snack", icon: "☕️", hour: 10),
-                               .init(name: "Lunch", icon: "🥗", hour: 12),
-                               .init(name: "Afternoon Snack", icon: "🥜", hour: 14),
-                               .init(name: "Dinner", icon: "🍲", hour: 18),
-                               .init(name: "Evening Snack", icon: "🍺", hour: 20)]
+    let meals: [MealToPick] = [
+        .init(name: "Breakfast", icon: "🥣", hour: 8),
+        .init(name: "Morning Snack", icon: "☕️", hour: 10),
+        .init(name: "Lunch", icon: "🥗", hour: 12),
+        .init(name: "Afternoon Snack", icon: "🥜", hour: 14),
+        .init(name: "Dinner", icon: "🍲", hour: 18),
+        .init(name: "Evening Snack", icon: "🍺", hour: 20),
+    ]
 
     init(timeConsumed: Binding<Date>) {
         self._timeConsumed = timeConsumed
@@ -77,7 +81,8 @@ class MealPickerViewModel {
     }
 
     func selectMeal(_ meal: MealToPick) {
-        timeConsumed = Calendar.current.date(bySettingHour: meal.hour, minute: 0, second: 0, of: timeConsumed)!
+        timeConsumed = Calendar.current.date(
+            bySettingHour: meal.hour, minute: 0, second: 0, of: timeConsumed)!
     }
 
     func isMealSelected(_ meal: MealToPick) -> Bool {

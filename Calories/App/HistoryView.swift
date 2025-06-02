@@ -12,8 +12,10 @@ struct HistoryView: View {
     private var viewModel: HistoryViewModel
     @Binding var entryDeleted: Bool
 
-    init(viewModel: HistoryViewModel,
-         entryDeleted: Binding<Bool>) {
+    init(
+        viewModel: HistoryViewModel,
+        entryDeleted: Binding<Bool>
+    ) {
         self.viewModel = viewModel
         self._entryDeleted = entryDeleted
     }
@@ -24,8 +26,9 @@ struct HistoryView: View {
                 ForEach(daySection.meals) { meal in
                     DisclosureGroup(meal.summary) {
                         ForEach(meal.foodEntries) { foodEntry in
-                            FoodEntryView(foodEntry: foodEntry,
-                                          formatter: HistoryViewModel.timeConsumedTimeFormatter)
+                            FoodEntryView(
+                                foodEntry: foodEntry,
+                                formatter: HistoryViewModel.timeConsumedTimeFormatter)
                         }
                         .onDelete { indexSet in
                             self.deleteItem(atRow: indexSet.first, inFoodEntries: meal.foodEntries)
@@ -73,13 +76,18 @@ struct FoodEntryView: View {
 }
 
 #Preview {
-    let plants: [PlantEntry] = [PlantEntry("Corn", imageName: "Corn"),
-                                PlantEntry("Rice", imageName: "Rice"),
-                                PlantEntry("Broccoli", imageName: "Broccoli")]
-    FoodEntryView(foodEntry: .init(foodDescription: "Veggie Chilli",
-                                   calories: 400,
-                                   timeConsumed: Date(),
-                                   plants: plants),
-                  formatter: HistoryViewModel.timeConsumedTimeFormatter)
+    let plants: [PlantEntry] = [
+        PlantEntry("Corn", imageName: "Corn"),
+        PlantEntry("Rice", imageName: "Rice"),
+        PlantEntry("Broccoli", imageName: "Broccoli"),
+    ]
+    FoodEntryView(
+        foodEntry: .init(
+            foodDescription: "Veggie Chilli",
+            calories: 400,
+            timeConsumed: Date(),
+            plants: plants),
+        formatter: HistoryViewModel.timeConsumedTimeFormatter
+    )
     .padding()
 }

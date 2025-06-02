@@ -7,6 +7,7 @@
 
 import SwiftData
 import XCTest
+
 @testable import Calories
 
 @MainActor
@@ -55,21 +56,26 @@ final class MealItemsViewModelTests: XCTestCase {
     }
 
     func testMealTitlesWithCalories() throws {
-        let date = DateComponents(calendar: Calendar.current,
-                                  year: 2023,
-                                  month: 1,
-                                  day: 1,
-                                  hour: 8).date!
+        let date = DateComponents(
+            calendar: Calendar.current,
+            year: 2023,
+            month: 1,
+            day: 1,
+            hour: 8
+        ).date!
 
-        let oldEntry = FoodEntry(foodDescription: "Some old food entry",
-                          calories: Double(100),
-                          timeConsumed: date.addingTimeInterval(-secsPerDay))
-        let foodEntry = FoodEntry(foodDescription: "Some food",
-                                  calories: Double(200),
-                                  timeConsumed: date)
-        let secondFoodEntry = FoodEntry(foodDescription: "Some more food",
-                                        calories: Double(100),
-                                        timeConsumed: date.addingTimeInterval(7199))    // Right at end of breakfast time
+        let oldEntry = FoodEntry(
+            foodDescription: "Some old food entry",
+            calories: Double(100),
+            timeConsumed: date.addingTimeInterval(-secsPerDay))
+        let foodEntry = FoodEntry(
+            foodDescription: "Some food",
+            calories: Double(200),
+            timeConsumed: date)
+        let secondFoodEntry = FoodEntry(
+            foodDescription: "Some more food",
+            calories: Double(100),
+            timeConsumed: date.addingTimeInterval(7199))  // Right at end of breakfast time
         modelContext.insert(oldEntry)
         modelContext.insert(foodEntry)
         modelContext.insert(secondFoodEntry)

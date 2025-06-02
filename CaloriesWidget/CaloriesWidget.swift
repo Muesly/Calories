@@ -20,12 +20,12 @@ struct Provider: TimelineProvider {
         CanEatEntry(date: Date(), calories: 0)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (CanEatEntry) -> ()) {
+    func getSnapshot(in context: Context, completion: @escaping (CanEatEntry) -> Void) {
         let entry = CanEatEntry(date: Date(), calories: 100)
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
@@ -60,7 +60,7 @@ struct CanEatEntry: TimelineEntry {
     let calories: Int
 }
 
-struct CaloriesWidgetEntryView : View {
+struct CaloriesWidgetEntryView: View {
     var entry: Provider.Entry
 
     var body: some View {
@@ -77,6 +77,7 @@ struct CaloriesWidget: Widget {
             CaloriesWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Can Eat")
-        .description("View how many calories you can eat and still be in deficit according to your goal.")
+        .description(
+            "View how many calories you can eat and still be in deficit according to your goal.")
     }
 }

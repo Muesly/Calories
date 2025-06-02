@@ -21,7 +21,7 @@ enum MealType: String, Equatable {
         let dc = Calendar.current.dateComponents([.hour], from: date)
         let hour = dc.hour!
 
-        switch(hour) {
+        switch hour {
         case rangeOfPeriod(.breakfast): return .breakfast
         case rangeOfPeriod(.morningSnack): return .morningSnack
         case rangeOfPeriod(.lunch): return .lunch
@@ -35,8 +35,8 @@ enum MealType: String, Equatable {
         type.rangeOfPeriod()
     }
 
-    func rangeOfPeriod() -> Range<Int>{
-        switch(self) {
+    func rangeOfPeriod() -> Range<Int> {
+        switch self {
         case .breakfast: return 0..<10
         case .morningSnack: return 10..<12
         case .lunch: return 12..<14
@@ -47,7 +47,7 @@ enum MealType: String, Equatable {
     }
 
     func mealTypeColor() -> Color {
-        switch(self) {
+        switch self {
         case .breakfast: return .red
         case .morningSnack: return .orange
         case .lunch: return .yellow
@@ -79,10 +79,13 @@ class MealItemsViewModel {
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
-    
+
     func fetchMealFoodEntries(date: Date) {
         let (startOfPeriod, endOfPeriod) = MealType.rangeOfPeriod(forDate: date)
-        let entries = modelContext.foodResults(for: #Predicate { ($0.timeConsumed >= startOfPeriod) && ($0.timeConsumed < endOfPeriod)})
+        let entries = modelContext.foodResults(
+            for: #Predicate {
+                ($0.timeConsumed >= startOfPeriod) && ($0.timeConsumed < endOfPeriod)
+            })
         mealFoodEntries = entries.sorted { entry1, entry2 in
             entry1.timeConsumed > entry2.timeConsumed
         }

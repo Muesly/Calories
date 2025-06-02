@@ -42,7 +42,9 @@ struct DaysCaloriesChart: View {
             }
             .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
             .frame(height: 240)
-            .chartForegroundStyleScale(["Burnt": .blue, "Consumed": .cyan, "Good": .green, "Ok": .orange, "Bad": .red])
+            .chartForegroundStyleScale([
+                "Burnt": .blue, "Consumed": .cyan, "Good": .green, "Ok": .orange, "Bad": .red,
+            ])
         }
         .gesture(
             DragGesture()
@@ -61,7 +63,7 @@ struct DaysCaloriesChart: View {
                         }
                     }
                 }
-            )
+        )
     }
 }
 
@@ -111,8 +113,13 @@ struct WeeklyProgressChart: View {
                             .foregroundStyle(by: .value("Bar Colour", $0.stat))
                         }
                     }
-                    .chartXScale(domain: viewModel.weeklyDataMinX...viewModel.weeklyDataMaxX, range: .plotDimension(padding: 20))
-                    .chartForegroundStyleScale(["Bad": .red, "Good": .green, "To Go": .gray, "Can Eat": .blue])
+                    .chartXScale(
+                        domain: viewModel.weeklyDataMinX...viewModel.weeklyDataMaxX,
+                        range: .plotDimension(padding: 20)
+                    )
+                    .chartForegroundStyleScale([
+                        "Bad": .red, "Good": .green, "To Go": .gray, "Can Eat": .blue,
+                    ])
                     Text("Different Plants Eaten")
                         .font(chartTitleFont)
                         .padding(.top, 5)
@@ -124,8 +131,13 @@ struct WeeklyProgressChart: View {
                             .foregroundStyle(by: .value("Bar Colour", $0.stat))
                         }
                     }
-                    .chartXScale(domain: 0...viewModel.weeklyPlantsDataMaxX, range: .plotDimension(padding: 20))
-                    .chartForegroundStyleScale(["Eaten": Color.yellow, "To Go": .gray, "Abundance": .green])
+                    .chartXScale(
+                        domain: 0...viewModel.weeklyPlantsDataMaxX,
+                        range: .plotDimension(padding: 20)
+                    )
+                    .chartForegroundStyleScale([
+                        "Eaten": Color.yellow, "To Go": .gray, "Abundance": .green,
+                    ])
                 }
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
             }

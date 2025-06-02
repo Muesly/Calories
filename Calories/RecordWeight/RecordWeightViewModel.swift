@@ -33,7 +33,7 @@ class RecordWeightViewModel: ObservableObject {
     var weightData: [WeightDataPoint] = []
     var latestWeight: Int = 0
     var originalWeight = 0
-    
+
     init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
@@ -52,16 +52,19 @@ class RecordWeightViewModel: ObservableObject {
 
         repeat {  // For last x weeks
             // Find most recent data point in last 7 days from now
-            if let weightDataPoint = try await healthStore.weight(fromDate: startDate,
-                                                                  toDate: endDate) {
+            if let weightDataPoint = try await healthStore.weight(
+                fromDate: startDate,
+                toDate: endDate)
+            {
                 do {
                     let deficit = try await fetchWeeklyDeficit(forDate: endDate)
-                    weightData.append(WeightDataPoint(date: endDate, weight: weightDataPoint, deficit: deficit))
+                    weightData.append(
+                        WeightDataPoint(date: endDate, weight: weightDataPoint, deficit: deficit))
                     numEmptyConsecutiveWeeks = 0
                 } catch RecordWeightErrors.noCaloriesReported {
                     numEmptyConsecutiveWeeks += 1
                     if numEmptyConsecutiveWeeks > 1 {
-                        break   // Break out of this when we have a signficant break in calories reporting to capture just the current weight reporting period
+                        break  // Break out of this when we have a signficant break in calories reporting to capture just the current weight reporting period
                     }
                 } catch {
                     break
@@ -90,18 +93,19 @@ class RecordWeightViewModel: ObservableObject {
         guard let firstRecordedDate = weightData.first?.date else {
             return ""
         }
-        return WeightDataPoint.weekStr(from: firstRecordedDate.startOfWeek, to: dataPoint.date.startOfWeek)
+        return WeightDataPoint.weekStr(
+            from: firstRecordedDate.startOfWeek, to: dataPoint.date.startOfWeek)
     }
-        
+
     func weightStr(_ weight: Double) -> String {
         let stones = Int(weight) / 14
         let pounds = Int(weight) % 14
         return "\(stones)st \(pounds)"
     }
-    
+
     var currentWeight: String {
         let lastWeight = latestWeight
-        let stone = Int(lastWeight/14)
+        let stone = Int(lastWeight / 14)
         let pounds = Int(lastWeight) % 14
         return "\(stone) st, \(pounds) lbs"
     }
@@ -123,7 +127,7 @@ class RecordWeightViewModel: ObservableObject {
     var hasLostWeight: Bool {
         originalWeight > self.latestWeight
     }
-    
+
     func decreaseWeight() {
         latestWeight -= 1
     }
@@ -152,10 +156,10 @@ class RecordWeightViewModel: ObservableObject {
                 let exercise = try await healthStore.exercise(date: date)
                 burntCalories += bmr + exercise
 
-                date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)    // Move to end of previous dat
+                date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)  // Move to end of previous dat
             }
         } catch RecordWeightErrors.noCaloriesReported {
-            throw RecordWeightErrors.noCaloriesReported 
+            throw RecordWeightErrors.noCaloriesReported
         } catch {
             print("Failed to fetch burnt or consumed data")
         }

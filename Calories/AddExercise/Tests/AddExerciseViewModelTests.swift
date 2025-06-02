@@ -17,9 +17,10 @@ final class AddExerciseViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
         mockHealthStore = MockHealthStore()
-        subject = AddExerciseViewModel(healthStore: mockHealthStore,
-                                       modelContext: .inMemory,
-                                       timeExercised: Date())
+        subject = AddExerciseViewModel(
+            healthStore: mockHealthStore,
+            modelContext: .inMemory,
+            timeExercised: Date())
     }
 
     override func tearDownWithError() throws {
@@ -28,23 +29,26 @@ final class AddExerciseViewModelTests: XCTestCase {
     }
 
     func dateFromComponents() -> Date {
-        let dc = DateComponents(calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
+        let dc = DateComponents(
+            calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         return dc.date!
     }
 
     func testGivenPermissionGrantedCanAddCalories() async throws {
-        try await subject.addExercise(exerciseDescription: "Ran somewhere",
-                                      calories: 100,
-                                      timeExercised: dateFromComponents())
+        try await subject.addExercise(
+            exerciseDescription: "Ran somewhere",
+            calories: 100,
+            timeExercised: dateFromComponents())
         XCTAssertEqual(mockHealthStore.caloriesBurned, 100)
     }
 
     func testDeniedPermissionGrantedCanAddExerciseEntry() async throws {
         mockHealthStore.authorizeError = HealthStoreError.errorNoHealthDataAvailable
         do {
-            try await subject.addExercise(exerciseDescription: "Ran somewhere",
-                                          calories: 100,
-                                          timeExercised: dateFromComponents())
+            try await subject.addExercise(
+                exerciseDescription: "Ran somewhere",
+                calories: 100,
+                timeExercised: dateFromComponents())
         } catch let healthStoreError as HealthStoreError {
             XCTAssertEqual(healthStoreError, HealthStoreError.errorNoHealthDataAvailable)
         }
@@ -52,7 +56,8 @@ final class AddExerciseViewModelTests: XCTestCase {
     }
 
     func testClearDownOfInProgressDetailsAfterDay() async {
-        let result = AddExerciseViewModel.shouldClearFields(phase: .active, date: Date().addingTimeInterval(-secsPerDay))
+        let result = AddExerciseViewModel.shouldClearFields(
+            phase: .active, date: Date().addingTimeInterval(-secsPerDay))
         XCTAssertTrue(result)
     }
 

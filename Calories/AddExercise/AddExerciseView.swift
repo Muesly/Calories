@@ -19,8 +19,10 @@ struct AddExerciseView: View {
     @Binding var showingAddExerciseView: Bool
     @State private var isSearching: Bool = false
 
-    init(viewModel: AddExerciseViewModel,
-         showingAddExerciseView: Binding<Bool>) {
+    init(
+        viewModel: AddExerciseViewModel,
+        showingAddExerciseView: Binding<Bool>
+    ) {
         self.viewModel = viewModel
         self._showingAddExerciseView = showingAddExerciseView
     }
@@ -49,18 +51,21 @@ struct AddExerciseView: View {
                     }
                 }
                 .navigationDestination(isPresented: $showingAddExerciseDetailsView) {
-                    AddExerciseDetailsView(viewModel: viewModel,
-                                           exerciseTemplate: viewModel.exerciseTemplateFor(searchText),
-                                           timeExerciseAdded: $timeExerciseAdded,
-                                           isExerciseDetailsViewPresented: $showingAddExerciseDetailsView)
+                    AddExerciseDetailsView(
+                        viewModel: viewModel,
+                        exerciseTemplate: viewModel.exerciseTemplateFor(searchText),
+                        timeExerciseAdded: $timeExerciseAdded,
+                        isExerciseDetailsViewPresented: $showingAddExerciseDetailsView)
                 }
             }
             .foregroundColor(.white)
             .font(.brand)
-            .searchable(text: $searchText,
-                        isPresented: $isSearching,
-                        placement:  .navigationBarDrawer(displayMode: .always),
-                        prompt: "Enter exercise")
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearching,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Enter exercise"
+            )
             .onSubmit(of: .search) {
                 dismissSearch()
                 showingAddExerciseDetailsView = true
@@ -96,8 +101,10 @@ struct AddExerciseView: View {
 
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
-    AddExerciseView(viewModel: AddExerciseViewModel(healthStore: MockHealthStore(),
-                                                    modelContext: modelContext,
-                                                    timeExercised: Date()),
-                    showingAddExerciseView: .constant(false))
+    AddExerciseView(
+        viewModel: AddExerciseViewModel(
+            healthStore: MockHealthStore(),
+            modelContext: modelContext,
+            timeExercised: Date()),
+        showingAddExerciseView: .constant(false))
 }
