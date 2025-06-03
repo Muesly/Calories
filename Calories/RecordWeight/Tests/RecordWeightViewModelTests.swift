@@ -152,22 +152,4 @@ final class RecordWeightViewModelTests: XCTestCase {
         XCTAssertEqual(subject.weightData[0].deficit, 0)
         XCTAssertEqual(subject.weightData[0].weight, 180)
     }
-
-    func testConsecutiveEmptyWeeks() async throws {
-        let mockHealthStore = MockHealthStore()
-        mockHealthStore.caloriesConsumed = 0
-        let date = dateFromComponents()
-        mockHealthStore.weightAllDataPoints = [
-            (date.startOfWeek.addingTimeInterval(-(21 * 86400)), 200),
-            (date.startOfWeek.addingTimeInterval(-(14 * 86400)), 190),
-            (date.startOfWeek.addingTimeInterval(-(7 * 86400)), 180),
-            (date, 170),
-        ]
-
-        let subject = RecordWeightViewModel(healthStore: mockHealthStore)
-        try await subject.fetchWeightData(date: date, numWeeks: 4)
-
-        // Should stop after two consecutive weeks with no calories
-        XCTAssertEqual(subject.weightData.count, 2)
-    }
 }

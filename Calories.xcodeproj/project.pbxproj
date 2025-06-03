@@ -138,7 +138,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "CaloriesTestPlan-all.xctestplan"; path = "Calories/Supporting Files/CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
+		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
 		DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
@@ -163,11 +163,9 @@
 		DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantViewModelTests.swift; sourceTree = "<group>"; };
 		DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Extensions.swift"; sourceTree = "<group>"; };
 		DD9F3C182DEC6A9F00417F73 /* EntryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryModels.swift; sourceTree = "<group>"; };
-		DD9F3C1A2DEC6AB700417F73 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
-		DD9F3C1B2DEC6AB700417F73 /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
-		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = "CaloriesTestPlan-unit.xctestplan"; path = "Calories/Supporting Files/CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
+		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
@@ -361,8 +359,8 @@
 		DD883E962D19F47200A15A62 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				DD9F3C1A2DEC6AB700417F73 /* CaloriesTestPlan-all.xctestplan */,
-				DD9F3C1B2DEC6AB700417F73 /* CaloriesTestPlan-unit.xctestplan */,
+				DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */,
+				DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */,
 				DD7A57DA2D19F51700CBF055 /* Calories.entitlements */,
 				DD7A57DB2D19F51700CBF055 /* Config.xcconfig */,
 			);
@@ -383,8 +381,6 @@
 		EA097D7B29918C9E00735129 = {
 			isa = PBXGroup;
 			children = (
-				DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */,
-				DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */,
 				EA097D8629918C9E00735129 /* Calories */,
 				EA76757E299D844E00771517 /* Calories Watch App */,
 				EA3146F429A2C6F3002AAA45 /* CaloriesWidget */,
@@ -1310,7 +1306,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
 		};
@@ -1342,7 +1338,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
 		};
