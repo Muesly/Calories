@@ -17,7 +17,7 @@ class AddPlantViewModel: ObservableObject {
         self.suggestionFetcher = suggestionFetcher
     }
 
-    func fetchSuggestions(searchText: String = "") {
+    func fetchSuggestions(searchText: String? = nil) {
         suggestions = suggestionFetcher.fetchSuggestions(searchText: searchText).map { .init($0) }
     }
 }

@@ -12,13 +12,17 @@ struct SuggestionFetcher {
     let modelContext: ModelContext
     let excludedSuggestions: [String]
 
-    func fetchSuggestions(searchText: String = "") -> [String] {
-        guard searchText.count > 1 else { return [] }
+    func fetchSuggestions(searchText: String?) -> [String] {
+        if let searchText {
+            guard searchText.count > 1 else { return [] }
+        }
+
         let predicate = #Predicate<PlantEntry> {
-            $0.name.localizedStandardContains(searchText) && !excludedSuggestions.contains($0.name)
+            !excludedSuggestions.contains($0.name) &&
+            (searchText == nil || $0.name.localizedStandardContains(searchText!))
         }
-        return modelContext.plantResults(for: predicate, sortBy: [SortDescriptor(\.name)]).map {
-            $0.name
-        }
+
+        return modelContext.plantResults(for: predicate, sortBy: [SortDescriptor(\.name)])
+            .map(\.name)
     }
 }

@@ -48,6 +48,7 @@ class RecordWeightViewModel: ObservableObject {
         var startDate = startOfWeek(date)
         var weightData = [WeightDataPoint]()
         var numEmptyConsecutiveWeeks = 0
+        var numNilWeeks = 0
         var numWeeksReported = 0
 
         repeat {  // For last x weeks
@@ -56,6 +57,7 @@ class RecordWeightViewModel: ObservableObject {
                 fromDate: startDate,
                 toDate: endDate)
             {
+                print("weightDataPoint")
                 do {
                     let deficit = try await fetchWeeklyDeficit(forDate: endDate)
                     weightData.append(
@@ -70,7 +72,10 @@ class RecordWeightViewModel: ObservableObject {
                     break
                 }
             } else {
-                break
+                numNilWeeks += 1
+                if numNilWeeks > 52 {
+                    break  // Break out of this when we have a signficant break in weight entries e.g. in UI tests where we never change calories returned
+                }
             }
             if let numWeeks {
                 numWeeksReported += 1
