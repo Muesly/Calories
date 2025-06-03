@@ -20,7 +20,7 @@ struct CaloriesView: View {
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
     @State var showingRecordWeightView = false
-    @State var entryDeleted = false
+    @State var entryChanged = false
 
     @State private var currentDate: Date
     private let overriddenCurrentDate: Date?
@@ -70,7 +70,7 @@ struct CaloriesView: View {
                         }
                     }
                 }
-                HistoryView(viewModel: historyViewModel, entryDeleted: $entryDeleted)
+                HistoryView(viewModel: historyViewModel, entryChanged: $entryChanged)
             }
             .navigationTitle("Calories")
             .background(Colours.backgroundPrimary)
@@ -105,11 +105,11 @@ struct CaloriesView: View {
                     currentDate = overriddenCurrentDate ?? Date()
                 }
             }
-            .onChange(of: entryDeleted) { _, isDeleted in
-                if isDeleted == true {
+            .onChange(of: entryChanged) { _, isChanged in
+                if isChanged == true {
                     refresh()
                 }
-                entryDeleted = false
+                entryChanged = false
             }
             .onChange(of: showingAddEntryView) { _, isBeingShown in
                 if !isBeingShown {

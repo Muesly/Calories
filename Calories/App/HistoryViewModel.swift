@@ -81,6 +81,17 @@ class HistoryViewModel {
         }
     }
 
+    func moveFoodEntry(_ foodEntry: FoodEntry, to newMealTime: Date) async {
+        do {
+            try await healthStore.deleteFoodEntry(foodEntry)
+            foodEntry.timeConsumed = newMealTime
+            try await healthStore.addFoodEntry(foodEntry)
+            try modelContext?.save()
+        } catch {
+            print("Failed to save move in Health")
+        }
+    }
+
     func shouldExpandMeal(meal: Meal) -> Bool {
         meal.foodEntries.last?.timeConsumed
             == daySections.last?.meals.last?.foodEntries.last?.timeConsumed

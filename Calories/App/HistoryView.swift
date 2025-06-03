@@ -10,14 +10,17 @@ import SwiftUI
 
 struct HistoryView: View {
     private var viewModel: HistoryViewModel
-    @Binding var entryDeleted: Bool
+    @Binding var entryChanged: Bool
+    @State private var showingMealPicker = false
+    @State private var selectedEntry: FoodEntry?
+    @State private var newMealTime: Date = Date()
 
     init(
         viewModel: HistoryViewModel,
-        entryDeleted: Binding<Bool>
+        entryChanged: Binding<Bool>
     ) {
         self.viewModel = viewModel
-        self._entryDeleted = entryDeleted
+        self._entryChanged = entryChanged
     }
 
     var body: some View {
@@ -28,10 +31,54 @@ struct HistoryView: View {
                         ForEach(meal.foodEntries) { foodEntry in
                             FoodEntryView(
                                 foodEntry: foodEntry,
-                                formatter: HistoryViewModel.timeConsumedTimeFormatter)
-                        }
-                        .onDelete { indexSet in
-                            self.deleteItem(atRow: indexSet.first, inFoodEntries: meal.foodEntries)
+                                formatter: HistoryViewModel.timeConsumedTimeFormatter
+                            )
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    deleteItem(foodEntry)
+                                } label: {
+                                    Text("Delete")
+                                }
+
+                                Button {
+                                    withAnimation {
+                                        selectedEntry = foodEntry
+                                        newMealTime = foodEntry.timeConsumed
+                                        showingMealPicker = true
+                                    }
+                                } label: {
+                                    Text("Move")
+                                }
+                                .tint(.blue)
+                            }
+                            .sheet(
+                                isPresented: Binding(
+                                    get: { showingMealPicker && (selectedEntry != nil) },
+                                    set: { showingMealPicker = $0 }
+                                )
+                            ) {
+                                VStack {
+                                    Text(
+                                        "Pick a meal to move \(selectedEntry?.foodDescription ?? "this item") to:"
+                                    )
+                                    MealPickerView(
+                                        viewModel: MealPickerViewModel(timeConsumed: $newMealTime)
+                                    )
+                                    .padding()
+                                    Button("Confirm") {
+                                        if let selectedEntry {
+                                            _ = withAnimation {
+                                                Task {
+                                                    moveItem(selectedEntry, to: newMealTime)
+                                                    showingMealPicker = false
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .padding()
+                                }
+                                .presentationDetents([.medium])
+                            }
                         }
                     }
                 }
@@ -39,11 +86,20 @@ struct HistoryView: View {
         }
     }
 
-    private func deleteItem(atRow row: Int?, inFoodEntries foodEntries: [FoodEntry]) {
+    private func deleteItem(_ foodEntry: FoodEntry) {
         _ = withAnimation {
             Task {
-                await viewModel.deleteEntries(atRow: row, inFoodEntries: foodEntries)
-                entryDeleted = true
+                await viewModel.deleteFoodEntry(foodEntry)
+                entryChanged = true
+            }
+        }
+    }
+
+    private func moveItem(_ foodEntry: FoodEntry, to newMealTime: Date) {
+        _ = withAnimation {
+            Task {
+                await viewModel.moveFoodEntry(foodEntry, to: newMealTime)
+                entryChanged = true
             }
         }
     }
