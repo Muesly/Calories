@@ -109,4 +109,27 @@ final class HistoryViewModelTests: XCTestCase {
         XCTAssertEqual(subject.daySections.first?.title, "Sunday, Jan 1")
         XCTAssertEqual(subject.daySections.first?.meals.first?.summary, "Morning Snack (100 cals)")
     }
+
+    func testMovingFoodEntryBetweenMeals() async throws {
+        // Create an entry in Evening Snack (21:00)
+        let eveningTime = Calendar.current.date(
+            bySettingHour: 21, minute: 0, second: 0, of: dateFromComponents)!
+        let foodEntry = FoodEntry(
+            foodDescription: "Dessert",
+            calories: Double(200),
+            timeConsumed: eveningTime
+        ).insert(into: modelContext)
+
+        // Move it to Dinner (18:00)
+        let dinnerTime = Calendar.current.date(
+            bySettingHour: 18, minute: 0, second: 0, of: dateFromComponents)!
+        await subject.moveFoodEntry(foodEntry, to: dinnerTime)
+
+        // Verify the entry is now in Dinner
+        subject.fetchDaySections(forDate: dateFromComponents)
+        let dinnerMeal = subject.daySections.first?.meals.first { $0.mealType == .dinner }
+        XCTAssertEqual(dinnerMeal?.foodEntries.count, 1)
+        XCTAssertEqual(dinnerMeal?.foodEntries.first?.foodDescription, "Dessert")
+        XCTAssertEqual(dinnerMeal?.foodEntries.first?.calories, 200)
+    }
 }

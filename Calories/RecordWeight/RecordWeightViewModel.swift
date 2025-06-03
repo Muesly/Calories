@@ -57,13 +57,17 @@ class RecordWeightViewModel: ObservableObject {
                 fromDate: startDate,
                 toDate: endDate)
             {
-                print("weightDataPoint")
                 do {
                     let deficit = try await fetchWeeklyDeficit(forDate: endDate)
                     weightData.append(
                         WeightDataPoint(date: endDate, weight: weightDataPoint, deficit: deficit))
                     numEmptyConsecutiveWeeks = 0
                 } catch RecordWeightErrors.noCaloriesReported {
+                    if numEmptyConsecutiveWeeks == 0 {
+                        // Scenario at start of week where no calories have been reported but a weight measurement has
+                        weightData.append(
+                            WeightDataPoint(date: endDate, weight: weightDataPoint, deficit: 0))
+                    }
                     numEmptyConsecutiveWeeks += 1
                     if numEmptyConsecutiveWeeks > 1 {
                         break  // Break out of this when we have a signficant break in calories reporting to capture just the current weight reporting period
