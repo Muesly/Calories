@@ -30,6 +30,7 @@
 		DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */; };
 		DD9F3C192DEC6A9F00417F73 /* EntryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9F3C182DEC6A9F00417F73 /* EntryModels.swift */; };
 		DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */; };
+		DDADA54D2E1C51C00004DADB /* MealPlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDADA54B2E1C51C00004DADB /* MealPlanningView.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
@@ -164,6 +165,7 @@
 		DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Extensions.swift"; sourceTree = "<group>"; };
 		DD9F3C182DEC6A9F00417F73 /* EntryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryModels.swift; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		DDADA54B2E1C51C00004DADB /* MealPlanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPlanningView.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
@@ -367,6 +369,14 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		DDADA54C2E1C51C00004DADB /* MealPlanning */ = {
+			isa = PBXGroup;
+			children = (
+				DDADA54B2E1C51C00004DADB /* MealPlanningView.swift */,
+			);
+			path = MealPlanning;
+			sourceTree = "<group>";
+		};
 		DDB7FF8C2C724EB6000FE006 /* Companion */ = {
 			isa = PBXGroup;
 			children = (
@@ -412,6 +422,7 @@
 				DDB7FF8C2C724EB6000FE006 /* Companion */,
 				EA2D491829981B3C00248864 /* HealthStore */,
 				EA2D491729981B0F00248864 /* MealItems */,
+				DDADA54C2E1C51C00004DADB /* MealPlanning */,
 				EA6655A529939EEA000770F6 /* Model */,
 				EAD2115929A38F730007A813 /* RecordWeight */,
 				EA2D491929981B4600248864 /* Resources */,
@@ -822,6 +833,7 @@
 				DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */,
 				DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */,
 				DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */,
+				DDADA54D2E1C51C00004DADB /* MealPlanningView.swift in Sources */,
 				EA2D490629944E3000248864 /* AddFoodView.swift in Sources */,
 				DD72D7952C8508A600E75FB5 /* PlantCellView.swift in Sources */,
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
@@ -1225,7 +1237,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CaloriesWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CaloriesWidget;
@@ -1255,7 +1267,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = CaloriesWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CaloriesWidget;
@@ -1286,7 +1298,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Calories Watch App/Calories Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Calories;
@@ -1318,7 +1330,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Calories Watch App/Calories Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Calories;
@@ -1348,7 +1360,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tonyshort.mynextweek.Calories-Watch-AppTests";
@@ -1368,7 +1380,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6BTW6RT2T4;
+				DEVELOPMENT_TEAM = 83K5Y3G266;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tonyshort.mynextweek.Calories-Watch-AppTests";

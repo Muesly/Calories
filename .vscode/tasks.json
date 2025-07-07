@@ -65,7 +65,7 @@
         {
             "label": "Focus Simulator",
             "type": "shell",
-            "command": "open -a Simulator",
+            "command": "open -a Simulator"
         },
         {
             "label": "Build, Run and Focus",
@@ -98,6 +98,18 @@
                 "panel": "new"
             },
             "problemMatcher": []
+        },
+        {
+            "type": "sweetpad",
+            "action": "debugging-run",
+            "problemMatcher": [
+                "$sweetpad-watch",
+                "$sweetpad-xcodebuild-default",
+                "$sweetpad-xcbeautify-errors",
+                "$sweetpad-xcbeautify-warnings"
+            ],
+            "label": "sweetpad: debugging-run",
+            "detail": "Run the app (for debugging)"
         }
     ]
 } 

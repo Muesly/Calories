@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "sweetpad-lldb",
+        "request": "attach",
+        "name": "Run with Debugger",
+        "preLaunchTask": "sweetpad: debugging-launch"
+      }
+    ]
+  }

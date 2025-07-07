@@ -20,6 +20,7 @@ struct CaloriesView: View {
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
     @State var showingRecordWeightView = false
+    @State var showingMealPlanningView = false
     @State var entryChanged = false
 
     @State private var currentDate: Date
@@ -67,6 +68,12 @@ struct CaloriesView: View {
                                 Text("Record weight").modifier(ButtonText())
                             }
                             .buttonStyle(.bordered)
+                            Button {
+                                showingMealPlanningView = true
+                            } label: {
+                                Text("Meal Planning").modifier(ButtonText())
+                            }
+                            .buttonStyle(.bordered)
                         }
                     }
                 }
@@ -98,6 +105,9 @@ struct CaloriesView: View {
             }
             .sheet(isPresented: $showingRecordWeightView) {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
+            }
+            .fullScreenCover(isPresented: $showingMealPlanningView) {
+                MealPlanningView()
             }
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {
