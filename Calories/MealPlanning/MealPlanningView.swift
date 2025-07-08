@@ -5,20 +5,33 @@
 //  Created by Tony Short on 07/07/2025.
 //
 
+import Foundation
 import SwiftUI
+
+enum WizardStage {
+    case mealSelection
+    case freezerMeals
+    case existingItems
+    case mealPicking
+}
 
 struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss
+    @StateObject private var viewModel = MealPlanningViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
-                // Empty screen for now
-                Spacer()
-                Text("Meal Planning")
-                    .font(.brand)
-                    .foregroundColor(Colours.foregroundPrimary)
-                Spacer()
+                switch viewModel.currentStage {
+                case .mealSelection:
+                    EmptyView()
+                case .freezerMeals:
+                    EmptyView()
+                case .existingItems:
+                    EmptyView()
+                case .mealPicking:
+                    EmptyView()
+                }
             }
             .background(Colours.backgroundPrimary)
             .navigationTitle("Meal Planning")
