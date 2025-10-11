@@ -11,6 +11,7 @@ enum Colours {
     static let backgroundPrimary = Color("backgroundPrimary")
     static let backgroundSecondary = Color("backgroundSecondary")
     static let foregroundPrimary = Color("foregroundPrimary")
+    static let foregroundSecondary = Color("foregroundSecondary")
 }
 
 extension Font {
