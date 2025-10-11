@@ -82,7 +82,7 @@ final class AddFoodViewModelTests {
             calories: 100,
             timeConsumed: date,
             plants: [])
-        subject.fetchSuggestions()
+        await subject.fetchSuggestions()
         #expect(subject.suggestions.isEmpty)
     }
 
@@ -94,7 +94,7 @@ final class AddFoodViewModelTests {
             calories: 100,
             timeConsumed: date.addingTimeInterval(-secsPerDay - (3 * 3600)),
             plants: [])
-        subject.fetchSuggestions()
+        await subject.fetchSuggestions()
         #expect(subject.suggestions.isEmpty)
     }
 
@@ -106,7 +106,9 @@ final class AddFoodViewModelTests {
             calories: 100,
             timeConsumed: date.addingTimeInterval(-secsPerDay),
             plants: [])
-        subject.fetchSuggestions()
+
+        await subject.fetchSuggestions()
+
         #expect(subject.suggestions == [Suggestion(name: "Some more food")])
     }
 
@@ -118,10 +120,10 @@ final class AddFoodViewModelTests {
             calories: 100,
             timeConsumed: date.addingTimeInterval(-secsPerDay),
             plants: [])
-        subject.fetchSuggestions(searchText: "more")
+        await subject.fetchSuggestions(searchText: "more")
         #expect(subject.suggestions == [Suggestion(name: "Some more food")])
 
-        subject.fetchSuggestions(searchText: "mxe")  // Shouldn't return results
+        await subject.fetchSuggestions(searchText: "mxe")  // Shouldn't return results
         #expect(subject.suggestions.isEmpty)
     }
 
@@ -155,3 +157,4 @@ final class AddFoodViewModelTests {
                 == "https://www.google.co.uk/search?q=calories+in+a+Banana%20Cake")
     }
 }
+

@@ -19,7 +19,6 @@ extension ModelContext {
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
     }
 
-    @MainActor
     func foodResults(
         for predicate: Predicate<FoodEntry>? = nil,
         sortBy: [SortDescriptor<FoodEntry>] = [FoodEntry.mostRecent]

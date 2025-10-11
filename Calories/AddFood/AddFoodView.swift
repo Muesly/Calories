@@ -69,11 +69,15 @@ struct AddFoodView: View {
                 }
             }
             .onAppear {
-                viewModel.fetchSuggestions(searchText: searchText)
+                Task {
+                    await viewModel.fetchSuggestions(searchText: searchText)
+                }
             }
             .onChange(of: searchText) { _, searchText in
-                viewModel.fetchSuggestions(searchText: searchText)
-                template = viewModel.foodTemplateFor(searchText, timeConsumed: currentDate)
+                Task {
+                    await viewModel.fetchSuggestions(searchText: searchText)
+                    template = viewModel.foodTemplateFor(searchText, timeConsumed: currentDate)
+                }
             }
             .navigationDestination(isPresented: $showingAddFoodDetailsView) {
                 if let template {
@@ -104,7 +108,9 @@ struct AddFoodView: View {
                 mealItemsViewModel.fetchMealFoodEntries(date: timeConsumed)
                 viewModel.setDateForEntries(timeConsumed)
             }
-            viewModel.fetchSuggestions(searchText: searchText)
+            Task {
+                await viewModel.fetchSuggestions(searchText: searchText)
+            }
         }
     }
 

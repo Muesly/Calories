@@ -44,29 +44,45 @@ class AddFoodViewModel: ObservableObject {
         dateForEntries = date
     }
 
-    func fetchSuggestions(searchText: String = "") {
-        if searchText.isEmpty {  // Show list of suitable suggestions for this time of day
+    func fetchSuggestions(searchText: String = "") async {
+        // Perform the fetch work off the main actor using a background ModelContext
+        let dateForEntries = self.dateForEntries
+        let container = self.modelContext.container
+
+        // Run the heavy work in a detached task and await its result
+        let computedSuggestions: [Suggestion] = await Task.detached(priority: .userInitiated) {
+            let backgroundContext = ModelContext(container)
+
             let mealType = MealType.mealTypeForDate(dateForEntries)
             let range = mealType.rangeOfPeriod()
-            let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)  // Find entries earlier than today as today's result are part of current meal
+            let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
 
-            let results = modelContext.foodResults(for: #Predicate { $0.timeConsumed < startOfDay })
-            let filteredResults = results.filter {
-                let dc = Calendar.current.dateComponents([.hour], from: $0.timeConsumed)
-                return (dc.hour! >= range.startIndex) && (dc.hour! <= range.endIndex)
+            let results: [FoodEntry]
+            if searchText.isEmpty {
+                results = backgroundContext.foodResults(for: #Predicate { $0.timeConsumed < startOfDay })
+            } else {
+                results = backgroundContext.foodResults()
             }
-            let orderedSet = NSOrderedSet(
-                array: filteredResults.map { Suggestion(name: $0.foodDescription) })
-            suggestions = orderedSet.map { $0 as! Suggestion }
-        } else {  // Show fuzzy matched strings for this search text
-            let results = modelContext.foodResults()
-            let filteredResults = results.filter { foodEntry in
-                return foodEntry.foodDescription.fuzzyMatch(searchText)
+
+            let filteredResults: [FoodEntry]
+            if searchText.isEmpty {
+                filteredResults = results.filter {
+                    let dc = Calendar.current.dateComponents([.hour], from: $0.timeConsumed)
+                    guard let hour = dc.hour else { return false }
+                    return (hour >= range.startIndex) && (hour <= range.endIndex)
+                }
+            } else {
+                filteredResults = results.filter { entry in
+                    entry.foodDescription.fuzzyMatch(searchText)
+                }
             }
-            let orderedSet = NSOrderedSet(
-                array: filteredResults.map { Suggestion(name: $0.foodDescription) })
-            suggestions = orderedSet.map { $0 as! Suggestion }
-        }
+
+            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
+            return orderedSet.compactMap { $0 as? Suggestion }
+        }.value
+
+        // Update observable state on the main actor
+        self.suggestions = computedSuggestions
     }
 
     @discardableResult
