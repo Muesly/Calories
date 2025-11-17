@@ -9,13 +9,15 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-enum MealType: String, Equatable {
+enum MealType: String, Equatable, Identifiable {
     case breakfast = "Breakfast"
     case morningSnack = "Morning Snack"
     case lunch = "Lunch"
     case afternoonSnack = "Afternoon Snack"
     case dinner = "Dinner"
     case eveningSnack = "Evening Snack"
+
+    var id: String { rawValue }
 
     static func mealTypeForDate(_ date: Date) -> MealType {
         let dc = Calendar.current.dateComponents([.hour], from: date)
@@ -66,6 +68,10 @@ enum MealType: String, Equatable {
         dc.hour = range.endIndex
         let endOfPeriod: Date = Calendar.current.date(from: dc)!
         return (startOfPeriod, endOfPeriod)
+    }
+
+    var shortened: String {
+        String(id.prefix(1))
     }
 }
 
