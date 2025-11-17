@@ -42,7 +42,7 @@ struct CaloriesView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section {
                     VStack(spacing: 30) {
@@ -80,10 +80,9 @@ struct CaloriesView: View {
                 HistoryView(viewModel: historyViewModel, entryChanged: $entryChanged)
             }
             .navigationTitle("Calories")
-            .background(Colours.backgroundPrimary)
             .font(.brand)
             .scrollContentBackground(.hidden)
-            .cornerRadius(10)
+            .background(Colours.backgroundPrimary)
             .sheet(isPresented: $showingAddEntryView) {
                 AddFoodView(
                     viewModel: AddFoodViewModel(
@@ -106,7 +105,7 @@ struct CaloriesView: View {
             .sheet(isPresented: $showingRecordWeightView) {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
             }
-            .fullScreenCover(isPresented: $showingMealPlanningView) {
+            .sheet(isPresented: $showingMealPlanningView) {
                 MealPlanningView()
             }
             .onChange(of: scenePhase) { _, newPhase in
