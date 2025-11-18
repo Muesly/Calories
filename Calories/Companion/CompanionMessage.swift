@@ -68,7 +68,7 @@ enum TimeOfDay: CaseIterable {
     case lateEvening
 }
 
-enum DayOfWeek: CaseIterable {
+enum DayOfWeek: String, CaseIterable {
     case monday
     case tuesday
     case wednesday

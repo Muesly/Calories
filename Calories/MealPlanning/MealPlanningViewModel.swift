@@ -14,7 +14,7 @@ enum Person: String, CaseIterable {
 
 struct MealSelection {
     var person: Person
-    var day: String
+    var day: DayOfWeek
     var mealType: MealType
     var isSelected: Bool
 
@@ -36,6 +36,16 @@ enum WizardStage: Int, CaseIterable {
 class MealPlanningViewModel: ObservableObject {
     @Published var currentStage: WizardStage = .mealAvailability
     @Published var mealSelections: [MealSelection] = []
+
+    init() {
+        [Person.tony, Person.karen].forEach { person in
+            DayOfWeek.allCases.forEach { day in
+                MealType.allCases.forEach { mealType in
+                    mealSelections.append(.init(person: person, day: day, mealType: mealType, isSelected: true))
+                }
+            }
+        }
+    }
 
     var daysOfWeek: [String] {
         let dateFormatter = DateFormatter()
@@ -71,7 +81,7 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    func toggleMealSelection(for person: Person, day: String, mealType: MealType) {
+    func toggleMealSelection(for person: Person, day: DayOfWeek, mealType: MealType) {
         if let index = mealSelections.firstIndex(where: { selection in
             selection.person == person && selection.day == day && selection.mealType == mealType
         }) {
@@ -79,11 +89,9 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    func isSelected(for person: Person, day: String, mealType: MealType) -> Bool {
+    func isSelected(for person: Person, day: DayOfWeek, mealType: MealType) -> Bool {
         return mealSelections.first { selection in
             selection.person == person && selection.day == day && selection.mealType == mealType
         }?.isSelected ?? false
     }
-
-
 }

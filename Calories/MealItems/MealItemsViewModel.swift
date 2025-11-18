@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 
-enum MealType: String, Equatable, Identifiable {
+enum MealType: String, CaseIterable, Equatable, Identifiable {
     case breakfast = "Breakfast"
     case morningSnack = "Morning Snack"
     case lunch = "Lunch"

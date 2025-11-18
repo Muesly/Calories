@@ -10,8 +10,6 @@ import SwiftUI
 struct MealAvailabilityView: View {
     @ObservedObject var viewModel: MealPlanningViewModel
 
-    private let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
     var body: some View {
         VStack(spacing: 20) {
             Text("Select which meals you'll need")
@@ -22,7 +20,7 @@ struct MealAvailabilityView: View {
 
             ScrollView {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2), spacing: 10) {
-                    ForEach(daysOfWeek, id: \.self) { day in
+                    ForEach(DayOfWeek.allCases, id: \.self) { day in
                         DayMealSelectionView(day: day, viewModel: viewModel)
                     }
                 }
@@ -54,13 +52,13 @@ struct CheckboxToggleStyle: ToggleStyle {
 }
 
 struct DayMealSelectionView: View {
-    let day: String
+    let day: DayOfWeek
     @ObservedObject var viewModel: MealPlanningViewModel
     private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(day)
+            Text(day.rawValue.capitalized)
                 .font(.headline)
                 .fontWeight(.medium)
                 .foregroundColor(Colours.foregroundPrimary)
