@@ -157,4 +157,3 @@ final class AddFoodViewModelTests {
                 == "https://www.google.co.uk/search?q=calories+in+a+Banana%20Cake")
     }
 }
-

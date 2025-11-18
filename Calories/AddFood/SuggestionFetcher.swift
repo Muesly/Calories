@@ -18,8 +18,8 @@ struct SuggestionFetcher {
         }
 
         let predicate = #Predicate<PlantEntry> {
-            !excludedSuggestions.contains($0.name) &&
-            (searchText == nil || $0.name.localizedStandardContains(searchText!))
+            !excludedSuggestions.contains($0.name)
+                && (searchText == nil || $0.name.localizedStandardContains(searchText!))
         }
 
         return modelContext.plantResults(for: predicate, sortBy: [SortDescriptor(\.name)])

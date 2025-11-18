@@ -38,10 +38,11 @@ class MealPlanningViewModel: ObservableObject {
     @Published var mealSelections: [MealSelection] = []
 
     init() {
-        [Person.tony, Person.karen].forEach { person in
-            DayOfWeek.allCases.forEach { day in
-                MealType.allCases.forEach { mealType in
-                    mealSelections.append(.init(person: person, day: day, mealType: mealType, isSelected: true))
+        for person in [Person.tony, Person.karen] {
+            for day in DayOfWeek.allCases {
+                for mealType in MealType.allCases {
+                    mealSelections.append(
+                        .init(person: person, day: day, mealType: mealType, isSelected: true))
                 }
             }
         }
@@ -50,7 +51,7 @@ class MealPlanningViewModel: ObservableObject {
     var daysOfWeek: [String] {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current
-        let firstWeekdayIndex = Calendar.current.firstWeekday - 1 // Make it zero-based
+        let firstWeekdayIndex = Calendar.current.firstWeekday - 1  // Make it zero-based
 
         guard let symbols = dateFormatter.weekdaySymbols else {
             return []
@@ -58,7 +59,7 @@ class MealPlanningViewModel: ObservableObject {
 
         return Array(symbols[firstWeekdayIndex...] + symbols[..<firstWeekdayIndex])
     }
-    
+
     var canGoBack: Bool {
         currentStage != WizardStage.allCases.first
     }
@@ -76,7 +77,9 @@ class MealPlanningViewModel: ObservableObject {
 
     func goToNextStage() {
         let allStages = WizardStage.allCases
-        if let currentIndex = allStages.firstIndex(of: currentStage), currentIndex < allStages.count - 1 {
+        if let currentIndex = allStages.firstIndex(of: currentStage),
+            currentIndex < allStages.count - 1
+        {
             currentStage = allStages[currentIndex + 1]
         }
     }

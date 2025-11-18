@@ -19,7 +19,10 @@ struct MealAvailabilityView: View {
                 .padding(.horizontal)
 
             ScrollView {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2), spacing: 10) {
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2),
+                    spacing: 10
+                ) {
                     ForEach(DayOfWeek.allCases, id: \.self) { day in
                         DayMealSelectionView(day: day, viewModel: viewModel)
                     }
@@ -72,10 +75,18 @@ struct DayMealSelectionView: View {
                             .foregroundColor(Colours.foregroundPrimary)
                         ForEach([Person.tony, Person.karen], id: \.self) { person in
                             HStack(spacing: 5) {
-                                Toggle(isOn: Binding(
-                                    get: { viewModel.isSelected(for: person, day: day, mealType: mealType) },
-                                    set: { _ in viewModel.toggleMealSelection(for: person, day: day, mealType: mealType) }
-                                )) {
+                                Toggle(
+                                    isOn: Binding(
+                                        get: {
+                                            viewModel.isSelected(
+                                                for: person, day: day, mealType: mealType)
+                                        },
+                                        set: { _ in
+                                            viewModel.toggleMealSelection(
+                                                for: person, day: day, mealType: mealType)
+                                        }
+                                    )
+                                ) {
                                     Text(person.rawValue)
                                         .font(.caption2)
                                         .foregroundColor(Colours.foregroundPrimary)

@@ -59,7 +59,8 @@ class AddFoodViewModel: ObservableObject {
 
             let results: [FoodEntry]
             if searchText.isEmpty {
-                results = backgroundContext.foodResults(for: #Predicate { $0.timeConsumed < startOfDay })
+                results = backgroundContext.foodResults(
+                    for: #Predicate { $0.timeConsumed < startOfDay })
             } else {
                 results = backgroundContext.foodResults()
             }
@@ -77,7 +78,8 @@ class AddFoodViewModel: ObservableObject {
                 }
             }
 
-            let orderedSet = NSOrderedSet(array: filteredResults.map { Suggestion(name: $0.foodDescription) })
+            let orderedSet = NSOrderedSet(
+                array: filteredResults.map { Suggestion(name: $0.foodDescription) })
             return orderedSet.compactMap { $0 as? Suggestion }
         }.value
 

@@ -1,0 +1,13 @@
+repos:
+- repo: local
+  hooks:
+  - id: swift-format
+    name: swift-format
+    entry: swift-format format -i --configuration .swift-format --recursive
+    language: system
+    types: [swift]
+  - id: swift-lint
+    name: swift-lint
+    entry: swift-format lint --configuration .swift-format --strict --recursive
+    language: system
+    types: [swift]
