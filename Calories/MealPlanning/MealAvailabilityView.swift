@@ -11,26 +11,18 @@ struct MealAvailabilityView: View {
     @ObservedObject var viewModel: MealPlanningViewModel
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Select which meals you'll need")
-                .font(.title2)
-                .foregroundColor(Colours.foregroundPrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-
-            ScrollView {
-                LazyVGrid(
-                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 2),
-                    spacing: 10
-                ) {
-                    ForEach(DayOfWeek.allCases, id: \.self) { day in
-                        DayMealSelectionView(day: day, viewModel: viewModel)
-                    }
+        ScrollView(.horizontal) {
+            LazyHStack {
+                ForEach(DayOfWeek.allCases, id: \.self) { day in
+                    DayMealSelectionView(day: day, viewModel: viewModel)
                 }
-                .padding(.horizontal)
             }
+            .scrollTargetLayout()
         }
-        .padding(.vertical)
+        .scrollIndicators(.hidden)
+        .scrollTargetBehavior(.viewAligned)
+        .safeAreaPadding(.horizontal, 20)
+        .padding(20)
     }
 }
 
@@ -60,41 +52,48 @@ struct DayMealSelectionView: View {
     private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 20) {
             Text(day.rawValue.capitalized)
                 .font(.headline)
                 .fontWeight(.medium)
                 .foregroundColor(Colours.foregroundPrimary)
 
-            VStack(spacing: 8) {
+            VStack(spacing: 12) {
                 ForEach(mealList, id: \.self) { mealType in
-                    HStack(spacing: 15) {
-                        Text(mealType.shortened)
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(Colours.foregroundPrimary)
-                        ForEach([Person.tony, Person.karen], id: \.self) { person in
-                            HStack(spacing: 5) {
-                                Toggle(
-                                    isOn: Binding(
-                                        get: {
-                                            viewModel.isSelected(
-                                                for: person, day: day, mealType: mealType)
-                                        },
-                                        set: { _ in
-                                            viewModel.toggleMealSelection(
-                                                for: person, day: day, mealType: mealType)
-                                        }
-                                    )
-                                ) {
-                                    Text(person.rawValue)
-                                        .font(.caption2)
-                                        .foregroundColor(Colours.foregroundPrimary)
+                    VStack(spacing: 12) {
+                        HStack(spacing: 12) {
+                            Text(mealType.rawValue)
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(Colours.foregroundPrimary)
+                            ForEach([Person.tony, Person.karen], id: \.self) { person in
+                                HStack(spacing: 5) {
+                                    Toggle(
+                                        isOn: Binding(
+                                            get: {
+                                                viewModel.isSelected(
+                                                    for: person, day: day, mealType: mealType)
+                                            },
+                                            set: { _ in
+                                                viewModel.toggleMealSelection(
+                                                    for: person, day: day, mealType: mealType)
+                                            }
+                                        )
+                                    ) {
+                                        Text(person.rawValue)
+                                            .font(.caption2)
+                                            .foregroundColor(Colours.foregroundPrimary)
+                                    }
+                                    .toggleStyle(CheckboxToggleStyle())
                                 }
-                                .toggleStyle(CheckboxToggleStyle())
                             }
                         }
+                        Image(systemName: "fork.knife")
+                            .frame(width: 150, height: 120)
+                            .background(Color.backgroundSecondary)
+                            .cornerRadius(10)
                     }
+
                 }
             }
         }
