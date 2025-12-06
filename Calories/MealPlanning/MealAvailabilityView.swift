@@ -11,18 +11,15 @@ struct MealAvailabilityView: View {
     @ObservedObject var viewModel: MealPlanningViewModel
 
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 16) {
                 ForEach(DayOfWeek.allCases, id: \.self) { day in
                     DayMealSelectionView(day: day, viewModel: viewModel)
                 }
             }
-            .scrollTargetLayout()
+            .padding(.horizontal, 20)
         }
         .scrollIndicators(.hidden)
-        .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.horizontal, 20)
-        .padding(20)
     }
 }
 
@@ -46,58 +43,67 @@ struct CheckboxToggleStyle: ToggleStyle {
     }
 }
 
+struct MealCardCompact: View {
+    let mealType: MealType
+    let day: DayOfWeek
+    @ObservedObject var viewModel: MealPlanningViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(mealType.rawValue)
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundColor(Colours.foregroundPrimary)
+
+            ForEach([Person.tony, Person.karen], id: \.self) { person in
+                Toggle(
+                    isOn: binding(for: person)
+                ) {
+                    Text(person.rawValue)
+                        .font(.caption2)
+                        .foregroundColor(Colours.foregroundPrimary)
+                }
+                .toggleStyle(CheckboxToggleStyle())
+            }
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Colours.backgroundSecondary.opacity(0.5))
+        .cornerRadius(8)
+    }
+
+    private func binding(for person: Person) -> Binding<Bool> {
+        Binding(
+            get: { viewModel.isSelected(for: person, day: day, mealType: mealType) },
+            set: { _ in viewModel.toggleMealSelection(for: person, day: day, mealType: mealType) }
+        )
+    }
+}
+
 struct DayMealSelectionView: View {
     let day: DayOfWeek
     @ObservedObject var viewModel: MealPlanningViewModel
     private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 12) {
             Text(day.rawValue.capitalized)
                 .font(.headline)
                 .fontWeight(.medium)
                 .foregroundColor(Colours.foregroundPrimary)
 
-            VStack(spacing: 12) {
+            HStack(spacing: 8) {
                 ForEach(mealList, id: \.self) { mealType in
-                    VStack(spacing: 12) {
-                        HStack(spacing: 12) {
-                            Text(mealType.rawValue)
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(Colours.foregroundPrimary)
-                            ForEach([Person.tony, Person.karen], id: \.self) { person in
-                                HStack(spacing: 5) {
-                                    Toggle(
-                                        isOn: Binding(
-                                            get: {
-                                                viewModel.isSelected(
-                                                    for: person, day: day, mealType: mealType)
-                                            },
-                                            set: { _ in
-                                                viewModel.toggleMealSelection(
-                                                    for: person, day: day, mealType: mealType)
-                                            }
-                                        )
-                                    ) {
-                                        Text(person.rawValue)
-                                            .font(.caption2)
-                                            .foregroundColor(Colours.foregroundPrimary)
-                                    }
-                                    .toggleStyle(CheckboxToggleStyle())
-                                }
-                            }
-                        }
-                        Image(systemName: "fork.knife")
-                            .frame(width: 150, height: 120)
-                            .background(Color.backgroundSecondary)
-                            .cornerRadius(10)
-                    }
-
+                    MealCardCompact(
+                        mealType: mealType,
+                        day: day,
+                        viewModel: viewModel
+                    )
                 }
             }
         }
-        .padding(12)
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Colours.backgroundSecondary)
         .cornerRadius(10)
     }
