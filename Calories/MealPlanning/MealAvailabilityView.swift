@@ -13,8 +13,8 @@ struct MealAvailabilityView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                ForEach(DayOfWeek.allCases, id: \.self) { day in
-                    DayMealSelectionView(day: day, viewModel: viewModel)
+                ForEach(viewModel.weekDates, id: \.self) { date in
+                    DayMealSelectionView(date: date, viewModel: viewModel)
                 }
             }
             .padding(20)
@@ -46,7 +46,7 @@ struct CheckboxToggleStyle: ToggleStyle {
 
 struct ReasonTextField: View {
     let person: Person
-    let day: DayOfWeek
+    let date: Date
     let mealType: MealType
     @ObservedObject var viewModel: MealPlanningViewModel
     @State private var reasonText: String = ""
@@ -63,7 +63,7 @@ struct ReasonTextField: View {
             .cornerRadius(4)
             .focused($isFocused)
             .onAppear {
-                reasonText = viewModel.getReason(for: person, day: day, mealType: mealType)
+                reasonText = viewModel.getReason(for: person, date: date, mealType: mealType)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     isFocused = true
                 }
@@ -72,10 +72,10 @@ struct ReasonTextField: View {
                 guard !newValue.contains("\n") else {
                     isFocused = false
                     reasonText = newValue.replacing("\n", with: "")
-                    viewModel.setReason(reasonText, for: person, day: day, mealType: mealType)
+                    viewModel.setReason(reasonText, for: person, date: date, mealType: mealType)
                     return
                 }
-                viewModel.setReason(newValue, for: person, day: day, mealType: mealType)
+                viewModel.setReason(newValue, for: person, date: date, mealType: mealType)
             }
             .onSubmit {
                 isFocused = false
@@ -85,7 +85,7 @@ struct ReasonTextField: View {
 
 struct MealCardCompact: View {
     let mealType: MealType
-    let day: DayOfWeek
+    let date: Date
     @ObservedObject var viewModel: MealPlanningViewModel
 
     var body: some View {
@@ -106,10 +106,10 @@ struct MealCardCompact: View {
                     }
                     .toggleStyle(CheckboxToggleStyle())
 
-                    if !viewModel.isSelected(for: person, day: day, mealType: mealType) {
+                    if !viewModel.isSelected(for: person, date: date, mealType: mealType) {
                         ReasonTextField(
                             person: person,
-                            day: day,
+                            date: date,
                             mealType: mealType,
                             viewModel: viewModel
                         )
@@ -135,27 +135,27 @@ struct MealCardCompact: View {
 
     private func binding(for person: Person) -> Binding<Bool> {
         Binding(
-            get: { viewModel.isSelected(for: person, day: day, mealType: mealType) },
-            set: { _ in viewModel.toggleMealSelection(for: person, day: day, mealType: mealType) }
+            get: { viewModel.isSelected(for: person, date: date, mealType: mealType) },
+            set: { _ in viewModel.toggleMealSelection(for: person, date: date, mealType: mealType) }
         )
     }
 
     private var quickMealBinding: Binding<Bool> {
         Binding(
-            get: { viewModel.isQuickMeal(for: day, mealType: mealType) },
-            set: { viewModel.setQuickMeal($0, for: day, mealType: mealType) }
+            get: { viewModel.isQuickMeal(for: date, mealType: mealType) },
+            set: { viewModel.setQuickMeal($0, for: date, mealType: mealType) }
         )
     }
 }
 
 struct DayMealSelectionView: View {
-    let day: DayOfWeek
+    let date: Date
     @ObservedObject var viewModel: MealPlanningViewModel
     private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(day.rawValue.capitalized)
+            Text(formattedDate)
                 .font(.headline)
                 .fontWeight(.medium)
                 .foregroundColor(Colours.foregroundPrimary)
@@ -164,7 +164,7 @@ struct DayMealSelectionView: View {
                 ForEach(mealList, id: \.self) { mealType in
                     MealCardCompact(
                         mealType: mealType,
-                        day: day,
+                        date: date,
                         viewModel: viewModel
                     )
                 }
@@ -174,5 +174,23 @@ struct DayMealSelectionView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Colours.backgroundSecondary)
         .cornerRadius(10)
+    }
+
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        let dayOfWeek = formatter.string(from: date)
+
+        let calendar = Calendar.current
+        let day = calendar.component(.day, from: date)
+
+        formatter.dateFormat = "MMM"
+        let month = formatter.string(from: date)
+
+        let ordinalFormatter = NumberFormatter()
+        ordinalFormatter.numberStyle = .ordinal
+        let dayWithSuffix = ordinalFormatter.string(from: NSNumber(value: day)) ?? "\(day)"
+
+        return "\(dayOfWeek) \(dayWithSuffix) \(month)"
     }
 }
