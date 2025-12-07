@@ -17,7 +17,7 @@ struct MealAvailabilityView: View {
                     DayMealSelectionView(day: day, viewModel: viewModel)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(20)
         }
         .scrollIndicators(.hidden)
         .scrollDismissesKeyboard(.interactively)
@@ -116,6 +116,16 @@ struct MealCardCompact: View {
                     }
                 }
             }
+            Divider()
+                .background(Colours.foregroundPrimary)
+            Toggle(
+                isOn: quickMealBinding
+            ) {
+                Text("Quick?")
+                    .font(.caption2)
+                    .foregroundColor(Colours.foregroundPrimary)
+            }
+            .toggleStyle(CheckboxToggleStyle())
         }
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -127,6 +137,13 @@ struct MealCardCompact: View {
         Binding(
             get: { viewModel.isSelected(for: person, day: day, mealType: mealType) },
             set: { _ in viewModel.toggleMealSelection(for: person, day: day, mealType: mealType) }
+        )
+    }
+
+    private var quickMealBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.isQuickMeal(for: day, mealType: mealType) },
+            set: { viewModel.setQuickMeal($0, for: day, mealType: mealType) }
         )
     }
 }

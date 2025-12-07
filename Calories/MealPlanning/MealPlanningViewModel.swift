@@ -37,6 +37,7 @@ class MealPlanningViewModel: ObservableObject {
     @Published var currentStage: WizardStage = .mealAvailability
     @Published var mealSelections: [MealSelection] = []
     @Published var mealReasons: [String: String] = [:]
+    @Published var quickMeals: [String: Bool] = [:]
 
     init() {
         for person in [Person.tony, Person.karen] {
@@ -114,5 +115,18 @@ class MealPlanningViewModel: ObservableObject {
 
     func getReason(for person: Person, day: DayOfWeek, mealType: MealType) -> String {
         mealReasons[Self.reasonKey(person: person, day: day, mealType: mealType)] ?? ""
+    }
+
+    private static func quickMealKey(day: DayOfWeek, mealType: MealType) -> String {
+        "\(day.rawValue)-\(mealType.rawValue)"
+    }
+
+    func setQuickMeal(_ isQuick: Bool, for day: DayOfWeek, mealType: MealType) {
+        let key = Self.quickMealKey(day: day, mealType: mealType)
+        quickMeals[key] = isQuick
+    }
+
+    func isQuickMeal(for day: DayOfWeek, mealType: MealType) -> Bool {
+        quickMeals[Self.quickMealKey(day: day, mealType: mealType)] ?? false
     }
 }
