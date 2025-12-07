@@ -24,26 +24,6 @@ struct MealAvailabilityView: View {
     }
 }
 
-struct CheckboxToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack {
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(Colours.foregroundPrimary, lineWidth: 1)
-                .frame(width: 16, height: 16)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(configuration.isOn ? Color.accentColor : Color.clear)
-                        .frame(width: 10, height: 10)
-                )
-                .onTapGesture {
-                    configuration.isOn.toggle()
-                }
-
-            configuration.label
-        }
-    }
-}
-
 struct ReasonTextField: View {
     let person: Person
     let date: Date
@@ -95,7 +75,7 @@ struct MealCardCompact: View {
                 .fontWeight(.medium)
                 .foregroundColor(Colours.foregroundPrimary)
 
-            ForEach([Person.tony, Person.karen], id: \.self) { person in
+            ForEach(Person.allCases, id: \.self) { person in
                 VStack(alignment: .leading, spacing: 4) {
                     Toggle(
                         isOn: binding(for: person)

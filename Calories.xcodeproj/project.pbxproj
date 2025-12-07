@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD1595392EE59E750059954C /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */; };
+		DD15953A2EE59E750059954C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1595372EE59E750059954C /* Theme.swift */; };
 		DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */; };
 		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
@@ -38,7 +40,6 @@
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
 		EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */; };
-		EA085450299BED050029DD42 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
 		EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085451299C01350029DD42 /* WeeklyChartView.swift */; };
 		EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */; };
 		EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA097D8729918C9E00735129 /* CaloriesApp.swift */; };
@@ -68,7 +69,6 @@
 		EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE508299E9D0A000FE6AC /* AddExerciseView.swift */; };
 		EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE50B299E9D5E000FE6AC /* AddExerciseViewModel.swift */; };
 		EA4EE50E299EA49F000FE6AC /* AddEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4EE50D299EA49F000FE6AC /* AddEntryView.swift */; };
-		EA4EE50F299EA514000FE6AC /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544F299BED050029DD42 /* Theme.swift */; };
 		EA56DDF629A372AF00084E5A /* AddExerciseViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA56DDF529A372AF00084E5A /* AddExerciseViewModelTests.swift */; };
 		EA767580299D844E00771517 /* CaloriesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA76757F299D844E00771517 /* CaloriesApp.swift */; };
 		EA767582299D844E00771517 /* TwoDayChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA767581299D844E00771517 /* TwoDayChartView.swift */; };
@@ -142,6 +142,8 @@
 
 /* Begin PBXFileReference section */
 		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
+		DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
+		DD1595372EE59E750059954C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
@@ -177,7 +179,6 @@
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
 		DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaloriesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodDetailsView.swift; sourceTree = "<group>"; };
-		EA08544F299BED050029DD42 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		EA085451299C01350029DD42 /* WeeklyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartView.swift; sourceTree = "<group>"; };
 		EA085453299C353A0029DD42 /* WeeklyChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyChartViewModel.swift; sourceTree = "<group>"; };
 		EA097D8429918C9E00735129 /* Calories.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calories.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,6 +278,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD1595382EE59E750059954C /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */,
+				DD1595372EE59E750059954C /* Theme.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
 		DD5134E32C846EE800027855 /* Add Plant */ = {
 			isa = PBXGroup;
 			children = (
@@ -421,6 +431,7 @@
 		EA097D8629918C9E00735129 /* Calories */ = {
 			isa = PBXGroup;
 			children = (
+				DD1595382EE59E750059954C /* DesignSystem */,
 				DD5134E32C846EE800027855 /* Add Plant */,
 				EA4EE50A299E9D44000FE6AC /* AddExercise */,
 				EA2D491629981AFD00248864 /* AddFood */,
@@ -448,7 +459,6 @@
 				EA097DB72991909500735129 /* HistoryViewModel.swift */,
 				DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */,
 				DD538CF22C6E9377007CAD98 /* RandomPicker.swift */,
-				EA08544F299BED050029DD42 /* Theme.swift */,
 				DD7DC8932C8471EC0021FA09 /* Tests */,
 			);
 			path = App;
@@ -828,12 +838,13 @@
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
-				EA085450299BED050029DD42 /* Theme.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
 				EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */,
 				EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */,
 				DD701F902E1CFB64006DB2FF /* MealPlanningViewModel.swift in Sources */,
+				DD1595392EE59E750059954C /* CheckboxToggleStyle.swift in Sources */,
+				DD15953A2EE59E750059954C /* Theme.swift in Sources */,
 				DD701F912E1CFB64006DB2FF /* MealPlanningView.swift in Sources */,
 				EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */,
 				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,
@@ -900,7 +911,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA7675B3299D88F700771517 /* FoodEntry.swift in Sources */,
-				EA4EE50F299EA514000FE6AC /* Theme.swift in Sources */,
 				EA767582299D844E00771517 /* TwoDayChartView.swift in Sources */,
 				EAB542DD29A28B5300664583 /* AddEntryViewModel.swift in Sources */,
 				EA4EE50E299EA49F000FE6AC /* AddEntryView.swift in Sources */,

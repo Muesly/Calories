@@ -49,7 +49,7 @@ class MealPlanningViewModel: ObservableObject {
             calendar.date(byAdding: .day, value: offset, to: tomorrow)
         }
 
-        for person in [Person.tony, Person.karen] {
+        for person in Person.allCases {
             for date in weekDates {
                 for mealType in MealType.allCases {
                     mealSelections.append(
@@ -57,18 +57,6 @@ class MealPlanningViewModel: ObservableObject {
                 }
             }
         }
-    }
-
-    var daysOfWeek: [String] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale.current
-        let firstWeekdayIndex = Calendar.current.firstWeekday - 1  // Make it zero-based
-
-        guard let symbols = dateFormatter.weekdaySymbols else {
-            return []
-        }
-
-        return Array(symbols[firstWeekdayIndex...] + symbols[..<firstWeekdayIndex])
     }
 
     var canGoBack: Bool {
@@ -95,10 +83,33 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Private Helpers
+
+    /// Checks if a meal selection matches the given criteria
+    private func matchesMeal(
+        selection: MealSelection, person: Person, date: Date, mealType: MealType
+    ) -> Bool {
+        selection.person == person && date.isSameDay(as: selection.date)
+            && selection.mealType == mealType
+    }
+
+    /// Generates a storage key for person-specific meal data
+    private static func personMealKey(person: Person, date: Date, mealType: MealType) -> String {
+        let dateString = date.formatted(date: .abbreviated, time: .omitted)
+        return "\(person.rawValue)-\(dateString)-\(mealType.rawValue)"
+    }
+
+    /// Generates a storage key for meal-level data (not person-specific)
+    private static func mealKey(date: Date, mealType: MealType) -> String {
+        let dateString = date.formatted(date: .abbreviated, time: .omitted)
+        return "\(dateString)-\(mealType.rawValue)"
+    }
+
+    // MARK: - Meal Selection
+
     func toggleMealSelection(for person: Person, date: Date, mealType: MealType) {
         if let index = mealSelections.firstIndex(where: { selection in
-            selection.person == person && Calendar.current.isDate(selection.date, inSameDayAs: date)
-                && selection.mealType == mealType
+            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
         }) {
             mealSelections[index].isSelected.toggle()
         }
@@ -106,18 +117,14 @@ class MealPlanningViewModel: ObservableObject {
 
     func isSelected(for person: Person, date: Date, mealType: MealType) -> Bool {
         return mealSelections.first { selection in
-            selection.person == person && Calendar.current.isDate(selection.date, inSameDayAs: date)
-                && selection.mealType == mealType
+            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
         }?.isSelected ?? false
     }
 
-    private static func reasonKey(person: Person, date: Date, mealType: MealType) -> String {
-        let dateString = date.formatted(date: .abbreviated, time: .omitted)
-        return "\(person.rawValue)-\(dateString)-\(mealType.rawValue)"
-    }
+    // MARK: - Meal Reasons
 
     func setReason(_ reason: String, for person: Person, date: Date, mealType: MealType) {
-        let key = Self.reasonKey(person: person, date: date, mealType: mealType)
+        let key = Self.personMealKey(person: person, date: date, mealType: mealType)
         if reason.isEmpty {
             mealReasons.removeValue(forKey: key)
         } else {
@@ -126,20 +133,17 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func getReason(for person: Person, date: Date, mealType: MealType) -> String {
-        mealReasons[Self.reasonKey(person: person, date: date, mealType: mealType)] ?? ""
+        mealReasons[Self.personMealKey(person: person, date: date, mealType: mealType)] ?? ""
     }
 
-    private static func quickMealKey(date: Date, mealType: MealType) -> String {
-        let dateString = date.formatted(date: .abbreviated, time: .omitted)
-        return "\(dateString)-\(mealType.rawValue)"
-    }
+    // MARK: - Quick Meals
 
     func setQuickMeal(_ isQuick: Bool, for date: Date, mealType: MealType) {
-        let key = Self.quickMealKey(date: date, mealType: mealType)
+        let key = Self.mealKey(date: date, mealType: mealType)
         quickMeals[key] = isQuick
     }
 
     func isQuickMeal(for date: Date, mealType: MealType) -> Bool {
-        quickMeals[Self.quickMealKey(date: date, mealType: mealType)] ?? false
+        quickMeals[Self.mealKey(date: date, mealType: mealType)] ?? false
     }
 }
