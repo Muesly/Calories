@@ -53,14 +53,9 @@ struct MealPickerView_Previews: PreviewProvider {
 
 class MealPickerViewModel {
     @Binding var timeConsumed: Date
-    let meals: [MealToPick] = [
-        .init(name: "Breakfast", icon: "🥣", hour: 8),
-        .init(name: "Morning Snack", icon: "☕️", hour: 10),
-        .init(name: "Lunch", icon: "🥗", hour: 12),
-        .init(name: "Afternoon Snack", icon: "🥜", hour: 14),
-        .init(name: "Dinner", icon: "🍲", hour: 18),
-        .init(name: "Evening Snack", icon: "🍺", hour: 20),
-    ]
+    let meals: [MealToPick] = MealType.allCases.map {
+        MealToPick(name: $0.rawValue, icon: $0.iconName, hour: $0.defaultHour)
+    }
 
     init(timeConsumed: Binding<Date>) {
         self._timeConsumed = timeConsumed

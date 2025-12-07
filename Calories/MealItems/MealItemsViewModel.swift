@@ -33,6 +33,17 @@ enum MealType: String, CaseIterable, Equatable, Identifiable {
         }
     }
 
+    var defaultHour: Int {
+        switch self {
+        case .breakfast: 8
+        case .morningSnack: 10
+        case .lunch: 12
+        case .afternoonSnack: 14
+        case .dinner: 18
+        case .eveningSnack: 20
+        }
+    }
+
     static func rangeOfPeriod(_ type: MealType) -> Range<Int> {
         type.rangeOfPeriod()
     }
@@ -48,14 +59,14 @@ enum MealType: String, CaseIterable, Equatable, Identifiable {
         }
     }
 
-    func mealTypeColor() -> Color {
+    var iconName: String {
         switch self {
-        case .breakfast: return .red
-        case .morningSnack: return .orange
-        case .lunch: return .yellow
-        case .afternoonSnack: return .green
-        case .dinner: return .blue
-        default: return .purple
+        case .breakfast: "🥣"
+        case .morningSnack: "☕️"
+        case .lunch: "🥗"
+        case .afternoonSnack: "🥜"
+        case .dinner: "🍲"
+        case .eveningSnack: "🍺"
         }
     }
 

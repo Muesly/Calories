@@ -70,11 +70,11 @@ struct MealCardCompact: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(mealType.rawValue)
-                .font(.caption)
-                .fontWeight(.medium)
+            Text("\(mealType.rawValue) \(mealType.iconName)")
+                .font(.subheadline)
                 .foregroundColor(Colours.foregroundPrimary)
-
+            Divider()
+                .background(Colours.foregroundPrimary)
             ForEach(Person.allCases, id: \.self) { person in
                 VStack(alignment: .leading, spacing: 4) {
                     Toggle(
@@ -150,10 +150,10 @@ struct DayMealSelectionView: View {
                 }
             }
         }
-        .padding()
+        //        .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Colours.backgroundSecondary)
-        .cornerRadius(10)
+        //        .background(Colours.backgroundSecondary)
+        //        .cornerRadius(10)
     }
 
     private var formattedDate: String {
