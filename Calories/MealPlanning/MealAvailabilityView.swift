@@ -12,7 +12,7 @@ struct MealAvailabilityView: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 ForEach(DayOfWeek.allCases, id: \.self) { day in
                     DayMealSelectionView(day: day, viewModel: viewModel)
                 }
@@ -20,6 +20,7 @@ struct MealAvailabilityView: View {
             .padding(.horizontal, 20)
         }
         .scrollIndicators(.hidden)
+        .scrollDismissesKeyboard(.interactively)
     }
 }
 
@@ -43,6 +44,45 @@ struct CheckboxToggleStyle: ToggleStyle {
     }
 }
 
+struct ReasonTextField: View {
+    let person: Person
+    let day: DayOfWeek
+    let mealType: MealType
+    @ObservedObject var viewModel: MealPlanningViewModel
+    @State private var reasonText: String = ""
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        TextField("Reason...", text: $reasonText, axis: .vertical)
+            .font(.caption2)
+            .submitLabel(.done)
+            .lineLimit(2)
+            .foregroundColor(Colours.foregroundPrimary)
+            .padding(4)
+            .background(Color.white.opacity(0.1))
+            .cornerRadius(4)
+            .focused($isFocused)
+            .onAppear {
+                reasonText = viewModel.getReason(for: person, day: day, mealType: mealType)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isFocused = true
+                }
+            }
+            .onChange(of: reasonText) { oldValue, newValue in
+                guard !newValue.contains("\n") else {
+                    isFocused = false
+                    reasonText = newValue.replacing("\n", with: "")
+                    viewModel.setReason(reasonText, for: person, day: day, mealType: mealType)
+                    return
+                }
+                viewModel.setReason(newValue, for: person, day: day, mealType: mealType)
+            }
+            .onSubmit {
+                isFocused = false
+            }
+    }
+}
+
 struct MealCardCompact: View {
     let mealType: MealType
     let day: DayOfWeek
@@ -56,14 +96,25 @@ struct MealCardCompact: View {
                 .foregroundColor(Colours.foregroundPrimary)
 
             ForEach([Person.tony, Person.karen], id: \.self) { person in
-                Toggle(
-                    isOn: binding(for: person)
-                ) {
-                    Text(person.rawValue)
-                        .font(.caption2)
-                        .foregroundColor(Colours.foregroundPrimary)
+                VStack(alignment: .leading, spacing: 4) {
+                    Toggle(
+                        isOn: binding(for: person)
+                    ) {
+                        Text(person.rawValue)
+                            .font(.caption2)
+                            .foregroundColor(Colours.foregroundPrimary)
+                    }
+                    .toggleStyle(CheckboxToggleStyle())
+
+                    if !viewModel.isSelected(for: person, day: day, mealType: mealType) {
+                        ReasonTextField(
+                            person: person,
+                            day: day,
+                            mealType: mealType,
+                            viewModel: viewModel
+                        )
+                    }
                 }
-                .toggleStyle(CheckboxToggleStyle())
             }
         }
         .padding(8)
@@ -92,7 +143,7 @@ struct DayMealSelectionView: View {
                 .fontWeight(.medium)
                 .foregroundColor(Colours.foregroundPrimary)
 
-            HStack(spacing: 8) {
+            HStack(alignment: .top, spacing: 8) {
                 ForEach(mealList, id: \.self) { mealType in
                     MealCardCompact(
                         mealType: mealType,

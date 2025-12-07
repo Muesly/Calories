@@ -15,48 +15,46 @@ struct MealPlanningView: View {
     var body: some View {
         let stage = viewModel.currentStage
         NavigationStack {
-            ScrollView {
-                VStack {
-                    switch stage {
-                    case .mealAvailability:
-                        MealAvailabilityView(viewModel: viewModel)
-                    case .freezerMeals:
-                        EmptyView()
-                    case .existingItems:
-                        EmptyView()
-                    case .mealPicking:
-                        EmptyView()
-                    }
+            VStack {
+                switch stage {
+                case .mealAvailability:
+                    MealAvailabilityView(viewModel: viewModel)
+                case .freezerMeals:
+                    EmptyView()
+                case .existingItems:
+                    EmptyView()
+                case .mealPicking:
+                    EmptyView()
                 }
-                HStack(spacing: 15) {
-                    if viewModel.canGoBack {
-                        Button(action: {
-                            viewModel.goToPreviousStage()
-                        }) {
-                            Text("Back")
-                                .modifier(ButtonText())
-                        }
-                        .buttonStyle(.bordered)
-                    }
-
+            }
+            HStack(spacing: 15) {
+                if viewModel.canGoBack {
                     Button(action: {
-                        viewModel.goToNextStage()
+                        viewModel.goToPreviousStage()
                     }) {
-                        Text("Next")
+                        Text("Back")
                             .modifier(ButtonText())
                     }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!viewModel.canGoForward)
+                    .buttonStyle(.bordered)
                 }
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity)
+
+                Button(action: {
+                    viewModel.goToNextStage()
+                }) {
+                    Text("Next")
+                        .modifier(ButtonText())
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(!viewModel.canGoForward)
             }
-            .navigationTitle("Meal Planning")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Close") {
-                        dismiss()
-                    }
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity)
+        }
+        .navigationTitle("Meal Planning")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Close") {
+                    dismiss()
                 }
             }
         }

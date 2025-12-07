@@ -36,6 +36,7 @@ enum WizardStage: Int, CaseIterable {
 class MealPlanningViewModel: ObservableObject {
     @Published var currentStage: WizardStage = .mealAvailability
     @Published var mealSelections: [MealSelection] = []
+    @Published var mealReasons: [String: String] = [:]
 
     init() {
         for person in [Person.tony, Person.karen] {
@@ -96,5 +97,22 @@ class MealPlanningViewModel: ObservableObject {
         return mealSelections.first { selection in
             selection.person == person && selection.day == day && selection.mealType == mealType
         }?.isSelected ?? false
+    }
+
+    private static func reasonKey(person: Person, day: DayOfWeek, mealType: MealType) -> String {
+        "\(person.rawValue)-\(day.rawValue)-\(mealType.rawValue)"
+    }
+
+    func setReason(_ reason: String, for person: Person, day: DayOfWeek, mealType: MealType) {
+        let key = Self.reasonKey(person: person, day: day, mealType: mealType)
+        if reason.isEmpty {
+            mealReasons.removeValue(forKey: key)
+        } else {
+            mealReasons[key] = reason
+        }
+    }
+
+    func getReason(for person: Person, day: DayOfWeek, mealType: MealType) -> String {
+        mealReasons[Self.reasonKey(person: person, day: day, mealType: mealType)] ?? ""
     }
 }
