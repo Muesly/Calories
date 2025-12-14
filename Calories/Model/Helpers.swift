@@ -67,6 +67,20 @@ extension ModelContext {
             return []
         }
     }
+
+    func recipeResults(
+        for predicate: Predicate<RecipeEntry>? = nil,
+        sortBy: [SortDescriptor<RecipeEntry>] = [RecipeEntry.byName]
+    ) -> [RecipeEntry] {
+        let fetchDescriptor = FetchDescriptor<RecipeEntry>(
+            predicate: predicate,
+            sortBy: sortBy)
+        do {
+            return try fetch(fetchDescriptor)
+        } catch {
+            return []
+        }
+    }
 }
 
 extension Formatter {

@@ -106,7 +106,7 @@ struct CaloriesView: View {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
             }
             .sheet(isPresented: $showingMealPlanningView) {
-                MealPlanningView()
+                MealPlanningView(viewModel: MealPlanningViewModel(modelContext: modelContext))
             }
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {

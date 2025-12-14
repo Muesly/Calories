@@ -30,6 +30,9 @@ struct MealPickerView: View {
         }
         .scrollIndicators(.hidden)
         .scrollDismissesKeyboard(.interactively)
+        .onAppear {
+            viewModel.fetchRecipes()
+        }
     }
 }
 

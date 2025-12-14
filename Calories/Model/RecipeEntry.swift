@@ -16,7 +16,11 @@ import SwiftData
     }
 }
 
-extension RecipeEntry {
+extension RecipeEntry: Equatable {
+    public static func == (lhs: RecipeEntry, rhs: RecipeEntry) -> Bool {
+        lhs.name == rhs.name
+    }
+
     static var byName: SortDescriptor<RecipeEntry> {
         SortDescriptor(\.name, order: .forward)
     }

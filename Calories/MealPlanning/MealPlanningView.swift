@@ -12,7 +12,11 @@ import SwiftUI
 struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @StateObject private var viewModel = MealPlanningViewModel()
+    private let viewModel: MealPlanningViewModel
+
+    init(viewModel: MealPlanningViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         let stage = viewModel.currentStage
@@ -66,5 +70,6 @@ struct MealPlanningView: View {
 }
 
 #Preview {
-    MealPlanningView()
+    @Previewable @Environment(\.modelContext) var modelContext
+    MealPlanningView(viewModel: MealPlanningViewModel(modelContext: modelContext))
 }

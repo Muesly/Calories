@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 enum Person: String, CaseIterable {
     case tony = "Tony"
@@ -53,6 +54,7 @@ struct FoodToUseUp: Identifiable {
 
 @MainActor
 class MealPlanningViewModel: ObservableObject {
+    let modelContext: ModelContext
     @Published var currentStage: WizardStage = .mealPicking
     @Published var mealSelections: [MealSelection] = []
     @Published var mealReasons: [String: String] = [:]
@@ -61,7 +63,9 @@ class MealPlanningViewModel: ObservableObject {
 
     let weekDates: [Date]
 
-    init() {
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+
         // Generate next 7 days starting from tomorrow
         let calendar = Calendar.current
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())!
@@ -101,6 +105,18 @@ class MealPlanningViewModel: ObservableObject {
         {
             currentStage = allStages[currentIndex + 1]
         }
+    }
+
+    func fetchRecipes() {
+        var filledInMealSelections = [MealSelection]()
+        if let firstSuggestion = modelContext.recipeResults().first {
+            for mealSelection in mealSelections {
+                var filledInMealSelection = mealSelection
+                filledInMealSelection.recipe = firstSuggestion
+                filledInMealSelections.append(filledInMealSelection)
+            }
+        }
+        mealSelections = filledInMealSelections
     }
 
     // MARK: - Private Helpers

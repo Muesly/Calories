@@ -132,7 +132,7 @@ struct AddExerciseDetailsView: View {
     AddExerciseDetailsView(
         viewModel: AddExerciseViewModel(
             healthStore: StubbedHealthStore(),
-            modelContext: .inMemory,
+            modelContext: modelContext,
             timeExercised: Date()),
         exerciseTemplate: ExerciseEntry(
             exerciseDescription: "Some exercise",
