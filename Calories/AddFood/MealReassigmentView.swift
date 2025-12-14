@@ -14,7 +14,7 @@ struct MealToPick: Hashable {
     let hour: Int
 }
 
-struct MealPickerView: View {
+struct MealReassigmentView: View {
     let viewModel: MealPickerViewModel
 
     var body: some View {
@@ -47,7 +47,7 @@ struct MealPickerView: View {
 
 struct MealPickerView_Previews: PreviewProvider {
     static var previews: some View {
-        MealPickerView(viewModel: MealPickerViewModel(timeConsumed: .constant(Date())))
+        MealReassigmentView(viewModel: MealPickerViewModel(timeConsumed: .constant(Date())))
     }
 }
 

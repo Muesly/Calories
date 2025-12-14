@@ -61,7 +61,7 @@ struct HistoryView: View {
                                     Text(
                                         "Pick a meal to move \(selectedEntry?.foodDescription ?? "this item") to:"
                                     )
-                                    MealPickerView(
+                                    MealReassigmentView(
                                         viewModel: MealPickerViewModel(timeConsumed: $newMealTime)
                                     )
                                     .padding()

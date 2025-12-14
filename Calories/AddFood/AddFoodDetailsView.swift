@@ -85,7 +85,7 @@ struct AddFoodDetailsView: View {
                         }
                     }
                 }
-                MealPickerView(viewModel: MealPickerViewModel(timeConsumed: $foodAddedAtTime))
+                MealReassigmentView(viewModel: MealPickerViewModel(timeConsumed: $foodAddedAtTime))
             }
             .padding()
             .background(Colours.backgroundSecondary)
