@@ -30,7 +30,8 @@ struct CaloriesApp: App {
             ? ModelConfiguration(url: URL(fileURLWithPath: "/dev/null"))
             : ModelConfiguration("Model")
         return try! ModelContainer(
-            for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, configurations: config)
+            for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, RecipeEntry.self,
+            configurations: config)
     }
 
     init() {
@@ -105,7 +106,8 @@ class StubbedHealthStore: HealthStore {
     func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         await waitForResult()
         guard weightBetweenDatesIndex < weightAllDataPoints.count else { return nil }
-        let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex]  // The concrete function returns most recent first then goes back, so we reverse here.
+        // The concrete function returns most recent first then goes back, so we reverse here.
+        let weight = weightAllDataPoints.reversed()[weightBetweenDatesIndex]
         weightBetweenDatesIndex += 1
         return weight.1
     }

@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftData
 import SwiftUI
 
 struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     @StateObject private var viewModel = MealPlanningViewModel()
 
     var body: some View {
@@ -57,6 +59,9 @@ struct MealPlanningView: View {
             }
         }
         .font(.brand)
+        .onAppear {
+            RecipeEntry.seedRecipes(into: modelContext)
+        }
     }
 }
 
