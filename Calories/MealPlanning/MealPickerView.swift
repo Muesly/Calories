@@ -14,15 +14,16 @@ struct MealPickerView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(viewModel.weekDates, id: \.self) { date in
-                    DayMealSelectionView(
-                        date: date,
-                        viewModel: viewModel,
-                        card: { mealType, date in
-                            RecipePickerCardCompact(
-                                mealType: mealType,
-                                date: date,
-                                viewModel: viewModel)
-                        })
+                    DayMealSelectionView(date: date) { mealType, date in
+                        let meal = viewModel.meal(forDay: date, mealType: mealType)
+                        RecipePickerCard(
+                            mealType: mealType,
+                            meal: meal,
+                            onTap: {
+                                // TODO: Show recipe picker
+                            }
+                        )
+                    }
                 }
             }
             .padding(20)
@@ -32,13 +33,12 @@ struct MealPickerView: View {
     }
 }
 
-struct RecipePickerCardCompact: View {
+struct RecipePickerCard: View {
     let mealType: MealType
-    let date: Date
-    @ObservedObject var viewModel: MealPlanningViewModel
+    let meal: MealSelection
+    let onTap: () -> Void
 
     var body: some View {
-        let meal = viewModel.meal(forDay: date, mealType: mealType)
         VStack(alignment: .leading, spacing: 8) {
             Text("\(mealType.rawValue) \(mealType.iconName)")
                 .font(.subheadline)
@@ -55,5 +55,6 @@ struct RecipePickerCardCompact: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Colours.backgroundSecondary.opacity(0.5))
         .cornerRadius(8)
+        .onTapGesture { onTap() }
     }
 }

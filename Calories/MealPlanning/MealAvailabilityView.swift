@@ -14,16 +14,25 @@ struct MealAvailabilityView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(viewModel.weekDates, id: \.self) { date in
-                    DayMealSelectionView(
-                        date: date,
-                        viewModel: viewModel,
-                        card: { mealType, date in
-                            MealCardCompact(
-                                mealType: mealType,
-                                date: date,
-                                viewModel: viewModel
-                            )
-                        })
+                    DayMealSelectionView(date: date) { mealType, date in
+                        MealAvailabilityCard(
+                            mealType: mealType,
+                            personSelections: personSelections(for: date, mealType: mealType),
+                            personReasons: personReasons(for: date, mealType: mealType),
+                            isQuickMeal: viewModel.isQuickMeal(for: date, mealType: mealType),
+                            onTogglePerson: { person in
+                                viewModel.toggleMealSelection(
+                                    for: person, date: date, mealType: mealType)
+                            },
+                            onReasonChanged: { person, reason in
+                                viewModel.setReason(
+                                    reason, for: person, date: date, mealType: mealType)
+                            },
+                            onQuickMealToggled: { isQuick in
+                                viewModel.setQuickMeal(isQuick, for: date, mealType: mealType)
+                            }
+                        )
+                    }
                 }
             }
             .padding(20)
@@ -31,13 +40,28 @@ struct MealAvailabilityView: View {
         .scrollIndicators(.hidden)
         .scrollDismissesKeyboard(.interactively)
     }
+
+    private func personSelections(for date: Date, mealType: MealType) -> [Person: Bool] {
+        var selections: [Person: Bool] = [:]
+        for person in Person.allCases {
+            selections[person] = viewModel.isSelected(for: person, date: date, mealType: mealType)
+        }
+        return selections
+    }
+
+    private func personReasons(for date: Date, mealType: MealType) -> [Person: String] {
+        var reasons: [Person: String] = [:]
+        for person in Person.allCases {
+            reasons[person] = viewModel.getReason(for: person, date: date, mealType: mealType)
+        }
+        return reasons
+    }
 }
 
 struct ReasonTextField: View {
     let person: Person
-    let date: Date
-    let mealType: MealType
-    @ObservedObject var viewModel: MealPlanningViewModel
+    let initialReason: String
+    let onReasonChanged: (String) -> Void
     @State private var reasonText: String = ""
     @FocusState private var isFocused: Bool
 
@@ -52,7 +76,7 @@ struct ReasonTextField: View {
             .cornerRadius(4)
             .focused($isFocused)
             .onAppear {
-                reasonText = viewModel.getReason(for: person, date: date, mealType: mealType)
+                reasonText = initialReason
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     isFocused = true
                 }
@@ -61,10 +85,10 @@ struct ReasonTextField: View {
                 guard !newValue.contains("\n") else {
                     isFocused = false
                     reasonText = newValue.replacing("\n", with: "")
-                    viewModel.setReason(reasonText, for: person, date: date, mealType: mealType)
+                    onReasonChanged(reasonText)
                     return
                 }
-                viewModel.setReason(newValue, for: person, date: date, mealType: mealType)
+                onReasonChanged(newValue)
             }
             .onSubmit {
                 isFocused = false
@@ -72,12 +96,15 @@ struct ReasonTextField: View {
     }
 }
 
-struct MealCardCompact: View {
+struct MealAvailabilityCard: View {
     let mealType: MealType
-    let date: Date
-    @ObservedObject var viewModel: MealPlanningViewModel
+    let personSelections: [Person: Bool]
+    let personReasons: [Person: String]
+    let isQuickMeal: Bool
+    let onTogglePerson: (Person) -> Void
+    let onReasonChanged: (Person, String) -> Void
+    let onQuickMealToggled: (Bool) -> Void
 
-    @ViewBuilder
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(mealType.rawValue) \(mealType.iconName)")
@@ -87,31 +114,29 @@ struct MealCardCompact: View {
                 .background(Colours.foregroundPrimary)
 
             ForEach(Person.allCases, id: \.self) { person in
+                let isSelected = personSelections[person] ?? true
                 VStack(alignment: .leading, spacing: 4) {
-                    Toggle(
-                        isOn: binding(for: person)
-                    ) {
+                    Toggle(isOn: binding(for: person, isSelected: isSelected)) {
                         Text(person.rawValue)
                             .font(.caption2)
                             .foregroundColor(Colours.foregroundPrimary)
                     }
                     .toggleStyle(CheckboxToggleStyle())
 
-                    if !viewModel.isSelected(for: person, date: date, mealType: mealType) {
+                    if !isSelected {
                         ReasonTextField(
                             person: person,
-                            date: date,
-                            mealType: mealType,
-                            viewModel: viewModel
+                            initialReason: personReasons[person] ?? "",
+                            onReasonChanged: { reason in
+                                onReasonChanged(person, reason)
+                            }
                         )
                     }
                 }
             }
             Divider()
                 .background(Colours.foregroundPrimary)
-            Toggle(
-                isOn: quickMealBinding
-            ) {
+            Toggle(isOn: quickMealBinding) {
                 Text("Quick?")
                     .font(.caption2)
                     .foregroundColor(Colours.foregroundPrimary)
@@ -124,17 +149,17 @@ struct MealCardCompact: View {
         .cornerRadius(8)
     }
 
-    private func binding(for person: Person) -> Binding<Bool> {
+    private func binding(for person: Person, isSelected: Bool) -> Binding<Bool> {
         Binding(
-            get: { viewModel.isSelected(for: person, date: date, mealType: mealType) },
-            set: { _ in viewModel.toggleMealSelection(for: person, date: date, mealType: mealType) }
+            get: { isSelected },
+            set: { _ in onTogglePerson(person) }
         )
     }
 
     private var quickMealBinding: Binding<Bool> {
         Binding(
-            get: { viewModel.isQuickMeal(for: date, mealType: mealType) },
-            set: { viewModel.setQuickMeal($0, for: date, mealType: mealType) }
+            get: { isQuickMeal },
+            set: { onQuickMealToggled($0) }
         )
     }
 }

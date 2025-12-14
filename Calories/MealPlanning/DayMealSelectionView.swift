@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DayMealSelectionView<Card: View>: View {
     let date: Date
-    @ObservedObject var viewModel: MealPlanningViewModel
     private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
     @ViewBuilder let card: (MealType, Date) -> Card
 
