@@ -2,7 +2,7 @@
 //  MealAvailabilityView.swift
 //  Calories
 //
-//  Created by Tony Short on 07/07/2025.
+//  Created by Tony Short on 14/12/2025.
 //
 
 import SwiftUI
@@ -14,7 +14,16 @@ struct MealAvailabilityView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(viewModel.weekDates, id: \.self) { date in
-                    DayMealSelectionView(date: date, viewModel: viewModel)
+                    DayMealSelectionView(
+                        date: date,
+                        viewModel: viewModel,
+                        card: { mealType, date in
+                            MealCardCompact(
+                                mealType: mealType,
+                                date: date,
+                                viewModel: viewModel
+                            )
+                        })
                 }
             }
             .padding(20)
@@ -68,6 +77,7 @@ struct MealCardCompact: View {
     let date: Date
     @ObservedObject var viewModel: MealPlanningViewModel
 
+    @ViewBuilder
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(mealType.rawValue) \(mealType.iconName)")
@@ -75,6 +85,7 @@ struct MealCardCompact: View {
                 .foregroundColor(Colours.foregroundPrimary)
             Divider()
                 .background(Colours.foregroundPrimary)
+
             ForEach(Person.allCases, id: \.self) { person in
                 VStack(alignment: .leading, spacing: 4) {
                     Toggle(
@@ -125,52 +136,5 @@ struct MealCardCompact: View {
             get: { viewModel.isQuickMeal(for: date, mealType: mealType) },
             set: { viewModel.setQuickMeal($0, for: date, mealType: mealType) }
         )
-    }
-}
-
-struct DayMealSelectionView: View {
-    let date: Date
-    @ObservedObject var viewModel: MealPlanningViewModel
-    private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(formattedDate)
-                .font(.headline)
-                .fontWeight(.medium)
-                .foregroundColor(Colours.foregroundPrimary)
-
-            HStack(alignment: .top, spacing: 8) {
-                ForEach(mealList, id: \.self) { mealType in
-                    MealCardCompact(
-                        mealType: mealType,
-                        date: date,
-                        viewModel: viewModel
-                    )
-                }
-            }
-        }
-        //        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        //        .background(Colours.backgroundSecondary)
-        //        .cornerRadius(10)
-    }
-
-    private var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE"
-        let dayOfWeek = formatter.string(from: date)
-
-        let calendar = Calendar.current
-        let day = calendar.component(.day, from: date)
-
-        formatter.dateFormat = "MMM"
-        let month = formatter.string(from: date)
-
-        let ordinalFormatter = NumberFormatter()
-        ordinalFormatter.numberStyle = .ordinal
-        let dayWithSuffix = ordinalFormatter.string(from: NSNumber(value: day)) ?? "\(day)"
-
-        return "\(dayOfWeek) \(dayWithSuffix) \(month)"
     }
 }

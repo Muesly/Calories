@@ -24,7 +24,7 @@ struct MealPlanningView: View {
                 case .foodToUseUp:
                     FoodToUseUpView(viewModel: viewModel)
                 case .mealPicking:
-                    EmptyView()
+                    MealPickerView(viewModel: viewModel)
                 }
             }
             HStack(spacing: 15) {

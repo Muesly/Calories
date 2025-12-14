@@ -17,6 +17,7 @@ struct MealSelection {
     var date: Date
     var mealType: MealType
     var isSelected: Bool
+    var recipe: RecipeEntry?
 
     var id: String {
         let dateString = date.formatted(date: .abbreviated, time: .omitted)
@@ -57,6 +58,7 @@ class MealPlanningViewModel: ObservableObject {
     @Published var mealReasons: [String: String] = [:]
     @Published var quickMeals: [String: Bool] = [:]
     @Published var foodToUseUp: [FoodToUseUp] = []
+
     let weekDates: [Date]
 
     init() {
@@ -184,5 +186,9 @@ class MealPlanningViewModel: ObservableObject {
         if let index = foodToUseUp.firstIndex(where: { $0.id == item.id }) {
             foodToUseUp[index] = item
         }
+    }
+
+    func meal(forDay: Date, mealType: MealType) -> MealSelection {
+        mealSelections.first!
     }
 }

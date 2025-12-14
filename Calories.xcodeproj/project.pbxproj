@@ -23,9 +23,11 @@
 		DD6F91F32EEEB60B00664110 /* FoodEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6F91EC2EEEB60B00664110 /* FoodEntry.swift */; };
 		DD6F91F42EEEB60B00664110 /* PlantEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6F91EE2EEEB60B00664110 /* PlantEntry.swift */; };
 		DD6F91F62EEEB60B00664110 /* RecipeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6F91EF2EEEB60B00664110 /* RecipeEntry.swift */; };
+		DD6F91FE2EEEF51E00664110 /* MealAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */; };
+		DD6F92002EEEF56600664110 /* DayMealSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */; };
 		DD701F902E1CFB64006DB2FF /* MealPlanningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */; };
 		DD701F912E1CFB64006DB2FF /* MealPlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */; };
-		DD701F932E1CFCCC006DB2FF /* MealAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD701F922E1CFCCC006DB2FF /* MealAvailabilityView.swift */; };
+		DD701F932E1CFCCC006DB2FF /* MealPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */; };
 		DD72D7912C84B3B600E75FB5 /* PlantGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7902C84B3B600E75FB5 /* PlantGridView.swift */; };
 		DD72D7932C84EDEB00E75FB5 /* PlantCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */; };
 		DD72D7952C8508A600E75FB5 /* PlantCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7942C8508A600E75FB5 /* PlantCellView.swift */; };
@@ -60,7 +62,7 @@
 		EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */; };
 		EA2D49122998142100248864 /* AddFoodViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49112998142100248864 /* AddFoodViewModel.swift */; };
 		EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2D49132998166500248864 /* AddFoodViewModelTests.swift */; };
-		EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EA7472B50776400382DC8 /* MealPickerView.swift */; };
+		EA2EA7482B50776400382DC8 /* MealReassigmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA2EA7472B50776400382DC8 /* MealReassigmentView.swift */; };
 		EA3146F129A2C6F3002AAA45 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */; };
 		EA3146F329A2C6F3002AAA45 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */; };
 		EA3146F629A2C6F3002AAA45 /* CaloriesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3146F529A2C6F3002AAA45 /* CaloriesWidget.swift */; };
@@ -161,9 +163,11 @@
 		DD6F91EC2EEEB60B00664110 /* FoodEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodEntry.swift; sourceTree = "<group>"; };
 		DD6F91EE2EEEB60B00664110 /* PlantEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEntry.swift; sourceTree = "<group>"; };
 		DD6F91EF2EEEB60B00664110 /* RecipeEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEntry.swift; sourceTree = "<group>"; };
+		DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealAvailabilityView.swift; sourceTree = "<group>"; };
+		DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayMealSelectionView.swift; sourceTree = "<group>"; };
 		DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPlanningViewModel.swift; sourceTree = "<group>"; };
 		DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPlanningView.swift; sourceTree = "<group>"; };
-		DD701F922E1CFCCC006DB2FF /* MealAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealAvailabilityView.swift; sourceTree = "<group>"; };
+		DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerView.swift; sourceTree = "<group>"; };
 		DD72D7902C84B3B600E75FB5 /* PlantGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGridView.swift; sourceTree = "<group>"; };
 		DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellViewModel.swift; sourceTree = "<group>"; };
 		DD72D7942C8508A600E75FB5 /* PlantCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellView.swift; sourceTree = "<group>"; };
@@ -204,7 +208,7 @@
 		EA2D490F2997D99E00248864 /* MealItemsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealItemsViewModelTests.swift; sourceTree = "<group>"; };
 		EA2D49112998142100248864 /* AddFoodViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodViewModel.swift; sourceTree = "<group>"; };
 		EA2D49132998166500248864 /* AddFoodViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFoodViewModelTests.swift; sourceTree = "<group>"; };
-		EA2EA7472B50776400382DC8 /* MealPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerView.swift; sourceTree = "<group>"; };
+		EA2EA7472B50776400382DC8 /* MealReassigmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealReassigmentView.swift; sourceTree = "<group>"; };
 		EA3146EE29A2C6F2002AAA45 /* CaloriesWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CaloriesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA3146F029A2C6F3002AAA45 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		EA3146F229A2C6F3002AAA45 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -395,7 +399,9 @@
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
 				DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */,
 				DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */,
-				DD701F922E1CFCCC006DB2FF /* MealAvailabilityView.swift */,
+				DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */,
+				DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */,
+				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
 			);
 			path = MealPlanning;
 			sourceTree = "<group>";
@@ -477,7 +483,7 @@
 				EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */,
 				EA2D490529944E3000248864 /* AddFoodView.swift */,
 				EA2D49112998142100248864 /* AddFoodViewModel.swift */,
-				EA2EA7472B50776400382DC8 /* MealPickerView.swift */,
+				EA2EA7472B50776400382DC8 /* MealReassigmentView.swift */,
 				DD5B072A2C87890C00523C1E /* SuggestionFetcher.swift */,
 				DD7DC88B2C8471100021FA09 /* Tests */,
 			);
@@ -839,7 +845,7 @@
 				EA097D8A29918C9E00735129 /* CaloriesView.swift in Sources */,
 				EABBF0CE29B1342500C3B1F9 /* Day.swift in Sources */,
 				DD5B072B2C87890C00523C1E /* SuggestionFetcher.swift in Sources */,
-				DD701F932E1CFCCC006DB2FF /* MealAvailabilityView.swift in Sources */,
+				DD701F932E1CFCCC006DB2FF /* MealPickerView.swift in Sources */,
 				EAD2115D29A390E80007A813 /* RecordWeightViewModel.swift in Sources */,
 				EABBF0D029B1343800C3B1F9 /* Meal.swift in Sources */,
 				EA2D490C2997D60200248864 /* MealItemsView.swift in Sources */,
@@ -848,6 +854,7 @@
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
+				DD6F91FE2EEEF51E00664110 /* MealAvailabilityView.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
 				EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */,
@@ -856,7 +863,7 @@
 				DD1595392EE59E750059954C /* CheckboxToggleStyle.swift in Sources */,
 				DD15953A2EE59E750059954C /* Theme.swift in Sources */,
 				DD701F912E1CFB64006DB2FF /* MealPlanningView.swift in Sources */,
-				EA2EA7482B50776400382DC8 /* MealPickerView.swift in Sources */,
+				EA2EA7482B50776400382DC8 /* MealReassigmentView.swift in Sources */,
 				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,
 				DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */,
 				DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */,
@@ -878,6 +885,7 @@
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
+				DD6F92002EEEF56600664110 /* DayMealSelectionView.swift in Sources */,
 				DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */,
 				DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */,
 				EA42A10029B15EEE003BB1FC /* Helpers.swift in Sources */,
