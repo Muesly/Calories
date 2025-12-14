@@ -19,10 +19,8 @@ struct MealPlanningView: View {
                 switch stage {
                 case .mealAvailability:
                     MealAvailabilityView(viewModel: viewModel)
-                case .freezerMeals:
-                    EmptyView()
-                case .existingItems:
-                    EmptyView()
+                case .foodToUseUp:
+                    FoodToUseUpView(viewModel: viewModel)
                 case .mealPicking:
                     EmptyView()
                 }

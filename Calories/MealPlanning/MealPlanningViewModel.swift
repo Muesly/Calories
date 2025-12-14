@@ -26,9 +26,26 @@ struct MealSelection {
 
 enum WizardStage: Int, CaseIterable {
     case mealAvailability
-    case freezerMeals
-    case existingItems
+    case foodToUseUp
     case mealPicking
+}
+
+struct FoodToUseUp: Identifiable {
+    let id: UUID
+    var name: String
+    var isFullMeal: Bool  // true = complete meal (🍲), false = ingredient (🥩)
+    var isFrozen: Bool  // needs thawing consideration
+
+    init(name: String = "", isFullMeal: Bool = false, isFrozen: Bool = false) {
+        self.id = UUID()
+        self.name = name
+        self.isFullMeal = isFullMeal
+        self.isFrozen = isFrozen
+    }
+
+    var typeEmoji: String {
+        isFullMeal ? "🍲" : "🥩"
+    }
 }
 
 // MARK: - View Model
@@ -39,6 +56,7 @@ class MealPlanningViewModel: ObservableObject {
     @Published var mealSelections: [MealSelection] = []
     @Published var mealReasons: [String: String] = [:]
     @Published var quickMeals: [String: Bool] = [:]
+    @Published var foodToUseUp: [FoodToUseUp] = []
     let weekDates: [Date]
 
     init() {
@@ -145,5 +163,26 @@ class MealPlanningViewModel: ObservableObject {
 
     func isQuickMeal(for date: Date, mealType: MealType) -> Bool {
         quickMeals[Self.mealKey(date: date, mealType: mealType)] ?? false
+    }
+
+    // MARK: - Food To Use Up
+
+    func addFoodItem() {
+        foodToUseUp.append(FoodToUseUp())
+    }
+
+    func removeFoodItem(at index: Int) {
+        guard index >= 0 && index < foodToUseUp.count else { return }
+        foodToUseUp.remove(at: index)
+    }
+
+    func removeFoodItem(withId id: UUID) {
+        foodToUseUp.removeAll { $0.id == id }
+    }
+
+    func updateFoodItem(_ item: FoodToUseUp) {
+        if let index = foodToUseUp.firstIndex(where: { $0.id == item.id }) {
+            foodToUseUp[index] = item
+        }
     }
 }
