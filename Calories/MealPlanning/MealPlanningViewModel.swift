@@ -111,7 +111,7 @@ class MealPlanningViewModel: ObservableObject {
     func fetchRecipes() {
         var filledInMealSelections = [MealSelection]()
         for mealSelection in mealSelections {
-            if let recipe = mealPickerEngine.pickRecipe() {
+            if let recipe = mealPickerEngine.pickRecipe(mealType: mealSelection.mealType) {
                 var filledInMealSelection = mealSelection
                 filledInMealSelection.recipe = recipe
                 filledInMealSelections.append(filledInMealSelection)

@@ -8,11 +8,43 @@
 import Foundation
 import SwiftData
 
+public enum MealSuitability: Int, Codable {
+    case never
+    case some
+    case always
+}
+
 @Model public class RecipeEntry {
     @Attribute(.unique) var name: String
+    private var breakfastSuitabilityRaw: Int
+    private var lunchSuitabilityRaw: Int
+    private var dinnerSuitabilityRaw: Int
 
-    public init(name: String) {
+    var breakfastSuitability: MealSuitability {
+        get { MealSuitability(rawValue: breakfastSuitabilityRaw) ?? .never }
+        set { breakfastSuitabilityRaw = newValue.rawValue }
+    }
+
+    var lunchSuitability: MealSuitability {
+        get { MealSuitability(rawValue: lunchSuitabilityRaw) ?? .never }
+        set { lunchSuitabilityRaw = newValue.rawValue }
+    }
+
+    var dinnerSuitability: MealSuitability {
+        get { MealSuitability(rawValue: dinnerSuitabilityRaw) ?? .never }
+        set { dinnerSuitabilityRaw = newValue.rawValue }
+    }
+
+    public init(
+        name: String,
+        breakfastSuitability: MealSuitability = .never,
+        lunchSuitability: MealSuitability = .never,
+        dinnerSuitability: MealSuitability = .never
+    ) {
         self.name = name
+        self.breakfastSuitabilityRaw = breakfastSuitability.rawValue
+        self.lunchSuitabilityRaw = lunchSuitability.rawValue
+        self.dinnerSuitabilityRaw = dinnerSuitability.rawValue
     }
 }
 
@@ -36,19 +68,50 @@ extension RecipeEntry: Equatable {
         let existingCount = (try? modelContext.fetchCount(descriptor)) ?? 0
         guard existingCount == 0 else { return }
 
-        let recipeNames = [
-            "Scrambled Eggs on Toast",
-            "Greek Yoghurt & Berries",
-            "Chicken Glow Bowl",
-            "Tuna Salad",
-            "Greek Salad",
-            "Roasted Feta & Vegetables",
-            "Tofu Thai Green Curry",
-            "Moroccan Lamb",
+        let recipes: [RecipeEntry] = [
+            .init(
+                name: "Scrambled Eggs on Toast",
+                breakfastSuitability: .always,
+                lunchSuitability: .some,
+                dinnerSuitability: .some),
+            .init(
+                name: "Greek Yoghurt & Berries",
+                breakfastSuitability: .always,
+                lunchSuitability: .never,
+                dinnerSuitability: .never),
+            .init(
+                name: "Chicken Glow Bowl",
+                breakfastSuitability: .never,
+                lunchSuitability: .always,
+                dinnerSuitability: .some),
+            .init(
+                name: "Tuna Salad",
+                breakfastSuitability: .never,
+                lunchSuitability: .always,
+                dinnerSuitability: .some),
+            .init(
+                name: "Greek Salad",
+                breakfastSuitability: .never,
+                lunchSuitability: .always,
+                dinnerSuitability: .some),
+            .init(
+                name: "Roasted Feta & Vegetables",
+                breakfastSuitability: .never,
+                lunchSuitability: .some,
+                dinnerSuitability: .always),
+            .init(
+                name: "Tofu Thai Green Curry",
+                breakfastSuitability: .never,
+                lunchSuitability: .some,
+                dinnerSuitability: .always),
+            .init(
+                name: "Moroccan Lamb",
+                breakfastSuitability: .never,
+                lunchSuitability: .some,
+                dinnerSuitability: .always),
         ]
 
-        for name in recipeNames {
-            let recipe = RecipeEntry(name: name)
+        for recipe in recipes {
             recipe.insert(into: modelContext)
         }
     }
