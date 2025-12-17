@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD01C6D12EF34C9C00E2D612 /* MealPickerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */; };
 		DD1595392EE59E750059954C /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */; };
 		DD15953A2EE59E750059954C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1595372EE59E750059954C /* Theme.swift */; };
 		DD15953C2EE5C22A0059954C /* FoodToUseUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */; };
@@ -146,6 +147,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerEngine.swift; sourceTree = "<group>"; };
 		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
 		DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		DD1595372EE59E750059954C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 			children = (
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
 				DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */,
+				DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */,
 				DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */,
 				DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */,
 				DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */,
@@ -887,6 +890,7 @@
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
 				DD6F92002EEEF56600664110 /* DayMealSelectionView.swift in Sources */,
 				DD538CEB2C6C0CCF007CAD98 /* Companion.swift in Sources */,
+				DD01C6D12EF34C9C00E2D612 /* MealPickerEngine.swift in Sources */,
 				DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */,
 				EA42A10029B15EEE003BB1FC /* Helpers.swift in Sources */,
 				DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */,

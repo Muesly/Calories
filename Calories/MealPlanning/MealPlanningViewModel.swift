@@ -60,11 +60,12 @@ class MealPlanningViewModel: ObservableObject {
     @Published var mealReasons: [String: String] = [:]
     @Published var quickMeals: [String: Bool] = [:]
     @Published var foodToUseUp: [FoodToUseUp] = []
-
+    let mealPickerEngine: MealPickerEngine
     let weekDates: [Date]
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
+        self.mealPickerEngine = MealPickerEngine(recipes: modelContext.recipeResults())
 
         // Generate next 7 days starting from tomorrow
         let calendar = Calendar.current
@@ -109,11 +110,12 @@ class MealPlanningViewModel: ObservableObject {
 
     func fetchRecipes() {
         var filledInMealSelections = [MealSelection]()
-        let recipeResults = modelContext.recipeResults()
         for mealSelection in mealSelections {
-            var filledInMealSelection = mealSelection
-            filledInMealSelection.recipe = recipeResults.randomElement()
-            filledInMealSelections.append(filledInMealSelection)
+            if let recipe = mealPickerEngine.pickRecipe() {
+                var filledInMealSelection = mealSelection
+                filledInMealSelection.recipe = recipe
+                filledInMealSelections.append(filledInMealSelection)
+            }
         }
         mealSelections = filledInMealSelections
     }
