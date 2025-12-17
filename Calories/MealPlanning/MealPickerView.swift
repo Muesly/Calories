@@ -15,14 +15,15 @@ struct MealPickerView: View {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(viewModel.weekDates, id: \.self) { date in
                     DayMealSelectionView(date: date) { mealType, date in
-                        let meal = viewModel.meal(forDay: date, mealType: mealType)
-                        RecipePickerCard(
-                            mealType: mealType,
-                            meal: meal,
-                            onTap: {
-                                // TODO: Show recipe picker
-                            }
-                        )
+                        if let meal = viewModel.meal(forDate: date, mealType: mealType) {
+                            RecipePickerCard(
+                                mealType: mealType,
+                                meal: meal,
+                                onTap: {
+                                    // TODO: Show recipe picker
+                                }
+                            )
+                        }
                     }
                 }
             }

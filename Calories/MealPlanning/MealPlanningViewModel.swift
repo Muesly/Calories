@@ -109,12 +109,11 @@ class MealPlanningViewModel: ObservableObject {
 
     func fetchRecipes() {
         var filledInMealSelections = [MealSelection]()
-        if let firstSuggestion = modelContext.recipeResults().first {
-            for mealSelection in mealSelections {
-                var filledInMealSelection = mealSelection
-                filledInMealSelection.recipe = firstSuggestion
-                filledInMealSelections.append(filledInMealSelection)
-            }
+        let recipeResults = modelContext.recipeResults()
+        for mealSelection in mealSelections {
+            var filledInMealSelection = mealSelection
+            filledInMealSelection.recipe = recipeResults.randomElement()
+            filledInMealSelections.append(filledInMealSelection)
         }
         mealSelections = filledInMealSelections
     }
@@ -204,7 +203,7 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    func meal(forDay: Date, mealType: MealType) -> MealSelection {
-        mealSelections.first!
+    func meal(forDate date: Date, mealType: MealType) -> MealSelection? {
+        mealSelections.first { $0.mealType == mealType && $0.date.isSameDay(as: date) }
     }
 }
