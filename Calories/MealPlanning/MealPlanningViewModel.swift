@@ -67,11 +67,9 @@ class MealPlanningViewModel: ObservableObject {
         self.modelContext = modelContext
         self.mealPickerEngine = MealPickerEngine(recipes: modelContext.recipeResults())
 
-        // Generate next 7 days starting from tomorrow
         let calendar = Calendar.current
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())!
         self.weekDates = (0..<7).compactMap { offset in
-            calendar.date(byAdding: .day, value: offset, to: tomorrow)
+            calendar.date(byAdding: .day, value: offset, to: Self.startOfPlanningWeek())
         }
 
         for person in Person.allCases {
@@ -207,5 +205,28 @@ class MealPlanningViewModel: ObservableObject {
 
     func meal(forDate date: Date, mealType: MealType) -> MealSelection? {
         mealSelections.first { $0.mealType == mealType && $0.date.isSameDay(as: date) }
+    }
+
+    /// Returns the Monday to plan from:
+    /// - Mon-Wed: this week's Monday
+    /// - Thu-Sun: next week's Monday
+    static func startOfPlanningWeek(from date: Date = Date()) -> Date {
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: date)
+
+        // Calendar weekday: 1 = Sunday, 2 = Monday, ..., 7 = Saturday
+        // Monday = 2, Tuesday = 3, Wednesday = 4
+        let isEarlyInWeek = (2...4).contains(weekday)
+
+        // Find this week's Monday
+        let thisMonday = calendar.date(
+            from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date))!
+
+        if isEarlyInWeek {
+            return thisMonday
+        } else {
+            // Return next Monday
+            return calendar.date(byAdding: .weekOfYear, value: 1, to: thisMonday)!
+        }
     }
 }
