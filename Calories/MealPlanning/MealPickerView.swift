@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MealPickerView: View {
-    @ObservedObject var viewModel: MealPlanningViewModel
+    @State var viewModel: MealPlanningViewModel
 
     var body: some View {
         ScrollView {

@@ -12,7 +12,7 @@ import SwiftUI
 struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    private let viewModel: MealPlanningViewModel
+    @State var viewModel: MealPlanningViewModel
 
     init(viewModel: MealPlanningViewModel) {
         self.viewModel = viewModel

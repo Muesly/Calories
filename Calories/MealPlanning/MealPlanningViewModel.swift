@@ -52,14 +52,15 @@ struct FoodToUseUp: Identifiable {
 
 // MARK: - View Model
 
+@Observable
 @MainActor
 class MealPlanningViewModel: ObservableObject {
     let modelContext: ModelContext
-    @Published var currentStage: WizardStage = .mealPicking
-    @Published var mealSelections: [MealSelection] = []
-    @Published var mealReasons: [String: String] = [:]
-    @Published var quickMeals: [String: Bool] = [:]
-    @Published var foodToUseUp: [FoodToUseUp] = []
+    var currentStage: WizardStage = .mealAvailability
+    var mealSelections: [MealSelection] = []
+    var mealReasons: [String: String] = [:]
+    var quickMeals: [String: Bool] = [:]
+    var foodToUseUp: [FoodToUseUp] = []
     let mealPickerEngine: MealPickerEngine
     let weekDates: [Date]
 
