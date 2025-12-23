@@ -218,6 +218,14 @@ class MealPlanningViewModel: ObservableObject {
         mealSelections.first { $0.mealType == mealType && $0.date.isSameDay(as: date) }
     }
 
+    func selectRecipe(_ recipe: RecipeEntry, for person: Person, date: Date, mealType: MealType) {
+        if let index = mealSelections.firstIndex(where: { selection in
+            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
+        }) {
+            mealSelections[index].recipe = recipe
+        }
+    }
+
     // MARK: - Serving Info
 
     /// Returns the number of people attending a meal

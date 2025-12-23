@@ -20,8 +20,12 @@ struct MealPickerView: View {
                                 mealType: mealType,
                                 meal: meal,
                                 servingInfo: viewModel.servingInfo(for: date, mealType: mealType),
-                                onTap: {
-                                    // TODO: Show recipe picker
+                                onRecipeSelected: { recipe in
+                                    let person = meal.person
+                                    let mealDate = date
+                                    let mealType = mealType
+                                    viewModel.selectRecipe(
+                                        recipe, for: person, date: mealDate, mealType: mealType)
                                 }
                             )
                         }
@@ -32,9 +36,6 @@ struct MealPickerView: View {
         }
         .scrollIndicators(.hidden)
         .scrollDismissesKeyboard(.interactively)
-        .onAppear {
-            viewModel.fetchRecipes()
-        }
     }
 }
 
@@ -42,7 +43,7 @@ struct RecipePickerCard: View {
     let mealType: MealType
     let meal: MealSelection
     let servingInfo: String
-    let onTap: () -> Void
+    let onRecipeSelected: (RecipeEntry) -> Void
 
     @State private var showMealChoice = false
 
@@ -70,7 +71,7 @@ struct RecipePickerCard: View {
                         .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
                         .italic()
                 } else {
-                    Text(meal.recipe?.name ?? "Select recipe...")
+                    Text(meal.recipe?.name ?? "Choose a meal")
                         .font(.caption)
                         .foregroundColor(Colours.foregroundPrimary)
                         .lineLimit(3)
@@ -89,7 +90,6 @@ struct RecipePickerCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Colours.backgroundSecondary.opacity(0.5))
         .cornerRadius(8)
-        .onTapGesture { onTap() }
         .sheet(isPresented: $showMealChoice) {
             if let recipe = meal.recipe {
                 MealChoiceView(
@@ -98,7 +98,10 @@ struct RecipePickerCard: View {
                     servingInfo: servingInfo
                 )
             } else {
-                RecipeBookView()
+                RecipeBookView(
+                    mealType: mealType,
+                    onRecipeSelected: onRecipeSelected
+                )
             }
         }
     }
