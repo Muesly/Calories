@@ -33,6 +33,8 @@
 		DD72D7932C84EDEB00E75FB5 /* PlantCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */; };
 		DD72D7952C8508A600E75FB5 /* PlantCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7942C8508A600E75FB5 /* PlantCellView.swift */; };
 		DD72D7972C8635F000E75FB5 /* PlantCellViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD72D7962C8635F000E75FB5 /* PlantCellViewModelTests.swift */; };
+		DD738C992EFB28B500ABFCFD /* MealChoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD738C982EFB28B500ABFCFD /* MealChoiceView.swift */; };
+		DD738C9B2EFB2A1700ABFCFD /* RecipeBookView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD738C9A2EFB2A1700ABFCFD /* RecipeBookView.swift */; };
 		DD7DC8872C84707D0021FA09 /* AddExerciseViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */; };
 		DD7DC8882C84707D0021FA09 /* AddFoodDetailsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */; };
 		DD7DC8892C84707D0021FA09 /* RecordWeightViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */; };
@@ -174,6 +176,8 @@
 		DD72D7922C84EDEB00E75FB5 /* PlantCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellViewModel.swift; sourceTree = "<group>"; };
 		DD72D7942C8508A600E75FB5 /* PlantCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellView.swift; sourceTree = "<group>"; };
 		DD72D7962C8635F000E75FB5 /* PlantCellViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCellViewModelTests.swift; sourceTree = "<group>"; };
+		DD738C982EFB28B500ABFCFD /* MealChoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealChoiceView.swift; sourceTree = "<group>"; };
+		DD738C9A2EFB2A1700ABFCFD /* RecipeBookView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeBookView.swift; sourceTree = "<group>"; };
 		DD7A57DA2D19F51700CBF055 /* Calories.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Calories.entitlements; sourceTree = "<group>"; };
 		DD7A57DB2D19F51700CBF055 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		DD7DC8842C84707D0021FA09 /* AddExerciseViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseViewTests.swift; sourceTree = "<group>"; };
@@ -400,8 +404,10 @@
 			children = (
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
 				DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */,
+				DD738C982EFB28B500ABFCFD /* MealChoiceView.swift */,
 				DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */,
 				DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */,
+				DD738C9A2EFB2A1700ABFCFD /* RecipeBookView.swift */,
 				DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */,
 				DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */,
 				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
@@ -855,6 +861,7 @@
 				DD15953C2EE5C22A0059954C /* FoodToUseUpView.swift in Sources */,
 				DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */,
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
+				DD738C9B2EFB2A1700ABFCFD /* RecipeBookView.swift in Sources */,
 				DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
 				DD6F91FE2EEEF51E00664110 /* MealAvailabilityView.swift in Sources */,
@@ -886,6 +893,7 @@
 				EA2D490A29970B8A00248864 /* HistoryView.swift in Sources */,
 				DD5134D42C83BE3400027855 /* PlantImageGenerator.swift in Sources */,
 				EAD2115B29A38F860007A813 /* RecordWeightView.swift in Sources */,
+				DD738C992EFB28B500ABFCFD /* MealChoiceView.swift in Sources */,
 				EA085454299C353A0029DD42 /* WeeklyChartViewModel.swift in Sources */,
 				EA2D490829945C9400248864 /* HealthStore.swift in Sources */,
 				DD6F92002EEEF56600664110 /* DayMealSelectionView.swift in Sources */,

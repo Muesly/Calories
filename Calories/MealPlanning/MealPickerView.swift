@@ -44,35 +44,45 @@ struct RecipePickerCard: View {
     let servingInfo: String
     let onTap: () -> Void
 
+    @State private var showMealChoice = false
+
     private var isNoMealRequired: Bool {
         servingInfo.hasPrefix("No meal required")
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("\(mealType.rawValue) \(mealType.iconName)")
-                .font(.subheadline)
-                .foregroundColor(Colours.foregroundPrimary)
-            Divider()
-                .background(Colours.foregroundPrimary)
-
-            if isNoMealRequired {
-                Text(servingInfo)
-                    .font(.caption)
-                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                    .italic()
-            } else {
-                Text(meal.recipe?.name ?? "Select recipe...")
-                    .font(.caption)
+        Button(action: {
+            guard !isNoMealRequired else {
+                return
+            }
+            showMealChoice = true
+        }) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("\(mealType.rawValue) \(mealType.iconName)")
+                    .font(.subheadline)
                     .foregroundColor(Colours.foregroundPrimary)
-                    .lineLimit(3)
-
                 Divider()
                     .background(Colours.foregroundPrimary)
 
-                Text(servingInfo)
-                    .font(.caption2)
-                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                if isNoMealRequired {
+                    Text(servingInfo)
+                        .font(.caption)
+                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                        .italic()
+                } else {
+                    Text(meal.recipe?.name ?? "Select recipe...")
+                        .font(.caption)
+                        .foregroundColor(Colours.foregroundPrimary)
+                        .lineLimit(3)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Divider()
+                        .background(Colours.foregroundPrimary)
+
+                    Text(servingInfo)
+                        .font(.caption2)
+                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                }
             }
         }
         .padding(8)
@@ -80,5 +90,16 @@ struct RecipePickerCard: View {
         .background(Colours.backgroundSecondary.opacity(0.5))
         .cornerRadius(8)
         .onTapGesture { onTap() }
+        .sheet(isPresented: $showMealChoice) {
+            if let recipe = meal.recipe {
+                MealChoiceView(
+                    recipe: recipe,
+                    mealType: mealType,
+                    servingInfo: servingInfo
+                )
+            } else {
+                RecipeBookView()
+            }
+        }
     }
 }
