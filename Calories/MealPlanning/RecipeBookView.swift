@@ -12,7 +12,9 @@ struct RecipeBookView: View {
     let mealType: MealType
     let onRecipeSelected: (RecipeEntry) -> Void
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
     @Query private var allRecipes: [RecipeEntry]
+    @State private var showAddRecipe = false
 
     var suitableRecipes: [RecipeEntry] {
         allRecipes.filter { recipe in
@@ -23,23 +25,43 @@ struct RecipeBookView: View {
 
     var body: some View {
         NavigationStack {
-            List(suitableRecipes, id: \.name) { recipe in
-                Button(action: {
-                    onRecipeSelected(recipe)
-                    dismiss()
-                }) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(recipe.name)
-                            .font(.body)
-                            .foregroundColor(Colours.foregroundPrimary)
-                        Text(suitabilityLabel(for: recipe))
-                            .font(.caption)
-                            .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+            ZStack {
+                List(suitableRecipes, id: \.name) { recipe in
+                    Button(action: {
+                        onRecipeSelected(recipe)
+                        dismiss()
+                    }) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(recipe.name)
+                                .font(.body)
+                                .foregroundColor(Colours.foregroundPrimary)
+                            Text(suitabilityLabel(for: recipe))
+                                .font(.caption)
+                                .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showAddRecipe = true
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.title2)
+                                .foregroundColor(Colours.foregroundPrimary)
+                                .padding(20)
+                                .background(Colours.backgroundSecondary)
+                                .clipShape(Circle())
+                        }
+                        .padding(20)
+                    }
                 }
             }
-            .navigationTitle("Choose a meal")
+            .navigationTitle("Recipe book")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -49,6 +71,9 @@ struct RecipeBookView: View {
                     .foregroundColor(Colours.foregroundPrimary)
                 }
             }
+        }
+        .sheet(isPresented: $showAddRecipe) {
+            AddRecipeSheet(isPresented: $showAddRecipe, modelContext: modelContext)
         }
     }
 

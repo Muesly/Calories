@@ -6,5 +6,7 @@
 	<string>$(GPT_API_KEY)</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is needed to capture photos of recipe book pages to extract recipe names automatically.</string>
 </dict>
 </plist>
