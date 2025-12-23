@@ -108,15 +108,25 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func fetchRecipes() {
-        var filledInMealSelections = [MealSelection]()
-        for mealSelection in mealSelections {
-            if let recipe = mealPickerEngine.pickRecipe(mealType: mealSelection.mealType) {
-                var filledInMealSelection = mealSelection
-                filledInMealSelection.recipe = recipe
-                filledInMealSelections.append(filledInMealSelection)
+        // Build a cache of recipes per date+mealType to ensure consistency
+        var recipeCache: [String: RecipeEntry?] = [:]
+
+        for index in mealSelections.indices {
+            let selection = mealSelections[index]
+            let key = Self.mealKey(date: selection.date, mealType: selection.mealType)
+
+            // Only pick a recipe if at least one person is attending
+            if recipeCache[key] == nil {
+                let count = attendeeCount(for: selection.date, mealType: selection.mealType)
+                if count > 0 {
+                    recipeCache[key] = mealPickerEngine.pickRecipe(mealType: selection.mealType)
+                } else {
+                    recipeCache[key] = .some(nil)  // Mark as processed but no recipe
+                }
             }
+
+            mealSelections[index].recipe = recipeCache[key] ?? nil
         }
-        mealSelections = filledInMealSelections
     }
 
     // MARK: - Private Helpers
@@ -206,6 +216,58 @@ class MealPlanningViewModel: ObservableObject {
 
     func meal(forDate date: Date, mealType: MealType) -> MealSelection? {
         mealSelections.first { $0.mealType == mealType && $0.date.isSameDay(as: date) }
+    }
+
+    // MARK: - Serving Info
+
+    /// Returns the number of people attending a meal
+    func attendeeCount(for date: Date, mealType: MealType) -> Int {
+        Person.allCases.filter { isSelected(for: $0, date: date, mealType: mealType) }.count
+    }
+
+    /// Returns serving info text for display in meal picker
+    func servingInfo(for date: Date, mealType: MealType) -> String {
+        let count = attendeeCount(for: date, mealType: mealType)
+        let absentPeople = Person.allCases.filter {
+            !isSelected(for: $0, date: date, mealType: mealType)
+        }
+
+        switch count {
+        case 2:
+            return "2 x servings"
+        case 1:
+            if let absentPerson = absentPeople.first {
+                let reason = getReason(for: absentPerson, date: date, mealType: mealType)
+                let reasonText = reason.isEmpty ? "" : " - \(reason)"
+                return "1 x serving (\(absentPerson.rawValue)\(reasonText))"
+            }
+            return "1 x serving"
+        case 0:
+            let reasonsByPerson = absentPeople.map { person -> (Person, String) in
+                (person, getReason(for: person, date: date, mealType: mealType))
+            }
+
+            // Check if all reasons are the same
+            let uniqueReasons = Set(reasonsByPerson.map { $0.1 })
+            let allReasonsSame = uniqueReasons.count <= 1
+
+            let reasonText: String
+            if allReasonsSame {
+                // All have the same reason (or all empty), omit person names
+                let reasons = reasonsByPerson.compactMap { $0.1.isEmpty ? nil : $0.1 }
+                reasonText = reasons.isEmpty ? "" : " - \(reasons.joined(separator: ", "))"
+            } else {
+                // Reasons differ, include person names
+                let reasons = reasonsByPerson.compactMap { person, reason -> String? in
+                    reason.isEmpty ? nil : "\(person.rawValue): \(reason)"
+                }
+                reasonText = reasons.isEmpty ? "" : " - \(reasons.joined(separator: ", "))"
+            }
+
+            return "No meal required\(reasonText)"
+        default:
+            return "\(count) x servings"
+        }
     }
 
     /// Returns the Monday to plan from:

@@ -19,6 +19,7 @@ struct MealPickerView: View {
                             RecipePickerCard(
                                 mealType: mealType,
                                 meal: meal,
+                                servingInfo: viewModel.servingInfo(for: date, mealType: mealType),
                                 onTap: {
                                     // TODO: Show recipe picker
                                 }
@@ -40,7 +41,12 @@ struct MealPickerView: View {
 struct RecipePickerCard: View {
     let mealType: MealType
     let meal: MealSelection
+    let servingInfo: String
     let onTap: () -> Void
+
+    private var isNoMealRequired: Bool {
+        servingInfo.hasPrefix("No meal required")
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -50,10 +56,24 @@ struct RecipePickerCard: View {
             Divider()
                 .background(Colours.foregroundPrimary)
 
-            Text(meal.recipe?.name ?? "Select recipe...")
-                .font(.caption)
-                .foregroundColor(Colours.foregroundPrimary)
-                .lineLimit(3)
+            if isNoMealRequired {
+                Text(servingInfo)
+                    .font(.caption)
+                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                    .italic()
+            } else {
+                Text(meal.recipe?.name ?? "Select recipe...")
+                    .font(.caption)
+                    .foregroundColor(Colours.foregroundPrimary)
+                    .lineLimit(3)
+
+                Divider()
+                    .background(Colours.foregroundPrimary)
+
+                Text(servingInfo)
+                    .font(.caption2)
+                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+            }
         }
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
