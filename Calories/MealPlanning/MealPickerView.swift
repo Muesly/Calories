@@ -11,31 +11,43 @@ struct MealPickerView: View {
     @State var viewModel: MealPlanningViewModel
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                ForEach(viewModel.weekDates, id: \.self) { date in
-                    DayMealSelectionView(date: date) { mealType, date in
-                        if let meal = viewModel.meal(forDate: date, mealType: mealType) {
-                            RecipePickerCard(
-                                mealType: mealType,
-                                meal: meal,
-                                servingInfo: viewModel.servingInfo(for: date, mealType: mealType),
-                                onRecipeSelected: { recipe in
-                                    let person = meal.person
-                                    let mealDate = date
-                                    let mealType = mealType
-                                    viewModel.selectRecipe(
-                                        recipe, for: person, date: mealDate, mealType: mealType)
-                                }
-                            )
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    ForEach(viewModel.weekDates, id: \.self) { date in
+                        DayMealSelectionView(date: date) { mealType, date in
+                            if let meal = viewModel.meal(forDate: date, mealType: mealType) {
+                                RecipePickerCard(
+                                    mealType: mealType,
+                                    meal: meal,
+                                    servingInfo: viewModel.servingInfo(
+                                        for: date, mealType: mealType),
+                                    onRecipeSelected: { recipe in
+                                        let person = meal.person
+                                        let mealDate = date
+                                        let mealType = mealType
+                                        viewModel.selectRecipe(
+                                            recipe, for: person, date: mealDate, mealType: mealType)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
+                .padding(20)
             }
-            .padding(20)
+            .scrollIndicators(.hidden)
+            .scrollDismissesKeyboard(.interactively)
+            .navigationTitle("Meal Planner")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Populate") {
+                        $viewModel.wrappedValue.populateEmptyMeals()
+                    }
+                }
+            }
         }
-        .scrollIndicators(.hidden)
-        .scrollDismissesKeyboard(.interactively)
     }
 }
 

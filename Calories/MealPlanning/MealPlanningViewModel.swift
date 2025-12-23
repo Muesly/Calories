@@ -226,6 +226,34 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
+    func populateEmptyMeals() {
+        // Build a cache of recipes per date+mealType to ensure consistency
+        var recipeCache: [String: RecipeEntry?] = [:]
+
+        for index in mealSelections.indices {
+            let selection = mealSelections[index]
+
+            // Skip if already has a recipe
+            if selection.recipe != nil {
+                continue
+            }
+
+            let key = Self.mealKey(date: selection.date, mealType: selection.mealType)
+
+            // Only pick a recipe if at least one person is attending
+            if recipeCache[key] == nil {
+                let count = attendeeCount(for: selection.date, mealType: selection.mealType)
+                if count > 0 {
+                    recipeCache[key] = mealPickerEngine.pickRecipe(mealType: selection.mealType)
+                } else {
+                    recipeCache[key] = .some(nil)  // Mark as processed but no recipe
+                }
+            }
+
+            mealSelections[index].recipe = recipeCache[key] ?? nil
+        }
+    }
+
     // MARK: - Serving Info
 
     /// Returns the number of people attending a meal
