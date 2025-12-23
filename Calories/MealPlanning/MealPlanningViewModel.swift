@@ -254,6 +254,17 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
+    func swapMeals(_ meal1: MealSelection, with meal2: MealSelection) {
+        let meal1Index = mealSelections.firstIndex { $0.id == meal1.id }
+        let meal2Index = mealSelections.firstIndex { $0.id == meal2.id }
+
+        guard let idx1 = meal1Index, let idx2 = meal2Index else { return }
+
+        let tempRecipe = mealSelections[idx1].recipe
+        mealSelections[idx1].recipe = mealSelections[idx2].recipe
+        mealSelections[idx2].recipe = tempRecipe
+    }
+
     // MARK: - Serving Info
 
     /// Returns the number of people attending a meal

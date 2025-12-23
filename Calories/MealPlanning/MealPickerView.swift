@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MealPickerView: View {
     @State var viewModel: MealPlanningViewModel
+    @State private var swapMode = false
+    @State private var mealToSwap: MealSelection?
 
     var body: some View {
         NavigationStack {
@@ -22,12 +24,28 @@ struct MealPickerView: View {
                                     meal: meal,
                                     servingInfo: viewModel.servingInfo(
                                         for: date, mealType: mealType),
+                                    isSwapMode: swapMode,
+                                    isSelectedForSwap: mealToSwap?.id == meal.id,
                                     onRecipeSelected: { recipe in
                                         let person = meal.person
                                         let mealDate = date
                                         let mealType = mealType
                                         viewModel.selectRecipe(
                                             recipe, for: person, date: mealDate, mealType: mealType)
+                                        swapMode = false
+                                    },
+                                    onChangeRequested: {
+                                        // Change will be handled internally in RecipePickerCard
+                                    },
+                                    onSwapRequested: {
+                                        if swapMode && mealToSwap != nil {
+                                            viewModel.swapMeals(mealToSwap!, with: meal)
+                                            swapMode = false
+                                            mealToSwap = nil
+                                        } else {
+                                            swapMode = true
+                                            mealToSwap = meal
+                                        }
                                     }
                                 )
                             }
@@ -42,8 +60,15 @@ struct MealPickerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Populate") {
-                        $viewModel.wrappedValue.populateEmptyMeals()
+                    if swapMode {
+                        Button("Cancel") {
+                            swapMode = false
+                            mealToSwap = nil
+                        }
+                    } else {
+                        Button("Populate") {
+                            $viewModel.wrappedValue.populateEmptyMeals()
+                        }
                     }
                 }
             }
@@ -55,9 +80,14 @@ struct RecipePickerCard: View {
     let mealType: MealType
     let meal: MealSelection
     let servingInfo: String
+    let isSwapMode: Bool
+    let isSelectedForSwap: Bool
     let onRecipeSelected: (RecipeEntry) -> Void
+    let onChangeRequested: (() -> Void)?
+    let onSwapRequested: (() -> Void)?
 
     @State private var showMealChoice = false
+    @State private var showRecipeBook = false
 
     private var isNoMealRequired: Bool {
         servingInfo.hasPrefix("No meal required")
@@ -65,10 +95,12 @@ struct RecipePickerCard: View {
 
     var body: some View {
         Button(action: {
-            guard !isNoMealRequired else {
-                return
+            // In swap mode, clicking the card triggers swap
+            if isSwapMode {
+                onSwapRequested?()
+            } else if !isNoMealRequired {
+                showMealChoice = true
             }
-            showMealChoice = true
         }) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("\(mealType.rawValue) \(mealType.iconName)")
@@ -92,16 +124,50 @@ struct RecipePickerCard: View {
                     Divider()
                         .background(Colours.foregroundPrimary)
 
-                    Text(servingInfo)
-                        .font(.caption2)
-                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                    HStack {
+                        Text(servingInfo)
+                            .font(.caption2)
+                            .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                        Spacer()
+                        if !isSwapMode {
+                            Menu {
+                                Button(action: {
+                                    showRecipeBook = true
+                                }) {
+                                    Label("Change", systemImage: "pencil")
+                                }
+                                if let onSwapRequested = onSwapRequested {
+                                    Button(action: onSwapRequested) {
+                                        Label("Swap", systemImage: "arrow.left.arrow.right")
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis")
+                                    .font(.caption)
+                                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                                    .padding(8)
+                            }
+                        }
+                    }
                 }
             }
         }
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Colours.backgroundSecondary.opacity(0.5))
+        .background(
+            isSelectedForSwap
+                ? Colours.backgroundSecondary
+                : (isSwapMode
+                    ? Colours.backgroundSecondary.opacity(0.5)
+                    : Colours.backgroundSecondary.opacity(0.5))
+        )
         .cornerRadius(8)
+        .overlay(
+            isSelectedForSwap
+                ? RoundedRectangle(cornerRadius: 8)
+                    .stroke(Colours.foregroundPrimary, lineWidth: 2)
+                : nil
+        )
         .sheet(isPresented: $showMealChoice) {
             if let recipe = meal.recipe {
                 MealChoiceView(
@@ -115,6 +181,12 @@ struct RecipePickerCard: View {
                     onRecipeSelected: onRecipeSelected
                 )
             }
+        }
+        .sheet(isPresented: $showRecipeBook) {
+            RecipeBookView(
+                mealType: mealType,
+                onRecipeSelected: onRecipeSelected
+            )
         }
     }
 }
