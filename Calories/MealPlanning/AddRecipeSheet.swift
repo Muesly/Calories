@@ -19,8 +19,16 @@ struct AddRecipeSheet: View {
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
+    @State private var dishPhoto: UIImage? = nil
+    @State private var stepsPhoto: UIImage? = nil
+    @State private var showDishCamera = false
+    @State private var showStepsCamera = false
     @State private var showCameraSheet = false
     @State private var showNameDropdown = false
+    @State private var fullScreenPhoto: UIImage? = nil
+    @State private var showFullScreenPhoto = false
+    @State private var photoZoomScale: CGFloat = 1.0
+    @State private var photoOffset: CGSize = .zero
     @State private var extractedRecipeNameCandidates: [String] = []
     @State private var extractedIngredientCandidates: [RecipeIngredientCandidate] = []
     @State private var recipeIngredients: [RecipeIngredientCandidate] = []
@@ -35,111 +43,246 @@ struct AddRecipeSheet: View {
 
     var body: some View {
         NavigationStack {
-            Button(action: {
-                showCameraSheet = true
-            }) {
-                HStack {
-                    Image(systemName: "camera.fill")
-                    Text("Scan recipe")
-                }
-                .frame(maxWidth: .infinity)
-                .padding(12)
-                .background(Colours.backgroundSecondary)
-                .foregroundColor(Colours.foregroundPrimary)
-                .cornerRadius(8)
-            }
-            Form {
-                Section(header: Text("Recipe Name")) {
-                    VStack(spacing: 12) {
+            VStack(spacing: 16) {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        showDishCamera = true
+                    }) {
                         HStack {
-                            TextField("Enter recipe name", text: $recipeName)
-                            if !extractedRecipeNameCandidates.isEmpty {
-                                Menu {
-                                    ForEach(extractedRecipeNameCandidates, id: \.self) {
-                                        candidate in
-                                        Button(action: {
-                                            recipeName = candidate
-                                        }) {
-                                            Text(candidate)
+                            Image(systemName: "camera.on.rectangle")
+                            Text("Dish")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(12)
+                        .background(Colours.backgroundSecondary)
+                        .foregroundColor(Colours.foregroundPrimary)
+                        .cornerRadius(8)
+                    }
+
+                    Button(action: {
+                        showStepsCamera = true
+                    }) {
+                        HStack {
+                            Image(systemName: "camera.on.rectangle")
+                            Text("Steps")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(12)
+                        .background(Colours.backgroundSecondary)
+                        .foregroundColor(Colours.foregroundPrimary)
+                        .cornerRadius(8)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top)
+
+                if dishPhoto != nil || stepsPhoto != nil {
+                    HStack(spacing: 12) {
+                        if let dishPhoto {
+                            Button(action: {
+                                fullScreenPhoto = dishPhoto
+                                showFullScreenPhoto = true
+                            }) {
+                                Image(uiImage: dishPhoto)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 200)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                        }
+
+                        if let stepsPhoto {
+                            Button(action: {
+                                fullScreenPhoto = stepsPhoto
+                                showFullScreenPhoto = true
+                            }) {
+                                Image(uiImage: stepsPhoto)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 200)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+
+                Button(action: {
+                    if stepsPhoto != nil {
+                        scanRecipe(from: stepsPhoto!)
+                    } else {
+                        showCameraSheet = true
+                    }
+                }) {
+                    Text("Scan recipe")
+                        .frame(maxWidth: .infinity)
+                        .padding(12)
+                        .background(Colours.backgroundSecondary)
+                        .foregroundColor(Colours.foregroundPrimary)
+                        .cornerRadius(8)
+                }
+
+                Form {
+                    Section(header: Text("Recipe Name")) {
+                        VStack(spacing: 12) {
+                            HStack {
+                                TextField("Enter recipe name", text: $recipeName)
+                                if !extractedRecipeNameCandidates.isEmpty {
+                                    Menu {
+                                        ForEach(extractedRecipeNameCandidates, id: \.self) {
+                                            candidate in
+                                            Button(action: {
+                                                recipeName = candidate
+                                            }) {
+                                                Text(candidate)
+                                            }
+                                        }
+                                    } label: {
+                                        Image(systemName: "chevron.down")
+                                            .foregroundColor(Colours.foregroundPrimary)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
+                    SuitabilitySection(title: "Lunch", selection: $lunchSuitability)
+                    SuitabilitySection(title: "Dinner", selection: $dinnerSuitability)
+
+                    if !recipeIngredients.isEmpty {
+                        Section(header: Text("Ingredients")) {
+                            ForEach(recipeIngredients, id: \.id) { ingredient in
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(ingredient.ingredientName)
+                                            .font(.body)
+                                            .foregroundColor(Colours.foregroundPrimary)
+                                        Text(ingredient.displayString)
+                                            .font(.caption)
+                                            .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .onDelete(perform: deleteIngredients)
+                        }
+                    }
+                }
+                .navigationTitle("Add Recipe")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel") {
+                            isPresented = false
+                        }
+                        .foregroundColor(Colours.foregroundPrimary)
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            var recipeIngredientsForSave: [RecipeIngredient] = []
+                            for ingredient in recipeIngredients {
+                                let ingredientEntry =
+                                    modelContext.findIngredient(
+                                        ingredient.ingredientName, isPlant: false)
+                                    ?? IngredientEntry(ingredient.ingredientName, isPlant: false)
+                                let recipeIngredient = RecipeIngredient(
+                                    quantity: ingredient.quantity,
+                                    unit: ingredient.unit,
+                                    ingredient: ingredientEntry
+                                )
+                                recipeIngredientsForSave.append(recipeIngredient)
+                                modelContext.insert(ingredientEntry)
+                                modelContext.insert(recipeIngredient)
+                            }
+
+                            let newRecipe = RecipeEntry(
+                                name: recipeName,
+                                breakfastSuitability: breakfastSuitability,
+                                lunchSuitability: lunchSuitability,
+                                dinnerSuitability: dinnerSuitability,
+                                recipeIngredients: recipeIngredientsForSave
+                            )
+                            modelContext.insert(newRecipe)
+                            try? modelContext.save()
+                            isPresented = false
+                        }
+                        .foregroundColor(Colours.foregroundPrimary)
+                        .disabled(!isFormValid)
+                    }
+                }
+                .sheet(isPresented: $showCameraSheet) {
+                    CameraViewControllerRepresentable { image in
+                        scanRecipe(from: image)
+                    }
+                }
+                .sheet(isPresented: $showDishCamera) {
+                    ImagePickerView(image: $dishPhoto, isPresented: $showDishCamera)
+                }
+                .sheet(isPresented: $showStepsCamera) {
+                    ImagePickerView(image: $stepsPhoto, isPresented: $showStepsCamera)
+                }
+                .fullScreenCover(isPresented: $showFullScreenPhoto) {
+                    ZStack {
+                        Color.black.ignoresSafeArea()
+
+                        VStack(spacing: 0) {
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    photoZoomScale = 1.0
+                                    photoOffset = .zero
+                                    showFullScreenPhoto = false
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(.system(size: 30))
+                                        .foregroundColor(.white)
+                                        .padding()
+                                }
+                            }
+
+                            Spacer()
+
+                            if let photo = fullScreenPhoto {
+                                Image(uiImage: photo)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .scaleEffect(photoZoomScale)
+                                    .offset(photoOffset)
+                                    .gesture(
+                                        SimultaneousGesture(
+                                            MagnificationGesture()
+                                                .onChanged { value in
+                                                    photoZoomScale = max(1.0, value)
+                                                },
+                                            DragGesture()
+                                                .onChanged { value in
+                                                    photoOffset = value.translation
+                                                }
+                                        )
+                                    )
+                                    .onTapGesture(count: 2) {
+                                        withAnimation {
+                                            if photoZoomScale > 1.5 {
+                                                photoZoomScale = 1.0
+                                                photoOffset = .zero
+                                            } else {
+                                                photoZoomScale = 2.5
+                                            }
                                         }
                                     }
-                                } label: {
-                                    Image(systemName: "chevron.down")
-                                        .foregroundColor(Colours.foregroundPrimary)
-                                }
+                                    .padding()
                             }
+
+                            Spacer()
                         }
                     }
-                }
-
-                SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
-                SuitabilitySection(title: "Lunch", selection: $lunchSuitability)
-                SuitabilitySection(title: "Dinner", selection: $dinnerSuitability)
-
-                if !recipeIngredients.isEmpty {
-                    Section(header: Text("Ingredients")) {
-                        ForEach(recipeIngredients, id: \.id) { ingredient in
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(ingredient.ingredientName)
-                                        .font(.body)
-                                        .foregroundColor(Colours.foregroundPrimary)
-                                    Text(ingredient.displayString)
-                                        .font(.caption)
-                                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                                }
-                                Spacer()
-                            }
+                    .onChange(of: showFullScreenPhoto) { oldValue, newValue in
+                        if !newValue {
+                            photoZoomScale = 1.0
+                            photoOffset = .zero
                         }
-                        .onDelete(perform: deleteIngredients)
                     }
-                }
-            }
-            .navigationTitle("Add Recipe")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        isPresented = false
-                    }
-                    .foregroundColor(Colours.foregroundPrimary)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        var recipeIngredientsForSave: [RecipeIngredient] = []
-                        for ingredient in recipeIngredients {
-                            let ingredientEntry =
-                                modelContext.findIngredient(
-                                    ingredient.ingredientName, isPlant: false)
-                                ?? IngredientEntry(ingredient.ingredientName, isPlant: false)
-                            let recipeIngredient = RecipeIngredient(
-                                quantity: ingredient.quantity,
-                                unit: ingredient.unit,
-                                ingredient: ingredientEntry
-                            )
-                            recipeIngredientsForSave.append(recipeIngredient)
-                            modelContext.insert(ingredientEntry)
-                            modelContext.insert(recipeIngredient)
-                        }
-
-                        let newRecipe = RecipeEntry(
-                            name: recipeName,
-                            breakfastSuitability: breakfastSuitability,
-                            lunchSuitability: lunchSuitability,
-                            dinnerSuitability: dinnerSuitability,
-                            recipeIngredients: recipeIngredientsForSave
-                        )
-                        modelContext.insert(newRecipe)
-                        try? modelContext.save()
-                        isPresented = false
-                    }
-                    .foregroundColor(Colours.foregroundPrimary)
-                    .disabled(!isFormValid)
-                }
-            }
-            .sheet(isPresented: $showCameraSheet) {
-                CameraViewControllerRepresentable { image in
-                    scanRecipe(from: image)
                 }
             }
         }
@@ -199,6 +342,50 @@ private struct SuitabilitySection: View {
                 Text("Always").tag(MealSuitability.always)
             }
             .pickerStyle(.segmented)
+        }
+    }
+}
+
+// MARK: - Image Picker View
+
+struct ImagePickerView: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Binding var isPresented: Bool
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(image: $image, isPresented: $isPresented)
+    }
+
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        @Binding var image: UIImage?
+        @Binding var isPresented: Bool
+
+        init(image: Binding<UIImage?>, isPresented: Binding<Bool>) {
+            _image = image
+            _isPresented = isPresented
+        }
+
+        func imagePickerController(
+            _ picker: UIImagePickerController,
+            didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+        ) {
+            if let uiImage = info[.originalImage] as? UIImage {
+                image = uiImage
+            }
+            isPresented = false
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            isPresented = false
         }
     }
 }

@@ -56,7 +56,7 @@ struct FoodToUseUp: Identifiable {
 @MainActor
 class MealPlanningViewModel: ObservableObject {
     let modelContext: ModelContext
-    var currentStage: WizardStage = .mealAvailability
+    var currentStage: WizardStage = .mealPicking
     var mealSelections: [MealSelection] = []
     var mealReasons: [String: String] = [:]
     var quickMeals: [String: Bool] = [:]
