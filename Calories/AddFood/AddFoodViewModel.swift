@@ -99,7 +99,7 @@ class AddFoodViewModel: ObservableObject {
             if let existingPlantEntry = modelContext.findPlant(plant.name) {
                 imageData = existingPlantEntry.imageData
             }
-            return PlantEntry(plant.name, timeConsumed: Date(), imageData: imageData)
+            return PlantEntry(plant.name, imageData: imageData)
         }
         let foodEntry = FoodEntry(
             foodDescription: foodDescription,

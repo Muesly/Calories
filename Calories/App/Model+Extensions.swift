@@ -10,7 +10,7 @@ import UIKit
 extension PlantEntry {
     convenience init(_ name: String, timeConsumed: Date = Date(), imageName: String) {
         self.init(
-            name, timeConsumed: timeConsumed,
+            name,
             imageData: UIImage(named: imageName)?.jpegData(compressionQuality: 0.9))
     }
 
