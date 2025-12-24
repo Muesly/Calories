@@ -23,6 +23,14 @@ struct AddRecipeSheet: View {
     @State private var showRecipeSelection = false
     @State private var extractedCandidates: [String] = []
 
+    var isFormValid: Bool {
+        let hasName = !recipeName.trimmingCharacters(in: .whitespaces).isEmpty
+        let hasAtLeastOneSuitability =
+            breakfastSuitability != .never || lunchSuitability != .never
+            || dinnerSuitability != .never
+        return hasName && hasAtLeastOneSuitability
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -64,7 +72,7 @@ struct AddRecipeSheet: View {
                         isPresented = false
                     }
                     .foregroundColor(Colours.foregroundPrimary)
-                    .disabled(recipeName.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(!isFormValid)
                 }
             }
             .sheet(isPresented: $showCameraSheet) {

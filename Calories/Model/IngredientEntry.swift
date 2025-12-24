@@ -13,6 +13,7 @@ import SwiftData
     #Index<IngredientEntry>([\.name])
     @Attribute(.externalStorage) var imageData: Data?
     var isPlant: Bool = false
+    @Relationship(inverse: \FoodEntry.ingredients) public var foodEntries: [FoodEntry]?
 
     public init(_ name: String, imageData: Data? = nil, isPlant: Bool = false) {
         self.name = name
@@ -36,11 +37,11 @@ extension IngredientEntry: Equatable {
 extension IngredientEntry {
     static func addPreviewIngredients(context: ModelContext) -> [IngredientEntry] {
         let ingredients = [
-            IngredientEntry("Corn", imageName: "Corn"),
-            IngredientEntry("Rice", imageName: "Rice"),
-            IngredientEntry("Broccoli", imageName: "Broccoli"),
+            IngredientEntry("Corn", isPlant: true),
+            IngredientEntry("Rice", isPlant: true),
+            IngredientEntry("Broccoli", isPlant: true),
             IngredientEntry("Unidentified"),
-            IngredientEntry("Corn 2", imageName: "Corn"),
+            IngredientEntry("Corn 2", isPlant: true),
         ]
         for ingredient in ingredients { context.insert(ingredient) }
         return ingredients
