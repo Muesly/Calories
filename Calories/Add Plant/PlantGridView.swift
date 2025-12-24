@@ -45,15 +45,7 @@ struct PlantGridView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    for ingredient in [
-        IngredientEntry("Corn", imageName: "Corn"),
-        IngredientEntry("Rice", imageName: "Rice"),
-        IngredientEntry("Broccoli", imageName: "Broccoli"),
-        IngredientEntry("Unidentified"),
-        IngredientEntry("Corn 2", imageName: "Corn"),
-    ] {
-        modelContext.insert($0)
-    }
+    let _ = IngredientEntry.addPreviewIngredients(context: modelContext)
     VStack {
         PlantGridView(
             plantSelections: ["Corn", "Rice", "Broccoli", "Unidentified", "Corn 2"].map {

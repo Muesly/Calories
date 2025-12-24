@@ -32,3 +32,17 @@ extension IngredientEntry: Equatable {
         return self
     }
 }
+
+extension IngredientEntry {
+    static func addPreviewIngredients(context: ModelContext) -> [IngredientEntry] {
+        let ingredients = [
+            IngredientEntry("Corn", imageName: "Corn"),
+            IngredientEntry("Rice", imageName: "Rice"),
+            IngredientEntry("Broccoli", imageName: "Broccoli"),
+            IngredientEntry("Unidentified"),
+            IngredientEntry("Corn 2", imageName: "Corn"),
+        ]
+        for ingredient in ingredients { context.insert(ingredient) }
+        return ingredients
+    }
+}

@@ -31,7 +31,7 @@ struct CaloriesApp: App {
             : ModelConfiguration("Model")
         let container = try! ModelContainer(
             for: FoodEntry.self, PlantEntry.self, IngredientEntry.self, ExerciseEntry.self,
-            RecipeEntry.self,
+            RecipeEntry.self, RecipeIngredient.self,
             configurations: config)
 
         if !isUITesting {

@@ -84,13 +84,7 @@ struct AddPlantView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    for plant in [
-        IngredientEntry("Corn", imageName: "Corn"),
-        IngredientEntry("Rice", imageName: "Rice"),
-        IngredientEntry("Broccoli", imageName: "Broccoli"),
-        IngredientEntry("Unidentified"),
-        IngredientEntry("Corn 2", imageName: "Corn"),
-    ] { $0.insert(into: modelContext) }
+    let _ = IngredientEntry.addPreviewIngredients(context: modelContext)
     let viewModel = AddPlantViewModel(
         suggestionFetcher: SuggestionFetcher(
             modelContext: modelContext, excludedSuggestions: ["Corn 2"]))
