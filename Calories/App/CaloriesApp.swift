@@ -29,9 +29,44 @@ struct CaloriesApp: App {
             isUITesting
             ? ModelConfiguration(url: URL(fileURLWithPath: "/dev/null"))
             : ModelConfiguration("Model")
-        return try! ModelContainer(
-            for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self, RecipeEntry.self,
+        let container = try! ModelContainer(
+            for: FoodEntry.self, PlantEntry.self, IngredientEntry.self, ExerciseEntry.self,
+            RecipeEntry.self,
             configurations: config)
+
+        if !isUITesting {
+            migratePlantEntriesToIngredients(container: container)
+        }
+
+        return container
+    }
+
+    private func migratePlantEntriesToIngredients(container: ModelContainer) {
+        let context = ModelContext(container)
+
+        do {
+            // Fetch all PlantEntry objects if they exist
+            let fetchDescriptor = FetchDescriptor<PlantEntry>()
+            let plantEntries = try context.fetch(fetchDescriptor)
+
+            guard !plantEntries.isEmpty else { return }
+
+            // Convert PlantEntry to IngredientEntry with isPlant = true
+            for plant in plantEntries {
+                let ingredient = IngredientEntry(
+                    plant.name, imageData: plant.imageData, isPlant: true)
+                context.insert(ingredient)
+            }
+
+            // Delete all PlantEntry objects
+            for plant in plantEntries {
+                context.delete(plant)
+            }
+
+            try context.save()
+        } catch {
+            print("Migration error: \(error)")
+        }
     }
 
     init() {

@@ -118,7 +118,7 @@ struct FoodEntryView: View {
                 Text("\(Int(foodEntry.calories)) cals").opacity(0.5).font(.brand)
             }
             HStack {
-                ForEach(foodEntry.plants ?? []) { plant in
+                ForEach(foodEntry.ingredients ?? []) { plant in
                     if let image = plant.uiImage {
                         Image(uiImage: image)
                             .resizable()
@@ -132,17 +132,17 @@ struct FoodEntryView: View {
 }
 
 #Preview {
-    let plants: [PlantEntry] = [
-        PlantEntry("Corn", imageName: "Corn"),
-        PlantEntry("Rice", imageName: "Rice"),
-        PlantEntry("Broccoli", imageName: "Broccoli"),
+    let ingredients: [IngredientEntry] = [
+        IngredientEntry("Corn", imageName: "Corn"),
+        IngredientEntry("Rice", imageName: "Rice"),
+        IngredientEntry("Broccoli", imageName: "Broccoli"),
     ]
     FoodEntryView(
         foodEntry: .init(
             foodDescription: "Veggie Chilli",
             calories: 400,
             timeConsumed: Date(),
-            plants: plants),
+            ingredients: ingredients),
         formatter: HistoryViewModel.timeConsumedTimeFormatter
     )
     .padding()

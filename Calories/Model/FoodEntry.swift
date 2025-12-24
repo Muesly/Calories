@@ -12,17 +12,21 @@ import SwiftData
     var calories: Double = 0.0
     var foodDescription: String = ""
     var timeConsumed: Date
-    @Relationship public var plants: [PlantEntry]?
+    @Relationship public var ingredients: [IngredientEntry]?
     public init(
         foodDescription: String,
         calories: Double,
         timeConsumed: Date,
-        plants: [PlantEntry] = []
+        ingredients: [IngredientEntry] = []
     ) {
         self.foodDescription = foodDescription
         self.calories = calories
         self.timeConsumed = timeConsumed
-        self.plants = plants
+        self.ingredients = ingredients
+    }
+
+    var plants: [IngredientEntry]? {
+        ingredients?.filter { $0.isPlant }
     }
 }
 

@@ -15,7 +15,7 @@ extension ModelContext {
     static var inMemory: ModelContext {
         ModelContext(
             try! ModelContainer(
-                for: FoodEntry.self, PlantEntry.self, ExerciseEntry.self,
+                for: FoodEntry.self, IngredientEntry.self, ExerciseEntry.self,
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
     }
 
@@ -33,11 +33,11 @@ extension ModelContext {
         }
     }
 
-    func plantResults(
-        for predicate: Predicate<PlantEntry>? = nil,
-        sortBy: [SortDescriptor<PlantEntry>] = []
-    ) -> [PlantEntry] {
-        let fetchDescriptor = FetchDescriptor<PlantEntry>(
+    func ingredientResults(
+        for predicate: Predicate<IngredientEntry>? = nil,
+        sortBy: [SortDescriptor<IngredientEntry>] = []
+    ) -> [IngredientEntry] {
+        let fetchDescriptor = FetchDescriptor<IngredientEntry>(
             predicate: predicate,
             sortBy: sortBy)
         do {
@@ -47,11 +47,31 @@ extension ModelContext {
         }
     }
 
-    func findPlant(_ plant: String) -> PlantEntry? {
-        let fetchDescriptor = FetchDescriptor<PlantEntry>(
-            predicate: #Predicate { $0.name == plant })
+    func findIngredient(_ name: String, isPlant: Bool = true) -> IngredientEntry? {
+        let fetchDescriptor = FetchDescriptor<IngredientEntry>(
+            predicate: #Predicate { $0.name == name && $0.isPlant == isPlant })
         let firstMatch = try? fetch(fetchDescriptor).first
         return firstMatch
+    }
+
+    // Backward compatibility
+    func plantResults(
+        for predicate: Predicate<IngredientEntry>? = nil,
+        sortBy: [SortDescriptor<IngredientEntry>] = []
+    ) -> [IngredientEntry] {
+        let enrichedPredicate: Predicate<IngredientEntry>?
+        if let predicate {
+            enrichedPredicate = #Predicate { ingredient in
+                ingredient.isPlant && predicate.evaluate(ingredient)
+            }
+        } else {
+            enrichedPredicate = #Predicate { $0.isPlant }
+        }
+        return ingredientResults(for: enrichedPredicate, sortBy: sortBy)
+    }
+
+    func findPlant(_ plant: String) -> IngredientEntry? {
+        findIngredient(plant, isPlant: true)
     }
 
     func exerciseResults(

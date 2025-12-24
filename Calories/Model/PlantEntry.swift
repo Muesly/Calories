@@ -13,7 +13,7 @@ import SwiftData
     #Index<PlantEntry>([\.name])
     @Attribute(.externalStorage) var imageData: Data?
 
-    @Relationship(inverse: \FoodEntry.plants) public var foodEntries: [FoodEntry]?
+    @Relationship(inverse: \FoodEntry.ingredients) public var foodEntries: [FoodEntry]?
     var numEntries: Int {
         foodEntries?.count ?? 0
     }

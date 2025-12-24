@@ -17,12 +17,13 @@ struct SuggestionFetcher {
             guard searchText.count > 1 else { return [] }
         }
 
-        let predicate = #Predicate<PlantEntry> {
-            !excludedSuggestions.contains($0.name)
+        let predicate = #Predicate<IngredientEntry> {
+            $0.isPlant
+                && !excludedSuggestions.contains($0.name)
                 && (searchText == nil || $0.name.localizedStandardContains(searchText!))
         }
 
-        return modelContext.plantResults(for: predicate, sortBy: [SortDescriptor(\.name)])
+        return modelContext.ingredientResults(for: predicate, sortBy: [SortDescriptor(\.name)])
             .map(\.name)
     }
 }

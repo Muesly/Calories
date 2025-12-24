@@ -7,11 +7,12 @@
 
 import UIKit
 
-extension PlantEntry {
-    convenience init(_ name: String, timeConsumed: Date = Date(), imageName: String) {
+extension IngredientEntry {
+    convenience init(_ name: String, imageName: String, isPlant: Bool = true) {
         self.init(
             name,
-            imageData: UIImage(named: imageName)?.jpegData(compressionQuality: 0.9))
+            imageData: UIImage(named: imageName)?.jpegData(compressionQuality: 0.9),
+            isPlant: isPlant)
     }
 
     var uiImage: UIImage? {

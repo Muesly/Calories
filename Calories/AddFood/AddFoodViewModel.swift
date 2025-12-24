@@ -93,19 +93,19 @@ class AddFoodViewModel: ObservableObject {
         async throws -> FoodEntry
     {
         try await healthStore.authorize()
-        let plantModels: [PlantEntry] = plants.map { plant in
+        let ingredientModels: [IngredientEntry] = plants.map { plant in
             // Find image data to put back in
             var imageData: Data?
-            if let existingPlantEntry = modelContext.findPlant(plant.name) {
-                imageData = existingPlantEntry.imageData
+            if let existingIngredient = modelContext.findIngredient(plant.name, isPlant: true) {
+                imageData = existingIngredient.imageData
             }
-            return PlantEntry(plant.name, imageData: imageData)
+            return IngredientEntry(plant.name, imageData: imageData, isPlant: true)
         }
         let foodEntry = FoodEntry(
             foodDescription: foodDescription,
             calories: Double(calories),
             timeConsumed: timeConsumed,
-            plants: plantModels
+            ingredients: ingredientModels
         ).insert(into: modelContext)
         do {
             try modelContext.save()
@@ -129,7 +129,7 @@ class AddFoodViewModel: ObservableObject {
             description: previousEntry.foodDescription,
             calories: Int(previousEntry.calories),
             dateTime: timeConsumed,
-            plants: (previousEntry.plants ?? []).map { $0.name })
+            plants: (previousEntry.ingredients ?? []).map { $0.name })
     }
 
     static func shouldClearFields(phase: ScenePhase, date: Date) -> Bool {

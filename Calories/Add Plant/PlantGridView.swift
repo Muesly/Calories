@@ -45,13 +45,13 @@ struct PlantGridView: View {
 
 #Preview {
     let modelContext = ModelContext.inMemory
-    let _ = [
-        PlantEntry("Corn", imageName: "Corn"),
-        PlantEntry("Rice", imageName: "Rice"),
-        PlantEntry("Broccoli", imageName: "Broccoli"),
-        PlantEntry("Unidentified"),
-        PlantEntry("Corn 2", imageName: "Corn"),
-    ].forEach {
+    for ingredient in [
+        IngredientEntry("Corn", imageName: "Corn"),
+        IngredientEntry("Rice", imageName: "Rice"),
+        IngredientEntry("Broccoli", imageName: "Broccoli"),
+        IngredientEntry("Unidentified"),
+        IngredientEntry("Corn 2", imageName: "Corn"),
+    ] {
         modelContext.insert($0)
     }
     VStack {
