@@ -26,21 +26,24 @@ struct RecipeBookView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                List(suitableRecipes, id: \.name) { recipe in
-                    Button(action: {
-                        onRecipeSelected(recipe)
-                        dismiss()
-                    }) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(recipe.name)
-                                .font(.body)
-                                .foregroundColor(Colours.foregroundPrimary)
-                            Text(suitabilityLabel(for: recipe))
-                                .font(.caption)
-                                .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                List {
+                    ForEach(suitableRecipes, id: \.name) { recipe in
+                        Button(action: {
+                            onRecipeSelected(recipe)
+                            dismiss()
+                        }) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(recipe.name)
+                                    .font(.body)
+                                    .foregroundColor(Colours.foregroundPrimary)
+                                Text(suitabilityLabel(for: recipe))
+                                    .font(.caption)
+                                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
+                    .onDelete(perform: deleteRecipes)
                 }
 
                 VStack {
@@ -75,6 +78,14 @@ struct RecipeBookView: View {
         .sheet(isPresented: $showAddRecipe) {
             AddRecipeSheet(isPresented: $showAddRecipe, modelContext: modelContext)
         }
+    }
+
+    private func deleteRecipes(at offsets: IndexSet) {
+        for index in offsets {
+            let recipe = suitableRecipes[index]
+            modelContext.delete(recipe)
+        }
+        try? modelContext.save()
     }
 
     private func suitabilityLabel(for recipe: RecipeEntry) -> String {
