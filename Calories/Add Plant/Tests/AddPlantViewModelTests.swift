@@ -16,7 +16,11 @@ struct AddPlantViewModelTests {
         let sut = AddPlantViewModel(
             suggestionFetcher: SuggestionFetcher(
                 modelContext: modelContext, excludedSuggestions: ["Oranges"]))
-        let _ = [PlantEntry("Pears"), PlantEntry("Apples"), PlantEntry("Oranges")].forEach {
+        let _ = [
+            IngredientEntry("Pears", isPlant: true),
+            IngredientEntry("Apples", isPlant: true),
+            IngredientEntry("Oranges", isPlant: true),
+        ].forEach {
             $0.insert(into: modelContext)
         }
         sut.fetchSuggestions()

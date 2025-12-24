@@ -29,6 +29,8 @@ struct AddRecipeSheet: View {
     @State private var showFullScreenPhoto = false
     @State private var photoZoomScale: CGFloat = 1.0
     @State private var photoOffset: CGSize = .zero
+    @State private var showScanError = false
+    @State private var isScanning = false
     @State private var extractedRecipeNameCandidates: [String] = []
     @State private var extractedIngredientCandidates: [RecipeIngredientCandidate] = []
     @State private var recipeIngredients: [RecipeIngredientCandidate] = []
@@ -111,16 +113,31 @@ struct AddRecipeSheet: View {
                     if stepsPhoto != nil {
                         scanRecipe(from: stepsPhoto!)
                     } else {
-                        showCameraSheet = true
+                        showScanError = true
                     }
                 }) {
-                    Text("Scan recipe")
+                    if isScanning {
+                        HStack(spacing: 8) {
+                            ProgressView()
+                                .tint(Colours.foregroundPrimary)
+                            Text("Scanning...")
+                        }
                         .frame(maxWidth: .infinity)
                         .padding(12)
                         .background(Colours.backgroundSecondary)
                         .foregroundColor(Colours.foregroundPrimary)
                         .cornerRadius(8)
+                    } else {
+                        Text("Scan recipe")
+                            .frame(maxWidth: .infinity)
+                            .padding(12)
+                            .background(Colours.backgroundSecondary)
+                            .foregroundColor(Colours.foregroundPrimary)
+                            .cornerRadius(8)
+                    }
                 }
+                .disabled(isScanning)
+                .padding(.horizontal)
 
                 Form {
                     Section(header: Text("Recipe Name")) {
@@ -153,17 +170,9 @@ struct AddRecipeSheet: View {
                     if !recipeIngredients.isEmpty {
                         Section(header: Text("Ingredients")) {
                             ForEach(recipeIngredients, id: \.id) { ingredient in
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(ingredient.ingredientName)
-                                            .font(.body)
-                                            .foregroundColor(Colours.foregroundPrimary)
-                                        Text(ingredient.displayString)
-                                            .font(.caption)
-                                            .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                                    }
-                                    Spacer()
-                                }
+                                Text(ingredient.ingredientName)
+                                    .font(.body)
+                                    .foregroundColor(Colours.foregroundPrimary)
                             }
                             .onDelete(perform: deleteIngredients)
                         }
@@ -187,8 +196,6 @@ struct AddRecipeSheet: View {
                                         ingredient.ingredientName, isPlant: false)
                                     ?? IngredientEntry(ingredient.ingredientName, isPlant: false)
                                 let recipeIngredient = RecipeIngredient(
-                                    quantity: ingredient.quantity,
-                                    unit: ingredient.unit,
                                     ingredient: ingredientEntry
                                 )
                                 recipeIngredientsForSave.append(recipeIngredient)
@@ -284,12 +291,21 @@ struct AddRecipeSheet: View {
                         }
                     }
                 }
+                .alert("No Recipe Photo", isPresented: $showScanError) {
+                    Button("OK") {}
+                } message: {
+                    Text("Please take a photo of the recipe steps first before scanning.")
+                }
             }
         }
     }
 
     private func scanRecipe(from image: UIImage) {
         Task {
+            await MainActor.run {
+                isScanning = true
+            }
+
             let (recipeNames, ingredients) = await RecipeTextExtractor.extractRecipeData(
                 from: image)
 
@@ -304,6 +320,11 @@ struct AddRecipeSheet: View {
                     if !recipeNames.isEmpty {
                         recipeName = recipeNames[0]
                     }
+                    isScanning = false
+                }
+            } else {
+                await MainActor.run {
+                    isScanning = false
                 }
             }
         }
@@ -319,13 +340,6 @@ struct AddRecipeSheet: View {
 struct RecipeIngredientCandidate: Identifiable {
     let id = UUID()
     let ingredientName: String
-    let quantity: Double
-    let unit: IngredientUnit
-
-    var displayString: String {
-        let quantityStr = String(format: "%.2g", quantity).replacingOccurrences(of: ",", with: ".")
-        return "\(quantityStr) \(unit.displayName)"
-    }
 }
 
 // MARK: - Suitability Section
@@ -525,15 +539,15 @@ struct RecipeTextExtractor {
             let prompt = """
                 Analyze this text extracted from a recipe book page. Extract:
                 1. Recipe names (1-2 most likely)
-                2. Ingredients with quantities and units
+                2. Ingredients including quantity and units but keeping them together
 
                 Format your response as:
                 RECIPES:
                 [recipe name 1]
                 [recipe name 2]
                 INGREDIENTS:
-                [quantity] [unit] [ingredient name]
-                [quantity] [unit] [ingredient name]
+                [ingredient name]
+                [ingredient name]
 
                 Text:
                 \(text)
@@ -572,18 +586,12 @@ struct RecipeTextExtractor {
 
     private static func parseIngredientLine(_ line: String) -> RecipeIngredientCandidate? {
         let components = line.split(separator: " ", maxSplits: 2).map(String.init)
-        guard components.count >= 3 else { return nil }
+        guard components.count >= 1 else { return nil }
 
-        guard let quantity = Double(components[0]) else { return nil }
-        let unitStr = components[1]
-        let ingredientName = components[2]
-
-        guard let unit = IngredientUnit(rawValue: unitStr) else { return nil }
+        let ingredientName = components[0]
 
         return RecipeIngredientCandidate(
-            ingredientName: ingredientName,
-            quantity: quantity,
-            unit: unit
+            ingredientName: ingredientName
         )
     }
 
@@ -592,7 +600,7 @@ struct RecipeTextExtractor {
 
         // Filter out obvious non-recipe lines and create candidates
         let candidates = lines.filter { line in
-            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            let trimmed = line.trimmingCharacters(in: .whitespaces).capitalized
             return !trimmed.isEmpty && trimmed.count >= 3 && !isMetadataLine(trimmed)
         }
 
@@ -623,17 +631,12 @@ struct RecipeTextExtractor {
             // Look for lines with pattern: number unit ingredient
             let components = trimmed.split(separator: " ", maxSplits: 2).map(String.init)
 
-            if components.count >= 3,
-                let quantity = Double(components[0]),
-                let unit = IngredientUnit(rawValue: components[1])
-            {
-                let ingredientName = components[2]
+            if components.count >= 1 {
+                let ingredientName = components[0]
                 if !isMetadataLine(ingredientName) {
                     ingredients.append(
                         RecipeIngredientCandidate(
-                            ingredientName: ingredientName,
-                            quantity: quantity,
-                            unit: unit
+                            ingredientName: ingredientName
                         ))
                 }
             }

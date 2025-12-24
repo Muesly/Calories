@@ -1,3 +1,6 @@
 {
-"indentation": { "spaces": 4 }
+"indentation": { "spaces": 4 },
+"rules": {
+  "ReplaceForEachWithForLoop": false
+}
 }

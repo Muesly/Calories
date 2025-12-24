@@ -81,12 +81,13 @@ final class WeeklyChartViewModelTests: XCTestCase {
         let _ = FoodEntry(
             foodDescription: "Salmon & Rice",
             calories: 350,
-            timeConsumed: dc.date!, plants: [.init("Rice")]
+            timeConsumed: dc.date!, ingredients: [.init("Rice", isPlant: true)]
         ).insert(into: modelContext)
         let _ = FoodEntry(
             foodDescription: "Beans & Rice",
             calories: 250,
-            timeConsumed: dc.date!, plants: [.init("Rice"), .init("Black Beans")]
+            timeConsumed: dc.date!,
+            ingredients: [.init("Rice", isPlant: true), .init("Black Beans", isPlant: true)]
         ).insert(into: modelContext)
         try modelContext.save()
         let mockIDGenerator = MockIDGenerator()
@@ -112,12 +113,13 @@ final class WeeklyChartViewModelTests: XCTestCase {
         let _ = FoodEntry(
             foodDescription: "Salmon & Rice",
             calories: 350,
-            timeConsumed: dc.date!, plants: [.init("Rice")]
+            timeConsumed: dc.date!, ingredients: [.init("Rice", isPlant: true)]
         ).insert(into: modelContext)
         let _ = FoodEntry(
             foodDescription: "Beans & Rice",
             calories: 250,
-            timeConsumed: dc.date!, plants: [.init("Rice"), .init("Black Beans")]
+            timeConsumed: dc.date!,
+            ingredients: [.init("Rice", isPlant: true), .init("Black Beans", isPlant: true)]
         ).insert(into: modelContext)
         try modelContext.save()
         let mockIDGenerator = MockIDGenerator()

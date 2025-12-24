@@ -13,6 +13,7 @@ import SwiftData
     var foodDescription: String = ""
     var timeConsumed: Date
     @Relationship public var ingredients: [IngredientEntry]?
+
     public init(
         foodDescription: String,
         calories: Double,

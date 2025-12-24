@@ -15,9 +15,10 @@ import UIKit
 struct PlantCellViewModelTests {
     @Test func cellImageToBeSetWithPlantThatHasImage() async throws {
         let modelContext = ModelContext.inMemory
-        let plantEntry = PlantEntry(
+        let plantEntry = IngredientEntry(
             "Rice",
-            imageData: UIImage(systemName: "plus")?.pngData())
+            imageData: UIImage(systemName: "plus")?.pngData(),
+            isPlant: true)
         plantEntry.insert(into: modelContext)
 
         let sut = PlantCellViewModel(
@@ -29,7 +30,7 @@ struct PlantCellViewModelTests {
 
     @Test func cellImageToBeSetWhenImageGeneratedForPlantWithNoImage() async throws {
         let modelContext = ModelContext.inMemory
-        let plantEntry = PlantEntry("Rice")
+        let plantEntry = IngredientEntry("Rice", isPlant: true)
         plantEntry.insert(into: modelContext)
 
         let plantGenerator = StubbedPlantGenerator()

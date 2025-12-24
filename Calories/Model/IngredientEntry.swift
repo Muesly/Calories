@@ -12,8 +12,8 @@ import SwiftData
     @Attribute(.unique) var name: String
     #Index<IngredientEntry>([\.name])
     @Attribute(.externalStorage) var imageData: Data?
-    var isPlant: Bool = false
     @Relationship(inverse: \FoodEntry.ingredients) public var foodEntries: [FoodEntry]?
+    var isPlant: Bool = false
 
     public init(_ name: String, imageData: Data? = nil, isPlant: Bool = false) {
         self.name = name
