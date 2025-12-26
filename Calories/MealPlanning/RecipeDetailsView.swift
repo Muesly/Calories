@@ -13,18 +13,13 @@ struct RecipeDetailsView: View {
     @Binding var isPresented: Bool
     let modelContext: ModelContext
     let extractedRecipeNames: [String]
-    let stepsPhoto: UIImage?
+    @Binding var dishPhoto: UIImage?
+    @Binding var stepsPhoto: UIImage?
 
     @State private var recipeName = ""
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
-    @State private var showCameraSheet = false
-    @State private var fullScreenPhoto: UIImage? = nil
-    @State private var showFullScreenPhoto = false
-    @State private var photoZoomScale: CGFloat = 1.0
-    @State private var photoOffset: CGSize = .zero
-    @State private var showScanError = false
     @State private var showSaveError = false
     @State private var saveErrorMessage = ""
     @State private var recipeIngredients: [RecipeIngredientCandidate] = []
@@ -46,27 +41,30 @@ struct RecipeDetailsView: View {
 
             Form {
                 Section(header: Text("Recipe Name")) {
-                    VStack(spacing: 12) {
-                        HStack {
-                            TextField("Enter recipe name", text: $recipeName)
-                            if !extractedRecipeNameCandidates.isEmpty {
-                                Menu {
-                                    ForEach(extractedRecipeNameCandidates, id: \.self) {
-                                        candidate in
-                                        Button(action: {
-                                            recipeName = candidate
-                                        }) {
-                                            Text(candidate)
-                                        }
+                    HStack {
+                        TextField("Enter recipe name", text: $recipeName)
+                        if !extractedRecipeNameCandidates.isEmpty {
+                            Menu {
+                                ForEach(extractedRecipeNameCandidates, id: \.self) {
+                                    candidate in
+                                    Button(action: {
+                                        recipeName = candidate
+                                    }) {
+                                        Text(candidate)
                                     }
-                                } label: {
-                                    Image(systemName: "chevron.down")
-                                        .foregroundColor(Colours.foregroundPrimary)
                                 }
+                            } label: {
+                                Image(systemName: "chevron.down")
+                                    .foregroundColor(Colours.foregroundPrimary)
                             }
                         }
                     }
                 }
+                HStack(spacing: 12) {
+                    RecipeThumbnail(label: "Dish photo", photo: $dishPhoto)
+                    RecipeThumbnail(label: "Steps photo", photo: $stepsPhoto)
+                }
+                .frame(height: 200)
 
                 SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
                 SuitabilitySection(title: "Lunch", selection: $lunchSuitability)
@@ -89,75 +87,7 @@ struct RecipeDetailsView: View {
                     saveRecipe()
                 }
                 .foregroundColor(Colours.foregroundPrimary)
-                .disabled(!isFormValid)
             }
-        }
-        .fullScreenCover(isPresented: $showFullScreenPhoto) {
-            ZStack {
-                Color.black.ignoresSafeArea()
-
-                VStack(spacing: 0) {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            photoZoomScale = 1.0
-                            photoOffset = .zero
-                            showFullScreenPhoto = false
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 30))
-                                .foregroundColor(.white)
-                                .padding()
-                        }
-                    }
-
-                    Spacer()
-
-                    if let photo = fullScreenPhoto {
-                        Image(uiImage: photo)
-                            .resizable()
-                            .scaledToFit()
-                            .scaleEffect(photoZoomScale)
-                            .offset(photoOffset)
-                            .gesture(
-                                SimultaneousGesture(
-                                    MagnificationGesture()
-                                        .onChanged { value in
-                                            photoZoomScale = max(1.0, value)
-                                        },
-                                    DragGesture()
-                                        .onChanged { value in
-                                            photoOffset = value.translation
-                                        }
-                                )
-                            )
-                            .onTapGesture(count: 2) {
-                                withAnimation {
-                                    if photoZoomScale > 1.5 {
-                                        photoZoomScale = 1.0
-                                        photoOffset = .zero
-                                    } else {
-                                        photoZoomScale = 2.5
-                                    }
-                                }
-                            }
-                            .padding()
-                    }
-
-                    Spacer()
-                }
-            }
-            .onChange(of: showFullScreenPhoto) { oldValue, newValue in
-                if !newValue {
-                    photoZoomScale = 1.0
-                    photoOffset = .zero
-                }
-            }
-        }
-        .alert("No Recipe Photo", isPresented: $showScanError) {
-            Button("OK") {}
-        } message: {
-            Text("Please take a photo of the recipe steps first before scanning.")
         }
         .alert("Failed to Save Recipe", isPresented: $showSaveError) {
             Button("OK") {}
@@ -172,6 +102,12 @@ struct RecipeDetailsView: View {
     }
 
     private func saveRecipe() {
+        guard isFormValid else {
+            saveErrorMessage = "Please ensure all required fields are entered"
+            showSaveError = true
+            return
+        }
+
         do {
             let newRecipe = RecipeEntry(
                 name: recipeName,
@@ -183,7 +119,7 @@ struct RecipeDetailsView: View {
             try modelContext.save()
             isPresented = false
         } catch {
-            saveErrorMessage = error.localizedDescription
+            saveErrorMessage = "Failed to save recipe"
             showSaveError = true
         }
     }

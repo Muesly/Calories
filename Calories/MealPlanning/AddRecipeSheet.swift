@@ -32,7 +32,8 @@ struct AddRecipeSheet: View {
                     isPresented: $isPresented,
                     modelContext: modelContext,
                     extractedRecipeNames: extractedRecipeNames,
-                    stepsPhoto: stepsPhoto
+                    dishPhoto: $dishPhoto,
+                    stepsPhoto: $stepsPhoto,
                 )
             }
         }
