@@ -19,7 +19,6 @@ public enum MealSuitability: Int, Codable {
     private var breakfastSuitabilityRaw: Int
     private var lunchSuitabilityRaw: Int
     private var dinnerSuitabilityRaw: Int
-    @Relationship(deleteRule: .cascade) public var recipeIngredients: [RecipeIngredient]?
 
     var breakfastSuitability: MealSuitability {
         get { MealSuitability(rawValue: breakfastSuitabilityRaw) ?? .never }
@@ -40,14 +39,12 @@ public enum MealSuitability: Int, Codable {
         name: String,
         breakfastSuitability: MealSuitability = .never,
         lunchSuitability: MealSuitability = .never,
-        dinnerSuitability: MealSuitability = .never,
-        recipeIngredients: [RecipeIngredient]? = nil
+        dinnerSuitability: MealSuitability = .never
     ) {
         self.name = name
         self.breakfastSuitabilityRaw = breakfastSuitability.rawValue
         self.lunchSuitabilityRaw = lunchSuitability.rawValue
         self.dinnerSuitabilityRaw = dinnerSuitability.rawValue
-        self.recipeIngredients = recipeIngredients
     }
 }
 

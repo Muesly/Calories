@@ -10,15 +10,18 @@ import SwiftUI
 
 struct RecipeSourceView: View {
     @Binding var currentPage: AddRecipePage
+    @Binding var extractedRecipeNames: [String]
+    @Binding var dishPhoto: UIImage?
+    @Binding var stepsPhoto: UIImage?
+
     @State private var showDishPicker = false
     @State private var showStepsPicker = false
     @State private var showDishCamera = false
     @State private var showStepsCamera = false
-    @State private var dishPhoto: UIImage? = nil
-    @State private var stepsPhoto: UIImage? = nil
     @State private var fullScreenPhoto: UIImage? = nil
     @State private var showFullScreenPhoto = false
     @State private var showGenerateAlert = false
+    @State private var isScanning = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -155,18 +158,31 @@ struct RecipeSourceView: View {
                         }
                         .frame(height: 200)
 
-                        // Next button
+                        // Scan recipe button
                         Button(action: {
-                            currentPage = .details
+                            scanRecipe()
                         }) {
-                            Text("Next")
+                            if isScanning {
+                                HStack(spacing: 8) {
+                                    ProgressView()
+                                        .tint(Colours.foregroundPrimary)
+                                    Text("Scanning...")
+                                }
                                 .frame(maxWidth: .infinity)
                                 .padding(12)
                                 .background(Colours.backgroundSecondary)
                                 .foregroundColor(Colours.foregroundPrimary)
                                 .cornerRadius(8)
+                            } else {
+                                Text("Scan recipe")
+                                    .frame(maxWidth: .infinity)
+                                    .padding(12)
+                                    .background(Colours.backgroundSecondary)
+                                    .foregroundColor(Colours.foregroundPrimary)
+                                    .cornerRadius(8)
+                            }
                         }
-                        .disabled(stepsPhoto == nil)
+                        .disabled(stepsPhoto == nil || isScanning)
                         .opacity(stepsPhoto == nil ? 0.5 : 1.0)
                     }
                     .padding(.horizontal)
@@ -231,6 +247,33 @@ struct RecipeSourceView: View {
             Button("OK") {}
         } message: {
             Text("Will generate recipe")
+        }
+    }
+
+    private func scanRecipe() {
+        guard let photo = stepsPhoto else { return }
+
+        Task {
+            await MainActor.run {
+                isScanning = true
+            }
+
+            let recipeNames = await RecipeTextExtractor.extractRecipeData(
+                from: photo)
+
+            if !recipeNames.isEmpty {
+                try? await Task.sleep(nanoseconds: 300_000_000)
+
+                await MainActor.run {
+                    extractedRecipeNames = recipeNames
+                    isScanning = false
+                    currentPage = .details
+                }
+            } else {
+                await MainActor.run {
+                    isScanning = false
+                }
+            }
         }
     }
 }

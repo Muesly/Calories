@@ -12,6 +12,8 @@ struct RecipeDetailsView: View {
     @Binding var currentPage: AddRecipePage
     @Binding var isPresented: Bool
     let modelContext: ModelContext
+    let extractedRecipeNames: [String]
+    let stepsPhoto: UIImage?
 
     @State private var recipeName = ""
     @State private var breakfastSuitability: MealSuitability = .never
@@ -23,11 +25,13 @@ struct RecipeDetailsView: View {
     @State private var photoZoomScale: CGFloat = 1.0
     @State private var photoOffset: CGSize = .zero
     @State private var showScanError = false
-    @State private var isScanning = false
-    @State private var extractedRecipeNameCandidates: [String] = []
-    @State private var extractedIngredientCandidates: [RecipeIngredientCandidate] = []
+    @State private var showSaveError = false
+    @State private var saveErrorMessage = ""
     @State private var recipeIngredients: [RecipeIngredientCandidate] = []
-    @State private var stepsPhoto: UIImage? = nil
+
+    private var extractedRecipeNameCandidates: [String] {
+        extractedRecipeNames
+    }
 
     var isFormValid: Bool {
         let hasName = !recipeName.trimmingCharacters(in: .whitespaces).isEmpty
@@ -39,35 +43,6 @@ struct RecipeDetailsView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Button(action: {
-                if stepsPhoto != nil {
-                    scanRecipe(from: stepsPhoto!)
-                } else {
-                    showScanError = true
-                }
-            }) {
-                if isScanning {
-                    HStack(spacing: 8) {
-                        ProgressView()
-                            .tint(Colours.foregroundPrimary)
-                        Text("Scanning...")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(12)
-                    .background(Colours.backgroundSecondary)
-                    .foregroundColor(Colours.foregroundPrimary)
-                    .cornerRadius(8)
-                } else {
-                    Text("Scan recipe")
-                        .frame(maxWidth: .infinity)
-                        .padding(12)
-                        .background(Colours.backgroundSecondary)
-                        .foregroundColor(Colours.foregroundPrimary)
-                        .cornerRadius(8)
-                }
-            }
-            .disabled(isScanning)
-            .padding(.horizontal)
 
             Form {
                 Section(header: Text("Recipe Name")) {
@@ -96,17 +71,6 @@ struct RecipeDetailsView: View {
                 SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
                 SuitabilitySection(title: "Lunch", selection: $lunchSuitability)
                 SuitabilitySection(title: "Dinner", selection: $dinnerSuitability)
-
-                if !recipeIngredients.isEmpty {
-                    Section(header: Text("Ingredients")) {
-                        ForEach(recipeIngredients, id: \.id) { ingredient in
-                            Text(ingredient.ingredientName)
-                                .font(.body)
-                                .foregroundColor(Colours.foregroundPrimary)
-                        }
-                        .onDelete(perform: deleteIngredients)
-                    }
-                }
             }
 
             Spacer()
@@ -122,38 +86,10 @@ struct RecipeDetailsView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Save") {
-                    var recipeIngredientsForSave: [RecipeIngredient] = []
-                    for ingredient in recipeIngredients {
-                        let ingredientEntry =
-                            modelContext.findIngredient(
-                                ingredient.ingredientName, isPlant: false)
-                            ?? IngredientEntry(ingredient.ingredientName, isPlant: false)
-                        let recipeIngredient = RecipeIngredient(
-                            ingredient: ingredientEntry
-                        )
-                        recipeIngredientsForSave.append(recipeIngredient)
-                        modelContext.insert(ingredientEntry)
-                        modelContext.insert(recipeIngredient)
-                    }
-
-                    let newRecipe = RecipeEntry(
-                        name: recipeName,
-                        breakfastSuitability: breakfastSuitability,
-                        lunchSuitability: lunchSuitability,
-                        dinnerSuitability: dinnerSuitability,
-                        recipeIngredients: recipeIngredientsForSave
-                    )
-                    modelContext.insert(newRecipe)
-                    try? modelContext.save()
-                    isPresented = false
+                    saveRecipe()
                 }
                 .foregroundColor(Colours.foregroundPrimary)
                 .disabled(!isFormValid)
-            }
-        }
-        .sheet(isPresented: $showCameraSheet) {
-            CameraViewControllerRepresentable { image in
-                scanRecipe(from: image)
             }
         }
         .fullScreenCover(isPresented: $showFullScreenPhoto) {
@@ -223,34 +159,32 @@ struct RecipeDetailsView: View {
         } message: {
             Text("Please take a photo of the recipe steps first before scanning.")
         }
+        .alert("Failed to Save Recipe", isPresented: $showSaveError) {
+            Button("OK") {}
+        } message: {
+            Text(saveErrorMessage)
+        }
+        .onAppear {
+            if !extractedRecipeNames.isEmpty {
+                recipeName = extractedRecipeNames[0]
+            }
+        }
     }
 
-    private func scanRecipe(from image: UIImage) {
-        Task {
-            await MainActor.run {
-                isScanning = true
-            }
-
-            let (recipeNames, ingredients) = await RecipeTextExtractor.extractRecipeData(
-                from: image)
-
-            if !recipeNames.isEmpty || !ingredients.isEmpty {
-                try? await Task.sleep(nanoseconds: 300_000_000)
-
-                await MainActor.run {
-                    extractedRecipeNameCandidates = recipeNames
-                    extractedIngredientCandidates = ingredients
-                    recipeIngredients = ingredients
-                    if !recipeNames.isEmpty {
-                        recipeName = recipeNames[0]
-                    }
-                    isScanning = false
-                }
-            } else {
-                await MainActor.run {
-                    isScanning = false
-                }
-            }
+    private func saveRecipe() {
+        do {
+            let newRecipe = RecipeEntry(
+                name: recipeName,
+                breakfastSuitability: breakfastSuitability,
+                lunchSuitability: lunchSuitability,
+                dinnerSuitability: dinnerSuitability
+            )
+            modelContext.insert(newRecipe)
+            try modelContext.save()
+            isPresented = false
+        } catch {
+            saveErrorMessage = error.localizedDescription
+            showSaveError = true
         }
     }
 

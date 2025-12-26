@@ -46,6 +46,7 @@
 		DDAA98ED2EFED9D90026AE9E /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98EC2EFED9D90026AE9E /* PhotoView.swift */; };
 		DDAA98EF2EFEDBCA0026AE9E /* RecipeSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98EE2EFEDBCA0026AE9E /* RecipeSourceView.swift */; };
 		DDAA98F12EFEDD670026AE9E /* RecipeDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F02EFEDD670026AE9E /* RecipeDetailsView.swift */; };
+		DDAA98F32EFEE1BB0026AE9E /* RecipeTextExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */; };
 		DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
@@ -197,6 +198,7 @@
 		DDAA98EC2EFED9D90026AE9E /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
 		DDAA98EE2EFEDBCA0026AE9E /* RecipeSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeSourceView.swift; sourceTree = "<group>"; };
 		DDAA98F02EFEDD670026AE9E /* RecipeDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailsView.swift; sourceTree = "<group>"; };
+		DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTextExtractor.swift; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
 				DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */,
+				DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */,
 				DD738C982EFB28B500ABFCFD /* MealChoiceView.swift */,
 				DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */,
 				DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */,
@@ -887,6 +890,7 @@
 				DD6F91FE2EEEF51E00664110 /* MealAvailabilityView.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
+				DDAA98F32EFEE1BB0026AE9E /* RecipeTextExtractor.swift in Sources */,
 				EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */,
 				EABDB44E29B4A98F0096FBF1 /* Date+Extensions.swift in Sources */,
 				DD701F902E1CFB64006DB2FF /* MealPlanningViewModel.swift in Sources */,
