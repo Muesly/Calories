@@ -8,6 +8,20 @@
 import Foundation
 import SwiftData
 
+enum MealPlanError: LocalizedError {
+    case saveFailed(Error)
+    case loadFailed(Error)
+
+    var errorDescription: String? {
+        switch self {
+        case .saveFailed(let error):
+            return "Failed to save meal plan: \(error.localizedDescription)"
+        case .loadFailed(let error):
+            return "Failed to load meal plan: \(error.localizedDescription)"
+        }
+    }
+}
+
 enum Person: String, CaseIterable {
     case tony = "Tony"
     case karen = "Karen"
@@ -89,6 +103,7 @@ class MealPlanningViewModel: ObservableObject {
     var mealReasons: [PersonMealKey: String] = [:]
     var quickMeals: [MealKey: Bool] = [:]
     var foodToUseUp: [FoodToUseUp] = []
+    var lastError: MealPlanError?
     let mealPickerEngine: MealPickerEngine
     let weekDates: [Date]
 
@@ -401,27 +416,34 @@ class MealPlanningViewModel: ObservableObject {
 
         // Load food to use up
         foodToUseUp = entry.getFoodToUseUp()
+
+        // Clear any previous errors
+        lastError = nil
     }
 
     func saveMealPlan() {
-        let entry = MealPlanEntry.findOrCreate(for: weekStartDate, in: modelContext)
-
-        // Save meal selections
-        entry.setMealSelections(mealSelections)
-
-        // Save meal reasons
-        entry.setMealReasons(mealReasons)
-
-        // Save quick meals
-        entry.setQuickMeals(quickMeals)
-
-        // Save food to use up
-        entry.setFoodToUseUp(foodToUseUp)
-
         do {
+            let entry = MealPlanEntry.findOrCreate(for: weekStartDate, in: modelContext)
+
+            // Save meal selections
+            entry.setMealSelections(mealSelections)
+
+            // Save meal reasons
+            entry.setMealReasons(mealReasons)
+
+            // Save quick meals
+            entry.setQuickMeals(quickMeals)
+
+            // Save food to use up
+            entry.setFoodToUseUp(foodToUseUp)
+
             try modelContext.save()
             print("✓ Meal plan saved successfully")
+
+            // Clear any previous errors
+            lastError = nil
         } catch {
+            lastError = .saveFailed(error)
             print("✗ Error saving meal plan: \(error)")
         }
     }
