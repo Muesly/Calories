@@ -149,6 +149,24 @@ class MealPlanningViewModel: ObservableObject {
             && selection.mealType == mealType
     }
 
+    /// Finds the index of a meal selection matching the given criteria
+    private func findMealSelectionIndex(
+        for person: Person, date: Date, mealType: MealType
+    ) -> Int? {
+        mealSelections.firstIndex { selection in
+            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
+        }
+    }
+
+    /// Finds the meal selection matching the given criteria
+    private func findMealSelection(
+        for person: Person, date: Date, mealType: MealType
+    ) -> MealSelection? {
+        mealSelections.first { selection in
+            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
+        }
+    }
+
     /// Generates a storage key for meal-level data (not person-specific)
     private static func mealKey(date: Date, mealType: MealType) -> MealKey {
         MealKey(date: date, mealType: mealType).normalize()
@@ -157,17 +175,14 @@ class MealPlanningViewModel: ObservableObject {
     // MARK: - Meal Selection
 
     func toggleMealSelection(for person: Person, date: Date, mealType: MealType) {
-        if let index = mealSelections.firstIndex(where: { selection in
-            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
-        }) {
-            mealSelections[index].isSelected.toggle()
+        guard let index = findMealSelectionIndex(for: person, date: date, mealType: mealType) else {
+            return
         }
+        mealSelections[index].isSelected.toggle()
     }
 
     func isSelected(for person: Person, date: Date, mealType: MealType) -> Bool {
-        return mealSelections.first { selection in
-            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
-        }?.isSelected ?? false
+        return findMealSelection(for: person, date: date, mealType: mealType)?.isSelected ?? false
     }
 
     // MARK: - Meal Reasons
@@ -224,11 +239,10 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func selectRecipe(_ recipe: RecipeEntry, for person: Person, date: Date, mealType: MealType) {
-        if let index = mealSelections.firstIndex(where: { selection in
-            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
-        }) {
-            mealSelections[index].recipe = recipe
+        guard let index = findMealSelectionIndex(for: person, date: date, mealType: mealType) else {
+            return
         }
+        mealSelections[index].recipe = recipe
     }
 
     func populateEmptyMeals() {
