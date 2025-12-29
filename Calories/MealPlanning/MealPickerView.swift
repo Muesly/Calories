@@ -9,63 +9,74 @@ import SwiftUI
 
 struct MealPickerView: View {
     @State var viewModel: MealPlanningViewModel
+    let onSave: () -> Void
     @State private var swapMode = false
     @State private var mealToSwap: MealSelection?
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    ForEach(viewModel.weekDates, id: \.self) { date in
-                        DayMealSelectionView(date: date) { mealType, date in
-                            if let meal = viewModel.meal(forDate: date, mealType: mealType) {
-                                RecipePickerCard(
-                                    mealType: mealType,
-                                    meal: meal,
-                                    servingInfo: viewModel.servingInfo(
-                                        for: date, mealType: mealType),
-                                    isSwapMode: swapMode,
-                                    isSelectedForSwap: mealToSwap?.id == meal.id,
-                                    onRecipeSelected: { recipe in
-                                        let person = meal.person
-                                        viewModel.selectRecipe(
-                                            recipe, for: person, date: date, mealType: mealType)
-                                        swapMode = false
-                                    },
-                                    onChangeRequested: {
-                                        // Change will be handled internally in RecipePickerCard
-                                    },
-                                    onSwapRequested: {
-                                        if swapMode && mealToSwap != nil {
-                                            viewModel.swapMeals(mealToSwap!, with: meal)
+            VStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 16) {
+                        ForEach(viewModel.weekDates, id: \.self) { date in
+                            DayMealSelectionView(date: date) { mealType, date in
+                                if let meal = viewModel.meal(forDate: date, mealType: mealType) {
+                                    RecipePickerCard(
+                                        mealType: mealType,
+                                        meal: meal,
+                                        servingInfo: viewModel.servingInfo(
+                                            for: date, mealType: mealType),
+                                        isSwapMode: swapMode,
+                                        isSelectedForSwap: mealToSwap?.id == meal.id,
+                                        onRecipeSelected: { recipe in
+                                            let person = meal.person
+                                            viewModel.selectRecipe(
+                                                recipe, for: person, date: date, mealType: mealType)
                                             swapMode = false
-                                            mealToSwap = nil
-                                        } else {
-                                            swapMode = true
-                                            mealToSwap = meal
+                                        },
+                                        onChangeRequested: {
+                                            // Change will be handled internally in RecipePickerCard
+                                        },
+                                        onSwapRequested: {
+                                            if swapMode && mealToSwap != nil {
+                                                viewModel.swapMeals(mealToSwap!, with: meal)
+                                                swapMode = false
+                                                mealToSwap = nil
+                                            } else {
+                                                swapMode = true
+                                                mealToSwap = meal
+                                            }
                                         }
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
                     }
+                    .padding(20)
                 }
-                .padding(20)
+                .scrollIndicators(.hidden)
+                .scrollDismissesKeyboard(.interactively)
             }
-            .scrollIndicators(.hidden)
-            .scrollDismissesKeyboard(.interactively)
             .navigationTitle("Meal Planner")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        viewModel.saveMealPlan()
+                        dismiss()
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if swapMode {
-                        Button("Cancel") {
+                        Button("Cancel Swap") {
                             swapMode = false
                             mealToSwap = nil
-                        }
-                    } else {
-                        Button("Populate") {
-                            $viewModel.wrappedValue.populateEmptyMeals()
                         }
                     }
                 }

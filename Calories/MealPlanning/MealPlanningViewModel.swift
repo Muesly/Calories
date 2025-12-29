@@ -56,7 +56,7 @@ struct FoodToUseUp: Identifiable {
 @MainActor
 class MealPlanningViewModel: ObservableObject {
     let modelContext: ModelContext
-    var currentStage: WizardStage = .mealPicking
+    var currentStage: WizardStage = .mealAvailability
     var mealSelections: [MealSelection] = []
     var mealReasons: [String: String] = [:]
     var quickMeals: [String: Bool] = [:]
@@ -337,6 +337,67 @@ class MealPlanningViewModel: ObservableObject {
         } else {
             // Return next Monday
             return calendar.date(byAdding: .weekOfYear, value: 1, to: thisMonday)!
+        }
+    }
+
+    // MARK: - Persistence
+
+    private var weekStartDate: Date {
+        Self.startOfPlanningWeek()
+    }
+
+    func loadMealPlan() {
+        let entry = MealPlanEntry.findOrCreate(for: weekStartDate, in: modelContext)
+
+        // Load recipes for converting stored selections
+        let recipes = modelContext.recipeResults()
+
+        // Load meal selections
+        let storedSelections = entry.getMealSelections(recipes: recipes)
+        if !storedSelections.isEmpty {
+            // Update existing selections with stored recipes
+            for storedSelection in storedSelections {
+                if let index = mealSelections.firstIndex(where: {
+                    $0.person == storedSelection.person
+                        && $0.date.isSameDay(as: storedSelection.date)
+                        && $0.mealType == storedSelection.mealType
+                }) {
+                    mealSelections[index].isSelected = storedSelection.isSelected
+                    mealSelections[index].recipe = storedSelection.recipe
+                }
+            }
+        }
+
+        // Load meal reasons
+        mealReasons = entry.mealReasons
+
+        // Load quick meals
+        quickMeals = entry.quickMeals
+
+        // Load food to use up
+        foodToUseUp = entry.getFoodToUseUp()
+    }
+
+    func saveMealPlan() {
+        let entry = MealPlanEntry.findOrCreate(for: weekStartDate, in: modelContext)
+
+        // Save meal selections
+        entry.setMealSelections(mealSelections)
+
+        // Save meal reasons
+        entry.mealReasons = mealReasons
+
+        // Save quick meals
+        entry.quickMeals = quickMeals
+
+        // Save food to use up
+        entry.setFoodToUseUp(foodToUseUp)
+
+        do {
+            try modelContext.save()
+            print("✓ Meal plan saved successfully")
+        } catch {
+            print("✗ Error saving meal plan: \(error)")
         }
     }
 }

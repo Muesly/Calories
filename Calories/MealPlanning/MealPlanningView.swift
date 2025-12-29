@@ -28,9 +28,10 @@ struct MealPlanningView: View {
                 case .foodToUseUp:
                     FoodToUseUpView(viewModel: viewModel)
                 case .mealPicking:
-                    MealPickerView(viewModel: viewModel)
+                    MealPickerView(viewModel: viewModel, onSave: saveMealPlan)
                 }
             }
+
             HStack(spacing: 15) {
                 if viewModel.canGoBack {
                     Button(action: {
@@ -42,30 +43,62 @@ struct MealPlanningView: View {
                     .buttonStyle(.bordered)
                 }
 
-                Button(action: {
-                    viewModel.goToNextStage()
-                }) {
-                    Text("Next")
+                if stage == .mealPicking {
+                    Button(action: {
+                        viewModel.populateEmptyMeals()
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Populate")
+                        }
                         .modifier(ButtonText())
+                        .buttonStyle(.borderedProminent)
+                    }
+                } else {
+                    Button(action: {
+                        viewModel.goToNextStage()
+                    }) {
+                        Text("Next")
+                            .modifier(ButtonText())
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!viewModel.canGoForward)
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(!viewModel.canGoForward)
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
         }
         .navigationTitle("Meal Planning")
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Close") {
-                    dismiss()
+            if stage == .mealPicking {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        saveMealPlan()
+                        dismiss()
+                    }
+                }
+            } else {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Close") {
+                        dismiss()
+                    }
                 }
             }
         }
         .font(.brand)
         .onAppear {
             RecipeEntry.seedRecipes(into: modelContext)
+            viewModel.loadMealPlan()
         }
+    }
+
+    private func saveMealPlan() {
+        viewModel.saveMealPlan()
     }
 }
 
