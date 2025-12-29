@@ -15,6 +15,7 @@ struct AddRecipeSheet: View {
     @State private var extractedRecipeNames: [String] = []
     @State private var dishPhoto: UIImage? = nil
     @State private var stepsPhoto: UIImage? = nil
+    @State private var showCancelAlert = false
 
     var body: some View {
         NavigationStack {
@@ -22,6 +23,7 @@ struct AddRecipeSheet: View {
             case .source:
                 RecipeSourceView(
                     currentPage: $currentPage,
+                    isPresented: $isPresented,
                     extractedRecipeNames: $extractedRecipeNames,
                     dishPhoto: $dishPhoto,
                     stepsPhoto: $stepsPhoto

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeSourceView: View {
     @Binding var currentPage: AddRecipePage
+    @Binding var isPresented: Bool
     @Binding var extractedRecipeNames: [String]
     @Binding var dishPhoto: UIImage?
     @Binding var stepsPhoto: UIImage?
@@ -96,6 +97,16 @@ struct RecipeSourceView: View {
         }
         .navigationTitle("Choose Recipe Source")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    isPresented = false
+                } label: {
+                    Image(systemName: "xmark")
+                }
+                .foregroundColor(Colours.foregroundPrimary)
+            }
+        }
         .alert("Generate Recipe", isPresented: $showGenerateAlert) {
             Button("OK") {}
         } message: {
