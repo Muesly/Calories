@@ -6,56 +6,52 @@
 //
 
 import SwiftData
-import XCTest
+import Testing
 
 @testable import Calories
 
+@Suite("MealItemsViewModel Tests")
 @MainActor
-final class MealItemsViewModelTests: XCTestCase {
-    var modelContext: ModelContext!
+struct MealItemsViewModelTests {
+    var modelContext: ModelContext = .inMemory
 
-    @MainActor override func setUpWithError() throws {
-        modelContext = .inMemory
-    }
-
-    override func tearDownWithError() throws {
-        modelContext = nil
-    }
-
-    func testMealTitlesDependingOnTimeOfDay() async throws {
+    @Test("Meal titles depend on time of day")
+    func mealTitlesDependingOnTimeOfDay() {
         var dc = DateComponents(calendar: Calendar.current)
+
         dc.hour = 8
         let breakfastSubject = MealItemsViewModel(modelContext: modelContext)
         breakfastSubject.fetchMealFoodEntries(date: dc.date!)
-        XCTAssertEqual(breakfastSubject.mealTitle, "Breakfast - 0 Calories")
+        #expect(breakfastSubject.mealTitle == "Breakfast - 0 Calories")
 
         dc.hour = 10
         let morningSnackSubject = MealItemsViewModel(modelContext: modelContext)
         morningSnackSubject.fetchMealFoodEntries(date: dc.date!)
-        XCTAssertEqual(morningSnackSubject.mealTitle, "Morning Snack - 0 Calories")
+        #expect(morningSnackSubject.mealTitle == "Morning Snack - 0 Calories")
 
         dc.hour = 12
         let lunchSubject = MealItemsViewModel(modelContext: modelContext)
         lunchSubject.fetchMealFoodEntries(date: dc.date!)
-        XCTAssertEqual(lunchSubject.mealTitle, "Lunch - 0 Calories")
+        #expect(lunchSubject.mealTitle == "Lunch - 0 Calories")
 
         dc.hour = 14
         let afternoonSnackSubject = MealItemsViewModel(modelContext: modelContext)
         afternoonSnackSubject.fetchMealFoodEntries(date: dc.date!)
-        XCTAssertEqual(afternoonSnackSubject.mealTitle, "Afternoon Snack - 0 Calories")
+        #expect(afternoonSnackSubject.mealTitle == "Afternoon Snack - 0 Calories")
 
         dc.hour = 17
         let dinnerSubject = MealItemsViewModel(modelContext: modelContext)
         dinnerSubject.fetchMealFoodEntries(date: dc.date!)
-        XCTAssertEqual(dinnerSubject.mealTitle, "Dinner - 0 Calories")
+        #expect(dinnerSubject.mealTitle == "Dinner - 0 Calories")
 
         dc.hour = 20
         let eveningSnackSubject = MealItemsViewModel(modelContext: modelContext)
         eveningSnackSubject.fetchMealFoodEntries(date: dc.date!)
-        XCTAssertEqual(eveningSnackSubject.mealTitle, "Evening Snack - 0 Calories")
+        #expect(eveningSnackSubject.mealTitle == "Evening Snack - 0 Calories")
     }
 
-    func testMealTitlesWithCalories() throws {
+    @Test("Meal titles with calories")
+    func mealTitlesWithCalories() {
         let date = DateComponents(
             calendar: Calendar.current,
             year: 2023,
@@ -82,7 +78,7 @@ final class MealItemsViewModelTests: XCTestCase {
 
         let subject = MealItemsViewModel(modelContext: modelContext)
         subject.fetchMealFoodEntries(date: date)
-        XCTAssertEqual(subject.mealTitle, "Breakfast - 300 Calories")
-        XCTAssertEqual(subject.mealFoodEntries, [secondFoodEntry, foodEntry])
+        #expect(subject.mealTitle == "Breakfast - 300 Calories")
+        #expect(subject.mealFoodEntries == [secondFoodEntry, foodEntry])
     }
 }

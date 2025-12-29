@@ -5,18 +5,20 @@
 //  Created by Tony Short on 13/01/2024.
 //
 
-import XCTest
+import Testing
 
 @testable import Calories
 
-final class MealPickerViewTests: XCTestCase {
+@Suite("MealPickerViewModel Tests")
+@MainActor
+struct MealPickerViewTests {
     func dateFromComponents() -> Date {
         let dc = DateComponents(
             calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 11, minute: 30)
         return dc.date!
     }
 
-    @MainActor
+    @Test("Setting of meals")
     func testSettingOfMeals() {
         var timeConsumed = dateFromComponents()
         let subject = MealPickerViewModel(
@@ -28,10 +30,10 @@ final class MealPickerViewTests: XCTestCase {
                     timeConsumed = date
                 }))
         subject.setInitialMealForTimeConsumed()
-        XCTAssertEqual(subject.selectedMealName, "Morning Snack")
-        XCTAssertTrue(subject.isMealSelected(.init(name: "Morning Snack", icon: "☕️", hour: 10)))
+        #expect(subject.selectedMealName == "Morning Snack")
+        #expect(subject.isMealSelected(.init(name: "Morning Snack", icon: "☕️", hour: 10)))
         let dc = DateComponents(
             calendar: Calendar.current, year: 2023, month: 1, day: 1, hour: 10, minute: 0)
-        XCTAssertEqual(timeConsumed, dc.date)
+        #expect(timeConsumed == dc.date)
     }
 }
