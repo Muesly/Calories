@@ -15,11 +15,20 @@ struct RecipeBookView: View {
     @Environment(\.modelContext) var modelContext
     @Query private var allRecipes: [RecipeEntry]
     @State private var showAddRecipe = false
+    @State var searchText = ""
+    @State private var isSearching: Bool = false
 
     var suitableRecipes: [RecipeEntry] {
         allRecipes.filter { recipe in
             let suitability = recipe.suitability(for: mealType)
-            return suitability != .never
+            guard suitability != .never else {
+                return false
+            }
+            if searchText.count < 2 {
+                return true
+            } else {
+                return recipe.name.localizedCaseInsensitiveContains(searchText)
+            }
         }
     }
 
@@ -45,31 +54,29 @@ struct RecipeBookView: View {
                     }
                     .onDelete(perform: deleteRecipes)
                 }
-
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            showAddRecipe = true
-                        }) {
-                            Image(systemName: "plus")
-                                .font(.title2)
-                                .foregroundColor(Colours.foregroundPrimary)
-                                .padding(20)
-                                .background(Colours.backgroundSecondary)
-                                .clipShape(Circle())
-                        }
-                        .padding(20)
-                    }
-                }
             }
             .navigationTitle("Recipe book")
             .navigationBarTitleDisplayMode(.inline)
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearching,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Enter Recipe"
+            )
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cancel") {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
                         dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .foregroundColor(Colours.foregroundPrimary)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showAddRecipe = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
                     .foregroundColor(Colours.foregroundPrimary)
                 }
