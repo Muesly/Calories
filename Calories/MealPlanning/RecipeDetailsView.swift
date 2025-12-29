@@ -21,6 +21,9 @@ struct RecipeDetailsView: View {
     @State private var recipeName = ""
     @State private var caloriesPerPortion = ""
     @State private var suggestions = ""
+    @State private var bookSearchText = ""
+    @State private var selectedBook: BookEntry?
+    @State private var availableBooks: [BookEntry] = []
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
@@ -30,6 +33,16 @@ struct RecipeDetailsView: View {
 
     private var extractedRecipeNameCandidates: [String] {
         extractedRecipeNames
+    }
+
+    private var filteredBooks: [BookEntry] {
+        guard bookSearchText.count >= 2 else {
+            return []
+        }
+        return
+            availableBooks
+            .filter { $0.name.localizedCaseInsensitiveContains(bookSearchText) }
+            .sorted { $0.name < $1.name }
     }
 
     var isFormValid: Bool {
@@ -42,7 +55,6 @@ struct RecipeDetailsView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-
             Form {
                 Section(header: Text("Recipe Name")) {
                     VStack(spacing: 12) {
@@ -80,11 +92,88 @@ struct RecipeDetailsView: View {
                         .keyboardType(.numberPad)
                 }
 
+                if let selectedBook = selectedBook {
+                    Section(header: Text("Recipe Book")) {
+                        HStack {
+                            Text(selectedBook.name)
+                                .foregroundColor(.white)
+                            Spacer()
+                            Button(action: {
+                                self.selectedBook = nil
+                                bookSearchText = ""
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(8)
+                        .background(Colours.backgroundSecondary)
+                        .cornerRadius(8)
+                    }
+                } else {
+                    Section(header: Text("Recipe Book")) {
+                        VStack(spacing: 12) {
+                            HStack {
+                                TextField("Search or add book", text: $bookSearchText)
+                                    .autocorrectionDisabled()
+                            }
+
+                            if !filteredBooks.isEmpty {
+                                VStack(spacing: 8) {
+                                    ForEach(filteredBooks, id: \.name) { book in
+                                        Button(action: {
+                                            selectedBook = book
+                                            bookSearchText = ""
+                                        }) {
+                                            HStack {
+                                                Text(book.name)
+                                                    .foregroundColor(.white)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(8)
+                                            .background(Colours.backgroundSecondary)
+                                            .cornerRadius(8)
+                                        }
+                                    }
+                                }
+                            }
+
+                            if !bookSearchText.isEmpty
+                                && !filteredBooks.contains(where: { $0.name == bookSearchText })
+                            {
+                                Button(action: {
+                                    let newBook = BookEntry(name: bookSearchText)
+                                    modelContext.insert(newBook)
+                                    do {
+                                        try modelContext.save()
+                                        selectedBook = newBook
+                                        availableBooks.append(newBook)
+                                        bookSearchText = ""
+                                    } catch {
+                                        print("Error saving new book: \(error)")
+                                    }
+                                }) {
+                                    HStack {
+                                        Image(systemName: "plus.circle.fill")
+                                        Text("Create '\(bookSearchText)'")
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(8)
+                                    .background(Colours.backgroundSecondary)
+                                    .cornerRadius(8)
+                                    .foregroundColor(.white)
+                                }
+                            }
+                        }
+                    }
+                }
+
                 Section(header: Text("Suggestions")) {
                     TextField(
                         "e.g. add more salt, reduce chilli", text: $suggestions, axis: .vertical
                     )
-                    .lineLimit(3...6)
+                    .lineLimit(1...2)
                 }
 
                 Section(header: Text("Meal Suitability")) {
@@ -135,6 +224,14 @@ struct RecipeDetailsView: View {
             default:
                 break
             }
+
+            // Fetch existing books
+            do {
+                let descriptor = FetchDescriptor<BookEntry>(sortBy: [SortDescriptor(\.name)])
+                availableBooks = try modelContext.fetch(descriptor)
+            } catch {
+                print("Error fetching books: \(error)")
+            }
         }
     }
 
@@ -149,7 +246,6 @@ struct RecipeDetailsView: View {
             let dishPhotoData = dishPhoto?.jpegData(compressionQuality: 0.8)
             let stepsPhotoData = stepsPhoto?.jpegData(compressionQuality: 0.8)
             let calories = Int(caloriesPerPortion) ?? 0
-
             let newRecipe = RecipeEntry(
                 name: recipeName,
                 breakfastSuitability: breakfastSuitability,
@@ -158,7 +254,8 @@ struct RecipeDetailsView: View {
                 dishPhotoData: dishPhotoData,
                 stepsPhotoData: stepsPhotoData,
                 caloriesPerPortion: calories,
-                suggestions: suggestions
+                suggestions: suggestions,
+                book: selectedBook
             )
             modelContext.insert(newRecipe)
             try modelContext.save()

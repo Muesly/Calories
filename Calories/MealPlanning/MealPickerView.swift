@@ -173,9 +173,7 @@ struct RecipePickerCard: View {
                 .background(
                     isSelectedForSwap
                         ? Colours.backgroundSecondary
-                        : (isSwapMode
-                            ? Colours.backgroundSecondary.opacity(0.5)
-                            : Colours.backgroundSecondary.opacity(0.5))
+                        : Colours.backgroundSecondary.opacity(0.5)
                 )
                 .cornerRadius(8)
                 .overlay(

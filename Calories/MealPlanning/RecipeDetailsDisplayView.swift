@@ -29,9 +29,9 @@ struct RecipeDetailsDisplayView: View {
                         }
                     }
 
-                    if !recipe.suggestions.isEmpty {
-                        Section(header: Text("Suggestions")) {
-                            Text(recipe.suggestions)
+                    if let book = recipe.book {
+                        Section(header: Text("Recipe Book")) {
+                            Text(book.name)
                                 .font(.body)
                                 .foregroundColor(Colours.foregroundPrimary)
                         }
@@ -53,6 +53,14 @@ struct RecipeDetailsDisplayView: View {
                                     }, set: { _ in }))
                         }
                         .frame(height: 200)
+                    }
+
+                    if !recipe.suggestions.isEmpty {
+                        Section(header: Text("Suggestions")) {
+                            Text(recipe.suggestions)
+                                .font(.body)
+                                .foregroundColor(Colours.foregroundPrimary)
+                        }
                     }
                 }
 

@@ -10,7 +10,6 @@ import SwiftUI
 /// Reusable card component for meal-related UI
 struct MealCard<Content: View>: View {
     let content: Content
-    let backgroundColor: Color = Color(red: 0.95, green: 0.95, blue: 0.95)
 
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -23,7 +22,7 @@ struct MealCard<Content: View>: View {
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
         .frame(minHeight: 140)
-        .background(backgroundColor.opacity(0.5))
+        .background(Colours.backgroundSecondary.opacity(0.5))
         .cornerRadius(8)
     }
 }
