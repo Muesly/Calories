@@ -114,75 +114,78 @@ struct RecipePickerCard: View {
                 showMealChoice = true
             }
         }) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("\(mealType.rawValue) \(mealType.iconName)")
-                    .font(.subheadline)
-                    .foregroundColor(Colours.foregroundPrimary)
-                Divider()
-                    .background(Colours.foregroundPrimary)
-
-                if isNoMealRequired {
-                    Text(servingInfo)
-                        .font(.caption)
-                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                        .italic()
-                } else {
-                    Text(meal.recipe?.name ?? "Choose a meal")
-                        .font(.caption)
+            ZStack(alignment: .topLeading) {
+                // Use an empty MealCard for styling
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("\(mealType.rawValue) \(mealType.iconName)")
+                        .font(.subheadline)
                         .foregroundColor(Colours.foregroundPrimary)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .frame(minHeight: 32, alignment: .top)
-
                     Divider()
                         .background(Colours.foregroundPrimary)
 
-                    HStack {
+                    if isNoMealRequired {
                         Text(servingInfo)
-                            .font(.caption2)
+                            .font(.caption)
                             .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                        Spacer()
-                        if !isSwapMode {
-                            Menu {
-                                Button(action: {
-                                    showRecipeBook = true
-                                }) {
-                                    Label("Change", systemImage: "pencil")
-                                }
-                                if let onSwapRequested = onSwapRequested {
-                                    Button(action: onSwapRequested) {
-                                        Label("Swap", systemImage: "arrow.left.arrow.right")
+                            .italic()
+                    } else {
+                        Text(meal.recipe?.name ?? "Choose a meal")
+                            .font(.caption)
+                            .foregroundColor(Colours.foregroundPrimary)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(minHeight: 32, alignment: .top)
+
+                        Divider()
+                            .background(Colours.foregroundPrimary)
+
+                        HStack {
+                            Text(servingInfo)
+                                .font(.caption2)
+                                .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                            Spacer()
+                            if !isSwapMode {
+                                Menu {
+                                    Button(action: {
+                                        showRecipeBook = true
+                                    }) {
+                                        Label("Change", systemImage: "pencil")
                                     }
+                                    if let onSwapRequested = onSwapRequested {
+                                        Button(action: onSwapRequested) {
+                                            Label("Swap", systemImage: "arrow.left.arrow.right")
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "ellipsis")
+                                        .font(.caption)
+                                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                                        .padding(8)
                                 }
-                            } label: {
-                                Image(systemName: "ellipsis")
-                                    .font(.caption)
-                                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                                    .padding(8)
                             }
                         }
                     }
                 }
+                .padding(8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(minHeight: 140)
+                .background(
+                    isSelectedForSwap
+                        ? Colours.backgroundSecondary
+                        : (isSwapMode
+                            ? Colours.backgroundSecondary.opacity(0.5)
+                            : Colours.backgroundSecondary.opacity(0.5))
+                )
+                .cornerRadius(8)
+                .overlay(
+                    isSelectedForSwap
+                        ? RoundedRectangle(cornerRadius: 8)
+                            .stroke(Colours.foregroundPrimary, lineWidth: 2)
+                        : nil
+                )
             }
         }
-        .padding(8)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .frame(minHeight: 140)
-        .background(
-            isSelectedForSwap
-                ? Colours.backgroundSecondary
-                : (isSwapMode
-                    ? Colours.backgroundSecondary.opacity(0.5)
-                    : Colours.backgroundSecondary.opacity(0.5))
-        )
-        .cornerRadius(8)
-        .overlay(
-            isSelectedForSwap
-                ? RoundedRectangle(cornerRadius: 8)
-                    .stroke(Colours.foregroundPrimary, lineWidth: 2)
-                : nil
-        )
         .sheet(isPresented: $showRecipeDetails) {
             if let recipe = meal.recipe {
                 RecipeDetailsDisplayView(recipe: recipe)

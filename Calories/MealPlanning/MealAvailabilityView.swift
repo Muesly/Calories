@@ -7,6 +7,27 @@
 
 import SwiftUI
 
+/// Reusable card component for meal-related UI
+struct MealCard<Content: View>: View {
+    let content: Content
+    let backgroundColor: Color = Color(red: 0.95, green: 0.95, blue: 0.95)
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            content
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minHeight: 140)
+        .background(backgroundColor.opacity(0.5))
+        .cornerRadius(8)
+    }
+}
+
 struct MealAvailabilityView: View {
     @ObservedObject var viewModel: MealPlanningViewModel
 
@@ -106,7 +127,7 @@ struct MealAvailabilityCard: View {
     let onQuickMealToggled: (Bool) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        MealCard {
             Text("\(mealType.rawValue) \(mealType.iconName)")
                 .font(.subheadline)
                 .foregroundColor(Colours.foregroundPrimary)
@@ -143,11 +164,6 @@ struct MealAvailabilityCard: View {
             }
             .toggleStyle(CheckboxToggleStyle())
         }
-        .padding(8)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .frame(minHeight: 140)
-        .background(Colours.backgroundSecondary.opacity(0.5))
-        .cornerRadius(8)
     }
 
     private func binding(for person: Person, isSelected: Bool) -> Binding<Bool> {
