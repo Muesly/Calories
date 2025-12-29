@@ -132,11 +132,16 @@ struct RecipeDetailsView: View {
         }
 
         do {
+            let dishPhotoData = dishPhoto?.jpegData(compressionQuality: 0.8)
+            let stepsPhotoData = stepsPhoto?.jpegData(compressionQuality: 0.8)
+
             let newRecipe = RecipeEntry(
                 name: recipeName,
                 breakfastSuitability: breakfastSuitability,
                 lunchSuitability: lunchSuitability,
-                dinnerSuitability: dinnerSuitability
+                dinnerSuitability: dinnerSuitability,
+                dishPhotoData: dishPhotoData,
+                stepsPhotoData: stepsPhotoData
             )
             modelContext.insert(newRecipe)
             try modelContext.save()

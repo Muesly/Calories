@@ -97,6 +97,7 @@ struct RecipePickerCard: View {
 
     @State private var showMealChoice = false
     @State private var showRecipeBook = false
+    @State private var showRecipeDetails = false
 
     private var isNoMealRequired: Bool {
         servingInfo.hasPrefix("No meal required")
@@ -107,6 +108,8 @@ struct RecipePickerCard: View {
             // In swap mode, clicking the card triggers swap
             if isSwapMode {
                 onSwapRequested?()
+            } else if meal.recipe != nil {
+                showRecipeDetails = true
             } else if !isNoMealRequired {
                 showMealChoice = true
             }
@@ -127,9 +130,10 @@ struct RecipePickerCard: View {
                     Text(meal.recipe?.name ?? "Choose a meal")
                         .font(.caption)
                         .foregroundColor(Colours.foregroundPrimary)
-                        .lineLimit(3)
+                        .lineLimit(2)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(minHeight: 32, alignment: .top)
 
                     Divider()
                         .background(Colours.foregroundPrimary)
@@ -164,6 +168,7 @@ struct RecipePickerCard: View {
         }
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minHeight: 140)
         .background(
             isSelectedForSwap
                 ? Colours.backgroundSecondary
@@ -178,6 +183,11 @@ struct RecipePickerCard: View {
                     .stroke(Colours.foregroundPrimary, lineWidth: 2)
                 : nil
         )
+        .sheet(isPresented: $showRecipeDetails) {
+            if let recipe = meal.recipe {
+                RecipeDetailsDisplayView(recipe: recipe)
+            }
+        }
         .sheet(isPresented: $showMealChoice) {
             if let recipe = meal.recipe {
                 MealChoiceView(

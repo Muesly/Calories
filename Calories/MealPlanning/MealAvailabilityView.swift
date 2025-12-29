@@ -145,6 +145,7 @@ struct MealAvailabilityCard: View {
         }
         .padding(8)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minHeight: 140)
         .background(Colours.backgroundSecondary.opacity(0.5))
         .cornerRadius(8)
     }

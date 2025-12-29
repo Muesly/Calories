@@ -19,6 +19,8 @@ public enum MealSuitability: Int, Codable {
     private var breakfastSuitabilityRaw: Int
     private var lunchSuitabilityRaw: Int
     private var dinnerSuitabilityRaw: Int
+    var dishPhotoData: Data?
+    var stepsPhotoData: Data?
 
     var breakfastSuitability: MealSuitability {
         get { MealSuitability(rawValue: breakfastSuitabilityRaw) ?? .never }
@@ -39,12 +41,16 @@ public enum MealSuitability: Int, Codable {
         name: String,
         breakfastSuitability: MealSuitability = .never,
         lunchSuitability: MealSuitability = .never,
-        dinnerSuitability: MealSuitability = .never
+        dinnerSuitability: MealSuitability = .never,
+        dishPhotoData: Data? = nil,
+        stepsPhotoData: Data? = nil
     ) {
         self.name = name
         self.breakfastSuitabilityRaw = breakfastSuitability.rawValue
         self.lunchSuitabilityRaw = lunchSuitability.rawValue
         self.dinnerSuitabilityRaw = dinnerSuitability.rawValue
+        self.dishPhotoData = dishPhotoData
+        self.stepsPhotoData = stepsPhotoData
     }
 }
 
