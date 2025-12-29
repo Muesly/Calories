@@ -108,25 +108,7 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func fetchRecipes() {
-        // Build a cache of recipes per date+mealType to ensure consistency
-        var recipeCache: [String: RecipeEntry?] = [:]
-
-        for index in mealSelections.indices {
-            let selection = mealSelections[index]
-            let key = Self.mealKey(date: selection.date, mealType: selection.mealType)
-
-            // Only pick a recipe if at least one person is attending
-            if recipeCache[key] == nil {
-                let count = attendeeCount(for: selection.date, mealType: selection.mealType)
-                if count > 0 {
-                    recipeCache[key] = mealPickerEngine.pickRecipe(mealType: selection.mealType)
-                } else {
-                    recipeCache[key] = .some(nil)  // Mark as processed but no recipe
-                }
-            }
-
-            mealSelections[index].recipe = recipeCache[key] ?? nil
-        }
+        populateMealRecipes(onlyEmpty: false)
     }
 
     // MARK: - Private Helpers
@@ -227,14 +209,20 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func populateEmptyMeals() {
+        populateMealRecipes(onlyEmpty: true)
+    }
+
+    /// Populates meal recipes using the picker engine
+    /// - Parameter onlyEmpty: If true, only fills meals without recipes; if false, fills all
+    private func populateMealRecipes(onlyEmpty: Bool) {
         // Build a cache of recipes per date+mealType to ensure consistency
         var recipeCache: [String: RecipeEntry?] = [:]
 
         for index in mealSelections.indices {
             let selection = mealSelections[index]
 
-            // Skip if already has a recipe
-            if selection.recipe != nil {
+            // Skip if only populating empty meals and this one has a recipe
+            if onlyEmpty && selection.recipe != nil {
                 continue
             }
 
