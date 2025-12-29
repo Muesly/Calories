@@ -96,26 +96,92 @@ struct StoredFoodToUseUp: Codable {
 
     // MARK: - Meal Reasons
 
-    var mealReasons: [String: String] {
-        get {
-            guard let data = mealReasonsData else { return [:] }
-            return (try? JSONDecoder().decode([String: String].self, from: data)) ?? [:]
+    func getMealReasons() -> [PersonMealKey: String] {
+        guard let data = mealReasonsData else { return [:] }
+        guard let storedReasons = (try? JSONDecoder().decode([String: String].self, from: data))
+        else { return [:] }
+
+        var result: [PersonMealKey: String] = [:]
+        for (key, reason) in storedReasons {
+            // Legacy format support: try to parse old string key
+            if let parsedKey = parsePersonMealKeyFromString(key) {
+                result[parsedKey] = reason
+            }
         }
-        set {
-            mealReasonsData = try? JSONEncoder().encode(newValue)
-        }
+        return result
+    }
+
+    func setMealReasons(_ reasons: [PersonMealKey: String]) {
+        let storedReasons = Dictionary(
+            uniqueKeysWithValues: reasons.map { key, reason in
+                let keyString =
+                    "\(key.person.rawValue)-\(key.date.formatted(date: .abbreviated, time: .omitted))-\(key.mealType.rawValue)"
+                return (keyString, reason)
+            })
+        mealReasonsData = try? JSONEncoder().encode(storedReasons)
     }
 
     // MARK: - Quick Meals
 
-    var quickMeals: [String: Bool] {
-        get {
-            guard let data = quickMealsData else { return [:] }
-            return (try? JSONDecoder().decode([String: Bool].self, from: data)) ?? [:]
+    func getQuickMeals() -> [MealKey: Bool] {
+        guard let data = quickMealsData else { return [:] }
+        guard let storedMeals = (try? JSONDecoder().decode([String: Bool].self, from: data)) else {
+            return [:]
         }
-        set {
-            quickMealsData = try? JSONEncoder().encode(newValue)
+
+        var result: [MealKey: Bool] = [:]
+        for (key, isQuick) in storedMeals {
+            if let parsedKey = parseMealKeyFromString(key) {
+                result[parsedKey] = isQuick
+            }
         }
+        return result
+    }
+
+    func setQuickMeals(_ quickMeals: [MealKey: Bool]) {
+        let storedMeals = Dictionary(
+            uniqueKeysWithValues: quickMeals.map { key, isQuick in
+                let keyString =
+                    "\(key.date.formatted(date: .abbreviated, time: .omitted))-\(key.mealType.rawValue)"
+                return (keyString, isQuick)
+            })
+        quickMealsData = try? JSONEncoder().encode(storedMeals)
+    }
+
+    // MARK: - Key Parsing Helpers
+
+    private func parsePersonMealKeyFromString(_ keyString: String) -> PersonMealKey? {
+        let components = keyString.split(
+            separator: "-", maxSplits: 2, omittingEmptySubsequences: false
+        ).map(String.init)
+        guard components.count >= 3 else { return nil }
+
+        let personRawValue = components[0]
+        let mealTypeRawValue = components[2]
+
+        guard let person = Person(rawValue: personRawValue),
+            let mealType = MealType.allCases.first(where: { $0.rawValue == mealTypeRawValue })
+        else {
+            return nil
+        }
+
+        // For legacy format, assume date string in middle - we'll use today for simplicity
+        return PersonMealKey(person: person, date: Date(), mealType: mealType).normalize()
+    }
+
+    private func parseMealKeyFromString(_ keyString: String) -> MealKey? {
+        let components = keyString.split(
+            separator: "-", maxSplits: 1, omittingEmptySubsequences: false
+        ).map(String.init)
+        guard components.count >= 2 else { return nil }
+
+        let mealTypeRawValue = components[1]
+        guard let mealType = MealType.allCases.first(where: { $0.rawValue == mealTypeRawValue })
+        else {
+            return nil
+        }
+
+        return MealKey(date: Date(), mealType: mealType).normalize()
     }
 
     // MARK: - Food To Use Up

@@ -13,6 +13,34 @@ enum Person: String, CaseIterable {
     case karen = "Karen"
 }
 
+/// Type-safe key for person-specific meal data
+struct PersonMealKey: Hashable {
+    let person: Person
+    let date: Date
+    let mealType: MealType
+
+    func normalize() -> PersonMealKey {
+        PersonMealKey(
+            person: person,
+            date: Calendar.current.startOfDay(for: date),
+            mealType: mealType
+        )
+    }
+}
+
+/// Type-safe key for meal-level data (shared across people)
+struct MealKey: Hashable {
+    let date: Date
+    let mealType: MealType
+
+    func normalize() -> MealKey {
+        MealKey(
+            date: Calendar.current.startOfDay(for: date),
+            mealType: mealType
+        )
+    }
+}
+
 struct MealSelection {
     var person: Person
     var date: Date
@@ -58,8 +86,8 @@ class MealPlanningViewModel: ObservableObject {
     let modelContext: ModelContext
     var currentStage: WizardStage = .mealAvailability
     var mealSelections: [MealSelection] = []
-    var mealReasons: [String: String] = [:]
-    var quickMeals: [String: Bool] = [:]
+    var mealReasons: [PersonMealKey: String] = [:]
+    var quickMeals: [MealKey: Bool] = [:]
     var foodToUseUp: [FoodToUseUp] = []
     let mealPickerEngine: MealPickerEngine
     let weekDates: [Date]
@@ -121,16 +149,9 @@ class MealPlanningViewModel: ObservableObject {
             && selection.mealType == mealType
     }
 
-    /// Generates a storage key for person-specific meal data
-    private static func personMealKey(person: Person, date: Date, mealType: MealType) -> String {
-        let dateString = date.formatted(date: .abbreviated, time: .omitted)
-        return "\(person.rawValue)-\(dateString)-\(mealType.rawValue)"
-    }
-
     /// Generates a storage key for meal-level data (not person-specific)
-    private static func mealKey(date: Date, mealType: MealType) -> String {
-        let dateString = date.formatted(date: .abbreviated, time: .omitted)
-        return "\(dateString)-\(mealType.rawValue)"
+    private static func mealKey(date: Date, mealType: MealType) -> MealKey {
+        MealKey(date: date, mealType: mealType).normalize()
     }
 
     // MARK: - Meal Selection
@@ -152,7 +173,7 @@ class MealPlanningViewModel: ObservableObject {
     // MARK: - Meal Reasons
 
     func setReason(_ reason: String, for person: Person, date: Date, mealType: MealType) {
-        let key = Self.personMealKey(person: person, date: date, mealType: mealType)
+        let key = PersonMealKey(person: person, date: date, mealType: mealType).normalize()
         if reason.isEmpty {
             mealReasons.removeValue(forKey: key)
         } else {
@@ -161,7 +182,8 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func getReason(for person: Person, date: Date, mealType: MealType) -> String {
-        mealReasons[Self.personMealKey(person: person, date: date, mealType: mealType)] ?? ""
+        let key = PersonMealKey(person: person, date: date, mealType: mealType).normalize()
+        return mealReasons[key] ?? ""
     }
 
     // MARK: - Quick Meals
@@ -172,7 +194,8 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func isQuickMeal(for date: Date, mealType: MealType) -> Bool {
-        quickMeals[Self.mealKey(date: date, mealType: mealType)] ?? false
+        let key = Self.mealKey(date: date, mealType: mealType)
+        return quickMeals[key] ?? false
     }
 
     // MARK: - Food To Use Up
@@ -216,7 +239,7 @@ class MealPlanningViewModel: ObservableObject {
     /// - Parameter onlyEmpty: If true, only fills meals without recipes; if false, fills all
     private func populateMealRecipes(onlyEmpty: Bool) {
         // Build a cache of recipes per date+mealType to ensure consistency
-        var recipeCache: [String: RecipeEntry?] = [:]
+        var recipeCache: [MealKey: RecipeEntry?] = [:]
 
         for index in mealSelections.indices {
             let selection = mealSelections[index]
@@ -357,10 +380,10 @@ class MealPlanningViewModel: ObservableObject {
         }
 
         // Load meal reasons
-        mealReasons = entry.mealReasons
+        mealReasons = entry.getMealReasons()
 
         // Load quick meals
-        quickMeals = entry.quickMeals
+        quickMeals = entry.getQuickMeals()
 
         // Load food to use up
         foodToUseUp = entry.getFoodToUseUp()
@@ -373,10 +396,10 @@ class MealPlanningViewModel: ObservableObject {
         entry.setMealSelections(mealSelections)
 
         // Save meal reasons
-        entry.mealReasons = mealReasons
+        entry.setMealReasons(mealReasons)
 
         // Save quick meals
-        entry.quickMeals = quickMeals
+        entry.setQuickMeals(quickMeals)
 
         // Save food to use up
         entry.setFoodToUseUp(foodToUseUp)
