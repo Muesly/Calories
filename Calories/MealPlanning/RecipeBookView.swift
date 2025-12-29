@@ -100,7 +100,7 @@ struct RecipeBookView: View {
         switch suitability {
         case .always:
             return "Great for this meal"
-        case .some:
+        case .sometimes:
             return "Good for this meal"
         case .never:
             return "Not suitable"

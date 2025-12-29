@@ -19,6 +19,18 @@ struct RecipeThumbnail: View {
     @State private var photoOffset: CGSize = .zero
 
     var body: some View {
+        thumbnailContent
+            .sheet(isPresented: $showCamera) {
+                CameraViewControllerRepresentable { image in
+                    photo = image
+                }
+            }
+            .sheet(isPresented: $showPicker) {
+                PHPickerView(image: $photo, isPresented: $showPicker)
+            }
+    }
+
+    private var thumbnailContent: some View {
         GeometryReader { geometry in
             let thumbnailWidth = geometry.size.width - 6
 
@@ -71,7 +83,8 @@ struct RecipeThumbnail: View {
                                 showFullScreenPhoto = true
                             }
                         }) {
-                            Label("View Full Size", systemImage: "expand")
+                            Label(
+                                "View Full Size", systemImage: "arrow.up.left.and.arrow.down.right")
                         }
                     }
                 } label: {
@@ -80,14 +93,7 @@ struct RecipeThumbnail: View {
             }
             .frame(height: 200)
         }
-        .sheet(isPresented: $showPicker) {
-            PHPickerView(image: $photo, isPresented: $showPicker)
-        }
-        .sheet(isPresented: $showCamera) {
-            CameraViewControllerRepresentable { image in
-                photo = image
-            }
-        }
+        .frame(height: 200)
         .fullScreenCover(isPresented: $showFullScreenPhoto) {
             ZStack {
                 Color.black.ignoresSafeArea()
@@ -169,7 +175,9 @@ struct PHPickerView: UIViewControllerRepresentable {
         return picker
     }
 
-    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+        // Update if needed
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(image: $image, isPresented: $isPresented)

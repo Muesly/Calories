@@ -41,34 +41,43 @@ struct RecipeDetailsView: View {
 
             Form {
                 Section(header: Text("Recipe Name")) {
-                    HStack {
-                        TextField("Enter recipe name", text: $recipeName)
-                        if !extractedRecipeNameCandidates.isEmpty {
-                            Menu {
-                                ForEach(extractedRecipeNameCandidates, id: \.self) {
-                                    candidate in
-                                    Button(action: {
-                                        recipeName = candidate
-                                    }) {
-                                        Text(candidate)
+                    VStack(spacing: 12) {
+                        HStack {
+                            TextField("Enter recipe name", text: $recipeName)
+                            if !extractedRecipeNameCandidates.isEmpty {
+                                Menu {
+                                    ForEach(extractedRecipeNameCandidates, id: \.self) {
+                                        candidate in
+                                        Button(action: {
+                                            recipeName = candidate
+                                        }) {
+                                            Text(candidate)
+                                        }
                                     }
+                                } label: {
+                                    Image(systemName: "chevron.down")
+                                        .foregroundColor(Colours.foregroundPrimary)
                                 }
-                            } label: {
-                                Image(systemName: "chevron.down")
-                                    .foregroundColor(Colours.foregroundPrimary)
                             }
                         }
                     }
                 }
-                HStack(spacing: 12) {
-                    RecipeThumbnail(label: "Dish photo", photo: $dishPhoto)
-                    RecipeThumbnail(label: "Steps photo", photo: $stepsPhoto)
-                }
-                .frame(height: 200)
 
-                SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
-                SuitabilitySection(title: "Lunch", selection: $lunchSuitability)
-                SuitabilitySection(title: "Dinner", selection: $dinnerSuitability)
+                Section(header: Text("Images")) {
+                    HStack(spacing: 12) {
+                        RecipeThumbnail(label: "Dish photo", photo: $dishPhoto)
+                        RecipeThumbnail(label: "Steps photo", photo: $stepsPhoto)
+                    }
+                    .frame(height: 200)
+                }
+
+                Section(header: Text("Meal Suitability")) {
+                    VStack(spacing: 12) {
+                        SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
+                        SuitabilitySection(title: "Lunch", selection: $lunchSuitability)
+                        SuitabilitySection(title: "Dinner", selection: $dinnerSuitability)
+                    }
+                }
             }
 
             Spacer()
@@ -141,15 +150,17 @@ struct RecipeIngredientCandidate: Identifiable {
 struct SuitabilitySection: View {
     let title: String
     @Binding var selection: MealSuitability
+    private let mealLabelWidth = 80.0
 
     var body: some View {
-        Section(header: Text(title)) {
-            Picker("\(title) Suitability", selection: $selection) {
+        HStack {
+            Text(title)
+                .frame(width: mealLabelWidth, alignment: .trailing)
+            Picker("", selection: $selection) {
                 Text("Never").tag(MealSuitability.never)
-                Text("Sometimes").tag(MealSuitability.some)
+                Text("Sometimes").tag(MealSuitability.sometimes)
                 Text("Always").tag(MealSuitability.always)
-            }
-            .pickerStyle(.segmented)
+            }.pickerStyle(.segmented)
         }
     }
 }

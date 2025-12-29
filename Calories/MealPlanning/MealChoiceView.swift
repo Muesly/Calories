@@ -45,8 +45,8 @@ struct MealChoiceView: View {
         recipe: RecipeEntry(
             name: "Scrambled Eggs on Toast",
             breakfastSuitability: .always,
-            lunchSuitability: .some,
-            dinnerSuitability: .some
+            lunchSuitability: .sometimes,
+            dinnerSuitability: .sometimes
         ),
         mealType: .breakfast,
         servingInfo: "2 x servings"

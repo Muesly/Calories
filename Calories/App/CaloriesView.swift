@@ -20,7 +20,7 @@ struct CaloriesView: View {
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
     @State var showingRecordWeightView = false
-    @State var showingMealPlanningView = false
+    @State var showingMealPlanningView = true
     @State var entryChanged = false
 
     @State private var currentDate: Date

@@ -32,7 +32,7 @@ extension MealSuitability {
     fileprivate var weight: Int {
         switch self {
         case .never: 0
-        case .some: 1
+        case .sometimes: 1
         case .always: 3
         }
     }

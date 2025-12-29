@@ -10,7 +10,7 @@ import SwiftData
 
 public enum MealSuitability: Int, Codable {
     case never
-    case some
+    case sometimes
     case always
 }
 
@@ -72,8 +72,8 @@ extension RecipeEntry: Equatable {
             .init(
                 name: "Scrambled Eggs on Toast",
                 breakfastSuitability: .always,
-                lunchSuitability: .some,
-                dinnerSuitability: .some),
+                lunchSuitability: .sometimes,
+                dinnerSuitability: .sometimes),
             .init(
                 name: "Greek Yoghurt & Berries",
                 breakfastSuitability: .always,
@@ -83,31 +83,31 @@ extension RecipeEntry: Equatable {
                 name: "Chicken Glow Bowl",
                 breakfastSuitability: .never,
                 lunchSuitability: .always,
-                dinnerSuitability: .some),
+                dinnerSuitability: .sometimes),
             .init(
                 name: "Tuna Salad",
                 breakfastSuitability: .never,
                 lunchSuitability: .always,
-                dinnerSuitability: .some),
+                dinnerSuitability: .sometimes),
             .init(
                 name: "Greek Salad",
                 breakfastSuitability: .never,
                 lunchSuitability: .always,
-                dinnerSuitability: .some),
+                dinnerSuitability: .sometimes),
             .init(
                 name: "Roasted Feta & Vegetables",
                 breakfastSuitability: .never,
-                lunchSuitability: .some,
+                lunchSuitability: .sometimes,
                 dinnerSuitability: .always),
             .init(
                 name: "Tofu Thai Green Curry",
                 breakfastSuitability: .never,
-                lunchSuitability: .some,
+                lunchSuitability: .sometimes,
                 dinnerSuitability: .always),
             .init(
                 name: "Moroccan Lamb",
                 breakfastSuitability: .never,
-                lunchSuitability: .some,
+                lunchSuitability: .sometimes,
                 dinnerSuitability: .always),
         ]
 
