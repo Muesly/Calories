@@ -42,6 +42,23 @@ struct CaloriesView: View {
     }
 
     var body: some View {
+        Group {
+            if UIScreen.main.bounds.width > 600 {
+                // On Mac: center the main view in middle third
+                HStack {
+                    Spacer()
+                    mainContent
+                        .frame(maxWidth: 600)
+                    Spacer()
+                }
+            } else {
+                // On iPhone/iPad: full width
+                mainContent
+            }
+        }
+    }
+
+    private var mainContent: some View {
         NavigationStack {
             List {
                 Section {
@@ -105,7 +122,7 @@ struct CaloriesView: View {
             .sheet(isPresented: $showingRecordWeightView) {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
             }
-            .sheet(isPresented: $showingMealPlanningView) {
+            .fullScreenCover(isPresented: $showingMealPlanningView) {
                 MealPlanningView(viewModel: MealPlanningViewModel(modelContext: modelContext))
             }
             .onChange(of: scenePhase) { _, newPhase in
