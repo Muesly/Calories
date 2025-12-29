@@ -29,6 +29,14 @@ struct RecipeDetailsDisplayView: View {
                         }
                     }
 
+                    if !recipe.suggestions.isEmpty {
+                        Section(header: Text("Suggestions")) {
+                            Text(recipe.suggestions)
+                                .font(.body)
+                                .foregroundColor(Colours.foregroundPrimary)
+                        }
+                    }
+
                     Section(header: Text("Images")) {
                         HStack(spacing: 12) {
                             RecipeThumbnail(

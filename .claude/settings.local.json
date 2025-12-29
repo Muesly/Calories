@@ -7,7 +7,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(ls:*)",
-      "Bash(swiftc:*)"
+      "Bash(swiftc:*)",
+      "Bash(wc:*)"
     ],
     "deny": []
   }

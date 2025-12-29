@@ -20,6 +20,7 @@ struct RecipeDetailsView: View {
 
     @State private var recipeName = ""
     @State private var caloriesPerPortion = ""
+    @State private var suggestions = ""
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
@@ -77,6 +78,13 @@ struct RecipeDetailsView: View {
                 Section(header: Text("Calories per Portion")) {
                     TextField("Enter calories", text: $caloriesPerPortion)
                         .keyboardType(.numberPad)
+                }
+
+                Section(header: Text("Suggestions")) {
+                    TextField(
+                        "e.g. add more salt, reduce chilli", text: $suggestions, axis: .vertical
+                    )
+                    .lineLimit(3...6)
                 }
 
                 Section(header: Text("Meal Suitability")) {
@@ -149,7 +157,8 @@ struct RecipeDetailsView: View {
                 dinnerSuitability: dinnerSuitability,
                 dishPhotoData: dishPhotoData,
                 stepsPhotoData: stepsPhotoData,
-                caloriesPerPortion: calories
+                caloriesPerPortion: calories,
+                suggestions: suggestions
             )
             modelContext.insert(newRecipe)
             try modelContext.save()
