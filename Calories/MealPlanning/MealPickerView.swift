@@ -28,10 +28,8 @@ struct MealPickerView: View {
                                     isSelectedForSwap: mealToSwap?.id == meal.id,
                                     onRecipeSelected: { recipe in
                                         let person = meal.person
-                                        let mealDate = date
-                                        let mealType = mealType
                                         viewModel.selectRecipe(
-                                            recipe, for: person, date: mealDate, mealType: mealType)
+                                            recipe, for: person, date: date, mealType: mealType)
                                         swapMode = false
                                     },
                                     onChangeRequested: {
@@ -119,6 +117,7 @@ struct RecipePickerCard: View {
                         .font(.caption)
                         .foregroundColor(Colours.foregroundPrimary)
                         .lineLimit(3)
+                        .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     Divider()

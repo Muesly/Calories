@@ -12,7 +12,9 @@ struct RecipeDetailsView: View {
     @Binding var currentPage: AddRecipePage
     @Binding var isPresented: Bool
     let modelContext: ModelContext
+    let mealType: MealType
     let extractedRecipeNames: [String]
+    let onRecipeCreated: (RecipeEntry) -> Void
     @Binding var dishPhoto: UIImage?
     @Binding var stepsPhoto: UIImage?
 
@@ -107,6 +109,18 @@ struct RecipeDetailsView: View {
             if !extractedRecipeNames.isEmpty {
                 recipeName = extractedRecipeNames[0]
             }
+
+            // Set default suitability based on meal type
+            switch mealType {
+            case .breakfast:
+                breakfastSuitability = .always
+            case .lunch:
+                lunchSuitability = .always
+            case .dinner:
+                dinnerSuitability = .always
+            default:
+                break
+            }
         }
     }
 
@@ -126,9 +140,18 @@ struct RecipeDetailsView: View {
             )
             modelContext.insert(newRecipe)
             try modelContext.save()
+            print("✓ Recipe saved successfully: \(recipeName)")
             isPresented = false
+            onRecipeCreated(newRecipe)
         } catch {
-            saveErrorMessage = "Failed to save recipe"
+            print("✗ Error saving recipe: \(error)")
+            if error.localizedDescription.contains("UNIQUE constraint failed")
+                || error.localizedDescription.contains("duplicate")
+            {
+                saveErrorMessage = "A recipe with the name '\(recipeName)' already exists"
+            } else {
+                saveErrorMessage = "Failed to save recipe: \(error.localizedDescription)"
+            }
             showSaveError = true
         }
     }

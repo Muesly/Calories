@@ -83,7 +83,15 @@ struct RecipeBookView: View {
             }
         }
         .sheet(isPresented: $showAddRecipe) {
-            AddRecipeSheet(isPresented: $showAddRecipe, modelContext: modelContext)
+            AddRecipeSheet(
+                isPresented: $showAddRecipe,
+                modelContext: modelContext,
+                mealType: mealType,
+                onRecipeCreated: { recipe in
+                    onRecipeSelected(recipe)
+                    dismiss()
+                }
+            )
         }
     }
 

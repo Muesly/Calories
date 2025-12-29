@@ -11,6 +11,8 @@ import SwiftUI
 struct AddRecipeSheet: View {
     @Binding var isPresented: Bool
     let modelContext: ModelContext
+    let mealType: MealType
+    let onRecipeCreated: (RecipeEntry) -> Void
     @State private var currentPage: AddRecipePage = .source
     @State private var extractedRecipeNames: [String] = []
     @State private var dishPhoto: UIImage? = nil
@@ -33,7 +35,9 @@ struct AddRecipeSheet: View {
                     currentPage: $currentPage,
                     isPresented: $isPresented,
                     modelContext: modelContext,
+                    mealType: mealType,
                     extractedRecipeNames: extractedRecipeNames,
+                    onRecipeCreated: onRecipeCreated,
                     dishPhoto: $dishPhoto,
                     stepsPhoto: $stepsPhoto,
                 )
