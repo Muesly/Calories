@@ -19,6 +19,7 @@ struct RecipeDetailsView: View {
     @Binding var stepsPhoto: UIImage?
 
     @State private var recipeName = ""
+    @State private var caloriesPerPortion = ""
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
@@ -71,6 +72,11 @@ struct RecipeDetailsView: View {
                         RecipeThumbnail(label: "Steps photo", photo: $stepsPhoto)
                     }
                     .frame(height: 200)
+                }
+
+                Section(header: Text("Calories per Portion")) {
+                    TextField("Enter calories", text: $caloriesPerPortion)
+                        .keyboardType(.numberPad)
                 }
 
                 Section(header: Text("Meal Suitability")) {
@@ -134,6 +140,7 @@ struct RecipeDetailsView: View {
         do {
             let dishPhotoData = dishPhoto?.jpegData(compressionQuality: 0.8)
             let stepsPhotoData = stepsPhoto?.jpegData(compressionQuality: 0.8)
+            let calories = Int(caloriesPerPortion) ?? 0
 
             let newRecipe = RecipeEntry(
                 name: recipeName,
@@ -141,7 +148,8 @@ struct RecipeDetailsView: View {
                 lunchSuitability: lunchSuitability,
                 dinnerSuitability: dinnerSuitability,
                 dishPhotoData: dishPhotoData,
-                stepsPhotoData: stepsPhotoData
+                stepsPhotoData: stepsPhotoData,
+                caloriesPerPortion: calories
             )
             modelContext.insert(newRecipe)
             try modelContext.save()

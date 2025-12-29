@@ -57,6 +57,17 @@ class AddFoodViewModel: ObservableObject {
             let range = mealType.rangeOfPeriod()
             let startOfDay: Date = Calendar.current.startOfDay(for: dateForEntries)
 
+            var suggestions: [Suggestion] = []
+
+            // Check if there's a recipe planned for this meal
+            if searchText.isEmpty {
+                let recipeSuggestions = Self.getRecipeSuggestionsForMeal(
+                    mealType: mealType,
+                    date: dateForEntries,
+                    backgroundContext: backgroundContext)
+                suggestions.append(contentsOf: recipeSuggestions)
+            }
+
             let results: [FoodEntry]
             if searchText.isEmpty {
                 results = backgroundContext.foodResults(
@@ -80,11 +91,51 @@ class AddFoodViewModel: ObservableObject {
 
             let orderedSet = NSOrderedSet(
                 array: filteredResults.map { Suggestion(name: $0.foodDescription) })
-            return orderedSet.compactMap { $0 as? Suggestion }
+            let foodSuggestions = orderedSet.compactMap { $0 as? Suggestion }
+
+            suggestions.append(contentsOf: foodSuggestions)
+            return suggestions
         }.value
 
         // Update observable state on the main actor
         self.suggestions = computedSuggestions
+    }
+
+    private nonisolated static func getRecipeSuggestionsForMeal(
+        mealType: MealType,
+        date: Date,
+        backgroundContext: ModelContext
+    ) -> [Suggestion] {
+        // Fetch meal plan for this week
+        let calendar = Calendar.current
+        let weekDay = calendar.component(.weekday, from: date)
+        let daysFromMonday = (weekDay - 2 + 7) % 7
+        let monday = calendar.date(
+            byAdding: .day, value: -daysFromMonday, to: calendar.startOfDay(for: date))!
+
+        let descriptor = FetchDescriptor<MealPlanEntry>(
+            predicate: #Predicate { $0.weekStartDate == monday }
+        )
+
+        guard let mealPlan = try? backgroundContext.fetch(descriptor).first else {
+            return []
+        }
+
+        let meals = mealPlan.getMealSelections(recipes: backgroundContext.recipeResults())
+        let todaysMeals = meals.filter {
+            $0.date.isSameDay(as: date) && $0.isSelected
+        }.compactMap {
+            if let recipe = $0.recipe {
+                return Suggestion(
+                    name: recipe.name,
+                    calories: recipe.caloriesPerPortion,
+                    isRecipeSuggestion: true
+                )
+            } else {
+                return nil
+            }
+        }
+        return todaysMeals
     }
 
     @discardableResult

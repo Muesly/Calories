@@ -21,6 +21,14 @@ struct RecipeDetailsDisplayView: View {
                             .foregroundColor(Colours.foregroundPrimary)
                     }
 
+                    if recipe.caloriesPerPortion > 0 {
+                        Section(header: Text("Calories per Portion")) {
+                            Text("\(recipe.caloriesPerPortion)")
+                                .font(.body)
+                                .foregroundColor(Colours.foregroundPrimary)
+                        }
+                    }
+
                     Section(header: Text("Images")) {
                         HStack(spacing: 12) {
                             RecipeThumbnail(

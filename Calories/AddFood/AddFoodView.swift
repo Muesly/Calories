@@ -42,8 +42,36 @@ struct AddFoodView: View {
                             Text("Add \(searchText) as a new food").bold()
                         }
                     }
+                    if viewModel.suggestions.contains(where: { $0.isRecipeSuggestion }) {
+                        Section("Planned Recipe") {
+                            ForEach(
+                                viewModel.suggestions.filter { $0.isRecipeSuggestion }, id: \.name
+                            ) { suggestion in
+                                Button {
+                                    template = FoodTemplate(
+                                        description: suggestion.name,
+                                        calories: suggestion.calories ?? 0,
+                                        dateTime: currentDate)
+                                    showingAddFoodDetailsView = true
+                                } label: {
+                                    HStack {
+                                        Text(suggestion.name)
+                                        if let calories = suggestion.calories, calories > 0 {
+                                            Spacer()
+                                            Text("\(calories) cal")
+                                                .font(.caption)
+                                                .foregroundColor(.white)
+                                        }
+                                    }
+                                }
+                                .listRowBackground(Color.green.opacity(0.3))
+                            }
+                        }
+                    }
+
                     Section("Recent foods you've had at this time") {
-                        ForEach(viewModel.suggestions, id: \.name) { suggestion in
+                        ForEach(viewModel.suggestions.filter { !$0.isRecipeSuggestion }, id: \.name)
+                        { suggestion in
                             Button {
                                 template = viewModel.foodTemplateFor(
                                     suggestion.name, timeConsumed: currentDate)
