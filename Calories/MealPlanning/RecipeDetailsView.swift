@@ -24,6 +24,8 @@ struct RecipeDetailsView: View {
     @State private var bookSearchText = ""
     @State private var selectedBook: BookEntry?
     @State private var availableBooks: [BookEntry] = []
+    @State private var pageNumber = ""
+    @State private var rating: Int16 = 0
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
@@ -101,6 +103,7 @@ struct RecipeDetailsView: View {
                             Button(action: {
                                 self.selectedBook = nil
                                 bookSearchText = ""
+                                pageNumber = ""
                             }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .foregroundColor(.white)
@@ -110,6 +113,9 @@ struct RecipeDetailsView: View {
                         .padding(8)
                         .background(Colours.backgroundSecondary)
                         .cornerRadius(8)
+
+                        TextField("Page number", text: $pageNumber)
+                            .keyboardType(.numberPad)
                     }
                 } else {
                     Section(header: Text("Recipe Book")) {
@@ -174,6 +180,10 @@ struct RecipeDetailsView: View {
                         "e.g. add more salt, reduce chilli", text: $suggestions, axis: .vertical
                     )
                     .lineLimit(1...2)
+                }
+
+                Section(header: Text("Rating")) {
+                    RatingView(rating: $rating)
                 }
 
                 Section(header: Text("Meal Suitability")) {
@@ -246,6 +256,7 @@ struct RecipeDetailsView: View {
             let dishPhotoData = dishPhoto?.jpegData(compressionQuality: 0.8)
             let stepsPhotoData = stepsPhoto?.jpegData(compressionQuality: 0.8)
             let calories = Int(caloriesPerPortion) ?? 0
+            let page = Int(pageNumber) ?? 0
             let newRecipe = RecipeEntry(
                 name: recipeName,
                 breakfastSuitability: breakfastSuitability,
@@ -255,7 +266,9 @@ struct RecipeDetailsView: View {
                 stepsPhotoData: stepsPhotoData,
                 caloriesPerPortion: calories,
                 suggestions: suggestions,
-                book: selectedBook
+                book: selectedBook,
+                pageNumber: page,
+                rating: rating
             )
             modelContext.insert(newRecipe)
             try modelContext.save()

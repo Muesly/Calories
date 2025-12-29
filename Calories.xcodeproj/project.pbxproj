@@ -50,6 +50,7 @@
 		DDAA98F32EFEE1BB0026AE9E /* RecipeTextExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */; };
 		DDAA98F52EFEE51D0026AE9E /* RecipeThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F42EFEE51D0026AE9E /* RecipeThumbnail.swift */; };
 		DDAA98F72F032E720026AE9E /* BookEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F62F032E720026AE9E /* BookEntry.swift */; };
+		DDAA98F92F033D810026AE9E /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F82F033D810026AE9E /* RatingView.swift */; };
 		DDAA98FA2EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F92EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift */; };
 		DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
@@ -206,6 +207,7 @@
 		DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTextExtractor.swift; sourceTree = "<group>"; };
 		DDAA98F42EFEE51D0026AE9E /* RecipeThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeThumbnail.swift; sourceTree = "<group>"; };
 		DDAA98F62F032E720026AE9E /* BookEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookEntry.swift; sourceTree = "<group>"; };
+		DDAA98F82F033D810026AE9E /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		DDAA98F92EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailsDisplayView.swift; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 		DDADA54C2E1C51C00004DADB /* MealPlanning */ = {
 			isa = PBXGroup;
 			children = (
+				DDAA98F82F033D810026AE9E /* RatingView.swift */,
 				DD738C9C2EFB387200ABFCFD /* AddRecipeSheet.swift */,
 				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
@@ -924,6 +927,7 @@
 				DD538CF52C6E939B007CAD98 /* CompanionMessage.swift in Sources */,
 				EA2D490629944E3000248864 /* AddFoodView.swift in Sources */,
 				DD72D7952C8508A600E75FB5 /* PlantCellView.swift in Sources */,
+				DDAA98F92F033D810026AE9E /* RatingView.swift in Sources */,
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
 				EA2D49122998142100248864 /* AddFoodViewModel.swift in Sources */,
 				DDAA98F12EFEDD670026AE9E /* RecipeDetailsView.swift in Sources */,

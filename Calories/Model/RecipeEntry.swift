@@ -24,6 +24,8 @@ public enum MealSuitability: Int, Codable {
     var caloriesPerPortion: Int = 0
     var suggestions: String = ""
     var book: BookEntry?
+    var pageNumber: Int = 0
+    var rating: Int16 = 0
 
     var breakfastSuitability: MealSuitability {
         get { MealSuitability(rawValue: breakfastSuitabilityRaw) ?? .never }
@@ -49,7 +51,9 @@ public enum MealSuitability: Int, Codable {
         stepsPhotoData: Data? = nil,
         caloriesPerPortion: Int = 0,
         suggestions: String = "",
-        book: BookEntry? = nil
+        book: BookEntry? = nil,
+        pageNumber: Int = 0,
+        rating: Int16 = 0
     ) {
         self.name = name
         self.breakfastSuitabilityRaw = breakfastSuitability.rawValue
@@ -60,6 +64,8 @@ public enum MealSuitability: Int, Codable {
         self.caloriesPerPortion = caloriesPerPortion
         self.suggestions = suggestions
         self.book = book
+        self.pageNumber = pageNumber
+        self.rating = rating
     }
 }
 

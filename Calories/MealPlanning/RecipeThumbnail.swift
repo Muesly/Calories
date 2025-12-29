@@ -34,13 +34,13 @@ struct RecipeThumbnail: View {
         GeometryReader { geometry in
             let thumbnailWidth = geometry.size.width - 6
 
-            ZStack {
+            ZStack(alignment: .topLeading) {
                 if let photo {
                     Image(uiImage: photo)
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: .fill)
                         .frame(width: thumbnailWidth, height: 200)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipped()
                 } else {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
@@ -92,6 +92,7 @@ struct RecipeThumbnail: View {
                 }
             }
             .frame(height: 200)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .frame(height: 200)
         .fullScreenCover(isPresented: $showFullScreenPhoto) {

@@ -31,9 +31,16 @@ struct RecipeDetailsDisplayView: View {
 
                     if let book = recipe.book {
                         Section(header: Text("Recipe Book")) {
-                            Text(book.name)
-                                .font(.body)
-                                .foregroundColor(Colours.foregroundPrimary)
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(book.name)
+                                    .font(.body)
+                                    .foregroundColor(Colours.foregroundPrimary)
+                                if recipe.pageNumber > 0 {
+                                    Text("Page \(recipe.pageNumber)")
+                                        .font(.caption)
+                                        .foregroundColor(Colours.foregroundSecondary)
+                                }
+                            }
                         }
                     }
 
@@ -60,6 +67,17 @@ struct RecipeDetailsDisplayView: View {
                             Text(recipe.suggestions)
                                 .font(.body)
                                 .foregroundColor(Colours.foregroundPrimary)
+                        }
+                    }
+
+                    if recipe.rating > 0 {
+                        Section(header: Text("Rating")) {
+                            HStack {
+                                ForEach(0..<Int(recipe.rating), id: \.self) { _ in
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.accentColor)
+                                }
+                            }
                         }
                     }
                 }
