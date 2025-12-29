@@ -268,6 +268,174 @@ struct MealPlanningViewModelTests {
         #expect(daysDifference > 0)
     }
 
+    // MARK: - Swap Meals Tests
+
+    @Test("Swap meals exchanges recipes")
+    func swapMealsExchangesRecipes() {
+        let modelContext = ModelContext(.inMemory)
+        RecipeEntry.seedRecipes(into: modelContext)
+        var subject = MealPlanningViewModel(modelContext: modelContext)
+
+        let recipes = modelContext.recipeResults()
+        guard recipes.count >= 2 else {
+            Issue.record("Not enough recipes for swap test")
+            return
+        }
+
+        let date = subject.weekDates[0]
+        let mealType1 = MealType.breakfast
+        let mealType2 = MealType.lunch
+
+        let meal1 = subject.mealSelections.first {
+            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType1
+        }!
+        let meal2 = subject.mealSelections.first {
+            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType2
+        }!
+
+        subject.selectRecipe(recipes[0], for: .tony, date: date, mealType: mealType1)
+        subject.selectRecipe(recipes[1], for: .tony, date: date, mealType: mealType2)
+
+        subject.swapMeals(meal1, with: meal2)
+
+        let swappedMeal1 = subject.mealSelections.first {
+            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType1
+        }!
+        let swappedMeal2 = subject.mealSelections.first {
+            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType2
+        }!
+
+        #expect(swappedMeal1.recipe?.name == recipes[1].name)
+        #expect(swappedMeal2.recipe?.name == recipes[0].name)
+    }
+
+    // MARK: - Food To Use Up Tests
+
+    @Test("Add food item appends to list")
+    func addFoodItemAppends() {
+        var subject = self.subject
+        let initialCount = subject.foodToUseUp.count
+
+        subject.addFoodItem()
+
+        #expect(subject.foodToUseUp.count == initialCount + 1)
+    }
+
+    @Test("Remove food item by index")
+    func removeFoodItemByIndex() {
+        var subject = self.subject
+        subject.addFoodItem()
+        subject.addFoodItem()
+        let countBefore = subject.foodToUseUp.count
+
+        subject.removeFoodItem(at: 0)
+
+        #expect(subject.foodToUseUp.count == countBefore - 1)
+    }
+
+    @Test("Remove food item by id")
+    func removeFoodItemById() {
+        var subject = self.subject
+        subject.addFoodItem()
+        let item = subject.foodToUseUp[0]
+
+        subject.removeFoodItem(withId: item.id)
+
+        #expect(subject.foodToUseUp.isEmpty)
+    }
+
+    @Test("Update food item")
+    func updateFoodItem() {
+        var subject = self.subject
+        subject.addFoodItem()
+        let item = subject.foodToUseUp[0]
+        var updatedItem = item
+        updatedItem.name = "Updated Food"
+
+        subject.updateFoodItem(updatedItem)
+
+        #expect(subject.foodToUseUp[0].name == "Updated Food")
+    }
+
+    // MARK: - Persistence Tests
+
+    @Test("Load and save meal plan preserves selections")
+    func loadAndSaveMealPlanPreservesSelections() {
+        let modelContext = ModelContext(.inMemory)
+        var subject = MealPlanningViewModel(modelContext: modelContext)
+
+        let date = subject.weekDates[0]
+        let mealType = MealType.breakfast
+        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
+
+        subject.saveMealPlan()
+
+        // Create new view model to load data
+        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        subject2.loadMealPlan()
+
+        let isSelected = subject2.isSelected(for: .tony, date: date, mealType: mealType)
+        #expect(!isSelected)
+    }
+
+    @Test("Load and save meal plan preserves reasons")
+    func loadAndSaveMealPlanPreservesReasons() {
+        let modelContext = ModelContext(.inMemory)
+        var subject = MealPlanningViewModel(modelContext: modelContext)
+
+        let date = subject.weekDates[0]
+        let mealType = MealType.breakfast
+        subject.setReason("Working late", for: .tony, date: date, mealType: mealType)
+
+        subject.saveMealPlan()
+
+        // Create new view model to load data
+        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        subject2.loadMealPlan()
+
+        let reason = subject2.getReason(for: .tony, date: date, mealType: mealType)
+        #expect(reason == "Working late")
+    }
+
+    @Test("Load and save meal plan preserves quick meals")
+    func loadAndSaveMealPlanPreservesQuickMeals() {
+        let modelContext = ModelContext(.inMemory)
+        var subject = MealPlanningViewModel(modelContext: modelContext)
+
+        let date = subject.weekDates[0]
+        let mealType = MealType.breakfast
+        subject.setQuickMeal(true, for: date, mealType: mealType)
+
+        subject.saveMealPlan()
+
+        // Create new view model to load data
+        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        subject2.loadMealPlan()
+
+        let isQuick = subject2.isQuickMeal(for: date, mealType: mealType)
+        #expect(isQuick)
+    }
+
+    @Test("Load and save meal plan preserves food to use up")
+    func loadAndSaveMealPlanPreservesFoodToUseUp() {
+        let modelContext = ModelContext(.inMemory)
+        var subject = MealPlanningViewModel(modelContext: modelContext)
+
+        subject.addFoodItem()
+        var item = subject.foodToUseUp[0]
+        item.name = "Leftover pasta"
+
+        subject.updateFoodItem(item)
+        subject.saveMealPlan()
+
+        // Create new view model to load data
+        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        subject2.loadMealPlan()
+
+        #expect(subject2.foodToUseUp.count == 1)
+        #expect(subject2.foodToUseUp[0].name == "Leftover pasta")
+    }
+
     // MARK: - Helper Methods
 
     private func dateForWeekday(_ weekday: Int) -> Date {
