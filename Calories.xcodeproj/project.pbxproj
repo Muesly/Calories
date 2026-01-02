@@ -52,6 +52,7 @@
 		DDAA98F72F032E720026AE9E /* BookEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F62F032E720026AE9E /* BookEntry.swift */; };
 		DDAA98F92F033D810026AE9E /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F82F033D810026AE9E /* RatingView.swift */; };
 		DDAA98FA2EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98F92EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift */; };
+		DDAA98FB2F0340730026AE9E /* CategoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98FA2F0340730026AE9E /* CategoryEntry.swift */; };
 		DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
@@ -209,6 +210,7 @@
 		DDAA98F62F032E720026AE9E /* BookEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookEntry.swift; sourceTree = "<group>"; };
 		DDAA98F82F033D810026AE9E /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		DDAA98F92EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailsDisplayView.swift; sourceTree = "<group>"; };
+		DDAA98FA2F0340730026AE9E /* CategoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntry.swift; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 		EA6655A529939EEA000770F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DDAA98FA2F0340730026AE9E /* CategoryEntry.swift */,
 				DDAA98F62F032E720026AE9E /* BookEntry.swift */,
 				EABBF0CD29B1342500C3B1F9 /* Day.swift */,
 				DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */,
@@ -900,6 +903,7 @@
 				DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */,
 				EA2D490E2997D62000248864 /* MealItemsViewModel.swift in Sources */,
 				DD738C9B2EFB2A1700ABFCFD /* RecipeBookView.swift in Sources */,
+				DDAA98FB2F0340730026AE9E /* CategoryEntry.swift in Sources */,
 				DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
 				DD6F91FE2EEEF51E00664110 /* MealAvailabilityView.swift in Sources */,

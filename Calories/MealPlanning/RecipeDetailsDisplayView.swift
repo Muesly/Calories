@@ -80,6 +80,22 @@ struct RecipeDetailsDisplayView: View {
                             }
                         }
                     }
+
+                    if !recipe.categories.isEmpty {
+                        Section(header: Text("Categories")) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                ForEach(recipe.categories.sorted { $0.name < $1.name }, id: \.name)
+                                { category in
+                                    Text(category.name)
+                                        .font(.body)
+                                        .foregroundColor(Colours.foregroundPrimary)
+                                        .padding(8)
+                                        .background(Colours.backgroundSecondary)
+                                        .cornerRadius(6)
+                                }
+                            }
+                        }
+                    }
                 }
 
                 Spacer()

@@ -26,6 +26,9 @@ struct RecipeDetailsView: View {
     @State private var availableBooks: [BookEntry] = []
     @State private var pageNumber = ""
     @State private var rating: Int16 = 0
+    @State private var categorySearchText = ""
+    @State private var selectedCategories: [CategoryEntry] = []
+    @State private var availableCategories: [CategoryEntry] = []
     @State private var breakfastSuitability: MealSuitability = .never
     @State private var lunchSuitability: MealSuitability = .never
     @State private var dinnerSuitability: MealSuitability = .never
@@ -44,6 +47,17 @@ struct RecipeDetailsView: View {
         return
             availableBooks
             .filter { $0.name.localizedCaseInsensitiveContains(bookSearchText) }
+            .sorted { $0.name < $1.name }
+    }
+
+    private var filteredCategories: [CategoryEntry] {
+        guard categorySearchText.count >= 2 else {
+            return []
+        }
+        return
+            availableCategories
+            .filter { $0.name.localizedCaseInsensitiveContains(categorySearchText) }
+            .filter { !selectedCategories.contains($0) }
             .sorted { $0.name < $1.name }
     }
 
@@ -186,6 +200,74 @@ struct RecipeDetailsView: View {
                     RatingView(rating: $rating)
                 }
 
+                Section(header: Text("Categories")) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            TextField("Search or add category", text: $categorySearchText)
+                                .autocorrectionDisabled()
+                        }
+
+                        if !selectedCategories.isEmpty {
+                            WrappedCategories(
+                                categories: selectedCategories,
+                                onRemove: { category in
+                                    selectedCategories.removeAll { $0.name == category.name }
+                                }
+                            )
+                        }
+
+                        if !filteredCategories.isEmpty {
+                            VStack(spacing: 8) {
+                                ForEach(filteredCategories, id: \.name) { category in
+                                    Button(action: {
+                                        selectedCategories.append(category)
+                                        categorySearchText = ""
+                                    }) {
+                                        HStack {
+                                            Text(category.name)
+                                                .foregroundColor(.white)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(8)
+                                        .background(Colours.backgroundSecondary)
+                                        .cornerRadius(8)
+                                    }
+                                }
+                            }
+                        }
+
+                        if !categorySearchText.isEmpty
+                            && !filteredCategories.contains(where: { $0.name == categorySearchText }
+                            )
+                            && !selectedCategories.contains(where: { $0.name == categorySearchText }
+                            )
+                        {
+                            Button(action: {
+                                let newCategory = CategoryEntry(name: categorySearchText)
+                                modelContext.insert(newCategory)
+                                do {
+                                    try modelContext.save()
+                                    selectedCategories.append(newCategory)
+                                    availableCategories.append(newCategory)
+                                    categorySearchText = ""
+                                } catch {
+                                    print("Error saving new category: \(error)")
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "plus.circle.fill")
+                                    Text("Create '\(categorySearchText)'")
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(8)
+                                .background(Colours.backgroundSecondary)
+                                .cornerRadius(8)
+                                .foregroundColor(.white)
+                            }
+                        }
+                    }
+                }
+
                 Section(header: Text("Meal Suitability")) {
                     VStack(spacing: 12) {
                         SuitabilitySection(title: "Breakfast", selection: $breakfastSuitability)
@@ -242,6 +324,14 @@ struct RecipeDetailsView: View {
             } catch {
                 print("Error fetching books: \(error)")
             }
+
+            // Fetch existing categories
+            do {
+                let descriptor = FetchDescriptor<CategoryEntry>(sortBy: [SortDescriptor(\.name)])
+                availableCategories = try modelContext.fetch(descriptor)
+            } catch {
+                print("Error fetching categories: \(error)")
+            }
         }
     }
 
@@ -268,7 +358,8 @@ struct RecipeDetailsView: View {
                 suggestions: suggestions,
                 book: selectedBook,
                 pageNumber: page,
-                rating: rating
+                rating: rating,
+                categories: selectedCategories
             )
             modelContext.insert(newRecipe)
             try modelContext.save()
@@ -290,6 +381,68 @@ struct RecipeDetailsView: View {
 
     private func deleteIngredients(at offsets: IndexSet) {
         recipeIngredients.remove(atOffsets: offsets)
+    }
+}
+
+// MARK: - Wrapped Categories
+
+struct WrappedCategories: View {
+    let categories: [CategoryEntry]
+    let onRemove: (CategoryEntry) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(groupedCategories.indices, id: \.self) { rowIndex in
+                HStack(spacing: 8) {
+                    ForEach(groupedCategories[rowIndex], id: \.name) { category in
+                        CategoryPill(
+                            name: category.name,
+                            onRemove: {
+                                onRemove(category)
+                            }
+                        )
+                    }
+                    Spacer()
+                }
+            }
+        }
+    }
+
+    private var groupedCategories: [[CategoryEntry]] {
+        var rows: [[CategoryEntry]] = [[]]
+        for category in categories {
+            rows[rows.count - 1].append(category)
+            if rows[rows.count - 1].count >= 3 {
+                rows.append([])
+            }
+        }
+        if rows.last?.isEmpty == true {
+            rows.removeLast()
+        }
+        return rows
+    }
+}
+
+// MARK: - Category Pill
+
+struct CategoryPill: View {
+    let name: String
+    let onRemove: () -> Void
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(name)
+                .font(.system(size: 13, weight: .medium))
+            Button(action: onRemove) {
+                Image(systemName: "xmark.circle.fill")
+                    .font(.system(size: 12))
+            }
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Colours.backgroundSecondary)
+        .cornerRadius(16)
     }
 }
 

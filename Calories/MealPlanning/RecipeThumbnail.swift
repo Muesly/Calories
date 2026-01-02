@@ -38,9 +38,9 @@ struct RecipeThumbnail: View {
                 if let photo {
                     Image(uiImage: photo)
                         .resizable()
-                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
                         .frame(width: thumbnailWidth, height: 200)
-                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 } else {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
