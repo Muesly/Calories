@@ -23,7 +23,7 @@ public enum MealSuitability: Int, Codable {
     var stepsPhotoData: Data?
     var caloriesPerPortion: Int = 0
     var suggestions: String = ""
-    var pageNumber: Int = 0
+    var pageNumber: Int?
     var rating: Int16 = 0
     @Relationship var categories: [CategoryEntry] = []
     @Relationship var book: BookEntry?
@@ -53,7 +53,7 @@ public enum MealSuitability: Int, Codable {
         caloriesPerPortion: Int = 0,
         suggestions: String = "",
         book: BookEntry? = nil,
-        pageNumber: Int = 0,
+        pageNumber: Int? = nil,
         rating: Int16 = 0,
         categories: [CategoryEntry] = []
     ) {

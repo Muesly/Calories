@@ -32,7 +32,6 @@ struct AddRecipeSheet: View {
                 )
             case .details:
                 RecipeDetailsView(
-                    currentPage: $currentPage,
                     isPresented: $isPresented,
                     modelContext: modelContext,
                     mealType: mealType,

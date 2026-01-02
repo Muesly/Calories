@@ -9,7 +9,6 @@ import SwiftData
 import SwiftUI
 
 struct RecipeDetailsView: View {
-    @Binding var currentPage: AddRecipePage
     @Binding var isPresented: Bool
     let modelContext: ModelContext
     let mealType: MealType
@@ -21,10 +20,8 @@ struct RecipeDetailsView: View {
     @State private var recipeName = ""
     @State private var caloriesPerPortion = ""
     @State private var suggestions = ""
-    @State private var bookSearchText = ""
     @State private var selectedBook: BookEntry?
-    @State private var availableBooks: [BookEntry] = []
-    @State private var pageNumber = ""
+    @State private var pageNumber: Int?
     @State private var rating: Int16 = 0
     @State private var categorySearchText = ""
     @State private var selectedCategories: [CategoryEntry] = []
@@ -38,16 +35,6 @@ struct RecipeDetailsView: View {
 
     private var extractedRecipeNameCandidates: [String] {
         extractedRecipeNames
-    }
-
-    private var filteredBooks: [BookEntry] {
-        guard bookSearchText.count >= 2 else {
-            return []
-        }
-        return
-            availableBooks
-            .filter { $0.name.localizedCaseInsensitiveContains(bookSearchText) }
-            .sorted { $0.name < $1.name }
     }
 
     private var filteredCategories: [CategoryEntry] {
@@ -72,29 +59,10 @@ struct RecipeDetailsView: View {
     var body: some View {
         VStack(spacing: 16) {
             Form {
-                Section(header: Text("Recipe Name")) {
-                    VStack(spacing: 12) {
-                        HStack {
-                            TextField("Enter recipe name", text: $recipeName)
-                            if !extractedRecipeNameCandidates.isEmpty {
-                                Menu {
-                                    ForEach(extractedRecipeNameCandidates, id: \.self) {
-                                        candidate in
-                                        Button(action: {
-                                            recipeName = candidate
-                                        }) {
-                                            Text(candidate)
-                                        }
-                                    }
-                                } label: {
-                                    Image(systemName: "chevron.down")
-                                        .foregroundColor(Colours.foregroundPrimary)
-                                }
-                            }
-                        }
-                    }
-                }
-
+                RecipeNameSection(
+                    recipeName: $recipeName,
+                    extractedRecipeNameCandidates: extractedRecipeNameCandidates
+                )
                 Section(header: Text("Images")) {
                     HStack(spacing: 12) {
                         RecipeThumbnail(label: "Dish photo", photo: $dishPhoto)
@@ -108,86 +76,11 @@ struct RecipeDetailsView: View {
                         .keyboardType(.numberPad)
                 }
 
-                if let selectedBook = selectedBook {
-                    Section(header: Text("Recipe Book")) {
-                        HStack {
-                            Text(selectedBook.name)
-                                .foregroundColor(.white)
-                            Spacer()
-                            Button(action: {
-                                self.selectedBook = nil
-                                bookSearchText = ""
-                                pageNumber = ""
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.white)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(8)
-                        .background(Colours.backgroundSecondary)
-                        .cornerRadius(8)
-
-                        TextField("Page number", text: $pageNumber)
-                            .keyboardType(.numberPad)
-                    }
-                } else {
-                    Section(header: Text("Recipe Book")) {
-                        VStack(spacing: 12) {
-                            HStack {
-                                TextField("Search or add book", text: $bookSearchText)
-                                    .autocorrectionDisabled()
-                            }
-
-                            if !filteredBooks.isEmpty {
-                                VStack(spacing: 8) {
-                                    ForEach(filteredBooks, id: \.name) { book in
-                                        Button(action: {
-                                            selectedBook = book
-                                            bookSearchText = ""
-                                        }) {
-                                            HStack {
-                                                Text(book.name)
-                                                    .foregroundColor(.white)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            .padding(8)
-                                            .background(Colours.backgroundSecondary)
-                                            .cornerRadius(8)
-                                        }
-                                    }
-                                }
-                            }
-
-                            if !bookSearchText.isEmpty
-                                && !filteredBooks.contains(where: { $0.name == bookSearchText })
-                            {
-                                Button(action: {
-                                    let newBook = BookEntry(name: bookSearchText)
-                                    modelContext.insert(newBook)
-                                    do {
-                                        try modelContext.save()
-                                        selectedBook = newBook
-                                        availableBooks.append(newBook)
-                                        bookSearchText = ""
-                                    } catch {
-                                        print("Error saving new book: \(error)")
-                                    }
-                                }) {
-                                    HStack {
-                                        Image(systemName: "plus.circle.fill")
-                                        Text("Create '\(bookSearchText)'")
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(8)
-                                    .background(Colours.backgroundSecondary)
-                                    .cornerRadius(8)
-                                    .foregroundColor(.white)
-                                }
-                            }
-                        }
-                    }
-                }
+                RecipeBookSection(
+                    modelContext: modelContext,
+                    selectedBook: $selectedBook,
+                    pageNumber: $pageNumber
+                )
 
                 Section(header: Text("Suggestions")) {
                     TextField(
@@ -317,14 +210,6 @@ struct RecipeDetailsView: View {
                 break
             }
 
-            // Fetch existing books
-            do {
-                let descriptor = FetchDescriptor<BookEntry>(sortBy: [SortDescriptor(\.name)])
-                availableBooks = try modelContext.fetch(descriptor)
-            } catch {
-                print("Error fetching books: \(error)")
-            }
-
             // Fetch existing categories
             do {
                 let descriptor = FetchDescriptor<CategoryEntry>(sortBy: [SortDescriptor(\.name)])
@@ -346,7 +231,7 @@ struct RecipeDetailsView: View {
             let dishPhotoData = dishPhoto?.jpegData(compressionQuality: 0.8)
             let stepsPhotoData = stepsPhoto?.jpegData(compressionQuality: 0.8)
             let calories = Int(caloriesPerPortion) ?? 0
-            let page = Int(pageNumber) ?? 0
+            let page = pageNumber
             let newRecipe = RecipeEntry(
                 name: recipeName,
                 breakfastSuitability: breakfastSuitability,
@@ -381,6 +266,152 @@ struct RecipeDetailsView: View {
 
     private func deleteIngredients(at offsets: IndexSet) {
         recipeIngredients.remove(atOffsets: offsets)
+    }
+}
+
+struct RecipeNameSection: View {
+    @Binding var recipeName: String
+    let extractedRecipeNameCandidates: [String]
+
+    var body: some View {
+        Section(header: Text("Recipe Name")) {
+            VStack(spacing: 12) {
+                HStack {
+                    TextField("Enter recipe name", text: $recipeName)
+                    if !extractedRecipeNameCandidates.isEmpty {
+                        Menu {
+                            ForEach(extractedRecipeNameCandidates, id: \.self) {
+                                candidate in
+                                Button(action: {
+                                    recipeName = candidate
+                                }) {
+                                    Text(candidate)
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "chevron.down")
+                                .foregroundColor(Colours.foregroundPrimary)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct RecipeBookSection: View {
+    let modelContext: ModelContext
+    @Binding var selectedBook: BookEntry?
+    @Binding var pageNumber: Int?
+    @State private var bookSearchText = ""
+    @State private var availableBooks: [BookEntry] = []
+
+    let formatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+
+    var body: some View {
+        if let selectedBook = selectedBook {
+            Section(header: Text("Recipe Book")) {
+                HStack {
+                    Text(selectedBook.name)
+                        .foregroundColor(.white)
+                    Spacer()
+                    Button(action: {
+                        self.selectedBook = nil
+                        bookSearchText = ""
+                        pageNumber = nil
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.white)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(8)
+                .background(Colours.backgroundSecondary)
+                .cornerRadius(8)
+
+                TextField("Page number", value: $pageNumber, formatter: formatter)
+                    .keyboardType(.numberPad)
+            }
+        } else {
+            Section(header: Text("Recipe Book")) {
+                VStack(spacing: 12) {
+                    HStack {
+                        TextField("Search or add book", text: $bookSearchText)
+                            .autocorrectionDisabled()
+                    }
+
+                    if !filteredBooks.isEmpty {
+                        VStack(spacing: 8) {
+                            ForEach(filteredBooks, id: \.name) { book in
+                                Button(action: {
+                                    selectedBook = book
+                                    bookSearchText = ""
+                                }) {
+                                    HStack {
+                                        Text(book.name)
+                                            .foregroundColor(.white)
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(8)
+                                    .background(Colours.backgroundSecondary)
+                                    .cornerRadius(8)
+                                }
+                            }
+                        }
+                    }
+
+                    if !bookSearchText.isEmpty
+                        && !filteredBooks.contains(where: { $0.name == bookSearchText })
+                    {
+                        Button(action: {
+                            let newBook = BookEntry(name: bookSearchText)
+                            modelContext.insert(newBook)
+                            do {
+                                try modelContext.save()
+                                selectedBook = newBook
+                                availableBooks.append(newBook)
+                                bookSearchText = ""
+                            } catch {
+                                print("Error saving new book: \(error)")
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Create '\(bookSearchText)'")
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(8)
+                            .background(Colours.backgroundSecondary)
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
+                        }
+                    }
+                }
+            }
+            .task {
+                // Fetch existing books
+                do {
+                    let descriptor = FetchDescriptor<BookEntry>(sortBy: [SortDescriptor(\.name)])
+                    availableBooks = try modelContext.fetch(descriptor)
+                } catch {
+                    print("Error fetching books: \(error)")
+                }
+            }
+        }
+    }
+
+    private var filteredBooks: [BookEntry] {
+        guard bookSearchText.count >= 2 else {
+            return []
+        }
+        return
+            availableBooks
+            .filter { $0.name.localizedCaseInsensitiveContains(bookSearchText) }
+            .sorted { $0.name < $1.name }
     }
 }
 
@@ -471,4 +502,23 @@ struct SuitabilitySection: View {
             }.pickerStyle(.segmented)
         }
     }
+}
+
+#Preview {
+    @Previewable @State var dishPhoto: UIImage? = UIImage(named: "corn")
+    @Previewable @State var stepsPhoto: UIImage? = UIImage(named: "corn")
+    let modelContext = ModelContext.inMemory
+    VStack {
+        RecipeDetailsView(
+            isPresented: .constant(true),
+            modelContext: modelContext,
+            mealType: .breakfast,
+            extractedRecipeNames: ["Muffins", "asdf"],
+            onRecipeCreated: { _ in
+
+            },
+            dishPhoto: $dishPhoto,
+            stepsPhoto: $stepsPhoto)
+    }
+    .modelContext(modelContext)
 }

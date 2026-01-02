@@ -35,8 +35,8 @@ struct RecipeDetailsDisplayView: View {
                                 Text(book.name)
                                     .font(.body)
                                     .foregroundColor(Colours.foregroundPrimary)
-                                if recipe.pageNumber > 0 {
-                                    Text("Page \(recipe.pageNumber)")
+                                if let pageNumber = recipe.pageNumber {
+                                    Text("Page \(pageNumber)")
                                         .font(.caption)
                                         .foregroundColor(Colours.foregroundSecondary)
                                 }
