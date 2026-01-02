@@ -124,6 +124,8 @@ class MealPlanningViewModel: ObservableObject {
                 }
             }
         }
+
+        currentStage = AppFlags.showRecipeShortcut ? .mealPicking : .mealAvailability
     }
 
     var canGoBack: Bool {

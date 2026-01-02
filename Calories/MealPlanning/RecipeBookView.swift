@@ -11,10 +11,11 @@ import SwiftUI
 struct RecipeBookView: View {
     let mealType: MealType
     let onRecipeSelected: (RecipeEntry) -> Void
+    let onCreateRecipe: () -> Void
+
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
     @Query private var allRecipes: [RecipeEntry]
-    @State private var showAddRecipe = false
     @State var searchText = ""
     @State private var isSearching: Bool = false
 
@@ -74,24 +75,13 @@ struct RecipeBookView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        showAddRecipe = true
+                        onCreateRecipe()
                     } label: {
                         Image(systemName: "plus")
                     }
                     .foregroundColor(Colours.foregroundPrimary)
                 }
             }
-        }
-        .sheet(isPresented: $showAddRecipe) {
-            AddRecipeSheet(
-                isPresented: $showAddRecipe,
-                modelContext: modelContext,
-                mealType: mealType,
-                onRecipeCreated: { recipe in
-                    onRecipeSelected(recipe)
-                    dismiss()
-                }
-            )
         }
     }
 
@@ -130,6 +120,10 @@ extension RecipeEntry {
 }
 
 #Preview {
-    RecipeBookView(mealType: .breakfast, onRecipeSelected: { _ in })
-        .modelContainer(for: RecipeEntry.self, inMemory: true)
+    RecipeBookView(
+        mealType: .breakfast,
+        onRecipeSelected: { _ in },
+        onCreateRecipe: {}
+    )
+    .modelContainer(for: RecipeEntry.self, inMemory: true)
 }

@@ -55,6 +55,7 @@
 		DDAA98FB2F0340730026AE9E /* CategoryEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA98FA2F0340730026AE9E /* CategoryEntry.swift */; };
 		DDAAD2D42D176EF50036DC58 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */; };
 		DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */; };
+		DDBC459E2F07E14600693798 /* AppFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDBC459D2F07E14500693798 /* AppFlags.swift */; };
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
@@ -213,6 +214,7 @@
 		DDAA98FA2F0340730026AE9E /* CategoryEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntry.swift; sourceTree = "<group>"; };
 		DDAAD2D32D176EF50036DC58 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		DDB7FF8D2C7253AD000FE006 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
+		DDBC459D2F07E14500693798 /* AppFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlags.swift; sourceTree = "<group>"; };
 		DDC477692DEB5713009578BE /* CaloriesTestPlan-unit.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-unit.xctestplan"; sourceTree = "<group>"; };
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
@@ -508,6 +510,7 @@
 		EA2D491529981AE800248864 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				DDBC459D2F07E14500693798 /* AppFlags.swift */,
 				EA097D8729918C9E00735129 /* CaloriesApp.swift */,
 				EA097D8929918C9E00735129 /* CaloriesView.swift */,
 				EABDB44D29B4A98F0096FBF1 /* Date+Extensions.swift */,
@@ -918,6 +921,7 @@
 				DD701F912E1CFB64006DB2FF /* MealPlanningView.swift in Sources */,
 				DDAA98EF2EFEDBCA0026AE9E /* RecipeSourceView.swift in Sources */,
 				EA2EA7482B50776400382DC8 /* MealReassigmentView.swift in Sources */,
+				DDBC459E2F07E14600693798 /* AppFlags.swift in Sources */,
 				DDE1C61C2EFC3D22005AA862 /* RecipeIngredient.swift in Sources */,
 				DD129422FF3F00000AABBCC /* MealPlanEntry.swift in Sources */,
 				EA4EE50C299E9D5E000FE6AC /* AddExerciseViewModel.swift in Sources */,

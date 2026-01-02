@@ -28,7 +28,8 @@ struct MealPlanningView: View {
                 case .foodToUseUp:
                     FoodToUseUpView(viewModel: viewModel)
                 case .mealPicking:
-                    MealPickerView(viewModel: viewModel, onSave: saveMealPlan)
+                    MealPickerView(
+                        modelContext: modelContext, viewModel: viewModel, onSave: saveMealPlan)
                 }
             }
 

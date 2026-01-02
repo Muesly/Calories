@@ -42,6 +42,12 @@ struct AddRecipeSheet: View {
                 )
             }
         }
+        .task {
+            if AppFlags.showRecipeShortcut {
+                extractedRecipeNames = ["Breakfast Muffin"]
+                currentPage = .details
+            }
+        }
     }
 }
 

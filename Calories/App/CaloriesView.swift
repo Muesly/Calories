@@ -20,7 +20,7 @@ struct CaloriesView: View {
     @State var showingAddEntryView = false
     @State var showingAddExerciseView = false
     @State var showingRecordWeightView = false
-    @State var showingMealPlanningView = true
+    @State var showingMealPlanningView = false
     @State var entryChanged = false
 
     @State private var currentDate: Date
@@ -151,6 +151,7 @@ struct CaloriesView: View {
                 companion.requestNotificationsPermission()
                 refresh()
 
+                showingMealPlanningView = AppFlags.showRecipeShortcut
             }
         }
     }

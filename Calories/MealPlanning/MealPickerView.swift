@@ -5,14 +5,18 @@
 //  Created by Tony Short on 14/12/2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct MealPickerView: View {
+    let modelContext: ModelContext
     @State var viewModel: MealPlanningViewModel
     let onSave: () -> Void
     @State private var swapMode = false
     @State private var mealToSwap: MealSelection?
     @Environment(\.dismiss) var dismiss
+    @State var showCreateRecipe = false
+    @State var mealForCreatedRecipe: MealSelection?
 
     var body: some View {
         NavigationStack {
@@ -35,8 +39,9 @@ struct MealPickerView: View {
                                                 recipe, for: person, date: date, mealType: mealType)
                                             swapMode = false
                                         },
-                                        onChangeRequested: {
-                                            // Change will be handled internally in RecipePickerCard
+                                        onCreateRecipe: {
+                                            showCreateRecipe = true
+                                            mealForCreatedRecipe = meal
                                         },
                                         onSwapRequested: {
                                             if swapMode && mealToSwap != nil {
@@ -81,6 +86,28 @@ struct MealPickerView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showCreateRecipe) {
+                if let meal = mealForCreatedRecipe {
+                    AddRecipeSheet(
+                        isPresented: $showCreateRecipe,
+                        modelContext: modelContext,
+                        mealType: meal.mealType,
+                        onRecipeCreated: { recipe in
+                            viewModel.selectRecipe(
+                                recipe, for: meal.person, date: meal.date, mealType: meal.mealType)
+                            swapMode = false
+                            dismiss()
+                        }
+                    )
+                }
+            }
+            .task {
+                if AppFlags.showRecipeShortcut {
+                    showCreateRecipe = true
+                    mealForCreatedRecipe = viewModel.meal(
+                        forDate: viewModel.weekDates.first!, mealType: .breakfast)
+                }
+            }
         }
     }
 }
@@ -92,8 +119,8 @@ struct RecipePickerCard: View {
     let isSwapMode: Bool
     let isSelectedForSwap: Bool
     let onRecipeSelected: (RecipeEntry) -> Void
-    let onChangeRequested: (() -> Void)?
-    let onSwapRequested: (() -> Void)?
+    let onCreateRecipe: (() -> Void)
+    let onSwapRequested: (() -> Void)
 
     @State private var showMealChoice = false
     @State private var showRecipeBook = false
@@ -107,7 +134,7 @@ struct RecipePickerCard: View {
         Button(action: {
             // In swap mode, clicking the card triggers swap
             if isSwapMode {
-                onSwapRequested?()
+                onSwapRequested()
             } else if meal.recipe != nil {
                 showRecipeDetails = true
             } else if !isNoMealRequired {
@@ -152,10 +179,8 @@ struct RecipePickerCard: View {
                                     }) {
                                         Label("Change", systemImage: "pencil")
                                     }
-                                    if let onSwapRequested = onSwapRequested {
-                                        Button(action: onSwapRequested) {
-                                            Label("Swap", systemImage: "arrow.left.arrow.right")
-                                        }
+                                    Button(action: onSwapRequested) {
+                                        Label("Swap", systemImage: "arrow.left.arrow.right")
                                     }
                                 } label: {
                                     Image(systemName: "ellipsis")
@@ -199,14 +224,16 @@ struct RecipePickerCard: View {
             } else {
                 RecipeBookView(
                     mealType: mealType,
-                    onRecipeSelected: onRecipeSelected
+                    onRecipeSelected: onRecipeSelected,
+                    onCreateRecipe: onCreateRecipe
                 )
             }
         }
         .sheet(isPresented: $showRecipeBook) {
             RecipeBookView(
                 mealType: mealType,
-                onRecipeSelected: onRecipeSelected
+                onRecipeSelected: onRecipeSelected,
+                onCreateRecipe: onCreateRecipe
             )
         }
     }
