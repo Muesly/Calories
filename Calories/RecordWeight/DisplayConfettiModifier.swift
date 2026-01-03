@@ -41,21 +41,23 @@ struct ConfettiContainerView: View {
     @State var yPosition: CGFloat = 0
 
     var body: some View {
-        ZStack {
-            ForEach(0..<count, id: \.self) { _ in
-                ConfettiView()
-                    .position(
-                        x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
-                        y: yPosition != 0
-                            ? CGFloat.random(in: 0...UIScreen.main.bounds.height) : yPosition
-                    )
+        GeometryReader { proxy in
+            ZStack {
+                ForEach(0..<count, id: \.self) { _ in
+                    ConfettiView()
+                        .position(
+                            x: CGFloat.random(in: 0...proxy.size.width),
+                            y: yPosition != 0
+                                ? CGFloat.random(in: 0...proxy.size.height) : yPosition
+                        )
+                }
             }
+            .ignoresSafeArea()
+            .onAppear {
+                yPosition = CGFloat.random(in: 0...proxy.size.height)
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
         }
-        .ignoresSafeArea()
-        .onAppear {
-            yPosition = CGFloat.random(in: 0...UIScreen.main.bounds.height)
-        }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
     }
 }
 

@@ -11,6 +11,7 @@ import SwiftUI
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     private let historyViewModel: HistoryViewModel
     private let weeklyChartViewModel: WeeklyChartViewModel
@@ -43,7 +44,7 @@ struct CaloriesView: View {
 
     var body: some View {
         Group {
-            if UIScreen.main.bounds.width > 600 {
+            if horizontalSizeClass == .regular {
                 // On Mac: center the main view in middle third
                 HStack {
                     Spacer()
@@ -51,6 +52,7 @@ struct CaloriesView: View {
                         .frame(maxWidth: 600)
                     Spacer()
                 }
+                .background(Color.black)
             } else {
                 // On iPhone/iPad: full width
                 mainContent
