@@ -33,6 +33,8 @@ struct RecipeDetailsView: View {
     @State private var saveErrorMessage = ""
     @State private var recipeIngredients: [RecipeIngredientCandidate] = []
 
+    @FocusState var isInputActive: Bool
+
     private var extractedRecipeNameCandidates: [String] {
         extractedRecipeNames
     }
@@ -74,6 +76,16 @@ struct RecipeDetailsView: View {
                 Section(header: Text("Calories per Portion")) {
                     TextField("Enter calories", text: $caloriesPerPortion)
                         .keyboardType(.numberPad)
+                        .focused($isInputActive)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Spacer()
+                                Button("Done") {
+                                    isInputActive = false
+                                }
+                            }
+                        }
+
                 }
 
                 RecipeBookSection(
