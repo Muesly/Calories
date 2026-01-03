@@ -1,5 +1,5 @@
 //
-//  AddRecipeSheet.swift
+//  CreateRecipeSheet.swift
 //  Calories
 //
 //  Created by Tony Short on 23/12/2025.
@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct AddRecipeSheet: View {
+struct CreateRecipeSheet: View {
     @Binding var isPresented: Bool
     let modelContext: ModelContext
     let mealType: MealType
