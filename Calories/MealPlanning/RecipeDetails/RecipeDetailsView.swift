@@ -32,8 +32,8 @@ struct RecipeDetailsView: View {
     @State private var showSaveError = false
     @State private var saveErrorMessage = ""
     @State private var recipeIngredients: [RecipeIngredientCandidate] = []
-
-    @FocusState var isInputActive: Bool
+    @State private var editingField: String?
+    @FocusState private var isCaloriesFocused: Bool
 
     private var extractedRecipeNameCandidates: [String] {
         extractedRecipeNames
@@ -74,18 +74,25 @@ struct RecipeDetailsView: View {
                 }
 
                 Section(header: Text("Calories per Portion")) {
-                    TextField("Enter calories", text: $caloriesPerPortion)
-                        .keyboardType(.numberPad)
-                        .focused($isInputActive)
-                        .toolbar {
+                    TextField(
+                        "Enter calories", text: $caloriesPerPortion,
+                        onEditingChanged: { isEditing in
+                            self.editingField = isEditing ? "calories" : nil
+                        }
+                    )
+                    .keyboardType(.numberPad)
+                    .focused($isCaloriesFocused)
+                    .toolbar {
+                        if editingField == "calories" {
                             ToolbarItemGroup(placement: .keyboard) {
                                 Spacer()
                                 Button("Done") {
-                                    isInputActive = false
+                                    editingField = nil
+                                    isCaloriesFocused = false
                                 }
                             }
                         }
-
+                    }
                 }
 
                 RecipeBookSection(
@@ -132,7 +139,7 @@ struct RecipeDetailsView: View {
                                             Text(category.name)
                                                 .foregroundColor(.white)
                                         }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .frame(maxWidth: .infinity)
                                         .padding(8)
                                         .background(Colours.backgroundSecondary)
                                         .cornerRadius(8)
@@ -163,7 +170,7 @@ struct RecipeDetailsView: View {
                                     Image(systemName: "plus.circle.fill")
                                     Text("Create '\(categorySearchText)'")
                                 }
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .frame(maxWidth: .infinity)
                                 .padding(8)
                                 .background(Colours.backgroundSecondary)
                                 .cornerRadius(8)
@@ -181,8 +188,6 @@ struct RecipeDetailsView: View {
                     }
                 }
             }
-
-            Spacer()
         }
         .navigationTitle("Add Recipe")
         .navigationBarTitleDisplayMode(.inline)
@@ -319,6 +324,8 @@ struct RecipeBookSection: View {
     @Binding var pageNumber: Int?
     @State private var bookSearchText = ""
     @State private var availableBooks: [BookEntry] = []
+    @State private var editingPageNumber = false
+    @FocusState private var isPageNumberFieldFocued: Bool
 
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -342,20 +349,36 @@ struct RecipeBookSection: View {
                             .foregroundColor(.white)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity)
                 .padding(8)
                 .background(Colours.backgroundSecondary)
                 .cornerRadius(8)
 
-                TextField("Page number", value: $pageNumber, formatter: formatter)
-                    .keyboardType(.numberPad)
+                TextField(
+                    "Page number", value: $pageNumber, formatter: formatter,
+                    onEditingChanged: { isEditing in
+                        self.editingPageNumber = isEditing
+                    }
+                )
+                .keyboardType(.numberPad)
+                .focused($isPageNumberFieldFocued)
+                .toolbar {
+                    if editingPageNumber {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Done") {
+                                editingPageNumber = false
+                                isPageNumberFieldFocued = false
+                            }
+                        }
+                    }
+                }
             }
         } else {
             Section(header: Text("Recipe Book")) {
                 VStack(spacing: 12) {
                     HStack {
                         TextField("Search or add book", text: $bookSearchText)
-                            .autocorrectionDisabled()
                     }
 
                     if !filteredBooks.isEmpty {
@@ -369,7 +392,7 @@ struct RecipeBookSection: View {
                                         Text(book.name)
                                             .foregroundColor(.white)
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(maxWidth: .infinity)
                                     .padding(8)
                                     .background(Colours.backgroundSecondary)
                                     .cornerRadius(8)
@@ -397,7 +420,7 @@ struct RecipeBookSection: View {
                                 Image(systemName: "plus.circle.fill")
                                 Text("Create '\(bookSearchText)'")
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(maxWidth: .infinity)
                             .padding(8)
                             .background(Colours.backgroundSecondary)
                             .cornerRadius(8)
