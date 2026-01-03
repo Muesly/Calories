@@ -346,6 +346,21 @@
 			path = "Add Plant";
 			sourceTree = "<group>";
 		};
+		DD5EA8B42F08FE0700965FDB /* RecipeDetails */ = {
+			isa = PBXGroup;
+			children = (
+				DD738C9C2EFB387200ABFCFD /* AddRecipeSheet.swift */,
+				DDAA98EC2EFED9D90026AE9E /* PhotoView.swift */,
+				DDAA98F82F033D810026AE9E /* RatingView.swift */,
+				DDAA98F92EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift */,
+				DDAA98F02EFEDD670026AE9E /* RecipeDetailsView.swift */,
+				DDAA98EE2EFEDBCA0026AE9E /* RecipeSourceView.swift */,
+				DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */,
+				DDAA98F42EFEE51D0026AE9E /* RecipeThumbnail.swift */,
+			);
+			path = RecipeDetails;
+			sourceTree = "<group>";
+		};
 		DD7DC88A2C8470DB0021FA09 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,23 +445,16 @@
 		DDADA54C2E1C51C00004DADB /* MealPlanning */ = {
 			isa = PBXGroup;
 			children = (
-				DDAA98F82F033D810026AE9E /* RatingView.swift */,
-				DD738C9C2EFB387200ABFCFD /* AddRecipeSheet.swift */,
+				DD5EA8B42F08FE0700965FDB /* RecipeDetails */,
 				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
 				DD6F91FD2EEEF51E00664110 /* MealAvailabilityView.swift */,
 				DD738C982EFB28B500ABFCFD /* MealChoiceView.swift */,
-				DDAA98F92EFFE5B20026AE9E /* RecipeDetailsDisplayView.swift */,
 				DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */,
 				DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */,
 				DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */,
 				DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */,
-				DDAA98EC2EFED9D90026AE9E /* PhotoView.swift */,
 				DD738C9A2EFB2A1700ABFCFD /* RecipeBookView.swift */,
-				DDAA98F02EFEDD670026AE9E /* RecipeDetailsView.swift */,
-				DDAA98EE2EFEDBCA0026AE9E /* RecipeSourceView.swift */,
-				DDAA98F22EFEE1BB0026AE9E /* RecipeTextExtractor.swift */,
-				DDAA98F42EFEE51D0026AE9E /* RecipeThumbnail.swift */,
 			);
 			path = MealPlanning;
 			sourceTree = "<group>";

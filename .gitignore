@@ -87,10 +87,6 @@ fastlane/test_output
 # After new code Injection tools there's a generated folder /iOSInjectionProject
 # https://github.com/johnno1962/injectionforxcode
 
-iOSInjectionProject/
-
 .vscode/settings.json
-
-Calories/.DS_Store
 .DS_Store
 Calories/Supporting Files/Config.xcconfig
