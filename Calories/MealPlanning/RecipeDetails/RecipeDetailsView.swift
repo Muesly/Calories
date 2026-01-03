@@ -278,7 +278,9 @@ struct RecipeNameSection: View {
             VStack(spacing: 12) {
                 HStack {
                     TextField("Enter recipe name", text: $recipeName)
-                    if !extractedRecipeNameCandidates.isEmpty {
+                    // Show a menu of other extracted names if more than one option
+                    let numCandidates = extractedRecipeNameCandidates.count
+                    if numCandidates > 1 {
                         Menu {
                             ForEach(extractedRecipeNameCandidates, id: \.self) {
                                 candidate in
@@ -289,8 +291,8 @@ struct RecipeNameSection: View {
                                 }
                             }
                         } label: {
-                            Image(systemName: "chevron.down")
-                                .foregroundColor(Colours.foregroundPrimary)
+                            Text("\(numCandidates) candidates")
+                                .font(.caption)
                         }
                     }
                 }
@@ -505,8 +507,8 @@ struct SuitabilitySection: View {
 }
 
 #Preview {
-    @Previewable @State var dishPhoto: UIImage? = UIImage(named: "corn")
-    @Previewable @State var stepsPhoto: UIImage? = UIImage(named: "corn")
+    @Previewable @State var dishPhoto: UIImage? = UIImage(named: "Corn")
+    @Previewable @State var stepsPhoto: UIImage? = UIImage(named: "Corn")
     let modelContext = ModelContext.inMemory
     VStack {
         RecipeDetailsView(

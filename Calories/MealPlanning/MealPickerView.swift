@@ -97,7 +97,11 @@ struct MealPickerView: View {
                                 recipe, for: meal.person, date: meal.date, mealType: meal.mealType)
                             swapMode = false
                             dismiss()
-                        }
+                        },
+                        currentPage: AppFlags.showRecipeShortcut ? .details : .source,
+                        extractedRecipeNames: AppFlags.showRecipeShortcut
+                            ? ["Breakfast Muffin", "Next option"] : [],
+                        dishPhoto: AppFlags.showRecipeShortcut ? UIImage(named: "Corn") : nil
                     )
                 }
             }

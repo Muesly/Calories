@@ -14,8 +14,6 @@ struct PhotoView: View {
     @State var lastScale: CGFloat = 1
     @State var offset: CGSize = .zero
     @State var lastOffset: CGSize = .zero
-    @State var debug = ""
-
     let image: UIImage
 
     var body: some View {

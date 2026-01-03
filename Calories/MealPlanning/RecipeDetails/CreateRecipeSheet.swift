@@ -13,10 +13,10 @@ struct CreateRecipeSheet: View {
     let modelContext: ModelContext
     let mealType: MealType
     let onRecipeCreated: (RecipeEntry) -> Void
-    @State private var currentPage: AddRecipePage = .source
-    @State private var extractedRecipeNames: [String] = []
-    @State private var dishPhoto: UIImage? = nil
-    @State private var stepsPhoto: UIImage? = nil
+    @State var currentPage: AddRecipePage
+    @State var extractedRecipeNames: [String]
+    @State var dishPhoto: UIImage?
+    @State var stepsPhoto: UIImage? = nil
     @State private var showCancelAlert = false
 
     var body: some View {
@@ -44,7 +44,9 @@ struct CreateRecipeSheet: View {
         }
         .task {
             if AppFlags.showRecipeShortcut {
-                extractedRecipeNames = ["Breakfast Muffin"]
+                extractedRecipeNames = ["Breakfast Muffin", "Next option"]
+                dishPhoto = UIImage(named: "ExampleDish")
+                stepsPhoto = UIImage(named: "ExampleSteps")
                 currentPage = .details
             }
         }

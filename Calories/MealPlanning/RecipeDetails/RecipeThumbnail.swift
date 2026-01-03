@@ -13,10 +13,7 @@ struct RecipeThumbnail: View {
     @Binding var photo: UIImage?
     @State private var showPicker = false
     @State private var showCamera = false
-    @State private var fullScreenPhoto: UIImage? = nil
     @State private var showFullScreenPhoto = false
-    @State private var photoZoomScale: CGFloat = 1.0
-    @State private var photoOffset: CGSize = .zero
 
     var body: some View {
         thumbnailContent
@@ -76,12 +73,7 @@ struct RecipeThumbnail: View {
                     if photo != nil {
                         Divider()
                         Button(action: {
-                            fullScreenPhoto = photo
-                            DispatchQueue.main.asyncAfter(
-                                deadline: .now() + 0.1
-                            ) {
-                                showFullScreenPhoto = true
-                            }
+                            showFullScreenPhoto = true
                         }) {
                             Label(
                                 "View Full Size", systemImage: "arrow.up.left.and.arrow.down.right")
@@ -96,65 +88,8 @@ struct RecipeThumbnail: View {
         }
         .frame(height: 200)
         .fullScreenCover(isPresented: $showFullScreenPhoto) {
-            ZStack {
-                Color.black.ignoresSafeArea()
-
-                VStack(spacing: 0) {
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            photoZoomScale = 1.0
-                            photoOffset = .zero
-                            showFullScreenPhoto = false
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.system(size: 30))
-                                .foregroundColor(.white)
-                                .padding()
-                        }
-                    }
-
-                    Spacer()
-
-                    if let photo = fullScreenPhoto {
-                        Image(uiImage: photo)
-                            .resizable()
-                            .scaledToFit()
-                            .scaleEffect(photoZoomScale)
-                            .offset(photoOffset)
-                            .gesture(
-                                SimultaneousGesture(
-                                    MagnificationGesture()
-                                        .onChanged { value in
-                                            photoZoomScale = max(1.0, value)
-                                        },
-                                    DragGesture()
-                                        .onChanged { value in
-                                            photoOffset = value.translation
-                                        }
-                                )
-                            )
-                            .onTapGesture(count: 2) {
-                                withAnimation {
-                                    if photoZoomScale > 1.5 {
-                                        photoZoomScale = 1.0
-                                        photoOffset = .zero
-                                    } else {
-                                        photoZoomScale = 2.5
-                                    }
-                                }
-                            }
-                            .padding()
-                    }
-
-                    Spacer()
-                }
-            }
-            .onChange(of: showFullScreenPhoto) { oldValue, newValue in
-                if !newValue {
-                    photoZoomScale = 1.0
-                    photoOffset = .zero
-                }
+            if let photo {
+                PhotoView(image: photo)
             }
         }
     }
