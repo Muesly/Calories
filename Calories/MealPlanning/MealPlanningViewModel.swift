@@ -430,7 +430,7 @@ class MealPlanningViewModel: ObservableObject {
     // MARK: - Persistence
 
     private var weekStartDate: Date {
-        Self.startOfPlanningWeek()
+        currentWeekStartDate
     }
 
     func loadMealPlan() {
@@ -438,6 +438,17 @@ class MealPlanningViewModel: ObservableObject {
 
         // Load recipes for converting stored selections
         let recipes = modelContext.recipeResults()
+
+        // Recreate mealSelections array with current week's dates
+        mealSelections = []
+        for person in Person.allCases {
+            for date in weekDates {
+                for mealType in MealType.allCases {
+                    mealSelections.append(
+                        .init(person: person, date: date, mealType: mealType, isSelected: true))
+                }
+            }
+        }
 
         // Load meal selections
         let storedSelections = entry.getMealSelections(recipes: recipes)
