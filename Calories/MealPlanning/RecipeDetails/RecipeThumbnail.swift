@@ -129,18 +129,29 @@ struct PHPickerView: UIViewControllerRepresentable {
         }
 
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-            DispatchQueue.main.async {
-                self.isPresented = false
+            guard let provider = results.first?.itemProvider else {
+                DispatchQueue.main.async {
+                    self.isPresented = false
+                }
+                return
             }
-
-            guard let provider = results.first?.itemProvider else { return }
 
             if provider.canLoadObject(ofClass: UIImage.self) {
                 provider.loadObject(ofClass: UIImage.self) { [weak self] image, _ in
-                    guard let uiImage = image as? UIImage else { return }
+                    guard let uiImage = image as? UIImage else {
+                        Task { @MainActor in
+                            self?.isPresented = false
+                        }
+                        return
+                    }
                     Task { @MainActor in
                         self?.image = uiImage
+                        self?.isPresented = false
                     }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.isPresented = false
                 }
             }
         }
