@@ -262,6 +262,13 @@ class MealPlanningViewModel: ObservableObject {
         mealSelections[index].recipe = recipe
     }
 
+    func clearMeal(for person: Person, date: Date, mealType: MealType) {
+        guard let index = findMealSelectionIndex(for: person, date: date, mealType: mealType) else {
+            return
+        }
+        mealSelections[index].recipe = nil
+    }
+
     func populateEmptyMeals() {
         populateMealRecipes(onlyEmpty: true)
     }

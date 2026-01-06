@@ -52,6 +52,11 @@ struct MealPickerView: View {
                                                 swapMode = true
                                                 mealToSwap = meal
                                             }
+                                        },
+                                        onRemoveMeal: {
+                                            let person = meal.person
+                                            viewModel.clearMeal(
+                                                for: person, date: date, mealType: mealType)
                                         }
                                     )
                                 }
@@ -124,6 +129,7 @@ struct RecipePickerCard: View {
     let onRecipeSelected: (RecipeEntry) -> Void
     let onCreateRecipe: (() -> Void)
     let onSwapRequested: (() -> Void)
+    let onRemoveMeal: (() -> Void)
 
     @State private var showMealChoice = false
     @State private var showRecipeBook = false
@@ -184,6 +190,11 @@ struct RecipePickerCard: View {
                                     }
                                     Button(action: onSwapRequested) {
                                         Label("Swap", systemImage: "arrow.left.arrow.right")
+                                    }
+                                    if meal.recipe != nil {
+                                        Button(role: .destructive, action: onRemoveMeal) {
+                                            Label("Remove", systemImage: "trash")
+                                        }
                                     }
                                 } label: {
                                     Image(systemName: "ellipsis")
