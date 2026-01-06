@@ -20,73 +20,36 @@ struct MealPlanningView: View {
     }
 
     var body: some View {
-        let stage = viewModel.currentStage
         NavigationStack {
             VStack {
-                switch stage {
-                case .mealAvailability:
-                    MealAvailabilityView(viewModel: viewModel)
-                case .mealPicking:
-                    MealPickerView(
-                        viewModel: viewModel, onSave: saveMealPlan)
-                }
+                MealPickerView(
+                    viewModel: viewModel, onSave: saveMealPlan)
             }
 
-            HStack(spacing: 15) {
-                if viewModel.canGoBack {
-                    Button(action: {
-                        viewModel.goToPreviousStage()
-                    }) {
-                        Text("Back")
-                            .modifier(ButtonText())
-                    }
-                    .buttonStyle(.bordered)
+            Button(action: {
+                showFoodToUseUp = true
+            }) {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                    Text("Populate")
                 }
-
-                if stage == .mealPicking {
-                    Button(action: {
-                        showFoodToUseUp = true
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                            Text("Populate")
-                        }
-                        .modifier(ButtonText())
-                        .buttonStyle(.borderedProminent)
-                    }
-                } else {
-                    Button(action: {
-                        viewModel.goToNextStage()
-                    }) {
-                        Text("Next")
-                            .modifier(ButtonText())
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!viewModel.canGoForward)
-                }
+                .modifier(ButtonText())
             }
+            .buttonStyle(.borderedProminent)
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
         }
         .navigationTitle("Meal Planning")
         .toolbar {
-            if stage == .mealPicking {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Cancel") {
+                    dismiss()
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveMealPlan()
-                        dismiss()
-                    }
-                }
-            } else {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Close") {
-                        dismiss()
-                    }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Save") {
+                    saveMealPlan()
+                    dismiss()
                 }
             }
         }
