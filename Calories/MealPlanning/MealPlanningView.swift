@@ -13,6 +13,7 @@ struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
     @State var viewModel: MealPlanningViewModel
+    @State private var showFoodToUseUp = false
 
     init(viewModel: MealPlanningViewModel) {
         self.viewModel = viewModel
@@ -25,8 +26,6 @@ struct MealPlanningView: View {
                 switch stage {
                 case .mealAvailability:
                     MealAvailabilityView(viewModel: viewModel)
-                case .foodToUseUp:
-                    FoodToUseUpView(viewModel: viewModel)
                 case .mealPicking:
                     MealPickerView(
                         viewModel: viewModel, onSave: saveMealPlan)
@@ -46,7 +45,7 @@ struct MealPlanningView: View {
 
                 if stage == .mealPicking {
                     Button(action: {
-                        viewModel.populateEmptyMeals()
+                        showFoodToUseUp = true
                     }) {
                         HStack {
                             Image(systemName: "arrow.clockwise")
@@ -95,6 +94,21 @@ struct MealPlanningView: View {
         .onAppear {
             RecipeEntry.seedRecipes(into: modelContext)
             viewModel.loadMealPlan()
+        }
+        .sheet(isPresented: $showFoodToUseUp) {
+            NavigationStack {
+                FoodToUseUpView(viewModel: viewModel)
+                    .navigationTitle("Foods to Use Up")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Done") {
+                                showFoodToUseUp = false
+                                viewModel.populateEmptyMeals()
+                            }
+                        }
+                    }
+            }
         }
     }
 

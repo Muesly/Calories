@@ -70,7 +70,6 @@ struct MealSelection {
 
 enum WizardStage: Int, CaseIterable {
     case mealAvailability
-    case foodToUseUp
     case mealPicking
 }
 
@@ -126,6 +125,7 @@ class MealPlanningViewModel: ObservableObject {
         }
 
         currentStage = AppFlags.showRecipeShortcut ? .mealPicking : .mealAvailability
+
     }
 
     var canGoBack: Bool {
