@@ -57,6 +57,23 @@ struct MealPickerView: View {
                                             let person = meal.person
                                             viewModel.clearMeal(
                                                 for: person, date: date, mealType: mealType)
+                                        },
+                                        personSelections: personSelections(
+                                            for: date, mealType: mealType),
+                                        personReasons: personReasons(for: date, mealType: mealType),
+                                        isQuickMeal: viewModel.isQuickMeal(
+                                            for: date, mealType: mealType),
+                                        onTogglePerson: { person in
+                                            viewModel.toggleMealSelection(
+                                                for: person, date: date, mealType: mealType)
+                                        },
+                                        onReasonChanged: { person, reason in
+                                            viewModel.setReason(
+                                                reason, for: person, date: date, mealType: mealType)
+                                        },
+                                        onQuickMealToggled: { isQuick in
+                                            viewModel.setQuickMeal(
+                                                isQuick, for: date, mealType: mealType)
                                         }
                                     )
                                 }
@@ -118,6 +135,22 @@ struct MealPickerView: View {
             }
         }
     }
+
+    private func personSelections(for date: Date, mealType: MealType) -> [Person: Bool] {
+        var selections: [Person: Bool] = [:]
+        for person in Person.allCases {
+            selections[person] = viewModel.isSelected(for: person, date: date, mealType: mealType)
+        }
+        return selections
+    }
+
+    private func personReasons(for date: Date, mealType: MealType) -> [Person: String] {
+        var reasons: [Person: String] = [:]
+        for person in Person.allCases {
+            reasons[person] = viewModel.getReason(for: person, date: date, mealType: mealType)
+        }
+        return reasons
+    }
 }
 
 struct RecipePickerCard: View {
@@ -130,10 +163,17 @@ struct RecipePickerCard: View {
     let onCreateRecipe: (() -> Void)
     let onSwapRequested: (() -> Void)
     let onRemoveMeal: (() -> Void)
+    let personSelections: [Person: Bool]
+    let personReasons: [Person: String]
+    let isQuickMeal: Bool
+    let onTogglePerson: (Person) -> Void
+    let onReasonChanged: (Person, String) -> Void
+    let onQuickMealToggled: (Bool) -> Void
 
     @State private var showMealChoice = false
     @State private var showRecipeBook = false
     @State private var showRecipeDetails = false
+    @State private var showAvailability = false
 
     private var isNoMealRequired: Bool {
         servingInfo.hasPrefix("No meal required")
@@ -159,30 +199,70 @@ struct RecipePickerCard: View {
                     Divider()
                         .background(Colours.foregroundPrimary)
 
-                    if isNoMealRequired {
-                        Text(servingInfo)
-                            .font(.caption)
-                            .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                            .italic()
-                    } else {
-                        Text(meal.recipe?.name ?? "Choose a meal")
-                            .font(.caption)
-                            .foregroundColor(Colours.foregroundPrimary)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .frame(minHeight: 32, alignment: .top)
+                    if showAvailability {
+                        ForEach(Person.allCases, id: \.self) { person in
+                            let isSelected = personSelections[person] ?? true
+                            VStack(alignment: .leading, spacing: 4) {
+                                Toggle(isOn: binding(for: person, isSelected: isSelected)) {
+                                    Text(person.rawValue)
+                                        .font(.caption2)
+                                        .foregroundColor(Colours.foregroundPrimary)
+                                }
+                                .toggleStyle(CheckboxToggleStyle())
 
+                                if !isSelected {
+                                    ReasonTextField(
+                                        person: person,
+                                        initialReason: personReasons[person] ?? "",
+                                        onReasonChanged: { reason in
+                                            onReasonChanged(person, reason)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                         Divider()
                             .background(Colours.foregroundPrimary)
-
-                        HStack {
-                            Text(servingInfo)
+                        Toggle(isOn: quickMealBinding) {
+                            Text("Quick?")
                                 .font(.caption2)
+                                .foregroundColor(Colours.foregroundPrimary)
+                        }
+                        .toggleStyle(CheckboxToggleStyle())
+                    } else {
+                        if isNoMealRequired {
+                            Text(servingInfo)
+                                .font(.caption)
                                 .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                            Spacer()
-                            if !isSwapMode {
-                                Menu {
+                                .italic()
+                        } else {
+                            Text(meal.recipe?.name ?? "Choose a meal")
+                                .font(.caption)
+                                .foregroundColor(Colours.foregroundPrimary)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .frame(minHeight: 32, alignment: .top)
+
+                            Divider()
+                                .background(Colours.foregroundPrimary)
+                        }
+                    }
+
+                    HStack {
+                        Text(servingInfo)
+                            .font(.caption2)
+                            .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                        Spacer()
+                        if !isSwapMode {
+                            Menu {
+                                if showAvailability {
+                                    Button(action: {
+                                        showAvailability = false
+                                    }) {
+                                        Label("Meal Pick", systemImage: "pencil")
+                                    }
+                                } else {
                                     Button(action: {
                                         showRecipeBook = true
                                     }) {
@@ -191,17 +271,22 @@ struct RecipePickerCard: View {
                                     Button(action: onSwapRequested) {
                                         Label("Swap", systemImage: "arrow.left.arrow.right")
                                     }
+                                    Button(action: {
+                                        showAvailability = true
+                                    }) {
+                                        Label("Availability", systemImage: "person.2")
+                                    }
                                     if meal.recipe != nil {
                                         Button(role: .destructive, action: onRemoveMeal) {
                                             Label("Remove", systemImage: "trash")
                                         }
                                     }
-                                } label: {
-                                    Image(systemName: "ellipsis")
-                                        .font(.caption)
-                                        .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
-                                        .padding(8)
                                 }
+                            } label: {
+                                Image(systemName: "ellipsis")
+                                    .font(.caption)
+                                    .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
+                                    .padding(8)
                             }
                         }
                     }
@@ -250,5 +335,19 @@ struct RecipePickerCard: View {
                 onCreateRecipe: onCreateRecipe
             )
         }
+    }
+
+    private func binding(for person: Person, isSelected: Bool) -> Binding<Bool> {
+        Binding(
+            get: { isSelected },
+            set: { _ in onTogglePerson(person) }
+        )
+    }
+
+    private var quickMealBinding: Binding<Bool> {
+        Binding(
+            get: { isQuickMeal },
+            set: { onQuickMealToggled($0) }
+        )
     }
 }

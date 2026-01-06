@@ -24,5 +24,6 @@ struct CheckboxToggleStyle: ToggleStyle {
 
             configuration.label
         }
+        .contentShape(Rectangle())
     }
 }

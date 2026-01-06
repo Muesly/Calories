@@ -6,5 +6,5 @@
 import Foundation
 
 struct AppFlags {
-    static let showRecipeShortcut = true
+    static let showRecipeShortcut = false
 }

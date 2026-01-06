@@ -332,10 +332,10 @@ class MealPlanningViewModel: ObservableObject {
         case 2:
             return "2 x servings"
         case 1:
-            if let absentPerson = absentPeople.first {
-                let reason = getReason(for: absentPerson, date: date, mealType: mealType)
-                let reasonText = reason.isEmpty ? "" : " - \(reason)"
-                return "1 x serving (\(absentPerson.rawValue)\(reasonText))"
+            if let presentPerson = Person.allCases.first(where: {
+                isSelected(for: $0, date: date, mealType: mealType)
+            }) {
+                return "1 x serving (\(presentPerson.rawValue))"
             }
             return "1 x serving"
         case 0:
