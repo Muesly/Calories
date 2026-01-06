@@ -75,6 +75,7 @@ struct RecipeBookView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        dismiss()
                         onCreateRecipe()
                     } label: {
                         Image(systemName: "plus")

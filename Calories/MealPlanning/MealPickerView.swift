@@ -117,7 +117,7 @@ struct MealPickerView: View {
                             viewModel.selectRecipe(
                                 recipe, for: meal.person, date: meal.date, mealType: meal.mealType)
                             swapMode = false
-                            dismiss()
+                            showCreateRecipe = false
                         },
                         currentPage: AppFlags.showRecipeShortcut ? .details : .source,
                         extractedRecipeNames: AppFlags.showRecipeShortcut
@@ -332,7 +332,11 @@ struct RecipePickerCard: View {
             RecipeBookView(
                 mealType: mealType,
                 onRecipeSelected: onRecipeSelected,
-                onCreateRecipe: onCreateRecipe
+                onCreateRecipe: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        onCreateRecipe()
+                    }
+                }
             )
         }
     }
