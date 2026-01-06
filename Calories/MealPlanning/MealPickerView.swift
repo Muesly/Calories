@@ -11,7 +11,6 @@ import SwiftUI
 struct MealPickerView: View {
     @Environment(\.modelContext) private var modelContext
     @State var viewModel: MealPlanningViewModel
-    let onSave: () -> Void
     @State private var swapMode = false
     @State private var mealToSwap: MealSelection?
     @Environment(\.dismiss) var dismiss
@@ -89,14 +88,13 @@ struct MealPickerView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
+                    Button(action: { viewModel.goToPreviousWeek() }) {
+                        Image(systemName: "chevron.left")
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        viewModel.saveMealPlan()
-                        dismiss()
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { viewModel.goToNextWeek() }) {
+                        Image(systemName: "chevron.right")
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -104,6 +102,10 @@ struct MealPickerView: View {
                         Button("Cancel Swap") {
                             swapMode = false
                             mealToSwap = nil
+                        }
+                    } else {
+                        Button("Close") {
+                            dismiss()
                         }
                     }
                 }
@@ -294,11 +296,25 @@ struct RecipePickerCard: View {
                 .padding(8)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(minHeight: 140)
-                .background(
-                    isSelectedForSwap
-                        ? Colours.backgroundSecondary
-                        : Colours.backgroundSecondary.opacity(0.5)
-                )
+                .background {
+                    ZStack {
+                        // Base background color
+                        isSelectedForSwap
+                            ? Colours.backgroundSecondary
+                            : Colours.backgroundSecondary.opacity(0.5)
+
+                        // Dish photo overlay
+                        if !showAvailability, let recipe = meal.recipe,
+                            let dishPhotoData = recipe.dishPhotoData,
+                            let uiImage = UIImage(data: dishPhotoData)
+                        {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFill()
+                                .opacity(0.2)
+                        }
+                    }
+                }
                 .cornerRadius(8)
                 .overlay(
                     isSelectedForSwap

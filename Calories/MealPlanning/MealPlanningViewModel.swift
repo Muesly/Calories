@@ -103,15 +103,19 @@ class MealPlanningViewModel: ObservableObject {
     var foodToUseUp: [FoodToUseUp] = []
     var lastError: MealPlanError?
     let mealPickerEngine: MealPickerEngine
-    let weekDates: [Date]
+    var currentWeekStartDate: Date
+    var weekDates: [Date]
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         self.mealPickerEngine = MealPickerEngine(recipes: modelContext.recipeResults())
 
+        let startDate = Self.startOfPlanningWeek()
+        self.currentWeekStartDate = startDate
+
         let calendar = Calendar.current
         self.weekDates = (0..<7).compactMap { offset in
-            calendar.date(byAdding: .day, value: offset, to: Self.startOfPlanningWeek())
+            calendar.date(byAdding: .day, value: offset, to: startDate)
         }
 
         for person in Person.allCases {
@@ -195,6 +199,7 @@ class MealPlanningViewModel: ObservableObject {
             return
         }
         mealSelections[index].isSelected.toggle()
+        saveMealPlan()
     }
 
     func isSelected(for person: Person, date: Date, mealType: MealType) -> Bool {
@@ -210,6 +215,7 @@ class MealPlanningViewModel: ObservableObject {
         } else {
             mealReasons[key] = reason
         }
+        saveMealPlan()
     }
 
     func getReason(for person: Person, date: Date, mealType: MealType) -> String {
@@ -222,6 +228,7 @@ class MealPlanningViewModel: ObservableObject {
     func setQuickMeal(_ isQuick: Bool, for date: Date, mealType: MealType) {
         let key = Self.mealKey(date: date, mealType: mealType)
         quickMeals[key] = isQuick
+        saveMealPlan()
     }
 
     func isQuickMeal(for date: Date, mealType: MealType) -> Bool {
@@ -233,20 +240,24 @@ class MealPlanningViewModel: ObservableObject {
 
     func addFoodItem() {
         foodToUseUp.append(FoodToUseUp())
+        saveMealPlan()
     }
 
     func removeFoodItem(at index: Int) {
         guard index >= 0 && index < foodToUseUp.count else { return }
         foodToUseUp.remove(at: index)
+        saveMealPlan()
     }
 
     func removeFoodItem(withId id: UUID) {
         foodToUseUp.removeAll { $0.id == id }
+        saveMealPlan()
     }
 
     func updateFoodItem(_ item: FoodToUseUp) {
         if let index = foodToUseUp.firstIndex(where: { $0.id == item.id }) {
             foodToUseUp[index] = item
+            saveMealPlan()
         }
     }
 
@@ -259,6 +270,7 @@ class MealPlanningViewModel: ObservableObject {
             return
         }
         mealSelections[index].recipe = recipe
+        saveMealPlan()
     }
 
     func clearMeal(for person: Person, date: Date, mealType: MealType) {
@@ -266,10 +278,12 @@ class MealPlanningViewModel: ObservableObject {
             return
         }
         mealSelections[index].recipe = nil
+        saveMealPlan()
     }
 
     func populateEmptyMeals() {
         populateMealRecipes(onlyEmpty: true)
+        saveMealPlan()
     }
 
     /// Populates meal recipes using the picker engine
@@ -311,6 +325,7 @@ class MealPlanningViewModel: ObservableObject {
         let tempRecipe = mealSelections[idx1].recipe
         mealSelections[idx1].recipe = mealSelections[idx2].recipe
         mealSelections[idx2].recipe = tempRecipe
+        saveMealPlan()
     }
 
     // MARK: - Serving Info
@@ -385,6 +400,30 @@ class MealPlanningViewModel: ObservableObject {
         } else {
             // Return next Monday
             return calendar.date(byAdding: .weekOfYear, value: 1, to: thisMonday)!
+        }
+    }
+
+    // MARK: - Week Navigation
+
+    func goToPreviousWeek() {
+        let calendar = Calendar.current
+        if let newDate = calendar.date(byAdding: .weekOfYear, value: -1, to: currentWeekStartDate) {
+            currentWeekStartDate = newDate
+            weekDates = (0..<7).compactMap { offset in
+                calendar.date(byAdding: .day, value: offset, to: newDate)
+            }
+            loadMealPlan()
+        }
+    }
+
+    func goToNextWeek() {
+        let calendar = Calendar.current
+        if let newDate = calendar.date(byAdding: .weekOfYear, value: 1, to: currentWeekStartDate) {
+            currentWeekStartDate = newDate
+            weekDates = (0..<7).compactMap { offset in
+                calendar.date(byAdding: .day, value: offset, to: newDate)
+            }
+            loadMealPlan()
         }
     }
 

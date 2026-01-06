@@ -22,8 +22,7 @@ struct MealPlanningView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                MealPickerView(
-                    viewModel: viewModel, onSave: saveMealPlan)
+                MealPickerView(viewModel: viewModel)
             }
 
             Button(action: {
@@ -38,20 +37,6 @@ struct MealPlanningView: View {
             .buttonStyle(.borderedProminent)
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
-        }
-        .navigationTitle("Meal Planning")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Cancel") {
-                    dismiss()
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Save") {
-                    saveMealPlan()
-                    dismiss()
-                }
-            }
         }
         .font(.brand)
         .onAppear {
@@ -75,9 +60,6 @@ struct MealPlanningView: View {
         }
     }
 
-    private func saveMealPlan() {
-        viewModel.saveMealPlan()
-    }
 }
 
 #Preview {
