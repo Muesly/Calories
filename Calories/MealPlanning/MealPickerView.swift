@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct MealPickerView: View {
-    let modelContext: ModelContext
+    @Environment(\.modelContext) private var modelContext
     @State var viewModel: MealPlanningViewModel
     let onSave: () -> Void
     @State private var swapMode = false
@@ -90,7 +90,6 @@ struct MealPickerView: View {
                 if let meal = mealForCreatedRecipe {
                     CreateRecipeSheet(
                         isPresented: $showCreateRecipe,
-                        modelContext: modelContext,
                         mealType: meal.mealType,
                         onRecipeCreated: { recipe in
                             viewModel.selectRecipe(

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct RecipeDetailsView: View {
     @Binding var isPresented: Bool
-    let modelContext: ModelContext
+    @Environment(\.modelContext) private var modelContext
     let mealType: MealType
     let extractedRecipeNames: [String]
     let onRecipeCreated: (RecipeEntry) -> Void
@@ -548,7 +548,6 @@ struct SuitabilitySection: View {
     VStack {
         RecipeDetailsView(
             isPresented: .constant(true),
-            modelContext: modelContext,
             mealType: .breakfast,
             extractedRecipeNames: ["Muffins", "asdf"],
             onRecipeCreated: { _ in

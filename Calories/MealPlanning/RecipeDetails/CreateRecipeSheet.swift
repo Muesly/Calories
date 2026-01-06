@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CreateRecipeSheet: View {
     @Binding var isPresented: Bool
-    let modelContext: ModelContext
+    @Environment(\.modelContext) private var modelContext
     let mealType: MealType
     let onRecipeCreated: (RecipeEntry) -> Void
     @State var currentPage: AddRecipePage
@@ -33,7 +33,6 @@ struct CreateRecipeSheet: View {
             case .details:
                 RecipeDetailsView(
                     isPresented: $isPresented,
-                    modelContext: modelContext,
                     mealType: mealType,
                     extractedRecipeNames: extractedRecipeNames,
                     onRecipeCreated: onRecipeCreated,
