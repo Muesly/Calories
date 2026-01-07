@@ -68,6 +68,7 @@ struct StoredFoodToUseUp: Codable {
     var mealSelectionsData: Data?
     var mealReasonsData: Data?
     var quickMealsData: Data?
+    var pinnedMealsData: Data?
     var foodToUseUpData: Data?
 
     public init(weekStartDate: Date) {
@@ -146,6 +147,33 @@ struct StoredFoodToUseUp: Codable {
                 return (keyString, isQuick)
             })
         quickMealsData = try? JSONEncoder().encode(storedMeals)
+    }
+
+    // MARK: - Pinned Meals
+
+    func getPinnedMeals() -> [MealKey: Bool] {
+        guard let data = pinnedMealsData else { return [:] }
+        guard let storedMeals = (try? JSONDecoder().decode([String: Bool].self, from: data)) else {
+            return [:]
+        }
+
+        var result: [MealKey: Bool] = [:]
+        for (key, isPinned) in storedMeals {
+            if let parsedKey = parseMealKeyFromString(key) {
+                result[parsedKey] = isPinned
+            }
+        }
+        return result
+    }
+
+    func setPinnedMeals(_ pinnedMeals: [MealKey: Bool]) {
+        let storedMeals = Dictionary(
+            uniqueKeysWithValues: pinnedMeals.map { key, isPinned in
+                let keyString =
+                    "\(key.date.formatted(date: .abbreviated, time: .omitted))-\(key.mealType.rawValue)"
+                return (keyString, isPinned)
+            })
+        pinnedMealsData = try? JSONEncoder().encode(storedMeals)
     }
 
     // MARK: - Key Parsing Helpers

@@ -62,6 +62,8 @@ struct MealPickerView: View {
                                         personReasons: personReasons(for: date, mealType: mealType),
                                         isQuickMeal: viewModel.isQuickMeal(
                                             for: date, mealType: mealType),
+                                        isPinned: viewModel.isPinnedMeal(
+                                            for: date, mealType: mealType),
                                         onTogglePerson: { person in
                                             viewModel.toggleMealSelection(
                                                 for: person, date: date, mealType: mealType)
@@ -73,6 +75,10 @@ struct MealPickerView: View {
                                         onQuickMealToggled: { isQuick in
                                             viewModel.setQuickMeal(
                                                 isQuick, for: date, mealType: mealType)
+                                        },
+                                        onPinnedToggled: { isPinned in
+                                            viewModel.setPinnedMeal(
+                                                isPinned, for: date, mealType: mealType)
                                         }
                                     )
                                 }
@@ -168,9 +174,11 @@ struct RecipePickerCard: View {
     let personSelections: [Person: Bool]
     let personReasons: [Person: String]
     let isQuickMeal: Bool
+    let isPinned: Bool
     let onTogglePerson: (Person) -> Void
     let onReasonChanged: (Person, String) -> Void
     let onQuickMealToggled: (Bool) -> Void
+    let onPinnedToggled: (Bool) -> Void
 
     @State private var showMealChoice = false
     @State private var showRecipeBook = false
@@ -279,6 +287,13 @@ struct RecipePickerCard: View {
                                         Label("Availability", systemImage: "person.2")
                                     }
                                     if meal.recipe != nil {
+                                        Button(action: {
+                                            onPinnedToggled(!isPinned)
+                                        }) {
+                                            Label(
+                                                isPinned ? "Unpin" : "Pin",
+                                                systemImage: isPinned ? "pin.slash" : "pin")
+                                        }
                                         Button(role: .destructive, action: onRemoveMeal) {
                                             Label("Remove", systemImage: "trash")
                                         }
@@ -322,6 +337,20 @@ struct RecipePickerCard: View {
                             .stroke(Colours.foregroundPrimary, lineWidth: 2)
                         : nil
                 )
+
+                // Pin indicator
+                if isPinned && meal.recipe != nil {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Image(systemName: "pin.fill")
+                                .font(.caption)
+                                .foregroundColor(Colours.foregroundPrimary)
+                                .padding(8)
+                        }
+                        Spacer()
+                    }
+                }
             }
         }
         .sheet(isPresented: $showRecipeDetails) {

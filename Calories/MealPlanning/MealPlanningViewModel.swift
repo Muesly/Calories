@@ -43,7 +43,7 @@ struct PersonMealKey: Hashable {
 }
 
 /// Type-safe key for meal-level data (shared across people)
-struct MealKey: Hashable {
+struct MealKey: Hashable, Comparable {
     let date: Date
     let mealType: MealType
 
@@ -52,6 +52,13 @@ struct MealKey: Hashable {
             date: Calendar.current.startOfDay(for: date),
             mealType: mealType
         )
+    }
+
+    static func < (lhs: MealKey, rhs: MealKey) -> Bool {
+        if lhs.date != rhs.date {
+            return lhs.date < rhs.date
+        }
+        return lhs.mealType.sortOrder < rhs.mealType.sortOrder
     }
 }
 
@@ -100,6 +107,7 @@ class MealPlanningViewModel: ObservableObject {
     var mealSelections: [MealSelection] = []
     var mealReasons: [PersonMealKey: String] = [:]
     var quickMeals: [MealKey: Bool] = [:]
+    var pinnedMeals: [MealKey: Bool] = [:]
     var foodToUseUp: [FoodToUseUp] = []
     var lastError: MealPlanError?
     let mealPickerEngine: MealPickerEngine
@@ -236,6 +244,19 @@ class MealPlanningViewModel: ObservableObject {
         return quickMeals[key] ?? false
     }
 
+    // MARK: - Pinned Meals
+
+    func setPinnedMeal(_ isPinned: Bool, for date: Date, mealType: MealType) {
+        let key = Self.mealKey(date: date, mealType: mealType)
+        pinnedMeals[key] = isPinned
+        saveMealPlan()
+    }
+
+    func isPinnedMeal(for date: Date, mealType: MealType) -> Bool {
+        let key = Self.mealKey(date: date, mealType: mealType)
+        return pinnedMeals[key] ?? false
+    }
+
     // MARK: - Food To Use Up
 
     func addFoodItem() {
@@ -282,7 +303,7 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func populateEmptyMeals() {
-        populateMealRecipes(onlyEmpty: true)
+        populateMealRecipes(onlyEmpty: false)
         saveMealPlan()
     }
 
@@ -292,27 +313,76 @@ class MealPlanningViewModel: ObservableObject {
         // Build a cache of recipes per date+mealType to ensure consistency
         var recipeCache: [MealKey: RecipeEntry?] = [:]
 
-        for index in mealSelections.indices {
-            let selection = mealSelections[index]
+        // Track used recipes for variety consideration
+        var usedRecipes: [(date: Date, mealType: MealType, recipe: RecipeEntry)] = []
 
-            // Skip if only populating empty meals and this one has a recipe
-            if onlyEmpty && selection.recipe != nil {
+        // Get unique meal keys sorted by date and meal type for chronological processing
+        let uniqueMealKeys = Array(
+            Set(
+                mealSelections.map {
+                    Self.mealKey(date: $0.date, mealType: $0.mealType)
+                })
+        ).sorted()
+
+        // Process each unique meal in chronological order
+        for key in uniqueMealKeys {
+            // Find a selection for this meal key
+            guard
+                let selection = mealSelections.first(where: {
+                    Self.mealKey(date: $0.date, mealType: $0.mealType) == key
+                })
+            else {
                 continue
             }
 
-            let key = Self.mealKey(date: selection.date, mealType: selection.mealType)
-
-            // Only pick a recipe if at least one person is attending
-            if recipeCache[key] == nil {
-                let count = attendeeCount(for: selection.date, mealType: selection.mealType)
-                if count > 0 {
-                    recipeCache[key] = mealPickerEngine.pickRecipe(mealType: selection.mealType)
-                } else {
-                    recipeCache[key] = .some(nil)  // Mark as processed but no recipe
+            // Skip if meal is pinned
+            if isPinnedMeal(for: selection.date, mealType: selection.mealType) {
+                // Keep existing recipe in used recipes if it exists
+                if let existingRecipe = selection.recipe {
+                    usedRecipes.append(
+                        (date: selection.date, mealType: selection.mealType, recipe: existingRecipe)
+                    )
                 }
+                continue
             }
 
-            mealSelections[index].recipe = recipeCache[key] ?? nil
+            // Skip if only populating empty meals and this one has a recipe
+            if onlyEmpty && selection.recipe != nil {
+                // Keep existing recipe in used recipes
+                if let existingRecipe = selection.recipe {
+                    usedRecipes.append(
+                        (date: selection.date, mealType: selection.mealType, recipe: existingRecipe)
+                    )
+                }
+                continue
+            }
+
+            // Only pick a recipe if at least one person is attending
+            let count = attendeeCount(for: selection.date, mealType: selection.mealType)
+            if count > 0 {
+                if let recipe = mealPickerEngine.pickRecipe(
+                    mealType: selection.mealType,
+                    forDate: selection.date,
+                    usedRecipes: usedRecipes
+                ) {
+                    recipeCache[key] = recipe
+                    usedRecipes.append(
+                        (date: selection.date, mealType: selection.mealType, recipe: recipe))
+                } else {
+                    recipeCache[key] = .some(nil)
+                }
+            } else {
+                recipeCache[key] = .some(nil)  // Mark as processed but no recipe
+            }
+        }
+
+        // Apply the cached recipes to all matching selections
+        for index in mealSelections.indices {
+            let selection = mealSelections[index]
+            let key = Self.mealKey(date: selection.date, mealType: selection.mealType)
+            if let cachedRecipe = recipeCache[key] {
+                mealSelections[index].recipe = cachedRecipe
+            }
         }
     }
 
@@ -472,6 +542,9 @@ class MealPlanningViewModel: ObservableObject {
         // Load quick meals
         quickMeals = entry.getQuickMeals()
 
+        // Load pinned meals
+        pinnedMeals = entry.getPinnedMeals()
+
         // Load food to use up
         foodToUseUp = entry.getFoodToUseUp()
 
@@ -491,6 +564,9 @@ class MealPlanningViewModel: ObservableObject {
 
             // Save quick meals
             entry.setQuickMeals(quickMeals)
+
+            // Save pinned meals
+            entry.setPinnedMeals(pinnedMeals)
 
             // Save food to use up
             entry.setFoodToUseUp(foodToUseUp)

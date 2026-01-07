@@ -84,6 +84,17 @@ enum MealType: String, CaseIterable, Equatable, Identifiable {
     var shortened: String {
         String(id.prefix(1))
     }
+
+    var sortOrder: Int {
+        switch self {
+        case .breakfast: return 0
+        case .morningSnack: return 1
+        case .lunch: return 2
+        case .afternoonSnack: return 3
+        case .dinner: return 4
+        case .eveningSnack: return 5
+        }
+    }
 }
 
 @Observable
