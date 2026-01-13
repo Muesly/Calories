@@ -10,4 +10,9 @@ public struct DayMeal: Hashable {
         }
         return lhs.mealType.sortOrder < rhs.mealType.sortOrder
     }
+
+    var keyString: String {
+        let dateString = date.formatted(date: .abbreviated, time: .omitted)
+        return "\(dateString)-\(mealType.rawValue)"
+    }
 }

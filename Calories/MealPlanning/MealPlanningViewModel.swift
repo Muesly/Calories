@@ -30,15 +30,19 @@ enum Person: String, CaseIterable {
 /// Type-safe key for person-specific meal data
 struct PersonMealKey: Hashable {
     let person: Person
-    let date: Date
-    let mealType: MealType
+    let dayMeal: DayMeal
 
     func normalize() -> PersonMealKey {
         PersonMealKey(
             person: person,
-            date: Calendar.current.startOfDay(for: date),
-            mealType: mealType
+            dayMeal: DayMeal(
+                mealType: self.dayMeal.mealType,
+                date: Calendar.current.startOfDay(for: self.dayMeal.date))
         )
+    }
+
+    var keyString: String {
+        "\(person.rawValue)-\(dayMeal.keyString)"
     }
 }
 
@@ -66,8 +70,7 @@ struct MealSelection {
     var recipe: RecipeEntry?
 
     var id: String {
-        let dateString = dayMeal.date.formatted(date: .abbreviated, time: .omitted)
-        return "\(person.rawValue)-\(dateString)-\(dayMeal.mealType.rawValue)"
+        "\(person.rawValue)-\(dayMeal.keyString)"
     }
 }
 
@@ -215,7 +218,7 @@ class MealPlanningViewModel: ObservableObject {
     // MARK: - Meal Reasons
 
     func setReason(_ reason: String, for person: Person, dayMeal: DayMeal) {
-        let key = PersonMealKey(person: person, date: dayMeal.date, mealType: dayMeal.mealType)
+        let key = PersonMealKey(person: person, dayMeal: dayMeal)
             .normalize()
         if reason.isEmpty {
             mealReasons.removeValue(forKey: key)
@@ -226,7 +229,7 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func getReason(for person: Person, dayMeal: DayMeal) -> String {
-        let key = PersonMealKey(person: person, date: dayMeal.date, mealType: dayMeal.mealType)
+        let key = PersonMealKey(person: person, dayMeal: dayMeal)
             .normalize()
         return mealReasons[key] ?? ""
     }

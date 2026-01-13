@@ -114,9 +114,8 @@ struct StoredFoodToUseUp: Codable {
     func setMealReasons(_ reasons: [PersonMealKey: String]) {
         let storedReasons = Dictionary(
             uniqueKeysWithValues: reasons.map { key, reason in
-                let keyString =
-                    "\(key.person.rawValue)-\(key.date.formatted(date: .abbreviated, time: .omitted))-\(key.mealType.rawValue)"
-                return (keyString, reason)
+                let personMealKey = PersonMealKey(person: key.person, dayMeal: key.dayMeal)
+                return (personMealKey.keyString, reason)
             })
         mealReasonsData = try? JSONEncoder().encode(storedReasons)
     }
@@ -141,9 +140,7 @@ struct StoredFoodToUseUp: Codable {
     func setQuickMeals(_ quickMeals: [MealKey: Bool]) {
         let storedMeals = Dictionary(
             uniqueKeysWithValues: quickMeals.map { key, isQuick in
-                let keyString =
-                    "\(key.dayMeal.date.formatted(date: .abbreviated, time: .omitted))-\(key.dayMeal.mealType.rawValue)"
-                return (keyString, isQuick)
+                (key.dayMeal.keyString, isQuick)
             })
         quickMealsData = try? JSONEncoder().encode(storedMeals)
     }
@@ -168,9 +165,7 @@ struct StoredFoodToUseUp: Codable {
     func setPinnedMeals(_ pinnedMeals: [MealKey: Bool]) {
         let storedMeals = Dictionary(
             uniqueKeysWithValues: pinnedMeals.map { key, isPinned in
-                let keyString =
-                    "\(key.dayMeal.date.formatted(date: .abbreviated, time: .omitted))-\(key.dayMeal.mealType.rawValue)"
-                return (keyString, isPinned)
+                return (key.dayMeal.keyString, isPinned)
             })
         pinnedMealsData = try? JSONEncoder().encode(storedMeals)
     }
@@ -193,7 +188,8 @@ struct StoredFoodToUseUp: Codable {
         }
 
         // For legacy format, assume date string in middle - we'll use today for simplicity
-        return PersonMealKey(person: person, date: Date(), mealType: mealType).normalize()
+        return PersonMealKey(person: person, dayMeal: DayMeal(mealType: mealType, date: Date()))
+            .normalize()
     }
 
     private func parseMealKeyFromString(_ keyString: String) -> MealKey? {
