@@ -10,7 +10,7 @@ import SwiftUI
 struct DayMealSelectionView<Card: View>: View {
     let date: Date
     private let mealList: [MealType] = [.breakfast, .lunch, .dinner]
-    @ViewBuilder let card: (MealType, Date) -> Card
+    @ViewBuilder let card: (DayMeal) -> Card
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -21,7 +21,12 @@ struct DayMealSelectionView<Card: View>: View {
 
             HStack(alignment: .top, spacing: 8) {
                 ForEach(mealList, id: \.self) { mealType in
-                    card(mealType, date)
+                    card(
+                        DayMeal(
+                            mealType: mealType,
+                            date: date
+                        )
+                    )
                 }
             }
         }

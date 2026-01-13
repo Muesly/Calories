@@ -12,7 +12,7 @@ struct MealPickerView: View {
     @Environment(\.modelContext) private var modelContext
     @State var viewModel: MealPlanningViewModel
     @State private var swapMode = false
-    @State private var mealToSwap: MealSelection?
+    @State private var dayMealToSwap: DayMeal?
     @Environment(\.dismiss) var dismiss
     @State var showCreateRecipe = false
     @State var mealForCreatedRecipe: MealSelection?
@@ -23,65 +23,65 @@ struct MealPickerView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         ForEach(viewModel.weekDates, id: \.self) { date in
-                            DayMealSelectionView(date: date) { mealType, date in
-                                if let meal = viewModel.meal(forDate: date, mealType: mealType) {
-                                    RecipePickerCard(
-                                        mealType: mealType,
-                                        meal: meal,
-                                        servingInfo: viewModel.servingInfo(
-                                            for: date, mealType: mealType),
-                                        isSwapMode: swapMode,
-                                        isSelectedForSwap: mealToSwap?.id == meal.id,
-                                        onRecipeSelected: { recipe in
+                            DayMealSelectionView(date: date) { dayMeal in
+                                let meals = viewModel.meals(forDayMeal: dayMeal)
+                                RecipePickerCard(
+                                    dayMeal: dayMeal,
+                                    meals: meals,
+                                    servingInfo: viewModel.servingInfo(forDayMeal: dayMeal),
+                                    isSwapMode: swapMode,
+                                    isSelectedForSwap: dayMealToSwap == dayMeal,
+                                    onRecipeSelected: { recipe in
+                                        if let meal = meals.first {
                                             let person = meal.person
                                             viewModel.selectRecipe(
-                                                recipe, for: person, date: date, mealType: mealType)
+                                                recipe, for: person, dayMeal: dayMeal)
                                             swapMode = false
-                                        },
-                                        onCreateRecipe: {
-                                            showCreateRecipe = true
-                                            mealForCreatedRecipe = meal
-                                        },
-                                        onSwapRequested: {
-                                            if swapMode && mealToSwap != nil {
-                                                viewModel.swapMeals(mealToSwap!, with: meal)
-                                                swapMode = false
-                                                mealToSwap = nil
-                                            } else {
-                                                swapMode = true
-                                                mealToSwap = meal
-                                            }
-                                        },
-                                        onRemoveMeal: {
-                                            let person = meal.person
-                                            viewModel.clearMeal(
-                                                for: person, date: date, mealType: mealType)
-                                        },
-                                        personSelections: personSelections(
-                                            for: date, mealType: mealType),
-                                        personReasons: personReasons(for: date, mealType: mealType),
-                                        isQuickMeal: viewModel.isQuickMeal(
-                                            for: date, mealType: mealType),
-                                        isPinned: viewModel.isPinnedMeal(
-                                            for: date, mealType: mealType),
-                                        onTogglePerson: { person in
-                                            viewModel.toggleMealSelection(
-                                                for: person, date: date, mealType: mealType)
-                                        },
-                                        onReasonChanged: { person, reason in
-                                            viewModel.setReason(
-                                                reason, for: person, date: date, mealType: mealType)
-                                        },
-                                        onQuickMealToggled: { isQuick in
-                                            viewModel.setQuickMeal(
-                                                isQuick, for: date, mealType: mealType)
-                                        },
-                                        onPinnedToggled: { isPinned in
-                                            viewModel.setPinnedMeal(
-                                                isPinned, for: date, mealType: mealType)
                                         }
-                                    )
-                                }
+                                    },
+                                    onCreateRecipe: {
+                                        showCreateRecipe = true
+                                        if let meal = meals.first {
+                                            mealForCreatedRecipe = meal
+                                        }
+                                    },
+                                    onSwapRequested: {
+                                        if swapMode && dayMealToSwap != nil {
+                                            viewModel.swapMeals(dayMealToSwap!, with: dayMeal)
+                                            swapMode = false
+                                            dayMealToSwap = nil
+                                        } else {
+                                            swapMode = true
+                                            dayMealToSwap = dayMeal
+                                        }
+                                    },
+                                    onRemoveMeal: {
+                                        if let meal = meals.first {
+                                            let person = meal.person
+                                            viewModel.clearMeal(for: person, dayMeal: dayMeal)
+                                        }
+                                    },
+                                    personSelections: personSelections(dayMeal: dayMeal),
+                                    personReasons: personReasons(dayMeal: dayMeal),
+                                    isQuickMeal: viewModel.isQuickMeal(forDayMeal: dayMeal),
+                                    isPinned: viewModel.isPinnedMeal(forDayMeal: dayMeal),
+                                    onTogglePerson: { person in
+                                        viewModel.toggleMealSelection(
+                                            for: person, dayMeal: dayMeal)
+                                    },
+                                    onReasonChanged: { person, reason in
+                                        viewModel.setReason(
+                                            reason, for: person, dayMeal: dayMeal)
+                                    },
+                                    onQuickMealToggled: { isQuick in
+                                        viewModel.setQuickMeal(
+                                            isQuick, dayMeal: dayMeal)
+                                    },
+                                    onPinnedToggled: { isPinned in
+                                        viewModel.setPinnedMeal(
+                                            isPinned, dayMeal: dayMeal)
+                                    }
+                                )
                             }
                         }
                     }
@@ -107,7 +107,7 @@ struct MealPickerView: View {
                     if swapMode {
                         Button("Cancel Swap") {
                             swapMode = false
-                            mealToSwap = nil
+                            dayMealToSwap = nil
                         }
                     } else {
                         Button("Close") {
@@ -120,10 +120,10 @@ struct MealPickerView: View {
                 if let meal = mealForCreatedRecipe {
                     CreateRecipeSheet(
                         isPresented: $showCreateRecipe,
-                        mealType: meal.mealType,
+                        mealType: meal.dayMeal.mealType,
                         onRecipeCreated: { recipe in
                             viewModel.selectRecipe(
-                                recipe, for: meal.person, date: meal.date, mealType: meal.mealType)
+                                recipe, for: meal.person, dayMeal: meal.dayMeal)
                             swapMode = false
                             showCreateRecipe = false
                         },
@@ -137,33 +137,34 @@ struct MealPickerView: View {
             .task {
                 if AppFlags.showRecipeShortcut {
                     showCreateRecipe = true
-                    mealForCreatedRecipe = viewModel.meal(
-                        forDate: viewModel.weekDates.first!, mealType: .breakfast)
+                    mealForCreatedRecipe = viewModel.meals(
+                        forDayMeal: .init(mealType: .breakfast, date: viewModel.weekDates.first!)
+                    ).first!
                 }
             }
         }
     }
 
-    private func personSelections(for date: Date, mealType: MealType) -> [Person: Bool] {
+    private func personSelections(dayMeal: DayMeal) -> [Person: Bool] {
         var selections: [Person: Bool] = [:]
         for person in Person.allCases {
-            selections[person] = viewModel.isSelected(for: person, date: date, mealType: mealType)
+            selections[person] = viewModel.isSelected(for: person, dayMeal: dayMeal)
         }
         return selections
     }
 
-    private func personReasons(for date: Date, mealType: MealType) -> [Person: String] {
+    private func personReasons(dayMeal: DayMeal) -> [Person: String] {
         var reasons: [Person: String] = [:]
         for person in Person.allCases {
-            reasons[person] = viewModel.getReason(for: person, date: date, mealType: mealType)
+            reasons[person] = viewModel.getReason(for: person, dayMeal: dayMeal)
         }
         return reasons
     }
 }
 
 struct RecipePickerCard: View {
-    let mealType: MealType
-    let meal: MealSelection
+    let dayMeal: DayMeal
+    let meals: [MealSelection]
     let servingInfo: String
     let isSwapMode: Bool
     let isSelectedForSwap: Bool
@@ -180,6 +181,14 @@ struct RecipePickerCard: View {
     let onQuickMealToggled: (Bool) -> Void
     let onPinnedToggled: (Bool) -> Void
 
+    //    private var meal: MealSelection {
+    //        meals.first!
+    //    }
+
+    private var mealType: MealType {
+        dayMeal.mealType
+    }
+
     @State private var showMealChoice = false
     @State private var showRecipeBook = false
     @State private var showRecipeDetails = false
@@ -189,12 +198,20 @@ struct RecipePickerCard: View {
         servingInfo.hasPrefix("No meal required")
     }
 
+    private var mealsHaveARecipe: Bool {
+        meals.count { $0.recipe != nil } > 0
+    }
+
+    private var firstRecipe: RecipeEntry? {
+        meals.first(where: { $0.recipe != nil })?.recipe
+    }
+
     var body: some View {
         Button(action: {
             // In swap mode, clicking the card triggers swap
             if isSwapMode {
                 onSwapRequested()
-            } else if meal.recipe != nil {
+            } else if mealsHaveARecipe {
                 showRecipeDetails = true
             } else if !isNoMealRequired {
                 showMealChoice = true
@@ -246,13 +263,38 @@ struct RecipePickerCard: View {
                                 .foregroundColor(Colours.foregroundPrimary.opacity(0.7))
                                 .italic()
                         } else {
-                            Text(meal.recipe?.name ?? "Choose a meal")
-                                .font(.caption)
-                                .foregroundColor(Colours.foregroundPrimary)
-                                .lineLimit(2)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            let selectedPeople = Person.allCases.filter {
+                                personSelections[$0] ?? true
+                            }
+                            let recipesAreDifferent = areRecipesDifferent(selectedPeople)
+
+                            if recipesAreDifferent {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    ForEach(selectedPeople, id: \.self) { person in
+                                        //                                        guard let meal = meals.first(where: { $0.person == person }) else {
+                                        //                                            continue
+                                        //                                        }
+                                        //                                        let recipeName = firstRecipe?.name ?? "Choose a meal"
+                                        //                                        let displayText = "\(recipeName) (\(person.rawValue))"
+                                        //                                        Text(displayText)
+                                        //                                            .font(.caption)
+                                        //                                            .foregroundColor(Colours.foregroundPrimary)
+                                        //                                            .lineLimit(3)
+                                        //                                            .multilineTextAlignment(.leading)
+                                        //                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                }
                                 .frame(minHeight: 32, alignment: .top)
+                            } else {
+                                let recipeName = firstRecipe?.name ?? "Choose a meal"
+                                Text(recipeName)
+                                    .font(.caption)
+                                    .foregroundColor(Colours.foregroundPrimary)
+                                    .lineLimit(3)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(minHeight: 32, alignment: .top)
+                            }
 
                             Divider()
                                 .background(Colours.foregroundPrimary)
@@ -286,7 +328,7 @@ struct RecipePickerCard: View {
                                     }) {
                                         Label("Availability", systemImage: "person.2")
                                     }
-                                    if meal.recipe != nil {
+                                    if mealsHaveARecipe {
                                         Button(action: {
                                             onPinnedToggled(!isPinned)
                                         }) {
@@ -319,7 +361,8 @@ struct RecipePickerCard: View {
                             : Colours.backgroundSecondary.opacity(0.5)
 
                         // Dish photo overlay
-                        if !showAvailability, let recipe = meal.recipe,
+                        if !showAvailability,
+                            let recipe = firstRecipe,
                             let dishPhotoData = recipe.dishPhotoData,
                             let uiImage = UIImage(data: dishPhotoData)
                         {
@@ -339,7 +382,7 @@ struct RecipePickerCard: View {
                 )
 
                 // Pin indicator
-                if isPinned && meal.recipe != nil {
+                if isPinned && mealsHaveARecipe {
                     VStack {
                         HStack {
                             Spacer()
@@ -354,12 +397,12 @@ struct RecipePickerCard: View {
             }
         }
         .sheet(isPresented: $showRecipeDetails) {
-            if let recipe = meal.recipe {
+            if let recipe = firstRecipe {
                 RecipeDetailsDisplayView(recipe: recipe)
             }
         }
         .sheet(isPresented: $showMealChoice) {
-            if let recipe = meal.recipe {
+            if let recipe = firstRecipe {
                 MealChoiceView(
                     recipe: recipe,
                     mealType: mealType,
@@ -398,5 +441,16 @@ struct RecipePickerCard: View {
             get: { isQuickMeal },
             set: { onQuickMealToggled($0) }
         )
+    }
+
+    private func areRecipesDifferent(_ selectedPeople: [Person]) -> Bool {
+        guard selectedPeople.count > 1 else { return false }
+
+        let selectedMeals = meals.filter { selectedPeople.contains($0.person) }
+        let recipeNames = selectedMeals.map { $0.recipe?.name ?? "Choose a meal" }
+        let normalizedNames = Set(recipeNames)
+
+        // Check if there's more than one distinct recipe (excluding multiple "Choose a meal" entries)
+        return normalizedNames.count > 1
     }
 }

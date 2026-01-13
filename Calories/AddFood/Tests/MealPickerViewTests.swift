@@ -5,6 +5,7 @@
 //  Created by Tony Short on 13/01/2024.
 //
 
+import Foundation
 import Testing
 
 @testable import Calories

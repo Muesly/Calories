@@ -66,8 +66,9 @@ struct MealPlanningViewModelTests {
     func servingInfoWhenBothPresent() {
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
         #expect(info == "2 x servings")
     }
@@ -77,13 +78,14 @@ struct MealPlanningViewModelTests {
         var subject = self.subject
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.setReason("Working late", for: .tony, date: date, mealType: mealType)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.setReason("Working late", for: .tony, dayMeal: dayMeal)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
-        #expect(info == "1 x serving (Tony - Working late)")
+        #expect(info == "1 x serving (Karen)")
     }
 
     @Test("Serving info when one absent without reason")
@@ -91,12 +93,13 @@ struct MealPlanningViewModelTests {
         var subject = self.subject
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
-        #expect(info == "1 x serving (Tony)")
+        #expect(info == "1 x serving (Karen)")
     }
 
     @Test("Serving info when both absent with same reason")
@@ -104,13 +107,14 @@ struct MealPlanningViewModelTests {
         var subject = self.subject
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.toggleMealSelection(for: .karen, date: date, mealType: mealType)
-        subject.setReason("Out of town", for: .tony, date: date, mealType: mealType)
-        subject.setReason("Out of town", for: .karen, date: date, mealType: mealType)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
+        subject.setReason("Out of town", for: .tony, dayMeal: dayMeal)
+        subject.setReason("Out of town", for: .karen, dayMeal: dayMeal)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
         #expect(info == "No meal required - Out of town")
     }
@@ -120,13 +124,14 @@ struct MealPlanningViewModelTests {
         var subject = self.subject
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.toggleMealSelection(for: .karen, date: date, mealType: mealType)
-        subject.setReason("Working late", for: .tony, date: date, mealType: mealType)
-        subject.setReason("Doctor appointment", for: .karen, date: date, mealType: mealType)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
+        subject.setReason("Working late", for: .tony, dayMeal: dayMeal)
+        subject.setReason("Doctor appointment", for: .karen, dayMeal: dayMeal)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
         #expect(info == "No meal required - Tony: Working late, Karen: Doctor appointment")
     }
@@ -136,11 +141,12 @@ struct MealPlanningViewModelTests {
         var subject = self.subject
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.toggleMealSelection(for: .karen, date: date, mealType: mealType)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
         #expect(info == "No meal required")
     }
@@ -150,12 +156,13 @@ struct MealPlanningViewModelTests {
         var subject = self.subject
         let date = Date()
         let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: mealType, date: date)
 
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.toggleMealSelection(for: .karen, date: date, mealType: mealType)
-        subject.setReason("Traveling", for: .tony, date: date, mealType: mealType)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
+        subject.setReason("Traveling", for: .tony, dayMeal: dayMeal)
 
-        let info = subject.servingInfo(for: date, mealType: mealType)
+        let info = subject.servingInfo(forDayMeal: dayMeal)
 
         #expect(info == "No meal required - Traveling")
     }
@@ -172,9 +179,9 @@ struct MealPlanningViewModelTests {
 
         let date = subject.weekDates[0]
         let mealType = MealType.breakfast
-        let meal = subject.meal(forDate: date, mealType: mealType)
+        let meals = subject.meals(forDate: date, mealType: mealType)
 
-        #expect(meal?.recipe != nil)
+        #expect(meals.first?.recipe != nil)
     }
 
     @Test("Fetch recipes does not pick recipe when both absent")

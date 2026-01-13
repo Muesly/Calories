@@ -59,6 +59,7 @@
 		DDC7FE7B2C123A5900FA5E68 /* MockHealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */; };
 		DDC854012C5FD7DA00420D87 /* DisplayConfettiModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */; };
 		DDC854032C5FDF2600420D87 /* RevealingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC854022C5FDF2600420D87 /* RevealingTextView.swift */; };
+		DDDBAB292F14320D00099158 /* DayMeal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDBAB282F14320D00099158 /* DayMeal.swift */; };
 		DDE1C61A2EFC34C5005AA862 /* IngredientEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE1C6192EFC34C5005AA862 /* IngredientEntry.swift */; };
 		DDE1C61C2EFC3D22005AA862 /* RecipeIngredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE1C61B2EFC3D22005AA862 /* RecipeIngredient.swift */; };
 		EA08544E299BD62A0029DD42 /* AddFoodDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA08544D299BD6290029DD42 /* AddFoodDetailsView.swift */; };
@@ -219,6 +220,7 @@
 		DDC7FE7A2C123A5900FA5E68 /* MockHealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHealthStore.swift; sourceTree = "<group>"; };
 		DDC854002C5FD7DA00420D87 /* DisplayConfettiModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayConfettiModifier.swift; sourceTree = "<group>"; };
 		DDC854022C5FDF2600420D87 /* RevealingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealingTextView.swift; sourceTree = "<group>"; };
+		DDDBAB282F14320D00099158 /* DayMeal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayMeal.swift; sourceTree = "<group>"; };
 		DDDCA40A2C5C157800445F06 /* CaloriesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CaloriesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE1C6192EFC34C5005AA862 /* IngredientEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientEntry.swift; sourceTree = "<group>"; };
 		DDE1C61B2EFC3D22005AA862 /* RecipeIngredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeIngredient.swift; sourceTree = "<group>"; };
@@ -445,16 +447,17 @@
 		DDADA54C2E1C51C00004DADB /* MealPlanning */ = {
 			isa = PBXGroup;
 			children = (
-				DD5EA8B42F08FE0700965FDB /* RecipeDetails */,
+				DDDBAB282F14320D00099158 /* DayMeal.swift */,
 				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
-				DD58657F2F0DA610007E0F54 /* ReasonTextField.swift */,
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
 				DD738C982EFB28B500ABFCFD /* MealChoiceView.swift */,
 				DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */,
 				DD701F922E1CFCCC006DB2FF /* MealPickerView.swift */,
 				DD701F8F2E1CFB64006DB2FF /* MealPlanningView.swift */,
 				DD701F8E2E1CFB64006DB2FF /* MealPlanningViewModel.swift */,
+				DD58657F2F0DA610007E0F54 /* ReasonTextField.swift */,
 				DD738C9A2EFB2A1700ABFCFD /* RecipeBookView.swift */,
+				DD5EA8B42F08FE0700965FDB /* RecipeDetails */,
 			);
 			path = MealPlanning;
 			sourceTree = "<group>";
@@ -917,6 +920,7 @@
 				DDAA98FB2F0340730026AE9E /* CategoryEntry.swift in Sources */,
 				DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */,
 				DD538CF32C6E9377007CAD98 /* RandomPicker.swift in Sources */,
+				DDDBAB292F14320D00099158 /* DayMeal.swift in Sources */,
 				DD5865802F0DA610007E0F54 /* ReasonTextField.swift in Sources */,
 				DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */,
 				EA085452299C01350029DD42 /* WeeklyChartView.swift in Sources */,
@@ -1304,7 +1308,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1326,7 +1330,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tonyshort.mynextweek.CaloriesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

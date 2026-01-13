@@ -44,34 +44,30 @@ struct PersonMealKey: Hashable {
 
 /// Type-safe key for meal-level data (shared across people)
 struct MealKey: Hashable, Comparable {
-    let date: Date
-    let mealType: MealType
+    let dayMeal: DayMeal
 
     func normalize() -> MealKey {
         MealKey(
-            date: Calendar.current.startOfDay(for: date),
-            mealType: mealType
+            dayMeal: DayMeal(
+                mealType: dayMeal.mealType,
+                date: Calendar.current.startOfDay(for: dayMeal.date))
         )
     }
 
     static func < (lhs: MealKey, rhs: MealKey) -> Bool {
-        if lhs.date != rhs.date {
-            return lhs.date < rhs.date
-        }
-        return lhs.mealType.sortOrder < rhs.mealType.sortOrder
+        return lhs.dayMeal < rhs.dayMeal
     }
 }
 
 struct MealSelection {
     var person: Person
-    var date: Date
-    var mealType: MealType
+    var dayMeal: DayMeal
     var isSelected: Bool
     var recipe: RecipeEntry?
 
     var id: String {
-        let dateString = date.formatted(date: .abbreviated, time: .omitted)
-        return "\(person.rawValue)-\(dateString)-\(mealType.rawValue)"
+        let dateString = dayMeal.date.formatted(date: .abbreviated, time: .omitted)
+        return "\(person.rawValue)-\(dateString)-\(dayMeal.mealType.rawValue)"
     }
 }
 
@@ -130,7 +126,10 @@ class MealPlanningViewModel: ObservableObject {
             for date in weekDates {
                 for mealType in MealType.allCases {
                     mealSelections.append(
-                        .init(person: person, date: date, mealType: mealType, isSelected: true))
+                        .init(
+                            person: person,
+                            dayMeal: DayMeal(mealType: mealType, date: date),
+                            isSelected: true))
                 }
             }
         }
@@ -171,53 +170,53 @@ class MealPlanningViewModel: ObservableObject {
 
     /// Checks if a meal selection matches the given criteria
     private func matchesMeal(
-        selection: MealSelection, person: Person, date: Date, mealType: MealType
+        selection: MealSelection, person: Person, dayMeal: DayMeal
     ) -> Bool {
-        selection.person == person && date.isSameDay(as: selection.date)
-            && selection.mealType == mealType
+        selection.person == person && dayMeal == selection.dayMeal
     }
 
     /// Finds the index of a meal selection matching the given criteria
     private func findMealSelectionIndex(
-        for person: Person, date: Date, mealType: MealType
+        for person: Person, dayMeal: DayMeal
     ) -> Int? {
         mealSelections.firstIndex { selection in
-            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
+            matchesMeal(selection: selection, person: person, dayMeal: dayMeal)
         }
     }
 
     /// Finds the meal selection matching the given criteria
     private func findMealSelection(
-        for person: Person, date: Date, mealType: MealType
+        for person: Person, dayMeal: DayMeal
     ) -> MealSelection? {
         mealSelections.first { selection in
-            matchesMeal(selection: selection, person: person, date: date, mealType: mealType)
+            matchesMeal(selection: selection, person: person, dayMeal: dayMeal)
         }
     }
 
     /// Generates a storage key for meal-level data (not person-specific)
-    private static func mealKey(date: Date, mealType: MealType) -> MealKey {
-        MealKey(date: date, mealType: mealType).normalize()
+    private static func mealKey(dayMeal: DayMeal) -> MealKey {
+        MealKey(dayMeal: dayMeal).normalize()
     }
 
     // MARK: - Meal Selection
 
-    func toggleMealSelection(for person: Person, date: Date, mealType: MealType) {
-        guard let index = findMealSelectionIndex(for: person, date: date, mealType: mealType) else {
+    func toggleMealSelection(for person: Person, dayMeal: DayMeal) {
+        guard let index = findMealSelectionIndex(for: person, dayMeal: dayMeal) else {
             return
         }
         mealSelections[index].isSelected.toggle()
         saveMealPlan()
     }
 
-    func isSelected(for person: Person, date: Date, mealType: MealType) -> Bool {
-        return findMealSelection(for: person, date: date, mealType: mealType)?.isSelected ?? false
+    func isSelected(for person: Person, dayMeal: DayMeal) -> Bool {
+        findMealSelection(for: person, dayMeal: dayMeal)?.isSelected ?? false
     }
 
     // MARK: - Meal Reasons
 
-    func setReason(_ reason: String, for person: Person, date: Date, mealType: MealType) {
-        let key = PersonMealKey(person: person, date: date, mealType: mealType).normalize()
+    func setReason(_ reason: String, for person: Person, dayMeal: DayMeal) {
+        let key = PersonMealKey(person: person, date: dayMeal.date, mealType: dayMeal.mealType)
+            .normalize()
         if reason.isEmpty {
             mealReasons.removeValue(forKey: key)
         } else {
@@ -226,34 +225,35 @@ class MealPlanningViewModel: ObservableObject {
         saveMealPlan()
     }
 
-    func getReason(for person: Person, date: Date, mealType: MealType) -> String {
-        let key = PersonMealKey(person: person, date: date, mealType: mealType).normalize()
+    func getReason(for person: Person, dayMeal: DayMeal) -> String {
+        let key = PersonMealKey(person: person, date: dayMeal.date, mealType: dayMeal.mealType)
+            .normalize()
         return mealReasons[key] ?? ""
     }
 
     // MARK: - Quick Meals
 
-    func setQuickMeal(_ isQuick: Bool, for date: Date, mealType: MealType) {
-        let key = Self.mealKey(date: date, mealType: mealType)
+    func setQuickMeal(_ isQuick: Bool, dayMeal: DayMeal) {
+        let key = Self.mealKey(dayMeal: dayMeal)
         quickMeals[key] = isQuick
         saveMealPlan()
     }
 
-    func isQuickMeal(for date: Date, mealType: MealType) -> Bool {
-        let key = Self.mealKey(date: date, mealType: mealType)
+    func isQuickMeal(forDayMeal dayMeal: DayMeal) -> Bool {
+        let key = Self.mealKey(dayMeal: dayMeal)
         return quickMeals[key] ?? false
     }
 
     // MARK: - Pinned Meals
 
-    func setPinnedMeal(_ isPinned: Bool, for date: Date, mealType: MealType) {
-        let key = Self.mealKey(date: date, mealType: mealType)
+    func setPinnedMeal(_ isPinned: Bool, dayMeal: DayMeal) {
+        let key = Self.mealKey(dayMeal: dayMeal)
         pinnedMeals[key] = isPinned
         saveMealPlan()
     }
 
-    func isPinnedMeal(for date: Date, mealType: MealType) -> Bool {
-        let key = Self.mealKey(date: date, mealType: mealType)
+    func isPinnedMeal(forDayMeal dayMeal: DayMeal) -> Bool {
+        let key = Self.mealKey(dayMeal: dayMeal)
         return pinnedMeals[key] ?? false
     }
 
@@ -282,20 +282,21 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    func meal(forDate date: Date, mealType: MealType) -> MealSelection? {
-        mealSelections.first { $0.mealType == mealType && $0.date.isSameDay(as: date) }
+    func meals(forDayMeal dayMeal: DayMeal) -> [MealSelection] {
+        // Can be multiple if not all having same meal
+        mealSelections.filter { dayMeal == $0.dayMeal }
     }
 
-    func selectRecipe(_ recipe: RecipeEntry, for person: Person, date: Date, mealType: MealType) {
-        guard let index = findMealSelectionIndex(for: person, date: date, mealType: mealType) else {
+    func selectRecipe(_ recipe: RecipeEntry, for person: Person, dayMeal: DayMeal) {
+        guard let index = findMealSelectionIndex(for: person, dayMeal: dayMeal) else {
             return
         }
         mealSelections[index].recipe = recipe
         saveMealPlan()
     }
 
-    func clearMeal(for person: Person, date: Date, mealType: MealType) {
-        guard let index = findMealSelectionIndex(for: person, date: date, mealType: mealType) else {
+    func clearMeal(for person: Person, dayMeal: DayMeal) {
+        guard let index = findMealSelectionIndex(for: person, dayMeal: dayMeal) else {
             return
         }
         mealSelections[index].recipe = nil
@@ -314,13 +315,13 @@ class MealPlanningViewModel: ObservableObject {
         var recipeCache: [MealKey: RecipeEntry?] = [:]
 
         // Track used recipes for variety consideration
-        var usedRecipes: [(date: Date, mealType: MealType, recipe: RecipeEntry)] = []
+        var usedRecipes: [(dayMeal: DayMeal, recipe: RecipeEntry)] = []
 
         // Get unique meal keys sorted by date and meal type for chronological processing
         let uniqueMealKeys = Array(
             Set(
                 mealSelections.map {
-                    Self.mealKey(date: $0.date, mealType: $0.mealType)
+                    Self.mealKey(dayMeal: $0.dayMeal)
                 })
         ).sorted()
 
@@ -329,18 +330,18 @@ class MealPlanningViewModel: ObservableObject {
             // Find a selection for this meal key
             guard
                 let selection = mealSelections.first(where: {
-                    Self.mealKey(date: $0.date, mealType: $0.mealType) == key
+                    Self.mealKey(dayMeal: $0.dayMeal) == key
                 })
             else {
                 continue
             }
 
             // Skip if meal is pinned
-            if isPinnedMeal(for: selection.date, mealType: selection.mealType) {
+            if isPinnedMeal(forDayMeal: selection.dayMeal) {
                 // Keep existing recipe in used recipes if it exists
                 if let existingRecipe = selection.recipe {
                     usedRecipes.append(
-                        (date: selection.date, mealType: selection.mealType, recipe: existingRecipe)
+                        (dayMeal: selection.dayMeal, recipe: existingRecipe)
                     )
                 }
                 continue
@@ -351,23 +352,22 @@ class MealPlanningViewModel: ObservableObject {
                 // Keep existing recipe in used recipes
                 if let existingRecipe = selection.recipe {
                     usedRecipes.append(
-                        (date: selection.date, mealType: selection.mealType, recipe: existingRecipe)
+                        (dayMeal: selection.dayMeal, recipe: existingRecipe)
                     )
                 }
                 continue
             }
 
             // Only pick a recipe if at least one person is attending
-            let count = attendeeCount(for: selection.date, mealType: selection.mealType)
+            let count = attendeeCount(forDayMeal: selection.dayMeal)
             if count > 0 {
                 if let recipe = mealPickerEngine.pickRecipe(
-                    mealType: selection.mealType,
-                    forDate: selection.date,
+                    dayMeal: selection.dayMeal,
                     usedRecipes: usedRecipes
                 ) {
                     recipeCache[key] = recipe
                     usedRecipes.append(
-                        (date: selection.date, mealType: selection.mealType, recipe: recipe))
+                        (dayMeal: selection.dayMeal, recipe: recipe))
                 } else {
                     recipeCache[key] = .some(nil)
                 }
@@ -379,7 +379,7 @@ class MealPlanningViewModel: ObservableObject {
         // Apply the cached recipes to all matching selections
         for index in mealSelections.indices {
             let selection = mealSelections[index]
-            let key = Self.mealKey(date: selection.date, mealType: selection.mealType)
+            let key = Self.mealKey(dayMeal: selection.dayMeal)
             if let cachedRecipe = recipeCache[key] {
                 mealSelections[index].recipe = cachedRecipe
             }
@@ -398,18 +398,34 @@ class MealPlanningViewModel: ObservableObject {
         saveMealPlan()
     }
 
+    func swapMeals(_ dayMeal1: DayMeal, with dayMeal2: DayMeal) {
+        // Swap recipes between the same person's meals on different days or different meal types
+        // Get the first person's meals for each day/meal type (prioritize same person)
+        guard
+            let meal1 = mealSelections.first(where: {
+                $0.dayMeal == dayMeal1
+            }),
+            let meal2 = mealSelections.first(where: {
+                $0.dayMeal == dayMeal2
+            })
+        else {
+            return
+        }
+        swapMeals(meal1, with: meal2)
+    }
+
     // MARK: - Serving Info
 
     /// Returns the number of people attending a meal
-    func attendeeCount(for date: Date, mealType: MealType) -> Int {
-        Person.allCases.filter { isSelected(for: $0, date: date, mealType: mealType) }.count
+    func attendeeCount(forDayMeal dayMeal: DayMeal) -> Int {
+        Person.allCases.filter { isSelected(for: $0, dayMeal: dayMeal) }.count
     }
 
     /// Returns serving info text for display in meal picker
-    func servingInfo(for date: Date, mealType: MealType) -> String {
-        let count = attendeeCount(for: date, mealType: mealType)
+    func servingInfo(forDayMeal dayMeal: DayMeal) -> String {
+        let count = attendeeCount(forDayMeal: dayMeal)
         let absentPeople = Person.allCases.filter {
-            !isSelected(for: $0, date: date, mealType: mealType)
+            !isSelected(for: $0, dayMeal: dayMeal)
         }
 
         switch count {
@@ -417,14 +433,14 @@ class MealPlanningViewModel: ObservableObject {
             return "2 x servings"
         case 1:
             if let presentPerson = Person.allCases.first(where: {
-                isSelected(for: $0, date: date, mealType: mealType)
+                isSelected(for: $0, dayMeal: dayMeal)
             }) {
                 return "1 x serving (\(presentPerson.rawValue))"
             }
             return "1 x serving"
         case 0:
             let reasonsByPerson = absentPeople.map { person -> (Person, String) in
-                (person, getReason(for: person, date: date, mealType: mealType))
+                (person, getReason(for: person, dayMeal: dayMeal))
             }
 
             // Check if all reasons are the same
@@ -515,7 +531,10 @@ class MealPlanningViewModel: ObservableObject {
             for date in weekDates {
                 for mealType in MealType.allCases {
                     mealSelections.append(
-                        .init(person: person, date: date, mealType: mealType, isSelected: true))
+                        MealSelection(
+                            person: person,
+                            dayMeal: DayMeal(mealType: mealType, date: date),
+                            isSelected: true))
                 }
             }
         }
@@ -526,9 +545,7 @@ class MealPlanningViewModel: ObservableObject {
             // Update existing selections with stored recipes
             for storedSelection in storedSelections {
                 if let index = mealSelections.firstIndex(where: {
-                    $0.person == storedSelection.person
-                        && $0.date.isSameDay(as: storedSelection.date)
-                        && $0.mealType == storedSelection.mealType
+                    $0.person == storedSelection.person && $0.dayMeal == storedSelection.dayMeal
                 }) {
                     mealSelections[index].isSelected = storedSelection.isSelected
                     mealSelections[index].recipe = storedSelection.recipe

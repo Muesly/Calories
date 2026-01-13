@@ -19,8 +19,8 @@ struct StoredMealSelection: Codable {
 
     init(from selection: MealSelection) {
         self.person = selection.person.rawValue
-        self.dateTimestamp = selection.date.timeIntervalSince1970
-        self.mealType = selection.mealType.rawValue
+        self.dateTimestamp = selection.dayMeal.date.timeIntervalSince1970
+        self.mealType = selection.dayMeal.mealType.rawValue
         self.isSelected = selection.isSelected
         self.recipeName = selection.recipe?.name
     }
@@ -33,8 +33,7 @@ struct StoredMealSelection: Codable {
 
         return MealSelection(
             person: person,
-            date: date,
-            mealType: mealType,
+            dayMeal: .init(mealType: mealType, date: date),
             isSelected: self.isSelected,
             recipe: recipe
         )
@@ -143,7 +142,7 @@ struct StoredFoodToUseUp: Codable {
         let storedMeals = Dictionary(
             uniqueKeysWithValues: quickMeals.map { key, isQuick in
                 let keyString =
-                    "\(key.date.formatted(date: .abbreviated, time: .omitted))-\(key.mealType.rawValue)"
+                    "\(key.dayMeal.date.formatted(date: .abbreviated, time: .omitted))-\(key.dayMeal.mealType.rawValue)"
                 return (keyString, isQuick)
             })
         quickMealsData = try? JSONEncoder().encode(storedMeals)
@@ -170,7 +169,7 @@ struct StoredFoodToUseUp: Codable {
         let storedMeals = Dictionary(
             uniqueKeysWithValues: pinnedMeals.map { key, isPinned in
                 let keyString =
-                    "\(key.date.formatted(date: .abbreviated, time: .omitted))-\(key.mealType.rawValue)"
+                    "\(key.dayMeal.date.formatted(date: .abbreviated, time: .omitted))-\(key.dayMeal.mealType.rawValue)"
                 return (keyString, isPinned)
             })
         pinnedMealsData = try? JSONEncoder().encode(storedMeals)
@@ -209,7 +208,7 @@ struct StoredFoodToUseUp: Codable {
             return nil
         }
 
-        return MealKey(date: Date(), mealType: mealType).normalize()
+        return MealKey(dayMeal: DayMeal(mealType: mealType, date: Date())).normalize()
     }
 
     // MARK: - Food To Use Up

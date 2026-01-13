@@ -12,37 +12,33 @@ struct MealPickerEngine {
 
     /// Picks a recipe for the given meal type, considering variety across the meal plan
     /// - Parameters:
-    ///   - mealType: The type of meal to pick for
-    ///   - forDate: The date this meal is being planned for
+    ///   - dayMeal: The date and type of meal to pick for
     ///   - usedRecipes: Previously selected recipes with their dates and meal types
     /// - Returns: A recipe suitable for this meal, avoiding repetition except dinner-to-lunch across days
     func pickRecipe(
-        mealType: MealType,
-        forDate date: Date,
-        usedRecipes: [(date: Date, mealType: MealType, recipe: RecipeEntry)]
+        dayMeal: DayMeal,
+        usedRecipes: [(dayMeal: DayMeal, recipe: RecipeEntry)]
     ) -> RecipeEntry? {
         // Filter recipes to exclude those already used, with dinner-to-lunch exception
         let availableRecipes = recipes.filter { recipe in
             isRecipeAvailable(
                 recipe,
-                forMealType: mealType,
-                onDate: date,
+                forDayMeal: dayMeal,
                 usedRecipes: usedRecipes
             )
         }
 
         // Weight recipes based on meal type suitability
         return availableRecipes.flatMap { recipe in
-            Array(repeating: recipe, count: recipe.suitability(for: mealType).weight)
+            Array(repeating: recipe, count: recipe.suitability(for: dayMeal.mealType).weight)
         }.randomElement()
     }
 
     /// Determines if a recipe can be used for a given meal
     private func isRecipeAvailable(
         _ recipe: RecipeEntry,
-        forMealType mealType: MealType,
-        onDate date: Date,
-        usedRecipes: [(date: Date, mealType: MealType, recipe: RecipeEntry)]
+        forDayMeal dayMeal: DayMeal,
+        usedRecipes: [(dayMeal: DayMeal, recipe: RecipeEntry)]
     ) -> Bool {
         // Check if this recipe has been used
         let previousUses = usedRecipes.filter { $0.recipe == recipe }
@@ -53,12 +49,13 @@ struct MealPickerEngine {
 
         // Recipe has been used - check if it's allowed
         // Exception: dinner yesterday can be reused for lunch today
-        if mealType == .lunch {
+        if dayMeal.mealType == .lunch {
             let calendar = Calendar.current
-            if let yesterday = calendar.date(byAdding: .day, value: -1, to: date) {
+            if let yesterday = calendar.date(byAdding: .day, value: -1, to: dayMeal.date) {
                 // Check if this recipe was used for dinner yesterday
                 let wasDinnerYesterday = previousUses.contains { use in
-                    use.mealType == .dinner && calendar.isDate(use.date, inSameDayAs: yesterday)
+                    use.dayMeal.mealType == .dinner
+                        && calendar.isDate(use.dayMeal.date, inSameDayAs: yesterday)
                 }
                 if wasDinnerYesterday {
                     return true  // Allow dinner-to-lunch reuse

@@ -123,7 +123,7 @@ class AddFoodViewModel: ObservableObject {
 
         let meals = mealPlan.getMealSelections(recipes: backgroundContext.recipeResults())
         let todaysMeals = meals.filter {
-            $0.date.isSameDay(as: date) && $0.isSelected
+            $0.dayMeal.date.isSameDay(as: date) && $0.isSelected
         }.compactMap {
             if let recipe = $0.recipe {
                 return Suggestion(
