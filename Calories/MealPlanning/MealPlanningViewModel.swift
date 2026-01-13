@@ -8,107 +8,32 @@
 import Foundation
 import SwiftData
 
-enum MealPlanError: LocalizedError {
-    case saveFailed(Error)
-    case loadFailed(Error)
-
-    var errorDescription: String? {
-        switch self {
-        case .saveFailed(let error):
-            return "Failed to save meal plan: \(error.localizedDescription)"
-        case .loadFailed(let error):
-            return "Failed to load meal plan: \(error.localizedDescription)"
-        }
-    }
-}
-
-enum Person: String, CaseIterable {
-    case tony = "Tony"
-    case karen = "Karen"
-}
-
-/// Type-safe key for person-specific meal data
-struct PersonMealKey: Hashable {
-    let person: Person
-    let dayMeal: DayMeal
-
-    func normalize() -> PersonMealKey {
-        PersonMealKey(
-            person: person,
-            dayMeal: DayMeal(
-                mealType: self.dayMeal.mealType,
-                date: Calendar.current.startOfDay(for: self.dayMeal.date))
-        )
-    }
-
-    var keyString: String {
-        "\(person.rawValue)-\(dayMeal.keyString)"
-    }
-}
-
-/// Type-safe key for meal-level data (shared across people)
-struct MealKey: Hashable, Comparable {
-    let dayMeal: DayMeal
-
-    func normalize() -> MealKey {
-        MealKey(
-            dayMeal: DayMeal(
-                mealType: dayMeal.mealType,
-                date: Calendar.current.startOfDay(for: dayMeal.date))
-        )
-    }
-
-    static func < (lhs: MealKey, rhs: MealKey) -> Bool {
-        return lhs.dayMeal < rhs.dayMeal
-    }
-}
-
-struct MealSelection {
-    var person: Person
-    var dayMeal: DayMeal
-    var isSelected: Bool
-    var recipe: RecipeEntry?
-
-    var id: String {
-        "\(person.rawValue)-\(dayMeal.keyString)"
-    }
-}
-
-enum WizardStage: Int, CaseIterable {
-    case mealPicking
-}
-
-struct FoodToUseUp: Identifiable {
-    let id: UUID
-    var name: String
-    var isFullMeal: Bool  // true = complete meal (🍲), false = ingredient (🥩)
-    var isFrozen: Bool  // needs thawing consideration
-
-    init(name: String = "", isFullMeal: Bool = false, isFrozen: Bool = false) {
-        self.id = UUID()
-        self.name = name
-        self.isFullMeal = isFullMeal
-        self.isFrozen = isFrozen
-    }
-
-    var typeEmoji: String {
-        isFullMeal ? "🍲" : "🥩"
-    }
-}
-
 // MARK: - View Model
 
 @Observable
 @MainActor
 class MealPlanningViewModel: ObservableObject {
+    private enum MealPlanError: LocalizedError {
+        case saveFailed(Error)
+        case loadFailed(Error)
+
+        var errorDescription: String? {
+            switch self {
+            case .saveFailed(let error):
+                return "Failed to save meal plan: \(error.localizedDescription)"
+            case .loadFailed(let error):
+                return "Failed to load meal plan: \(error.localizedDescription)"
+            }
+        }
+    }
+
     let modelContext: ModelContext
-    var currentStage: WizardStage = .mealPicking
     var mealSelections: [MealSelection] = []
     var mealReasons: [PersonMealKey: String] = [:]
     var quickMeals: [MealKey: Bool] = [:]
     var pinnedMeals: [MealKey: Bool] = [:]
     var foodToUseUp: [FoodToUseUp] = []
-    var lastError: MealPlanError?
+    private var lastError: MealPlanError?
     let mealPickerEngine: MealPickerEngine
     var currentWeekStartDate: Date
     var weekDates: [Date]
@@ -135,33 +60,6 @@ class MealPlanningViewModel: ObservableObject {
                             isSelected: true))
                 }
             }
-        }
-
-        currentStage = .mealPicking
-
-    }
-
-    var canGoBack: Bool {
-        currentStage != WizardStage.allCases.first
-    }
-
-    func goToPreviousStage() {
-        let allStages = WizardStage.allCases
-        if let currentIndex = allStages.firstIndex(of: currentStage), currentIndex > 0 {
-            currentStage = allStages[currentIndex - 1]
-        }
-    }
-
-    var canGoForward: Bool {
-        currentStage != WizardStage.allCases.last
-    }
-
-    func goToNextStage() {
-        let allStages = WizardStage.allCases
-        if let currentIndex = allStages.firstIndex(of: currentStage),
-            currentIndex < allStages.count - 1
-        {
-            currentStage = allStages[currentIndex + 1]
         }
     }
 
@@ -264,12 +162,6 @@ class MealPlanningViewModel: ObservableObject {
 
     func addFoodItem() {
         foodToUseUp.append(FoodToUseUp())
-        saveMealPlan()
-    }
-
-    func removeFoodItem(at index: Int) {
-        guard index >= 0 && index < foodToUseUp.count else { return }
-        foodToUseUp.remove(at: index)
         saveMealPlan()
     }
 
@@ -389,18 +281,6 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    func swapMeals(_ meal1: MealSelection, with meal2: MealSelection) {
-        let meal1Index = mealSelections.firstIndex { $0.id == meal1.id }
-        let meal2Index = mealSelections.firstIndex { $0.id == meal2.id }
-
-        guard let idx1 = meal1Index, let idx2 = meal2Index else { return }
-
-        let tempRecipe = mealSelections[idx1].recipe
-        mealSelections[idx1].recipe = mealSelections[idx2].recipe
-        mealSelections[idx2].recipe = tempRecipe
-        saveMealPlan()
-    }
-
     func swapMeals(_ dayMeal1: DayMeal, with dayMeal2: DayMeal) {
         // Swap recipes between the same person's meals on different days or different meal types
         // Get the first person's meals for each day/meal type (prioritize same person)
@@ -415,6 +295,18 @@ class MealPlanningViewModel: ObservableObject {
             return
         }
         swapMeals(meal1, with: meal2)
+    }
+
+    private func swapMeals(_ meal1: MealSelection, with meal2: MealSelection) {
+        let meal1Index = mealSelections.firstIndex { $0.id == meal1.id }
+        let meal2Index = mealSelections.firstIndex { $0.id == meal2.id }
+
+        guard let idx1 = meal1Index, let idx2 = meal2Index else { return }
+
+        let tempRecipe = mealSelections[idx1].recipe
+        mealSelections[idx1].recipe = mealSelections[idx2].recipe
+        mealSelections[idx2].recipe = tempRecipe
+        saveMealPlan()
     }
 
     // MARK: - Serving Info

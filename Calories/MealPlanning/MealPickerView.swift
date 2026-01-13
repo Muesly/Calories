@@ -7,7 +7,6 @@
 
 import SwiftData
 import SwiftUI
-
 struct MealPickerView: View {
     @Environment(\.modelContext) private var modelContext
     @State var viewModel: MealPlanningViewModel
