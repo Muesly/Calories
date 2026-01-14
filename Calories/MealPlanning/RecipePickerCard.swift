@@ -6,10 +6,12 @@ struct RecipePickerCard: View {
     let servingInfo: String
     let isSwapMode: Bool
     let isSelectedForSwap: Bool
-    let onRecipeSelected: (RecipeEntry) -> Void
+    let onRecipeSelected: (RecipeEntry, [Person]) -> Void
     let onCreateRecipe: (() -> Void)
     let onSwapRequested: (() -> Void)
     let onRemoveMeal: (() -> Void)
+    let onSplitMeal: (() -> Void)
+    let onJoinMeal: (() -> Void)
     let personSelections: [Person: Bool]
     let personReasons: [Person: String]
     let isQuickMeal: Bool
@@ -19,18 +21,16 @@ struct RecipePickerCard: View {
     let onQuickMealToggled: (Bool) -> Void
     let onPinnedToggled: (Bool) -> Void
 
-    //    private var meal: MealSelection {
-    //        meals.first!
-    //    }
-
     private var mealType: MealType {
         dayMeal.mealType
     }
 
-    @State private var showMealChoice = false
+    @State private var mealChoiceRecipe: RecipeEntry?
     @State private var showRecipeBook = false
     @State private var showRecipeDetails = false
     @State private var showAvailability = false
+    @State private var showPersonSelection = false
+    @State private var selectedPersonForRecipe: Person?
 
     private var isNoMealRequired: Bool {
         servingInfo.hasPrefix("No meal required")
@@ -44,15 +44,31 @@ struct RecipePickerCard: View {
         meals.first(where: { $0.recipe != nil })?.recipe
     }
 
+    private func mealForPerson(_ person: Person) -> MealSelection? {
+        meals.first(where: { $0.person == person })
+    }
+
+    private var selectedPeople: [Person] {
+        Person.allCases.filter {
+            personSelections[$0] ?? false
+        }
+    }
+
     var body: some View {
         Button(action: {
             // In swap mode, clicking the card triggers swap
             if isSwapMode {
                 onSwapRequested()
             } else if mealsHaveARecipe {
-                showRecipeDetails = true
+                // If meal is split (different recipes), show person selection
+                if areRecipesDifferent(selectedPeople) {
+                    showPersonSelection = true
+                } else {
+                    // Not split, show the recipe directly
+                    showRecipeDetails = true
+                }
             } else if !isNoMealRequired {
-                showMealChoice = true
+                showRecipeBook = true
             }
         }) {
             ZStack(alignment: .topLeading) {
@@ -109,17 +125,16 @@ struct RecipePickerCard: View {
                             if recipesAreDifferent {
                                 VStack(alignment: .leading, spacing: 4) {
                                     ForEach(selectedPeople, id: \.self) { person in
-                                        //                                        guard let meal = meals.first(where: { $0.person == person }) else {
-                                        //                                            continue
-                                        //                                        }
-                                        //                                        let recipeName = firstRecipe?.name ?? "Choose a meal"
-                                        //                                        let displayText = "\(recipeName) (\(person.rawValue))"
-                                        //                                        Text(displayText)
-                                        //                                            .font(.caption)
-                                        //                                            .foregroundColor(Colours.foregroundPrimary)
-                                        //                                            .lineLimit(3)
-                                        //                                            .multilineTextAlignment(.leading)
-                                        //                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        if let meal = mealForPerson(person) {
+                                            let recipeName = meal.recipe?.name ?? "Choose a meal"
+                                            let displayText = "\(recipeName) (\(person.rawValue))"
+                                            Text(displayText)
+                                                .font(.caption)
+                                                .foregroundColor(Colours.foregroundPrimary)
+                                                .lineLimit(3)
+                                                .multilineTextAlignment(.leading)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
                                     }
                                 }
                                 .frame(minHeight: 32, alignment: .top)
@@ -165,6 +180,18 @@ struct RecipePickerCard: View {
                                         showAvailability = true
                                     }) {
                                         Label("Availability", systemImage: "person.2")
+                                    }
+                                    let selectedPeople = Person.allCases.filter {
+                                        personSelections[$0] ?? true
+                                    }
+                                    if areRecipesDifferent(selectedPeople) {
+                                        Button(action: onJoinMeal) {
+                                            Label("Join", systemImage: "arrow.merge")
+                                        }
+                                    } else if mealsHaveARecipe {
+                                        Button(action: onSplitMeal) {
+                                            Label("Split", systemImage: "arrow.left.and.right")
+                                        }
                                     }
                                     if mealsHaveARecipe {
                                         Button(action: {
@@ -235,35 +262,60 @@ struct RecipePickerCard: View {
             }
         }
         .sheet(isPresented: $showRecipeDetails) {
-            if let recipe = firstRecipe {
+            // If a specific person was selected, show their recipe
+            if let person = selectedPersonForRecipe {
+                if let recipe = mealForPerson(person)?.recipe {
+                    RecipeDetailsDisplayView(recipe: recipe)
+                }
+            } else if let recipe = firstRecipe {
                 RecipeDetailsDisplayView(recipe: recipe)
             }
         }
-        .sheet(isPresented: $showMealChoice) {
-            if let recipe = firstRecipe {
-                MealChoiceView(
-                    recipe: recipe,
-                    mealType: mealType,
-                    servingInfo: servingInfo
-                )
-            } else {
-                RecipeBookView(
-                    mealType: mealType,
-                    onRecipeSelected: onRecipeSelected,
-                    onCreateRecipe: onCreateRecipe
-                )
-            }
+        .sheet(item: $mealChoiceRecipe) { recipe in
+            MealChoiceView(
+                recipe: recipe,
+                mealType: mealType,
+                servingInfo: servingInfo
+            )
         }
         .sheet(isPresented: $showRecipeBook) {
             RecipeBookView(
                 mealType: mealType,
-                onRecipeSelected: onRecipeSelected,
+                onRecipeSelected: { recipe in
+                    var selectedPeopleForRecipe = [Person]()
+                    if areRecipesDifferent(selectedPeople) {
+                        if let selectedPersonForRecipe {
+                            selectedPeopleForRecipe.append(selectedPersonForRecipe)
+                        }
+                    } else {
+                        selectedPeopleForRecipe.append(contentsOf: selectedPeople)
+                    }
+                    onRecipeSelected(recipe, selectedPeopleForRecipe)
+                },
                 onCreateRecipe: {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         onCreateRecipe()
                     }
                 }
             )
+        }
+        .confirmationDialog("Choose person", isPresented: $showPersonSelection) {
+            let selectedPeople = Person.allCases.filter {
+                personSelections[$0] ?? true
+            }
+            ForEach(selectedPeople, id: \.self) { person in
+                Button(person.rawValue) {
+                    selectedPersonForRecipe = person
+                    if let meal = mealForPerson(person) {
+                        if meal.recipe != nil {
+                            showRecipeDetails = true
+                        } else {
+                            showRecipeBook = true
+                        }
+                    }
+                }
+            }
+            Button("Cancel", role: .cancel) {}
         }
     }
 

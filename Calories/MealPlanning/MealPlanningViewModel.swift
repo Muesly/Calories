@@ -190,11 +190,37 @@ class MealPlanningViewModel: ObservableObject {
         saveMealPlan()
     }
 
-    func clearMeal(for person: Person, dayMeal: DayMeal) {
-        guard let index = findMealSelectionIndex(for: person, dayMeal: dayMeal) else {
+    func removeMeal(forDayMeal dayMeal: DayMeal) {
+        for (i, mealSelection) in mealSelections.enumerated() {
+            if mealSelection.dayMeal == dayMeal {
+                mealSelections[i].recipe = nil
+            }
+        }
+        saveMealPlan()
+    }
+
+    /// Splits a meal so that each person can have a different recipe
+    /// The second person will have their recipe cleared
+    func splitMeal(dayMeal: DayMeal) {
+        // Find second meal and clear it
+        guard let karenIndex = findMealSelectionIndex(for: .karen, dayMeal: dayMeal) else {
             return
         }
-        mealSelections[index].recipe = nil
+        mealSelections[karenIndex].recipe = nil
+        saveMealPlan()
+    }
+
+    /// Joins a split meal by copying Tony's recipe to Karen
+    func joinMeal(dayMeal: DayMeal) {
+        // Find Tony's meal and get the recipe
+        guard let tonyMeal = findMealSelection(for: .tony, dayMeal: dayMeal),
+            let karenIndex = findMealSelectionIndex(for: .karen, dayMeal: dayMeal)
+        else {
+            return
+        }
+
+        // Copy Tony's recipe to Karen
+        mealSelections[karenIndex].recipe = tonyMeal.recipe
         saveMealPlan()
     }
 

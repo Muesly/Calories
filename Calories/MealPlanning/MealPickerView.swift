@@ -30,13 +30,14 @@ struct MealPickerView: View {
                                     servingInfo: viewModel.servingInfo(forDayMeal: dayMeal),
                                     isSwapMode: swapMode,
                                     isSelectedForSwap: dayMealToSwap == dayMeal,
-                                    onRecipeSelected: { recipe in
-                                        if let meal = meals.first {
-                                            let person = meal.person
+                                    onRecipeSelected: { recipe, people in
+                                        for person in people {
                                             viewModel.selectRecipe(
-                                                recipe, for: person, dayMeal: dayMeal)
-                                            swapMode = false
+                                                recipe,
+                                                for: person,
+                                                dayMeal: dayMeal)
                                         }
+                                        swapMode = false
                                     },
                                     onCreateRecipe: {
                                         showCreateRecipe = true
@@ -55,10 +56,13 @@ struct MealPickerView: View {
                                         }
                                     },
                                     onRemoveMeal: {
-                                        if let meal = meals.first {
-                                            let person = meal.person
-                                            viewModel.clearMeal(for: person, dayMeal: dayMeal)
-                                        }
+                                        viewModel.removeMeal(forDayMeal: dayMeal)
+                                    },
+                                    onSplitMeal: {
+                                        viewModel.splitMeal(dayMeal: dayMeal)
+                                    },
+                                    onJoinMeal: {
+                                        viewModel.joinMeal(dayMeal: dayMeal)
                                     },
                                     personSelections: personSelections(dayMeal: dayMeal),
                                     personReasons: personReasons(dayMeal: dayMeal),
