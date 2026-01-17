@@ -15,7 +15,7 @@ struct RatingView: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 20) {
             Text("Rating")
             VStack {
                 Button {
@@ -29,8 +29,9 @@ struct RatingView: View {
                         Image(systemName: "star")
                     }
                 }
+                .buttonStyle(.plain)
                 .foregroundColor(rating == 4 ? .accentColor : .gray.opacity(0.5))
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 10))
+                .padding(.bottom, 10)
                 Button {
                     rating = 5
                 } label: {
@@ -42,8 +43,9 @@ struct RatingView: View {
                         Image(systemName: "star.fill")
                     }
                 }
+                .buttonStyle(.plain)
                 .foregroundColor(rating == 5 ? .accentColor : .gray.opacity(0.5))
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 10))
+                .padding(.bottom, 10)
             }
         }
     }
