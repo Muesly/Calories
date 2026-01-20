@@ -13,6 +13,16 @@ import SwiftData
 @Observable
 @MainActor
 class MealPlanningViewModel: ObservableObject {
+    let modelContext: ModelContext
+    var mealSelections: [MealSelection] = []
+    var mealReasons: [PersonMealKey: String] = [:]
+    var quickMeals: [MealKey: Bool] = [:]
+    var pinnedMeals: [MealKey: Bool] = [:]
+    var foodToUseUp: [FoodToUseUp] = []
+    private var lastError: MealPlanError?
+    var currentWeekStartDate: Date
+    var weekDates: [Date]
+
     private enum MealPlanError: LocalizedError {
         case saveFailed(Error)
         case loadFailed(Error)
@@ -27,22 +37,8 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    let modelContext: ModelContext
-    var mealSelections: [MealSelection] = []
-    var mealReasons: [PersonMealKey: String] = [:]
-    var quickMeals: [MealKey: Bool] = [:]
-    var pinnedMeals: [MealKey: Bool] = [:]
-    var foodToUseUp: [FoodToUseUp] = []
-    private var lastError: MealPlanError?
-    let mealPickerEngine: MealPickerEngine
-    var currentWeekStartDate: Date
-    var weekDates: [Date]
-
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, startDate: Date) {
         self.modelContext = modelContext
-        self.mealPickerEngine = MealPickerEngine(recipes: modelContext.recipeResults())
-
-        let startDate = Self.startOfPlanningWeek()
         self.currentWeekStartDate = startDate
 
         let calendar = Calendar.current
@@ -61,10 +57,6 @@ class MealPlanningViewModel: ObservableObject {
                 }
             }
         }
-    }
-
-    func fetchRecipes() {
-        populateMealRecipes(onlyEmpty: false)
     }
 
     // MARK: - Private Helpers
@@ -110,7 +102,10 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func isSelected(for person: Person, dayMeal: DayMeal) -> Bool {
-        findMealSelection(for: person, dayMeal: dayMeal)?.isSelected ?? false
+        guard let mealSelection = findMealSelection(for: person, dayMeal: dayMeal) else {
+            fatalError("Cannot find \(dayMeal) meal selection for \(person)")
+        }
+        return mealSelection.isSelected
     }
 
     // MARK: - Meal Reasons
@@ -224,14 +219,8 @@ class MealPlanningViewModel: ObservableObject {
         saveMealPlan()
     }
 
-    func populateEmptyMeals() {
-        populateMealRecipes(onlyEmpty: false)
-        saveMealPlan()
-    }
-
     /// Populates meal recipes using the picker engine
-    /// - Parameter onlyEmpty: If true, only fills meals without recipes; if false, fills all
-    private func populateMealRecipes(onlyEmpty: Bool) {
+    func populateMealRecipes() {
         // Build a cache of recipes per date+mealType to ensure consistency
         var recipeCache: [MealKey: RecipeEntry?] = [:]
 
@@ -246,6 +235,7 @@ class MealPlanningViewModel: ObservableObject {
                 })
         ).sorted()
 
+        let mealPickerEngine = MealPickerEngine(recipes: modelContext.recipeResults())
         // Process each unique meal in chronological order
         for key in uniqueMealKeys {
             // Find a selection for this meal key
@@ -268,20 +258,8 @@ class MealPlanningViewModel: ObservableObject {
                 continue
             }
 
-            // Skip if only populating empty meals and this one has a recipe
-            if onlyEmpty && selection.recipe != nil {
-                // Keep existing recipe in used recipes
-                if let existingRecipe = selection.recipe {
-                    usedRecipes.append(
-                        (dayMeal: selection.dayMeal, recipe: existingRecipe)
-                    )
-                }
-                continue
-            }
-
             // Only pick a recipe if at least one person is attending
-            let count = attendeeCount(forDayMeal: selection.dayMeal)
-            if count > 0 {
+            if attendeeCount(forDayMeal: selection.dayMeal) > 0 {
                 if let recipe = mealPickerEngine.pickRecipe(
                     dayMeal: selection.dayMeal,
                     usedRecipes: usedRecipes
@@ -305,6 +283,7 @@ class MealPlanningViewModel: ObservableObject {
                 mealSelections[index].recipe = cachedRecipe
             }
         }
+        saveMealPlan()
     }
 
     func swapMeals(_ dayMeal1: DayMeal, with dayMeal2: DayMeal) {
@@ -364,15 +343,18 @@ class MealPlanningViewModel: ObservableObject {
                 (person, getReason(for: person, dayMeal: dayMeal))
             }
 
-            // Check if all reasons are the same
-            let uniqueReasons = Set(reasonsByPerson.map { $0.1 })
-            let allReasonsSame = uniqueReasons.count <= 1
-
             let reasonText: String
-            if allReasonsSame {
+
+            // Check if all reasons are the same
+            let uniqueReasons = Set(
+                reasonsByPerson.compactMap {
+                    let reason = $0.1
+                    return reason.isEmpty ? nil : reason
+                })
+            if uniqueReasons.count == 1 {
                 // All have the same reason (or all empty), omit person names
-                let reasons = reasonsByPerson.compactMap { $0.1.isEmpty ? nil : $0.1 }
-                reasonText = reasons.isEmpty ? "" : " - \(reasons.joined(separator: ", "))"
+                let reason = uniqueReasons.first ?? ""
+                reasonText = reason.isEmpty ? "" : " - \(reason)"
             } else {
                 // Reasons differ, include person names
                 let reasons = reasonsByPerson.compactMap { person, reason -> String? in
@@ -380,33 +362,9 @@ class MealPlanningViewModel: ObservableObject {
                 }
                 reasonText = reasons.isEmpty ? "" : " - \(reasons.joined(separator: ", "))"
             }
-
             return "No meal required\(reasonText)"
         default:
             return "\(count) x servings"
-        }
-    }
-
-    /// Returns the Monday to plan from:
-    /// - Mon-Wed: this week's Monday
-    /// - Thu-Sun: next week's Monday
-    static func startOfPlanningWeek(from date: Date = Date()) -> Date {
-        let calendar = Calendar.current
-        let weekday = calendar.component(.weekday, from: date)
-
-        // Calendar weekday: 1 = Sunday, 2 = Monday, ..., 7 = Saturday
-        // Monday = 2, Tuesday = 3, Wednesday = 4
-        let isEarlyInWeek = (2...4).contains(weekday)
-
-        // Find this week's Monday
-        let thisMonday = calendar.date(
-            from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date))!
-
-        if isEarlyInWeek {
-            return thisMonday
-        } else {
-            // Return next Monday
-            return calendar.date(byAdding: .weekOfYear, value: 1, to: thisMonday)!
         }
     }
 

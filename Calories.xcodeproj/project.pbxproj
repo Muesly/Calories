@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		DD01C6D12EF34C9C00E2D612 /* MealPickerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */; };
 		DD129422FF3F00000AABBCC /* MealPlanEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD129412FF3F00000AABBCC /* MealPlanEntry.swift */; };
+		DD134C462F1BE403009AB903 /* DateTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD134C442F1BE3F4009AB903 /* DateTestHelpers.swift */; };
+		DD134C492F1BE64D009AB903 /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD134C472F1BE64D009AB903 /* DateHelpers.swift */; };
+		DD134C4A2F1BE68D009AB903 /* DateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD134C472F1BE64D009AB903 /* DateHelpers.swift */; };
 		DD1595392EE59E750059954C /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */; };
 		DD15953A2EE59E750059954C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1595372EE59E750059954C /* Theme.swift */; };
 		DD15953C2EE5C22A0059954C /* FoodToUseUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */; };
@@ -19,6 +22,7 @@
 		DD238EA02F16EF05004E8544 /* PersonMealKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD238E9F2F16EF05004E8544 /* PersonMealKey.swift */; };
 		DD258F612C7B6BE9007E7754 /* ExerciseEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */; };
 		DD2C70142C73FAAA008193B3 /* AddPlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2C70132C73FAAA008193B3 /* AddPlantView.swift */; };
+		DD2E12152F196C7B0045B398 /* MealPlanningViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2E12132F196C7B0045B398 /* MealPlanningViewModelTests.swift */; };
 		DD3253FA2C6A89D300D9FF1D /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253F92C6A89D300D9FF1D /* Suggestion.swift */; };
 		DD3253FC2C6AB56200D9FF1D /* AddExerciseDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */; };
 		DD5134D42C83BE3400027855 /* PlantImageGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */; };
@@ -172,6 +176,8 @@
 		DD01C6D02EF34C9B00E2D612 /* MealPickerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPickerEngine.swift; sourceTree = "<group>"; };
 		DD0855AF2DEB57730093F793 /* CaloriesTestPlan-all.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CaloriesTestPlan-all.xctestplan"; sourceTree = "<group>"; };
 		DD129412FF3F00000AABBCC /* MealPlanEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPlanEntry.swift; sourceTree = "<group>"; };
+		DD134C442F1BE3F4009AB903 /* DateTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTestHelpers.swift; sourceTree = "<group>"; };
+		DD134C472F1BE64D009AB903 /* DateHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelpers.swift; sourceTree = "<group>"; };
 		DD1595362EE59E750059954C /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		DD1595372EE59E750059954C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodToUseUpView.swift; sourceTree = "<group>"; };
@@ -182,6 +188,7 @@
 		DD238E9F2F16EF05004E8544 /* PersonMealKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonMealKey.swift; sourceTree = "<group>"; };
 		DD258F5A2C7B6AAC007E7754 /* ExerciseEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntry.swift; sourceTree = "<group>"; };
 		DD2C70132C73FAAA008193B3 /* AddPlantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantView.swift; sourceTree = "<group>"; };
+		DD2E12132F196C7B0045B398 /* MealPlanningViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealPlanningViewModelTests.swift; sourceTree = "<group>"; };
 		DD3253F92C6A89D300D9FF1D /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		DD3253FB2C6AB56200D9FF1D /* AddExerciseDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExerciseDetailsView.swift; sourceTree = "<group>"; };
 		DD5134D32C83BE3400027855 /* PlantImageGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantImageGenerator.swift; sourceTree = "<group>"; };
@@ -334,6 +341,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD134C432F1BE3E2009AB903 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				DD134C442F1BE3F4009AB903 /* DateTestHelpers.swift */,
+				DD134C472F1BE64D009AB903 /* DateHelpers.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		DD1595382EE59E750059954C /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +357,14 @@
 				DD1595372EE59E750059954C /* Theme.swift */,
 			);
 			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		DD2E12142F196C7B0045B398 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				DD2E12132F196C7B0045B398 /* MealPlanningViewModelTests.swift */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		DD5134E32C846EE800027855 /* Add Plant */ = {
@@ -457,6 +481,7 @@
 		DDADA54C2E1C51C00004DADB /* MealPlanning */ = {
 			isa = PBXGroup;
 			children = (
+				DD2E12142F196C7B0045B398 /* Tests */,
 				DDDBAB282F14320D00099158 /* DayMeal.swift */,
 				DD6F91FF2EEEF56600664110 /* DayMealSelectionView.swift */,
 				DD15953B2EE5C22A0059954C /* FoodToUseUpView.swift */,
@@ -515,12 +540,12 @@
 		EA097D8629918C9E00735129 /* Calories */ = {
 			isa = PBXGroup;
 			children = (
-				DD1595382EE59E750059954C /* DesignSystem */,
 				DD5134E32C846EE800027855 /* Add Plant */,
 				EA4EE50A299E9D44000FE6AC /* AddExercise */,
 				EA2D491629981AFD00248864 /* AddFood */,
 				EA2D491529981AE800248864 /* App */,
 				DDB7FF8C2C724EB6000FE006 /* Companion */,
+				DD1595382EE59E750059954C /* DesignSystem */,
 				EA2D491829981B3C00248864 /* HealthStore */,
 				EA2D491729981B0F00248864 /* MealItems */,
 				DDADA54C2E1C51C00004DADB /* MealPlanning */,
@@ -528,6 +553,7 @@
 				EAD2115929A38F730007A813 /* RecordWeight */,
 				EA2D491929981B4600248864 /* Resources */,
 				DD883E962D19F47200A15A62 /* Supporting Files */,
+				DD134C432F1BE3E2009AB903 /* Utils */,
 				EA3EDC16299D6E8D005070D3 /* WeeklyChart */,
 			);
 			path = Calories;
@@ -971,6 +997,7 @@
 				EA4EE509299E9D0A000FE6AC /* AddExerciseView.swift in Sources */,
 				EA2D49122998142100248864 /* AddFoodViewModel.swift in Sources */,
 				DDAA98F12EFEDD670026AE9E /* RecipeDetailsView.swift in Sources */,
+				DD134C492F1BE64D009AB903 /* DateHelpers.swift in Sources */,
 				DDB7FF8E2C7253AD000FE006 /* NotificationSender.swift in Sources */,
 				EA097D8829918C9E00735129 /* CaloriesApp.swift in Sources */,
 				EA097DB82991909500735129 /* HistoryViewModel.swift in Sources */,
@@ -1003,7 +1030,10 @@
 				EA3EDC18299D74DA005070D3 /* WeeklyChartViewModelTests.swift in Sources */,
 				EA2D49102997D99E00248864 /* MealItemsViewModelTests.swift in Sources */,
 				EAD2115F29A391960007A813 /* RecordWeightViewModelTests.swift in Sources */,
+				DD134C4A2F1BE68D009AB903 /* DateHelpers.swift in Sources */,
+				DD134C462F1BE403009AB903 /* DateTestHelpers.swift in Sources */,
 				DD538CED2C6C0CFD007CAD98 /* CompanionTests.swift in Sources */,
+				DD2E12152F196C7B0045B398 /* MealPlanningViewModelTests.swift in Sources */,
 				DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */,
 				EA2D49142998166500248864 /* AddFoodViewModelTests.swift in Sources */,
 				EA097D9E29918CA000735129 /* HistoryViewModelTests.swift in Sources */,

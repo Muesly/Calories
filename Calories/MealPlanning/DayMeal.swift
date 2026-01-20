@@ -12,7 +12,9 @@ public struct DayMeal: Hashable {
     }
 
     var keyString: String {
-        let dateString = date.formatted(date: .abbreviated, time: .omitted)
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate]  // Just date, no time: "2026-03-05"
+        let dateString = formatter.string(from: date).replacingOccurrences(of: "-", with: "/")
         return "\(dateString)-\(mealType.rawValue)"
     }
 }

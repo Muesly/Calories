@@ -15,193 +15,134 @@ import Testing
 @MainActor
 struct MealPlanningViewModelTests {
     var subject: MealPlanningViewModel
+    var modelContext: ModelContext! = .inMemory
 
     init() {
-        let modelContext = ModelContext(.inMemory)
-        subject = MealPlanningViewModel(modelContext: modelContext)
+        subject = MealPlanningViewModel(
+            modelContext: modelContext,
+            startDate: .testReference.startOfPlanningWeek
+        )
     }
 
     // MARK: - Attendee Count Tests
 
     @Test("Attendee count when both present")
     func attendeeCountWhenBothPresent() {
-        let date = Date()
-        let mealType = MealType.breakfast
-
-        let count = subject.attendeeCount(for: date, mealType: mealType)
-
-        #expect(count == 2)
+        let dayMeal = DayMeal(mealType: .breakfast, date: Date.testReference.startOfPlanningWeek)
+        #expect(subject.attendeeCount(forDayMeal: dayMeal) == 2)
     }
 
     @Test("Attendee count when one absent")
     func attendeeCountWhenOneAbsent() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-
-        let count = subject.attendeeCount(for: date, mealType: mealType)
-
-        #expect(count == 1)
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        #expect(subject.attendeeCount(forDayMeal: dayMeal) == 1)
     }
 
     @Test("Attendee count when both absent")
     func attendeeCountWhenBothAbsent() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.toggleMealSelection(for: .karen, date: date, mealType: mealType)
-
-        let count = subject.attendeeCount(for: date, mealType: mealType)
-
-        #expect(count == 0)
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
+        #expect(subject.attendeeCount(forDayMeal: dayMeal) == 0)
     }
 
     // MARK: - Serving Info Tests
 
     @Test("Serving info when both present")
     func servingInfoWhenBothPresent() {
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         let info = subject.servingInfo(forDayMeal: dayMeal)
-
         #expect(info == "2 x servings")
     }
 
     @Test("Serving info when one absent with reason")
     func servingInfoWhenOneAbsentWithReason() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.setReason("Working late", for: .tony, dayMeal: dayMeal)
-
-        let info = subject.servingInfo(forDayMeal: dayMeal)
-
-        #expect(info == "1 x serving (Karen)")
+        #expect(subject.servingInfo(forDayMeal: dayMeal) == "1 x serving (Karen)")
+        #expect(subject.getReason(for: .tony, dayMeal: dayMeal) == "Working late")
     }
 
     @Test("Serving info when one absent without reason")
     func servingInfoWhenOneAbsentWithoutReason() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
-
-        let info = subject.servingInfo(forDayMeal: dayMeal)
-
-        #expect(info == "1 x serving (Karen)")
+        #expect(subject.servingInfo(forDayMeal: dayMeal) == "1 x serving (Karen)")
+        #expect(subject.getReason(for: .tony, dayMeal: dayMeal) == "")
     }
 
     @Test("Serving info when both absent with same reason")
     func servingInfoWhenBothAbsentSameReason() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
         subject.setReason("Out of town", for: .tony, dayMeal: dayMeal)
         subject.setReason("Out of town", for: .karen, dayMeal: dayMeal)
-
-        let info = subject.servingInfo(forDayMeal: dayMeal)
-
-        #expect(info == "No meal required - Out of town")
+        #expect(subject.servingInfo(forDayMeal: dayMeal) == "No meal required - Out of town")
     }
 
     @Test("Serving info when both absent with different reasons")
     func servingInfoWhenBothAbsentDifferentReasons() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
         subject.setReason("Working late", for: .tony, dayMeal: dayMeal)
         subject.setReason("Doctor appointment", for: .karen, dayMeal: dayMeal)
-
-        let info = subject.servingInfo(forDayMeal: dayMeal)
-
-        #expect(info == "No meal required - Tony: Working late, Karen: Doctor appointment")
+        #expect(
+            subject.servingInfo(forDayMeal: dayMeal)
+                == "No meal required - Tony: Working late, Karen: Doctor appointment")
     }
 
     @Test("Serving info when both absent with no reasons")
     func servingInfoWhenBothAbsentNoReasons() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
-
-        let info = subject.servingInfo(forDayMeal: dayMeal)
-
-        #expect(info == "No meal required")
+        #expect(subject.servingInfo(forDayMeal: dayMeal) == "No meal required")
     }
 
     @Test("Serving info when both absent with one reason")
     func servingInfoWhenBothAbsentOneWithReason() {
-        var subject = self.subject
-        let date = Date()
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: .testReference.startOfPlanningWeek)
         subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
         subject.setReason("Traveling", for: .tony, dayMeal: dayMeal)
-
-        let info = subject.servingInfo(forDayMeal: dayMeal)
-
-        #expect(info == "No meal required - Traveling")
+        #expect(subject.servingInfo(forDayMeal: dayMeal) == "No meal required - Traveling")
     }
 
-    // MARK: - fetchRecipes Tests
+    // MARK: - populateEmptyMeals Tests
 
     @Test("Fetch recipes picks recipe when at least one person present")
-    func fetchRecipesPicksRecipeWhenAtLeastOnePersonPresent() {
-        let modelContext = ModelContext(.inMemory)
+    func populateEmptyMealsPicksRecipeWhenAtLeastOnePersonPresent() {
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
+        let recipes = modelContext.recipeResults()
 
-        subject.fetchRecipes()
-
+        subject.populateMealRecipes()
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let meals = subject.meals(forDate: date, mealType: mealType)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
+        let meals = subject.meals(forDayMeal: dayMeal)
 
         #expect(meals.first?.recipe != nil)
     }
 
     @Test("Fetch recipes does not pick recipe when both absent")
-    func fetchRecipesDoesNotPickRecipeWhenBothAbsent() {
-        let modelContext = ModelContext(.inMemory)
+    func populateEmptyMealsDoesNotPickRecipeWhenBothAbsent() {
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-        subject.toggleMealSelection(for: .karen, date: date, mealType: mealType)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
+        subject.toggleMealSelection(for: .karen, dayMeal: dayMeal)
 
-        subject.fetchRecipes()
+        subject.populateMealRecipes()
 
         let mealTony = subject.mealSelections.first {
-            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType
+            $0.person == .tony && $0.dayMeal == dayMeal
         }
         let mealKaren = subject.mealSelections.first {
-            $0.person == .karen && $0.date.isSameDay(as: date) && $0.mealType == mealType
+            $0.person == .karen && $0.dayMeal == dayMeal
         }
 
         #expect(mealTony?.recipe == nil)
@@ -209,20 +150,17 @@ struct MealPlanningViewModelTests {
     }
 
     @Test("Fetch recipes picks same recipe for both people")
-    func fetchRecipesPicksSameRecipeForBothPeople() {
-        let modelContext = ModelContext(.inMemory)
+    func populateEmptyMealsPicksSameRecipeForBothPeople() {
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
-        subject.fetchRecipes()
+        subject.populateMealRecipes()
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
         let mealTony = subject.mealSelections.first {
-            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType
+            $0.person == .tony && $0.dayMeal == dayMeal
         }
         let mealKaren = subject.mealSelections.first {
-            $0.person == .karen && $0.date.isSameDay(as: date) && $0.mealType == mealType
+            $0.person == .karen && $0.dayMeal == dayMeal
         }
 
         #expect(mealTony?.recipe?.name == mealKaren?.recipe?.name)
@@ -230,58 +168,55 @@ struct MealPlanningViewModelTests {
 
     // MARK: - startOfPlanningWeek Tests
 
-    @Test("Start of planning week Monday to Wednesday")
-    func startOfPlanningWeekMondayToWednesday() {
-        let monday = dateForWeekday(2)
-        let tuesday = dateForWeekday(3)
-        let wednesday = dateForWeekday(4)
-
-        let mondayResult = MealPlanningViewModel.startOfPlanningWeek(from: monday)
-        let tuesdayResult = MealPlanningViewModel.startOfPlanningWeek(from: tuesday)
-        let wednesdayResult = MealPlanningViewModel.startOfPlanningWeek(from: wednesday)
-
-        #expect(Calendar.current.component(.weekday, from: mondayResult) == 2)
-        #expect(Calendar.current.component(.weekday, from: tuesdayResult) == 2)
-        #expect(Calendar.current.component(.weekday, from: wednesdayResult) == 2)
-
-        #expect(mondayResult.isSameDay(as: tuesdayResult))
-        #expect(tuesdayResult.isSameDay(as: wednesdayResult))
-    }
-
-    @Test("Start of planning week Thursday to Sunday")
-    func startOfPlanningWeekThursdayToSunday() {
-        let thursday = dateForWeekday(5)
-        let friday = dateForWeekday(6)
-        let saturday = dateForWeekday(7)
-        let sunday = dateForWeekday(1)
-
-        let thursdayResult = MealPlanningViewModel.startOfPlanningWeek(from: thursday)
-        let fridayResult = MealPlanningViewModel.startOfPlanningWeek(from: friday)
-        let saturdayResult = MealPlanningViewModel.startOfPlanningWeek(from: saturday)
-        let sundayResult = MealPlanningViewModel.startOfPlanningWeek(from: sunday)
-
-        #expect(Calendar.current.component(.weekday, from: thursdayResult) == 2)
-        #expect(Calendar.current.component(.weekday, from: fridayResult) == 2)
-        #expect(Calendar.current.component(.weekday, from: saturdayResult) == 2)
-        #expect(Calendar.current.component(.weekday, from: sundayResult) == 2)
-
-        #expect(thursdayResult.isSameDay(as: fridayResult))
-        #expect(fridayResult.isSameDay(as: saturdayResult))
-        #expect(saturdayResult.isSameDay(as: sundayResult))
-
+    @Test("Start of planning week")
+    func startOfPlanningWeek() {
         let calendar = Calendar.current
-        let daysDifference =
-            calendar.dateComponents([.day], from: thursday, to: thursdayResult).day ?? 0
-        #expect(daysDifference > 0)
+        let components: Set<Calendar.Component> = [.weekday, .day]
+
+        // Monday to Wednesday we are still planning for current week
+        let monday = Date.testReference.startOfWeek
+        let mondayResult = calendar.dateComponents(components, from: monday.startOfPlanningWeek)
+        #expect(mondayResult.weekday == 2)
+        #expect(mondayResult.day == 29)
+
+        let tuesday = calendar.date(byAdding: .day, value: 1, to: monday)!
+        let tuesdayResult = calendar.dateComponents(components, from: tuesday.startOfPlanningWeek)
+        #expect(tuesdayResult.weekday == 2)
+        #expect(tuesdayResult.day == 29)
+
+        let wednesday = calendar.date(byAdding: .day, value: 2, to: monday)!
+        let wednesdayResult = calendar.dateComponents(
+            components, from: wednesday.startOfPlanningWeek)
+        #expect(wednesdayResult.weekday == 2)
+        #expect(wednesdayResult.day == 29)
+
+        // Thursday onwards we are planning the following week
+        let thursday = calendar.date(byAdding: .day, value: 3, to: monday)!
+        let thursdayResult = calendar.dateComponents(components, from: thursday.startOfPlanningWeek)
+        #expect(thursdayResult.weekday == 2)
+        #expect(thursdayResult.day == 5)
+
+        let friday = calendar.date(byAdding: .day, value: 4, to: monday)!
+        let fridayResult = calendar.dateComponents(components, from: friday.startOfPlanningWeek)
+        #expect(fridayResult.weekday == 2)
+        #expect(fridayResult.day == 5)
+
+        let saturday = calendar.date(byAdding: .day, value: 5, to: monday)!
+        let saturdayResult = calendar.dateComponents(components, from: saturday.startOfPlanningWeek)
+        #expect(saturdayResult.weekday == 2)
+        #expect(saturdayResult.day == 5)
+
+        let sunday = calendar.date(byAdding: .day, value: 6, to: monday)!
+        let sundayResult = calendar.dateComponents(components, from: sunday.startOfPlanningWeek)
+        #expect(sundayResult.weekday == 2)
+        #expect(sundayResult.day == 5)
     }
 
     // MARK: - Swap Meals Tests
 
     @Test("Swap meals exchanges recipes")
     func swapMealsExchangesRecipes() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard recipes.count >= 2 else {
@@ -292,24 +227,19 @@ struct MealPlanningViewModelTests {
         let date = subject.weekDates[0]
         let mealType1 = MealType.breakfast
         let mealType2 = MealType.lunch
+        let dayMeal1 = DayMeal(mealType: mealType1, date: date)
+        let dayMeal2 = DayMeal(mealType: mealType2, date: date)
 
-        let meal1 = subject.mealSelections.first {
-            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType1
-        }!
-        let meal2 = subject.mealSelections.first {
-            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType2
-        }!
+        subject.selectRecipe(recipes[0], for: .tony, dayMeal: dayMeal1)
+        subject.selectRecipe(recipes[1], for: .tony, dayMeal: dayMeal2)
 
-        subject.selectRecipe(recipes[0], for: .tony, date: date, mealType: mealType1)
-        subject.selectRecipe(recipes[1], for: .tony, date: date, mealType: mealType2)
-
-        subject.swapMeals(meal1, with: meal2)
+        subject.swapMeals(dayMeal1, with: dayMeal2)
 
         let swappedMeal1 = subject.mealSelections.first {
-            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType1
+            $0.person == .tony && $0.dayMeal == dayMeal1
         }!
         let swappedMeal2 = subject.mealSelections.first {
-            $0.person == .tony && $0.date.isSameDay(as: date) && $0.mealType == mealType2
+            $0.person == .tony && $0.dayMeal == dayMeal2
         }!
 
         #expect(swappedMeal1.recipe?.name == recipes[1].name)
@@ -320,7 +250,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Add food item appends to list")
     func addFoodItemAppends() {
-        var subject = self.subject
         let initialCount = subject.foodToUseUp.count
 
         subject.addFoodItem()
@@ -330,19 +259,18 @@ struct MealPlanningViewModelTests {
 
     @Test("Remove food item by index")
     func removeFoodItemByIndex() {
-        var subject = self.subject
         subject.addFoodItem()
         subject.addFoodItem()
         let countBefore = subject.foodToUseUp.count
+        let firstItemId = subject.foodToUseUp[0].id
 
-        subject.removeFoodItem(at: 0)
+        subject.removeFoodItem(withId: firstItemId)
 
         #expect(subject.foodToUseUp.count == countBefore - 1)
     }
 
     @Test("Remove food item by id")
     func removeFoodItemById() {
-        var subject = self.subject
         subject.addFoodItem()
         let item = subject.foodToUseUp[0]
 
@@ -353,7 +281,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Update food item")
     func updateFoodItem() {
-        var subject = self.subject
         subject.addFoodItem()
         let item = subject.foodToUseUp[0]
         var updatedItem = item
@@ -368,88 +295,66 @@ struct MealPlanningViewModelTests {
 
     @Test("Load and save meal plan preserves selections")
     func loadAndSaveMealPlanPreservesSelections() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.saveMealPlan()
 
-        // Create new view model to load data
-        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        let subject2 = MealPlanningViewModel(modelContext: modelContext, startDate: date)
         subject2.loadMealPlan()
 
-        let isSelected = subject2.isSelected(for: .tony, date: date, mealType: mealType)
-        #expect(!isSelected)
+        #expect(!subject2.isSelected(for: .tony, dayMeal: dayMeal))
     }
 
     @Test("Load and save meal plan preserves reasons")
     func loadAndSaveMealPlanPreservesReasons() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        subject.setReason("Working late", for: .tony, date: date, mealType: mealType)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
+        subject.setReason("Working late", for: .tony, dayMeal: dayMeal)
         subject.saveMealPlan()
 
-        // Create new view model to load data
-        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        let subject2 = MealPlanningViewModel(modelContext: modelContext, startDate: date)
         subject2.loadMealPlan()
 
-        let reason = subject2.getReason(for: .tony, date: date, mealType: mealType)
-        #expect(reason == "Working late")
+        #expect(subject2.getReason(for: .tony, dayMeal: dayMeal) == "Working late")
     }
 
     @Test("Load and save meal plan preserves quick meals")
     func loadAndSaveMealPlanPreservesQuickMeals() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        subject.setQuickMeal(true, for: date, mealType: mealType)
-
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
+        subject.setQuickMeal(true, dayMeal: dayMeal)
         subject.saveMealPlan()
 
-        // Create new view model to load data
-        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        let subject2 = MealPlanningViewModel(modelContext: modelContext, startDate: date)
         subject2.loadMealPlan()
 
-        let isQuick = subject2.isQuickMeal(for: date, mealType: mealType)
-        #expect(isQuick)
+        #expect(subject2.isQuickMeal(forDayMeal: dayMeal))
     }
 
     @Test("Load and save meal plan preserves food to use up")
-    func loadAndSaveMealPlanPreservesFoodToUseUp() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
+    func loadAndSaveMealPlanPreservesFoodToUseUp() throws {
         subject.addFoodItem()
         var item = subject.foodToUseUp[0]
         item.name = "Leftover pasta"
-
         subject.updateFoodItem(item)
         subject.saveMealPlan()
 
-        // Create new view model to load data
-        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        let subject2 = MealPlanningViewModel(
+            modelContext: modelContext,
+            startDate: Date.testReference.startOfPlanningWeek)
         subject2.loadMealPlan()
 
         #expect(subject2.foodToUseUp.count == 1)
-        #expect(subject2.foodToUseUp[0].name == "Leftover pasta")
+        let firstFoodToUseUp = try #require(subject2.foodToUseUp.first?.name)
+        #expect(firstFoodToUseUp == "Leftover pasta")
     }
 
     // MARK: - Recipe Selection Tests
 
     @Test("Select recipe assigns recipe to person's meal")
     func selectRecipeAssignsToMeal() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let recipe = recipes.first else {
@@ -458,8 +363,7 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(recipe, for: .tony, dayMeal: dayMeal)
 
@@ -471,9 +375,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Remove meal clears recipe for all people at day meal")
     func removeMealClearsRecipeForAllPeople() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let recipe = recipes.first else {
@@ -482,8 +384,7 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(recipe, for: .tony, dayMeal: dayMeal)
         subject.selectRecipe(recipe, for: .karen, dayMeal: dayMeal)
@@ -505,9 +406,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Split meal clears Karen's recipe")
     func splitMealClearsKarensRecipe() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let recipe = recipes.first else {
@@ -516,8 +415,7 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(recipe, for: .tony, dayMeal: dayMeal)
         subject.selectRecipe(recipe, for: .karen, dayMeal: dayMeal)
@@ -537,9 +435,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Join meal copies Tony's recipe to Karen")
     func joinMealCopiesRecipe() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard recipes.count >= 2 else {
@@ -548,8 +444,7 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(recipes[0], for: .tony, dayMeal: dayMeal)
         subject.selectRecipe(recipes[1], for: .karen, dayMeal: dayMeal)
@@ -571,7 +466,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Set pinned meal stores pinned status")
     func setPinnedMealStoresStatus() {
-        var subject = self.subject
         let date = subject.weekDates[0]
         let mealType = MealType.lunch
         let dayMeal = DayMeal(mealType: mealType, date: date)
@@ -583,9 +477,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Pinned meals are not replaced when fetching recipes")
     func pinnedMealsAreNotReplaced() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let recipe = recipes.first else {
@@ -594,13 +486,12 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(recipe, for: .tony, dayMeal: dayMeal)
         subject.setPinnedMeal(true, dayMeal: dayMeal)
 
-        subject.fetchRecipes()
+        subject.populateMealRecipes()
 
         let meal = subject.mealSelections.first {
             $0.person == .tony && $0.dayMeal == dayMeal
@@ -611,9 +502,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Unpinned meals can be replaced when fetching recipes")
     func unpinnedMealsCanBeReplaced() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let firstRecipe = recipes.first else {
@@ -622,13 +511,12 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(firstRecipe, for: .tony, dayMeal: dayMeal)
         subject.setPinnedMeal(false, dayMeal: dayMeal)
 
-        subject.fetchRecipes()
+        subject.populateMealRecipes()
 
         let meal = subject.mealSelections.first {
             $0.person == .tony && $0.dayMeal == dayMeal
@@ -641,9 +529,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Go to previous week changes week dates")
     func goToPreviousWeekChangesWeekDates() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
         let originalStartDate = subject.currentWeekStartDate
         let originalFirstDate = subject.weekDates.first!
 
@@ -656,8 +541,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Go to next week changes week dates")
     func goToNextWeekChangesWeekDates() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let originalStartDate = subject.currentWeekStartDate
         let originalFirstDate = subject.weekDates.first!
@@ -671,19 +554,17 @@ struct MealPlanningViewModelTests {
 
     @Test("Week navigation loads meal plan for new week")
     func weekNavigationLoadsMealPlan() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        subject.toggleMealSelection(for: .tony, date: date, mealType: mealType)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
+        subject.toggleMealSelection(for: .tony, dayMeal: dayMeal)
         subject.saveMealPlan()
 
         subject.goToNextWeek()
         subject.goToPreviousWeek()
 
-        let isSelected = subject.isSelected(for: .tony, date: date, mealType: mealType)
+        let isSelected = subject.isSelected(for: .tony, dayMeal: dayMeal)
         #expect(!isSelected)
     }
 
@@ -691,7 +572,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Meals returns all meal selections for day meal")
     func mealsReturnsAllSelectionsForDayMeal() {
-        var subject = self.subject
         let date = subject.weekDates[0]
         let mealType = MealType.dinner
         let dayMeal = DayMeal(mealType: mealType, date: date)
@@ -706,17 +586,12 @@ struct MealPlanningViewModelTests {
 
     @Test("Load and save meal plan preserves pinned meals")
     func loadAndSaveMealPlanPreservesPinnedMeals() {
-        let modelContext = ModelContext(.inMemory)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
-
         let date = subject.weekDates[0]
-        let mealType = MealType.dinner
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .dinner, date: date)
         subject.setPinnedMeal(true, dayMeal: dayMeal)
-
         subject.saveMealPlan()
 
-        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        let subject2 = MealPlanningViewModel(modelContext: modelContext, startDate: date)
         subject2.loadMealPlan()
 
         let isPinned = subject2.isPinnedMeal(forDayMeal: dayMeal)
@@ -725,9 +600,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Load and save meal plan preserves recipes")
     func loadAndSaveMealPlanPreservesRecipes() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let recipe = recipes.first else {
@@ -736,13 +609,12 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
         subject.selectRecipe(recipe, for: .tony, dayMeal: dayMeal)
 
         subject.saveMealPlan()
 
-        var subject2 = MealPlanningViewModel(modelContext: modelContext)
+        let subject2 = MealPlanningViewModel(modelContext: modelContext, startDate: date)
         subject2.loadMealPlan()
 
         let meal = subject2.mealSelections.first {
@@ -755,7 +627,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Set quick meal stores status")
     func setQuickMealStoresStatus() {
-        var subject = self.subject
         let date = subject.weekDates[0]
         let mealType = MealType.lunch
         let dayMeal = DayMeal(mealType: mealType, date: date)
@@ -767,7 +638,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Quick meal status defaults to false")
     func quickMealDefaultsToFalse() {
-        var subject = self.subject
         let date = subject.weekDates[0]
         let mealType = MealType.dinner
         let dayMeal = DayMeal(mealType: mealType, date: date)
@@ -781,9 +651,7 @@ struct MealPlanningViewModelTests {
 
     @Test("Swap meals with same day meal does nothing")
     func swapMealsWithSameDayMeal() {
-        let modelContext = ModelContext(.inMemory)
         RecipeEntry.seedRecipes(into: modelContext)
-        var subject = MealPlanningViewModel(modelContext: modelContext)
 
         let recipes = modelContext.recipeResults()
         guard let recipe = recipes.first else {
@@ -792,8 +660,7 @@ struct MealPlanningViewModelTests {
         }
 
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.selectRecipe(recipe, for: .tony, dayMeal: dayMeal)
 
@@ -807,7 +674,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Toggle meal selection twice returns to original state")
     func toggleMealSelectionTwiceReturnsToOriginal() {
-        var subject = self.subject
         let date = subject.weekDates[0]
         let mealType = MealType.lunch
         let dayMeal = DayMeal(mealType: mealType, date: date)
@@ -824,10 +690,8 @@ struct MealPlanningViewModelTests {
 
     @Test("Set empty reason removes reason from storage")
     func setEmptyReasonRemovesFromStorage() {
-        var subject = self.subject
         let date = subject.weekDates[0]
-        let mealType = MealType.breakfast
-        let dayMeal = DayMeal(mealType: mealType, date: date)
+        let dayMeal = DayMeal(mealType: .breakfast, date: date)
 
         subject.setReason("Initial reason", for: .tony, dayMeal: dayMeal)
         subject.setReason("", for: .tony, dayMeal: dayMeal)
@@ -839,7 +703,6 @@ struct MealPlanningViewModelTests {
 
     @Test("Meals for day meal returns empty array for future date outside week")
     func mealsForDayMealOutsideWeek() {
-        var subject = self.subject
         let futureDate = Calendar.current.date(byAdding: .day, value: 14, to: Date())!
         let mealType = MealType.dinner
         let dayMeal = DayMeal(mealType: mealType, date: futureDate)
@@ -853,39 +716,19 @@ struct MealPlanningViewModelTests {
 
     @Test("Initialize creates selections for all people and meal types")
     func initializeCreatesAllSelections() {
-        let modelContext = ModelContext(.inMemory)
-        let subject = MealPlanningViewModel(modelContext: modelContext)
-
         let expectedCount = Person.allCases.count * 7 * MealType.allCases.count
-
         #expect(subject.mealSelections.count == expectedCount)
     }
 
     @Test("Initialize creates seven week dates")
     func initializeCreatesSevenDates() {
-        let modelContext = ModelContext(.inMemory)
-        let subject = MealPlanningViewModel(modelContext: modelContext)
-
         #expect(subject.weekDates.count == 7)
     }
 
     @Test("Initialize sets all selections to selected by default")
     func initializeSetsAllSelectionsToSelected() {
-        let modelContext = ModelContext(.inMemory)
-        let subject = MealPlanningViewModel(modelContext: modelContext)
-
         let allSelected = subject.mealSelections.allSatisfy { $0.isSelected }
 
         #expect(allSelected)
-    }
-
-    // MARK: - Helper Methods
-
-    private func dateForWeekday(_ weekday: Int) -> Date {
-        let calendar = Calendar.current
-        let now = Date()
-        let currentWeekday = calendar.component(.weekday, from: now)
-        let daysToAdd = (weekday - currentWeekday + 7) % 7
-        return calendar.date(byAdding: .day, value: daysToAdd, to: now) ?? now
     }
 }

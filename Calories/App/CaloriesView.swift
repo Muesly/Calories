@@ -125,7 +125,11 @@ struct CaloriesView: View {
                 RecordWeightView(viewModel: RecordWeightViewModel(healthStore: healthStore))
             }
             .fullScreenCover(isPresented: $showingMealPlanningView) {
-                MealPlanningView(viewModel: MealPlanningViewModel(modelContext: modelContext))
+                MealPlanningView(
+                    viewModel: MealPlanningViewModel(
+                        modelContext: modelContext,
+                        startDate: Date().startOfPlanningWeek)
+                )
             }
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {

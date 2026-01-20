@@ -15,7 +15,11 @@ extension ModelContext {
     static var inMemory: ModelContext {
         ModelContext(
             try! ModelContainer(
-                for: FoodEntry.self, IngredientEntry.self, ExerciseEntry.self,
+                for: FoodEntry.self,
+                IngredientEntry.self,
+                ExerciseEntry.self,
+                RecipeEntry.self,
+                MealPlanEntry.self,
                 configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
     }
 

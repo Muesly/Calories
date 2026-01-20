@@ -52,17 +52,19 @@ struct MealPlanningView: View {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button("Done") {
                                 showFoodToUseUp = false
-                                viewModel.populateEmptyMeals()
+                                viewModel.populateMealRecipes()
                             }
                         }
                     }
             }
         }
     }
-
 }
 
 #Preview {
     @Previewable @Environment(\.modelContext) var modelContext
-    MealPlanningView(viewModel: MealPlanningViewModel(modelContext: modelContext))
+    MealPlanningView(
+        viewModel: MealPlanningViewModel(
+            modelContext: modelContext,
+            startDate: Date().startOfPlanningWeek))
 }

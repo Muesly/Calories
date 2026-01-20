@@ -9,7 +9,10 @@
       "Bash(ls:*)",
       "Bash(swiftc:*)",
       "Bash(wc:*)",
-      "Bash(swift build:*)"
+      "Bash(swift build:*)",
+      "Bash(swift test:*)",
+      "Bash(xcrun xcodebuild test:*)",
+      "Bash(xcpretty:*)"
     ],
     "deny": []
   }

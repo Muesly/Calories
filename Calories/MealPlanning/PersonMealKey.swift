@@ -29,4 +29,10 @@ struct PersonMealKey: Hashable {
     var keyString: String {
         "\(person.rawValue)-\(dayMeal.keyString)"
     }
+
+    static var formatter: ISO8601DateFormatter {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate]  // Just date, no time: "2026-03-05"
+        return formatter
+    }
 }

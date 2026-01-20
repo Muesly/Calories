@@ -176,19 +176,20 @@ struct StoredFoodToUseUp: Codable {
         let components = keyString.split(
             separator: "-", maxSplits: 2, omittingEmptySubsequences: false
         ).map(String.init)
-        guard components.count >= 3 else { return nil }
+        guard components.count == 3 else { return nil }
 
         let personRawValue = components[0]
+        let dateRawValue = components[1]
         let mealTypeRawValue = components[2]
-
         guard let person = Person(rawValue: personRawValue),
-            let mealType = MealType.allCases.first(where: { $0.rawValue == mealTypeRawValue })
+            let mealType = MealType.allCases.first(where: { $0.rawValue == mealTypeRawValue }),
+            let date = PersonMealKey.formatter.date(
+                from: dateRawValue.replacingOccurrences(of: "/", with: "-"))
         else {
             return nil
         }
 
-        // For legacy format, assume date string in middle - we'll use today for simplicity
-        return PersonMealKey(person: person, dayMeal: DayMeal(mealType: mealType, date: Date()))
+        return PersonMealKey(person: person, dayMeal: DayMeal(mealType: mealType, date: date))
             .normalize()
     }
 
@@ -198,13 +199,16 @@ struct StoredFoodToUseUp: Codable {
         ).map(String.init)
         guard components.count >= 2 else { return nil }
 
+        let dateRawValue = components[0]
         let mealTypeRawValue = components[1]
-        guard let mealType = MealType.allCases.first(where: { $0.rawValue == mealTypeRawValue })
+        guard let mealType = MealType.allCases.first(where: { $0.rawValue == mealTypeRawValue }),
+            let date = PersonMealKey.formatter.date(
+                from: dateRawValue.replacingOccurrences(of: "/", with: "-"))
         else {
             return nil
         }
 
-        return MealKey(dayMeal: DayMeal(mealType: mealType, date: Date())).normalize()
+        return MealKey(dayMeal: DayMeal(mealType: mealType, date: date)).normalize()
     }
 
     // MARK: - Food To Use Up
