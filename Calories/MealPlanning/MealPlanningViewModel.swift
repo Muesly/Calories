@@ -287,30 +287,20 @@ class MealPlanningViewModel: ObservableObject {
     }
 
     func swapMeals(_ dayMeal1: DayMeal, with dayMeal2: DayMeal) {
-        // Swap recipes between the same person's meals on different days or different meal types
-        // Get the first person's meals for each day/meal type (prioritize same person)
-        guard
-            let meal1 = mealSelections.first(where: {
-                $0.dayMeal == dayMeal1
-            }),
-            let meal2 = mealSelections.first(where: {
-                $0.dayMeal == dayMeal2
-            })
-        else {
-            return
+        // Swap recipes for all people between two meals, preserving joined/split state
+        // For each person, swap their recipe from meal1 with their recipe from meal2
+        for person in Person.allCases {
+            guard
+                let idx1 = findMealSelectionIndex(for: person, dayMeal: dayMeal1),
+                let idx2 = findMealSelectionIndex(for: person, dayMeal: dayMeal2)
+            else {
+                continue
+            }
+
+            let tempRecipe = mealSelections[idx1].recipe
+            mealSelections[idx1].recipe = mealSelections[idx2].recipe
+            mealSelections[idx2].recipe = tempRecipe
         }
-        swapMeals(meal1, with: meal2)
-    }
-
-    private func swapMeals(_ meal1: MealSelection, with meal2: MealSelection) {
-        let meal1Index = mealSelections.firstIndex { $0.id == meal1.id }
-        let meal2Index = mealSelections.firstIndex { $0.id == meal2.id }
-
-        guard let idx1 = meal1Index, let idx2 = meal2Index else { return }
-
-        let tempRecipe = mealSelections[idx1].recipe
-        mealSelections[idx1].recipe = mealSelections[idx2].recipe
-        mealSelections[idx2].recipe = tempRecipe
         saveMealPlan()
     }
 

@@ -117,7 +117,6 @@ struct MealPlanningViewModelTests {
     @Test("Fetch recipes picks recipe when at least one person present")
     func populateEmptyMealsPicksRecipeWhenAtLeastOnePersonPresent() {
         RecipeEntry.seedRecipes(into: modelContext)
-        let recipes = modelContext.recipeResults()
 
         subject.populateMealRecipes()
         let date = subject.weekDates[0]
@@ -244,6 +243,142 @@ struct MealPlanningViewModelTests {
 
         #expect(swappedMeal1.recipe?.name == recipes[1].name)
         #expect(swappedMeal2.recipe?.name == recipes[0].name)
+    }
+
+    @Test("Swap joined meals preserves joined state")
+    func swapJoinedMealsPreservesJoinedState() {
+        RecipeEntry.seedRecipes(into: modelContext)
+
+        let recipes = modelContext.recipeResults()
+        guard recipes.count >= 2 else {
+            Issue.record("Not enough recipes for swap test")
+            return
+        }
+
+        let date = subject.weekDates[0]
+        let dayMeal1 = DayMeal(mealType: .breakfast, date: date)
+        let dayMeal2 = DayMeal(mealType: .lunch, date: date)
+
+        // Set up joined meals (both Tony and Karen have same recipe)
+        subject.selectRecipe(recipes[0], for: .tony, dayMeal: dayMeal1)
+        subject.selectRecipe(recipes[0], for: .karen, dayMeal: dayMeal1)
+        subject.selectRecipe(recipes[1], for: .tony, dayMeal: dayMeal2)
+        subject.selectRecipe(recipes[1], for: .karen, dayMeal: dayMeal2)
+
+        subject.swapMeals(dayMeal1, with: dayMeal2)
+
+        // After swap, both meals should still be joined
+        let tonyMeal1 = subject.mealSelections.first {
+            $0.person == .tony && $0.dayMeal == dayMeal1
+        }!
+        let karenMeal1 = subject.mealSelections.first {
+            $0.person == .karen && $0.dayMeal == dayMeal1
+        }!
+        let tonyMeal2 = subject.mealSelections.first {
+            $0.person == .tony && $0.dayMeal == dayMeal2
+        }!
+        let karenMeal2 = subject.mealSelections.first {
+            $0.person == .karen && $0.dayMeal == dayMeal2
+        }!
+
+        // Meal 1 should now have recipe[1] for both people
+        #expect(tonyMeal1.recipe?.name == recipes[1].name)
+        #expect(karenMeal1.recipe?.name == recipes[1].name)
+
+        // Meal 2 should now have recipe[0] for both people
+        #expect(tonyMeal2.recipe?.name == recipes[0].name)
+        #expect(karenMeal2.recipe?.name == recipes[0].name)
+    }
+
+    @Test("Swap split meals preserves split state")
+    func swapSplitMealsPreservesSplitState() {
+        RecipeEntry.seedRecipes(into: modelContext)
+
+        let recipes = modelContext.recipeResults()
+        guard recipes.count >= 4 else {
+            Issue.record("Not enough recipes for swap test")
+            return
+        }
+
+        let date = subject.weekDates[0]
+        let dayMeal1 = DayMeal(mealType: .breakfast, date: date)
+        let dayMeal2 = DayMeal(mealType: .lunch, date: date)
+
+        // Set up split meals (Tony and Karen have different recipes)
+        subject.selectRecipe(recipes[0], for: .tony, dayMeal: dayMeal1)
+        subject.selectRecipe(recipes[1], for: .karen, dayMeal: dayMeal1)
+        subject.selectRecipe(recipes[2], for: .tony, dayMeal: dayMeal2)
+        subject.selectRecipe(recipes[3], for: .karen, dayMeal: dayMeal2)
+
+        subject.swapMeals(dayMeal1, with: dayMeal2)
+
+        // After swap, both meals should still be split
+        let tonyMeal1 = subject.mealSelections.first {
+            $0.person == .tony && $0.dayMeal == dayMeal1
+        }!
+        let karenMeal1 = subject.mealSelections.first {
+            $0.person == .karen && $0.dayMeal == dayMeal1
+        }!
+        let tonyMeal2 = subject.mealSelections.first {
+            $0.person == .tony && $0.dayMeal == dayMeal2
+        }!
+        let karenMeal2 = subject.mealSelections.first {
+            $0.person == .karen && $0.dayMeal == dayMeal2
+        }!
+
+        // Meal 1 should now have recipe[2] for Tony and recipe[3] for Karen
+        #expect(tonyMeal1.recipe?.name == recipes[2].name)
+        #expect(karenMeal1.recipe?.name == recipes[3].name)
+
+        // Meal 2 should now have recipe[0] for Tony and recipe[1] for Karen
+        #expect(tonyMeal2.recipe?.name == recipes[0].name)
+        #expect(karenMeal2.recipe?.name == recipes[1].name)
+    }
+
+    @Test("Swap joined meal with split meal maintains respective states")
+    func swapJoinedWithSplitMaintainsStates() {
+        RecipeEntry.seedRecipes(into: modelContext)
+
+        let recipes = modelContext.recipeResults()
+        guard recipes.count >= 3 else {
+            Issue.record("Not enough recipes for swap test")
+            return
+        }
+
+        let date = subject.weekDates[0]
+        let dayMeal1 = DayMeal(mealType: .breakfast, date: date)
+        let dayMeal2 = DayMeal(mealType: .lunch, date: date)
+
+        // Meal 1: joined (both have same recipe)
+        subject.selectRecipe(recipes[0], for: .tony, dayMeal: dayMeal1)
+        subject.selectRecipe(recipes[0], for: .karen, dayMeal: dayMeal1)
+
+        // Meal 2: split (different recipes)
+        subject.selectRecipe(recipes[1], for: .tony, dayMeal: dayMeal2)
+        subject.selectRecipe(recipes[2], for: .karen, dayMeal: dayMeal2)
+
+        subject.swapMeals(dayMeal1, with: dayMeal2)
+
+        let tonyMeal1 = subject.mealSelections.first {
+            $0.person == .tony && $0.dayMeal == dayMeal1
+        }!
+        let karenMeal1 = subject.mealSelections.first {
+            $0.person == .karen && $0.dayMeal == dayMeal1
+        }!
+        let tonyMeal2 = subject.mealSelections.first {
+            $0.person == .tony && $0.dayMeal == dayMeal2
+        }!
+        let karenMeal2 = subject.mealSelections.first {
+            $0.person == .karen && $0.dayMeal == dayMeal2
+        }!
+
+        // Meal 1 should now be split (recipe[1] and recipe[2])
+        #expect(tonyMeal1.recipe?.name == recipes[1].name)
+        #expect(karenMeal1.recipe?.name == recipes[2].name)
+
+        // Meal 2 should now be joined (both have recipe[0])
+        #expect(tonyMeal2.recipe?.name == recipes[0].name)
+        #expect(karenMeal2.recipe?.name == recipes[0].name)
     }
 
     // MARK: - Food To Use Up Tests
