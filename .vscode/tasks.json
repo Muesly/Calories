@@ -3,43 +3,6 @@
     
     "tasks": [
         {
-            "label": "Build iOS App",
-            "type": "shell",
-            "command": "xcodebuild",
-            "args": [
-                "-scheme",
-                "Calories",
-                "-configuration",
-                "Debug",
-                "-destination",
-                "'platform=iOS Simulator,name=iPhone 16'",
-                "BUILD_DIR=\"${workspaceFolder}/build\""
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": [
-                    "relative",
-                    "${workspaceFolder}"
-                ],
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
-                }
-            }
-        },
-        {
             "label": "sweetpad: launcher",
             "type": "sweetpad",
             "action": "launch",
@@ -63,21 +26,33 @@
             }
         },
         {
-            "label": "Focus Simulator",
-            "type": "shell",
-            "command": "open -a Simulator"
-        },
-        {
-            "label": "Build, Run and Focus",
-            "dependsOn": [
-                "sweetpad: launcher",
-                "Focus Simulator"
-            ]
+            "label": "sweetpad: test",
+            "type": "sweetpad",
+            "action": "test",
+            "scheme": "Calories",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": [
+                "$sweetpad-watch",
+                "$sweetpad-xcodebuild-default",
+                "$sweetpad-xcbeautify-errors",
+                "$sweetpad-xcbeautify-warnings"
+            ],
+            "detail": "Test the app",
+            "runOptions": {
+                "instanceLimit": 1
+            }
         },
         {
             "label": "Run All Tests",
             "type": "shell",
-            "command": "xcrun xcodebuild test -scheme Calories -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -testPlan 'CaloriesTestPlan-all' | xcpretty",
+            "command": "xcrun xcodebuild test -scheme Calories -destination 'platform=iOS Simulator,name=iPhone 17' -testPlan 'CaloriesTestPlan-all' | xcpretty",
             "group": "test",
             "presentation": {
                 "reveal": "always",
@@ -88,7 +63,7 @@
         {
             "label": "Run Unit Tests",
             "type": "shell",
-            "command": "xcrun xcodebuild test -scheme Calories -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -testPlan 'CaloriesTestPlan-unit' | xcpretty",
+            "command": "xcrun xcodebuild test -scheme Calories -destination 'platform=iOS Simulator,name=iPhone 17' -testPlan 'CaloriesTestPlan-unit' | xcpretty",
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -110,6 +85,22 @@
             ],
             "label": "sweetpad: debugging-run",
             "detail": "Run the app (for debugging)"
+        },
+        {
+            "type": "sweetpad",
+            "action": "build",
+            "problemMatcher": [
+                "$sweetpad-watch",
+                "$sweetpad-xcodebuild-default",
+                "$sweetpad-xcbeautify-errors",
+                "$sweetpad-xcbeautify-warnings"
+            ],
+            "label": "sweetpad: build",
+            "detail": "Build the app",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 } 
