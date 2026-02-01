@@ -4,4 +4,18 @@
    </FileRef>
    <FileRef location = "group:Packages/CaloriesFoundation">
    </FileRef>
+   <FileRef location = "group:Packages/ExerciseTracking">
+   </FileRef>
+   <FileRef location = "group:Packages/WeightTracking">
+   </FileRef>
+   <FileRef location = "group:Packages/PlantTracking">
+   </FileRef>
+   <FileRef location = "group:Packages/Companion">
+   </FileRef>
+   <FileRef location = "group:Packages/Charting">
+   </FileRef>
+   <FileRef location = "group:Packages/FoodTracking">
+   </FileRef>
+   <FileRef location = "group:Packages/MealPlanning">
+   </FileRef>
 </Workspace>
