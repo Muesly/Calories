@@ -10,15 +10,6 @@ import SwiftData
 import SwiftUI
 import UserNotifications
 
-import CaloriesFoundation
-import ExerciseTracking
-import WeightTracking
-import PlantTracking
-import Companion
-import Charting
-import FoodTracking
-import MealPlanning
-
 @main
 struct CaloriesApp: App {
     let isUITesting: Bool
