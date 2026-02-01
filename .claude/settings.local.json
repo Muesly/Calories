@@ -12,7 +12,8 @@
       "Bash(swift build:*)",
       "Bash(swift test:*)",
       "Bash(xcrun xcodebuild test:*)",
-      "Bash(xcpretty:*)"
+      "Bash(xcpretty:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }
