@@ -6,9 +6,10 @@
 //
 
 import Foundation
-import HealthKit
 import SwiftData
 import SwiftUI
+import HealthKit
+import CaloriesFoundation
 
 @Observable
 @MainActor

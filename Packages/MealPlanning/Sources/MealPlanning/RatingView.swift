@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct RatingView: View {
     @Binding private var rating: Int16

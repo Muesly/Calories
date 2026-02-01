@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import CaloriesFoundation
 
 struct RecipeDetailsView: View {
     @Binding var isPresented: Bool

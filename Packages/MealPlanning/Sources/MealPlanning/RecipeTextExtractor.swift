@@ -5,13 +5,15 @@
 //  Created by Tony Short on 26/12/2025.
 //
 
+import SwiftUI
 import FoundationModels
 import NaturalLanguage
-import SwiftUI
 import Vision
+import CaloriesFoundation
 
 // MARK: - Recipe Text Extractor
 
+import CaloriesFoundation
 struct RecipeTextExtractor {
     struct ExtractionResult {
         let recipeNames: [String]

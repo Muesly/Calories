@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CaloriesFoundation
 
 enum Person: String, CaseIterable {
     case tony = "Tony"

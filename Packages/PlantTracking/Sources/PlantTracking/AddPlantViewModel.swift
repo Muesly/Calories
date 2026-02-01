@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CaloriesFoundation
 
 @Observable
 class AddPlantViewModel: ObservableObject {

@@ -7,9 +7,11 @@
 
 import Foundation
 import SwiftData
+import CaloriesFoundation
 
 // MARK: - View Model
 
+import CaloriesFoundation
 @Observable
 @MainActor
 class MealPlanningViewModel: ObservableObject {

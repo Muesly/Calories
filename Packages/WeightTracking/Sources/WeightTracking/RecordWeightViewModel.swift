@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import HealthKit
 import SwiftUI
+import HealthKit
+import CaloriesFoundation
 
 struct WeightDataPoint: Identifiable, Equatable {
     let id = UUID()

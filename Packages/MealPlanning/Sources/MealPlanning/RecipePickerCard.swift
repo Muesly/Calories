@@ -1,4 +1,5 @@
 import SwiftUI
+import CaloriesFoundation
 
 struct RecipePickerCard: View {
     let dayMeal: DayMeal

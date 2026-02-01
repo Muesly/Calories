@@ -1,4 +1,5 @@
 import Foundation
+import CaloriesFoundation
 
 public struct DayMeal: Hashable {
     let mealType: MealType

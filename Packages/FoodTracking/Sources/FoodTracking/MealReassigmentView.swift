@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CaloriesFoundation
 
 struct MealToPick: Hashable {
     let name: String

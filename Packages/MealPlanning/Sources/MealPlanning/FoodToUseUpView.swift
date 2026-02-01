@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct FoodToUseUpView: View {
     @State var viewModel: MealPlanningViewModel

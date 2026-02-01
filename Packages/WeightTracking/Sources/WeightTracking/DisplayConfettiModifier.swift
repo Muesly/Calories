@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct ConfettiView: View {
     @State var animate = false

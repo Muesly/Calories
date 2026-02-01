@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import CaloriesFoundation
 
 struct AddPlantView: View {
     @Environment(\.dismissSearch) private var dismissSearch

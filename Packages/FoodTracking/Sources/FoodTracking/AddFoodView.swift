@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import CaloriesFoundation
 
 struct AddFoodView: View {
     @Environment(\.dismissSearch) private var dismissSearch

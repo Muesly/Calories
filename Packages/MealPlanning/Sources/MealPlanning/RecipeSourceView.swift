@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct RecipeSourceView: View {
     @Binding var currentPage: AddRecipePage

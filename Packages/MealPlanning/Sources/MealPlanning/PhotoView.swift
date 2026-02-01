@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct PhotoView: View {
     @Environment(\.dismiss) var dismiss

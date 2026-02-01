@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import UIKit
+import CaloriesFoundation
 
 struct PlantSelection: Hashable {
     let id = UUID()

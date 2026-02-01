@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct RevealingTextView: View {
     @Binding var text: String

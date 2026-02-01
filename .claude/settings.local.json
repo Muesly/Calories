@@ -14,7 +14,9 @@
       "Bash(xcrun xcodebuild test:*)",
       "Bash(xcpretty:*)",
       "Bash(git checkout:*)",
-      "Bash(swift-lint:*)"
+      "Bash(swift-lint:*)",
+      "Bash(grep:*)",
+      "Bash(swift:*)"
     ],
     "deny": []
   }

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import CaloriesFoundation
 
 struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss

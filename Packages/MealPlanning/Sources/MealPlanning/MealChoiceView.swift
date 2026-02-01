@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct MealChoiceView: View {
     let recipe: RecipeEntry

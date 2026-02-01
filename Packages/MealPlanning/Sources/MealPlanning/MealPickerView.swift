@@ -7,6 +7,8 @@
 
 import SwiftData
 import SwiftUI
+import CaloriesFoundation
+
 struct MealPickerView: View {
     @Environment(\.modelContext) private var modelContext
     @State var viewModel: MealPlanningViewModel

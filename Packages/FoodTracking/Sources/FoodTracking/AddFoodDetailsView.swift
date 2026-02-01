@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CaloriesFoundation
 
 struct AddFoodDetailsView: View {
     @Environment(\.scenePhase) var scenePhase

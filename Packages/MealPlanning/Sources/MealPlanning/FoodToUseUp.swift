@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CaloriesFoundation
 
 struct FoodToUseUp: Identifiable {
     let id: UUID

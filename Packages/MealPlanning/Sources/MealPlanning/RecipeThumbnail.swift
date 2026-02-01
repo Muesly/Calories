@@ -5,8 +5,9 @@
 //  Created by Tony Short on 26/12/2025.
 //
 
-import PhotosUI
 import SwiftUI
+import PhotosUI
+import CaloriesFoundation
 
 struct RecipeThumbnail: View {
     let label: String

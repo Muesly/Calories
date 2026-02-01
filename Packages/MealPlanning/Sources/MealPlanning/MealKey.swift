@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import CaloriesFoundation
 
 /// Type-safe key for meal-level data (shared across people)
+import CaloriesFoundation
 struct MealKey: Hashable, Comparable {
     let dayMeal: DayMeal
 

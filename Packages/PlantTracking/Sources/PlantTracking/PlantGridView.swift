@@ -8,6 +8,7 @@
 import SwiftData
 import SwiftUI
 import UIKit
+import CaloriesFoundation
 
 let columns = [
     GridItem(.fixed(110), spacing: 0),

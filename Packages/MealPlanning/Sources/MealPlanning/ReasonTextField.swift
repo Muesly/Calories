@@ -1,4 +1,5 @@
 import SwiftUI
+import CaloriesFoundation
 
 struct ReasonTextField: View {
     let person: Person

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CaloriesFoundation
 
 struct MealSelection {
     var person: Person

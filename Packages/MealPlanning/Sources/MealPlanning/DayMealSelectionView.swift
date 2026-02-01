@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CaloriesFoundation
 
 struct DayMealSelectionView<Card: View>: View {
     let date: Date

@@ -8,6 +8,7 @@
 import Charts
 import Foundation
 import SwiftUI
+import CaloriesFoundation
 
 struct RecordWeightView: View {
     @Environment(\.currentDate) var currentDate

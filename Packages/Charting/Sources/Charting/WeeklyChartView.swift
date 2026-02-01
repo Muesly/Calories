@@ -7,6 +7,7 @@
 
 import Charts
 import SwiftUI
+import CaloriesFoundation
 
 struct WeeklyChartView: View {
     var viewModel: WeeklyChartViewModel

@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import CaloriesFoundation
 
 struct RecipeBookView: View {
     let mealType: MealType

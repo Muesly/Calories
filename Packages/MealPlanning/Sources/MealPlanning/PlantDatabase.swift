@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import CaloriesFoundation
 
 // MARK: - Plant Database
 
+import CaloriesFoundation
 public struct PlantDatabase {
     public static let plants: Set<String> = [
         // Vegetables - UK Spellings

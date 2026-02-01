@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CaloriesFoundation
 
 struct MealPickerEngine {
     let recipes: [RecipeEntry]
