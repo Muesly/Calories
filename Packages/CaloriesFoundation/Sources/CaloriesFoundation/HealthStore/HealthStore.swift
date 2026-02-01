@@ -10,7 +10,7 @@ import HealthKit
 import SwiftUI
 
 @MainActor
-protocol HealthStore {
+public protocol HealthStore {
     func authorize() async throws
     func caloriesConsumed(date: Date) async throws -> Int
     func bmr(date: Date) async throws -> Int
@@ -52,19 +52,19 @@ enum HealthStoreError: Error {
 }
 
 extension HKHealthStore: HealthStore {
-    func calorieConsumedModifier() -> Double {
+    public func calorieConsumedModifier() -> Double {
         1.1
     }
 
-    func bmrModifier() -> Double {
+    public func bmrModifier() -> Double {
         1.0
     }
 
-    func activeEnergyModifier() -> Double {
+    public func activeEnergyModifier() -> Double {
         0.8
     }
 
-    func authorize() async throws {
+    public func authorize() async throws {
         if HKHealthStore.isHealthDataAvailable(),
             let dietaryEnergyConsumed = HKObjectType.quantityType(
                 forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed),
@@ -112,25 +112,25 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func bmr(date: Date) async throws -> Int {
+    public func bmr(date: Date) async throws -> Int {
         try await Int(Double(countForType(.basalEnergyBurned, date: date)) * bmrModifier())
     }
 
-    func exercise(date: Date) async throws -> Int {
+    public func exercise(date: Date) async throws -> Int {
         try await Int(
             Double(countForType(.activeEnergyBurned, date: date)) * activeEnergyModifier())
     }
 
-    func caloriesConsumed(date: Date) async throws -> Int {
+    public func caloriesConsumed(date: Date) async throws -> Int {
         try await Int(
             Double(countForType(.dietaryEnergyConsumed, date: date)) * calorieConsumedModifier())
     }
 
-    func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
+    public func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
         try await caloriesConsumedAllDataPoints(predicate: nil, applyModifier: applyModifier)
     }
 
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool)
+    public func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool)
         async throws -> [(Date, Int)]
     {
         let predicate = HKQuery.predicateForSamples(
@@ -183,7 +183,7 @@ extension HKHealthStore: HealthStore {
             modifierFactor: applyModifier ? calorieConsumedModifier() : 1.0)
     }
 
-    func bmrBetweenDates(
+    public func bmrBetweenDates(
         fromDate: Date,
         toDate: Date,
         applyModifier: Bool
@@ -196,7 +196,7 @@ extension HKHealthStore: HealthStore {
             modifierFactor: applyModifier ? bmrModifier() : 1.0)
     }
 
-    func activeBetweenDates(
+    public func activeBetweenDates(
         fromDate: Date,
         toDate: Date,
         applyModifier: Bool
@@ -209,7 +209,7 @@ extension HKHealthStore: HealthStore {
             modifierFactor: applyModifier ? activeEnergyModifier() : 1.0)
     }
 
-    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    public func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return []
         }
@@ -241,7 +241,7 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func weight(fromDate: Date, toDate: Date) async throws -> Int? {
+    public func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         guard let type = HKObjectType.quantityType(forIdentifier: .bodyMass) else {
             return nil
         }
@@ -265,15 +265,15 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func weeklyWeightChange() async throws -> Int {
+    public func weeklyWeightChange() async throws -> Int {
         try await weightChange(days: 7)
     }
 
-    func monthlyWeightChange() async throws -> Int {
+    public func monthlyWeightChange() async throws -> Int {
         try await weightChange(days: 31)
     }
 
-    func weightChange(days: Int) async throws -> Int {
+    public func weightChange(days: Int) async throws -> Int {
         let weightDataPoints = try await weightBetweenDates(
             fromDate: Date().addingTimeInterval(TimeInterval(-86400 * days)), toDate: Date())
         guard let first = weightDataPoints.first,
@@ -284,7 +284,7 @@ extension HKHealthStore: HealthStore {
         return last.1 - first.1
     }
 
-    func addFoodEntry(_ foodEntry: FoodEntry) async throws {
+    public func addFoodEntry(_ foodEntry: FoodEntry) async throws {
         guard
             let caloriesConsumedType = HKObjectType.quantityType(
                 forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed)
@@ -302,7 +302,7 @@ extension HKHealthStore: HealthStore {
         try await save(caloriesConsumed)
     }
 
-    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
+    public func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
         guard
             let caloriesConsumedType = HKObjectType.quantityType(
                 forIdentifier: HKQuantityTypeIdentifier.dietaryEnergyConsumed)
@@ -349,7 +349,7 @@ extension HKHealthStore: HealthStore {
         }
     }
 
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
+    public func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
         guard
             let activeEnergyBurnedType = HKObjectType.quantityType(
                 forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)
@@ -368,7 +368,7 @@ extension HKHealthStore: HealthStore {
         try await save(exercise)
     }
 
-    func addWeightEntry(_ weightEntry: WeightEntry) async throws {
+    public func addWeightEntry(_ weightEntry: WeightEntry) async throws {
         guard
             let bodyMassType = HKObjectType.quantityType(
                 forIdentifier: HKQuantityTypeIdentifier.bodyMass)

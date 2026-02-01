@@ -8,13 +8,13 @@
 import Foundation
 import SwiftUI
 
-struct Suggestion: Hashable {
-    let name: String
-    var uiImage: UIImage?
-    var calories: Int?
-    var isRecipeSuggestion: Bool = false
+public struct Suggestion: Hashable {
+    public let name: String
+    public var uiImage: UIImage?
+    public var calories: Int?
+    public var isRecipeSuggestion: Bool = false
 
-    init(
+    public init(
         name: String, uiImage: UIImage? = nil, calories: Int? = nil,
         isRecipeSuggestion: Bool = false
     ) {

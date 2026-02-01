@@ -7,52 +7,54 @@
 
 import Foundation
 
-class MockHealthStore: HealthStore {
-    var authorizeError: Error?
-    var bmr: Int = 0
-    var exercise: Int = 0
-    var caloriesConsumed: Int = 0
-    var caloriesBurned: Int = 0
-    var weight: Int = 0
-    var weightBetweenDatesIndex = 0
-    var caloriesConsumedAllDataPoints = [(Date, Int)]()
-    var bmrAllDataPoints = [(Date, Int)]()
-    var activeCaloriesAllDataPoints = [(Date, Int)]()
-    var weightAllDataPoints = [(Date, Int)]()
-    var addDelayFetchingWeights = false
+public class MockHealthStore: HealthStore {
+    public var authorizeError: Error?
+    public var bmr: Int = 0
+    public var exercise: Int = 0
+    public var caloriesConsumed: Int = 0
+    public var caloriesBurned: Int = 0
+    public var weight: Int = 0
+    public var weightBetweenDatesIndex = 0
+    public var caloriesConsumedAllDataPoints = [(Date, Int)]()
+    public var bmrAllDataPoints = [(Date, Int)]()
+    public var activeCaloriesAllDataPoints = [(Date, Int)]()
+    public var weightAllDataPoints = [(Date, Int)]()
+    public var addDelayFetchingWeights = false
 
-    func authorize() async throws {
+    public init() {}
+
+    public func authorize() async throws {
         guard let error = authorizeError else {
             return
         }
         throw error
     }
 
-    func bmr(date: Date) async throws -> Int {
+    public func bmr(date: Date) async throws -> Int {
         bmr
     }
 
-    func exercise(date: Date) async throws -> Int {
+    public func exercise(date: Date) async throws -> Int {
         exercise
     }
 
-    func caloriesConsumed(date: Date) async throws -> Int {
+    public func caloriesConsumed(date: Date) async throws -> Int {
         caloriesConsumed
     }
 
-    func weight(date: Date?) async throws -> Int {
+    public func weight(date: Date?) async throws -> Int {
         weight
     }
 
-    func addFoodEntry(_ foodEntry: FoodEntry) async throws {
+    public func addFoodEntry(_ foodEntry: FoodEntry) async throws {
         caloriesConsumed += Int(foodEntry.calories)
     }
 
-    func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
+    public func deleteFoodEntry(_ foodEntry: FoodEntry) async throws {
         caloriesConsumed -= Int(foodEntry.calories)
     }
 
-    func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
+    public func addExerciseEntry(_ exerciseEntry: ExerciseEntry) async throws {
         caloriesBurned += Int(exerciseEntry.calories)
     }
 
@@ -65,7 +67,7 @@ class MockHealthStore: HealthStore {
         }
     }
 
-    func weight(fromDate: Date, toDate: Date) async throws -> Int? {
+    public func weight(fromDate: Date, toDate: Date) async throws -> Int? {
         if addDelayFetchingWeights {
             await waitForResult()
         }
@@ -77,46 +79,50 @@ class MockHealthStore: HealthStore {
         return weight.1
     }
 
-    func weeklyWeightChange() async throws -> Int {
+    public func weeklyWeightChange() async throws -> Int {
         0
     }
 
-    func monthlyWeightChange() async throws -> Int {
+    public func monthlyWeightChange() async throws -> Int {
         0
     }
 
-    func addWeightEntry(_ weightEntry: WeightEntry) async throws {
+    public func addWeightEntry(_ weightEntry: WeightEntry) async throws {
         weightAllDataPoints.append((weightEntry.timeRecorded, weightEntry.weight))
         weightBetweenDatesIndex = 0
     }
 
-    func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
+    public func caloriesConsumedAllDataPoints(applyModifier: Bool) async throws -> [(Date, Int)] {
         caloriesConsumedAllDataPoints
     }
 
-    func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool)
+    public func caloriesConsumedAllDataPoints(fromDate: Date, toDate: Date, applyModifier: Bool)
         async throws -> [(Date, Int)]
     {
         caloriesConsumedAllDataPoints
     }
 
-    func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(
-        Date, Int
-    )] {
+    public func bmrBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws
+        -> [(
+            Date, Int
+        )]
+    {
         bmrAllDataPoints
     }
 
-    func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws -> [(
-        Date, Int
-    )] {
+    public func activeBetweenDates(fromDate: Date, toDate: Date, applyModifier: Bool) async throws
+        -> [(
+            Date, Int
+        )]
+    {
         activeCaloriesAllDataPoints
     }
 
-    func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
+    public func weightBetweenDates(fromDate: Date, toDate: Date) async throws -> [(Date, Int)] {
         weightAllDataPoints
     }
 
-    static var uiTests: MockHealthStore {
+    public static var uiTests: MockHealthStore {
         let healthStore = MockHealthStore()
         healthStore.addDelayFetchingWeights = true
         healthStore.weightAllDataPoints = [
