@@ -77,7 +77,7 @@ extension RecipeEntry: Equatable {
         lhs.name == rhs.name
     }
 
-    static var byName: SortDescriptor<RecipeEntry> {
+    public static var byName: SortDescriptor<RecipeEntry> {
         SortDescriptor(\.name, order: .forward)
     }
 

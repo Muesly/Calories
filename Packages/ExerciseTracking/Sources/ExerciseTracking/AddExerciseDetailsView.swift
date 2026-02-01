@@ -105,7 +105,7 @@ struct AddExerciseDetailsView: View {
             .cornerRadius(10)
             Spacer()
                 .onChange(of: scenePhase) { _, newPhase in
-                    if AddFoodViewModel.shouldClearFields(
+                    if AddExerciseViewModel.shouldClearFields(
                         phase: newPhase, date: viewModel.timeExercised)
                     {
                         Task {

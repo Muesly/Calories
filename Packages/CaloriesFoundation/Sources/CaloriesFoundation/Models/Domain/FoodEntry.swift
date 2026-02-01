@@ -31,7 +31,7 @@ import SwiftData
     }
 }
 
-extension FoodEntry {
+public extension FoodEntry {
     static var mostRecent: SortDescriptor<FoodEntry> {
         SortDescriptor(\.timeConsumed, order: .reverse)
     }

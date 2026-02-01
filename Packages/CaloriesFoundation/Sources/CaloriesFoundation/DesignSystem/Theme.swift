@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-enum Colours {
-    static let backgroundPrimary = Color("backgroundPrimary")
-    static let backgroundSecondary = Color("backgroundSecondary")
-    static let foregroundPrimary = Color("foregroundPrimary")
-    static let foregroundSecondary = Color("foregroundSecondary")
+public enum Colours {
+    public static let backgroundPrimary = Color("backgroundPrimary")
+    public static let backgroundSecondary = Color("backgroundSecondary")
+    public static let foregroundPrimary = Color("foregroundPrimary")
+    public static let foregroundSecondary = Color("foregroundSecondary")
 }
 
-extension Font {
+public extension Font {
     static let brand = Font.custom(
         "Avenir Next",
         size: UIFont.preferredFont(forTextStyle: .body).pointSize)

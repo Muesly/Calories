@@ -51,6 +51,14 @@
 		DD7DC8882C84707D0021FA09 /* AddFoodDetailsViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8852C84707D0021FA09 /* AddFoodDetailsViewTests.swift */; };
 		DD7DC8892C84707D0021FA09 /* RecordWeightViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7DC8862C84707D0021FA09 /* RecordWeightViewTests.swift */; };
 		DD946C242C847526001A36EE /* PlantImageGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD946C232C847526001A36EE /* PlantImageGeneratorTests.swift */; };
+		DD9890222F2F6F95000BA793 /* CaloriesFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = DD9890212F2F6F95000BA793 /* CaloriesFoundation */; };
+		DD9890242F2F6F95000BA793 /* Charting in Frameworks */ = {isa = PBXBuildFile; productRef = DD9890232F2F6F95000BA793 /* Charting */; };
+		DD9890262F2F6F95000BA793 /* Companion in Frameworks */ = {isa = PBXBuildFile; productRef = DD9890252F2F6F95000BA793 /* Companion */; };
+		DD9890282F2F6F95000BA793 /* ExerciseTracking in Frameworks */ = {isa = PBXBuildFile; productRef = DD9890272F2F6F95000BA793 /* ExerciseTracking */; };
+		DD98902A2F2F6F95000BA793 /* FoodTracking in Frameworks */ = {isa = PBXBuildFile; productRef = DD9890292F2F6F95000BA793 /* FoodTracking */; };
+		DD98902C2F2F6F95000BA793 /* MealPlanning in Frameworks */ = {isa = PBXBuildFile; productRef = DD98902B2F2F6F95000BA793 /* MealPlanning */; };
+		DD98902E2F2F6F95000BA793 /* PlantTracking in Frameworks */ = {isa = PBXBuildFile; productRef = DD98902D2F2F6F95000BA793 /* PlantTracking */; };
+		DD9890302F2F6F95000BA793 /* WeightTracking in Frameworks */ = {isa = PBXBuildFile; productRef = DD98902F2F2F6F95000BA793 /* WeightTracking */; };
 		DD98B2992C7FD7FF00D1AAFA /* AddPlantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B2982C7FD7F900D1AAFA /* AddPlantViewModel.swift */; };
 		DD98B29B2C83469C00D1AAFA /* AddPlantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD98B29A2C83469C00D1AAFA /* AddPlantViewModelTests.swift */; };
 		DD9F3C172DEC36A800417F73 /* Model+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9F3C162DEC36A800417F73 /* Model+Extensions.swift */; };
@@ -307,6 +315,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD9890242F2F6F95000BA793 /* Charting in Frameworks */,
+				DD9890302F2F6F95000BA793 /* WeightTracking in Frameworks */,
+				DD9890262F2F6F95000BA793 /* Companion in Frameworks */,
+				DD9890222F2F6F95000BA793 /* CaloriesFoundation in Frameworks */,
+				DD9890282F2F6F95000BA793 /* ExerciseTracking in Frameworks */,
+				DD98902C2F2F6F95000BA793 /* MealPlanning in Frameworks */,
+				DD98902A2F2F6F95000BA793 /* FoodTracking in Frameworks */,
+				DD98902E2F2F6F95000BA793 /* PlantTracking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,6 +761,14 @@
 			);
 			name = Calories;
 			packageProductDependencies = (
+				DD9890212F2F6F95000BA793 /* CaloriesFoundation */,
+				DD9890232F2F6F95000BA793 /* Charting */,
+				DD9890252F2F6F95000BA793 /* Companion */,
+				DD9890272F2F6F95000BA793 /* ExerciseTracking */,
+				DD9890292F2F6F95000BA793 /* FoodTracking */,
+				DD98902B2F2F6F95000BA793 /* MealPlanning */,
+				DD98902D2F2F6F95000BA793 /* PlantTracking */,
+				DD98902F2F2F6F95000BA793 /* WeightTracking */,
 			);
 			productName = Calories;
 			productReference = EA097D8429918C9E00735129 /* Calories.app */;
@@ -1624,6 +1648,41 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DD9890212F2F6F95000BA793 /* CaloriesFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CaloriesFoundation;
+		};
+		DD9890232F2F6F95000BA793 /* Charting */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Charting;
+		};
+		DD9890252F2F6F95000BA793 /* Companion */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Companion;
+		};
+		DD9890272F2F6F95000BA793 /* ExerciseTracking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ExerciseTracking;
+		};
+		DD9890292F2F6F95000BA793 /* FoodTracking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoodTracking;
+		};
+		DD98902B2F2F6F95000BA793 /* MealPlanning */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MealPlanning;
+		};
+		DD98902D2F2F6F95000BA793 /* PlantTracking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PlantTracking;
+		};
+		DD98902F2F2F6F95000BA793 /* WeightTracking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WeightTracking;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EA097D7C29918C9E00735129 /* Project object */;
 }

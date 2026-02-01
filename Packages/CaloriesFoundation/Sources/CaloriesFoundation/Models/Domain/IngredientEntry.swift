@@ -33,7 +33,7 @@ extension IngredientEntry: Equatable {
     }
 }
 
-extension IngredientEntry {
+public extension IngredientEntry {
     static func addPreviewIngredients(context: ModelContext) -> [IngredientEntry] {
         let ingredients = [
             IngredientEntry("Corn", isPlant: true),

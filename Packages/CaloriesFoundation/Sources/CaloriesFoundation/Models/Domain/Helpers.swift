@@ -8,10 +8,10 @@
 import Foundation
 import SwiftData
 
-let secsPerDay = TimeInterval(86400)
-let secsPerWeek = TimeInterval(7 * secsPerDay)
+public let secsPerDay = TimeInterval(86400)
+public let secsPerWeek = TimeInterval(7 * secsPerDay)
 
-extension ModelContext {
+public extension ModelContext {
     static var inMemory: ModelContext {
         ModelContext(
             try! ModelContainer(
@@ -99,7 +99,7 @@ extension ModelContext {
     }
 }
 
-extension Formatter {
+public extension Formatter {
     static var integer: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.zeroSymbol = ""

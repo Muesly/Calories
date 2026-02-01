@@ -17,6 +17,8 @@ public class StubbedHealthStore: HealthStore {
         (Date(), 198),
     ]
 
+    public init() {}
+
     public func authorize() async throws {
     }
 

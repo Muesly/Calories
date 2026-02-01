@@ -10,9 +10,9 @@ import Foundation
 import SwiftData
 
 @Model public class ExerciseEntry {
-    var calories: Int32
-    var exerciseDescription: String
-    var timeExercised: Date
+    public var calories: Int32
+    public var exerciseDescription: String
+    public var timeExercised: Date
     public init(
         exerciseDescription: String,
         calories: Int,
@@ -24,7 +24,7 @@ import SwiftData
     }
 }
 
-extension ExerciseEntry {
+public extension ExerciseEntry {
     static var mostRecent: SortDescriptor<ExerciseEntry> {
         SortDescriptor(\.timeExercised, order: .reverse)
     }
