@@ -38,16 +38,17 @@ public protocol HealthStore {
 }
 
 @MainActor
-struct HealthStoreFactory {
-    static func create() -> HealthStore {
+public struct HealthStoreFactory {
+    static public func create() -> HealthStore {
         HKHealthStore()
     }
 
-    static func createNull() -> HealthStore {
+    static public func createNull() -> HealthStore {
         MockHealthStore.uiTests
     }
 }
-enum HealthStoreError: Error {
+
+public enum HealthStoreError: Error {
     case errorNoHealthDataAvailable
 }
 

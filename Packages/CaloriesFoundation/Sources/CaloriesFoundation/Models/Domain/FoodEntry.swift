@@ -9,9 +9,9 @@ import Foundation
 import SwiftData
 
 @Model public class FoodEntry {
-    var calories: Double = 0.0
-    var foodDescription: String = ""
-    var timeConsumed: Date
+    public var calories: Double = 0.0
+    public var foodDescription: String = ""
+    public var timeConsumed: Date
     @Relationship public var ingredients: [IngredientEntry]?
 
     public init(
@@ -26,7 +26,7 @@ import SwiftData
         self.ingredients = ingredients
     }
 
-    var plants: [IngredientEntry]? {
+    public var plants: [IngredientEntry]? {
         ingredients?.filter { $0.isPlant }
     }
 }

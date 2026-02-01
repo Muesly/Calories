@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import CaloriesFoundation
 
-struct AddExerciseView: View {
+public struct AddExerciseView: View {
     @Environment(\.dismissSearch) private var dismissSearch
 
     private let viewModel: AddExerciseViewModel
@@ -20,7 +20,7 @@ struct AddExerciseView: View {
     @Binding var showingAddExerciseView: Bool
     @State private var isSearching: Bool = false
 
-    init(
+    public init(
         viewModel: AddExerciseViewModel,
         showingAddExerciseView: Binding<Bool>
     ) {
@@ -28,7 +28,7 @@ struct AddExerciseView: View {
         self._showingAddExerciseView = showingAddExerciseView
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             VStack {
                 List {

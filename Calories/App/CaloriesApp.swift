@@ -5,6 +5,8 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
+import CaloriesFoundation
+import Companion
 import Foundation
 import SwiftData
 import SwiftUI

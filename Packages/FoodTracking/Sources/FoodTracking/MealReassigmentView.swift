@@ -15,10 +15,14 @@ struct MealToPick: Hashable {
     let hour: Int
 }
 
-struct MealReassigmentView: View {
+public struct MealReassigmentView: View {
     let viewModel: MealPickerViewModel
 
-    var body: some View {
+    public init(viewModel: MealPickerViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
         VStack(spacing: 15) {
             HStack {
                 ForEach(viewModel.meals, id: \.self) { mealToPick in
@@ -52,13 +56,13 @@ struct MealPickerView_Previews: PreviewProvider {
     }
 }
 
-class MealPickerViewModel {
+public class MealPickerViewModel {
     @Binding var timeConsumed: Date
     let meals: [MealToPick] = MealType.allCases.map {
         MealToPick(name: $0.rawValue, icon: $0.iconName, hour: $0.defaultHour)
     }
 
-    init(timeConsumed: Binding<Date>) {
+    public init(timeConsumed: Binding<Date>) {
         self._timeConsumed = timeConsumed
     }
 

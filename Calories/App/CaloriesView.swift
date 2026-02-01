@@ -5,8 +5,15 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
+import CaloriesFoundation
+import Charting
+import Companion
+import ExerciseTracking
+import FoodTracking
+import MealPlanning
 import SwiftData
 import SwiftUI
+import WeightTracking
 
 struct CaloriesView: View {
     @Environment(\.scenePhase) var scenePhase
@@ -157,7 +164,7 @@ struct CaloriesView: View {
                 companion.requestNotificationsPermission()
                 refresh()
 
-                showingMealPlanningView = AppFlags.showRecipeShortcut
+                showingMealPlanningView = MealPlanningAppFlags.showRecipeShortcut
             }
         }
     }

@@ -9,10 +9,14 @@ import Charts
 import SwiftUI
 import CaloriesFoundation
 
-struct WeeklyChartView: View {
-    var viewModel: WeeklyChartViewModel
+public struct WeeklyChartView: View {
+    public var viewModel: WeeklyChartViewModel
 
-    var body: some View {
+    public init(viewModel: WeeklyChartViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
         VStack(spacing: 20) {
             DaysCaloriesChart(viewModel: viewModel)
             WeekSelector(viewModel: viewModel)
@@ -22,10 +26,10 @@ struct WeeklyChartView: View {
     }
 }
 
-struct DaysCaloriesChart: View {
+public struct DaysCaloriesChart: View {
     let viewModel: WeeklyChartViewModel
 
-    var body: some View {
+    public var body: some View {
         VStack {
             Chart {
                 ForEach(viewModel.daysCaloriesData) { dayCalorieData in

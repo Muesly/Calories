@@ -5,9 +5,9 @@
 //  Created by Tony Short on 01/09/2024.
 //
 
+import CaloriesFoundation
 import Foundation
 import SwiftUI
-import CaloriesFoundation
 
 struct PlantCellView: View {
     let viewModel: PlantCellViewModel
@@ -51,7 +51,7 @@ struct PlantCellView: View {
                             width: PlantCellView.imageSize.width,
                             height: PlantCellView.imageSize.height
                         )
-                        .background(Color.backgroundSecondary).opacity(0.5)
+                        .background(Colours.backgroundSecondary).opacity(0.5)
                     }
                 }
                 if viewModel.isSelected {
@@ -94,8 +94,8 @@ struct PlantCellView: View {
                 }
             }
             .frame(width: Self.width, height: 25)
-            .background(Color.backgroundSecondary)
-            .foregroundColor(Color.foregroundPrimary)
+            .background(Colours.backgroundSecondary)
+            .foregroundColor(Colours.foregroundPrimary)
         }
         .cornerRadius(5)
     }

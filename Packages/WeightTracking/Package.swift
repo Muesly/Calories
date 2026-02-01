@@ -1,9 +1,9 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.2
 import PackageDescription
 
 let package = Package(
     name: "WeightTracking",
-    platforms: [.iOS(.v17), .watchOS(.v10)],
+    platforms: [.iOS(.v26)],
     products: [
         .library(name: "WeightTracking", targets: ["WeightTracking"])
     ],

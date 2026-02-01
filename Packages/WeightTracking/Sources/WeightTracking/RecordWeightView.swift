@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import CaloriesFoundation
 
-struct RecordWeightView: View {
+public struct RecordWeightView: View {
     @Environment(\.currentDate) var currentDate
     @Environment(\.dismiss) var dismiss
     @Environment(\.scenePhase) var scenePhase
@@ -20,7 +20,7 @@ struct RecordWeightView: View {
     @State private var applied = false
     @State private var showConfetti = false
 
-    init(viewModel: RecordWeightViewModel) {
+    public init(viewModel: RecordWeightViewModel) {
         self.viewModel = viewModel
     }
 
@@ -51,7 +51,7 @@ struct RecordWeightView: View {
         return markIDs.map { Int($0) }
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationView {
             VStack {
                 ZStack {

@@ -9,11 +9,6 @@ import Foundation
 import UIKit
 import CaloriesFoundation
 
-@MainActor
-protocol PlantImageGenerating {
-    func generate(for plantName: String) async throws -> Data
-}
-
 enum PlantImageGeneratorError: Error {
     case failedToDecodeImageFromResponse
     case noURLsReturned

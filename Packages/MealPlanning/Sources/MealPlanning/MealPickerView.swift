@@ -132,15 +132,16 @@ struct MealPickerView: View {
                             swapMode = false
                             showCreateRecipe = false
                         },
-                        currentPage: AppFlags.showRecipeShortcut ? .details : .source,
-                        extractedRecipeNames: AppFlags.showRecipeShortcut
+                        currentPage: MealPlanningAppFlags.showRecipeShortcut ? .details : .source,
+                        extractedRecipeNames: MealPlanningAppFlags.showRecipeShortcut
                             ? ["Breakfast Muffin", "Next option"] : [],
-                        dishPhoto: AppFlags.showRecipeShortcut ? UIImage(named: "Corn") : nil
+                        dishPhoto: MealPlanningAppFlags.showRecipeShortcut
+                            ? UIImage(named: "Corn") : nil
                     )
                 }
             }
             .task {
-                if AppFlags.showRecipeShortcut {
+                if MealPlanningAppFlags.showRecipeShortcut {
                     showCreateRecipe = true
                     mealForCreatedRecipe = viewModel.meals(
                         forDayMeal: .init(mealType: .breakfast, date: viewModel.weekDates.first!)

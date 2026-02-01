@@ -11,7 +11,7 @@ extension Date {
     /// Returns the Monday to plan from:
     /// - Mon-Wed: this week's Monday
     /// - Thu-Sun: next week's Monday
-    var startOfPlanningWeek: Date {
+    public var startOfPlanningWeek: Date {
         let calendar = Calendar.current
         let weekday = calendar.component(.weekday, from: self)
 

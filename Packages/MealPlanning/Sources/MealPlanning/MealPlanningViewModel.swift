@@ -14,7 +14,7 @@ import CaloriesFoundation
 import CaloriesFoundation
 @Observable
 @MainActor
-class MealPlanningViewModel: ObservableObject {
+public class MealPlanningViewModel: ObservableObject {
     let modelContext: ModelContext
     var mealSelections: [MealSelection] = []
     var mealReasons: [PersonMealKey: String] = [:]
@@ -39,7 +39,7 @@ class MealPlanningViewModel: ObservableObject {
         }
     }
 
-    init(modelContext: ModelContext, startDate: Date) {
+    public init(modelContext: ModelContext, startDate: Date) {
         self.modelContext = modelContext
         self.currentWeekStartDate = startDate
 

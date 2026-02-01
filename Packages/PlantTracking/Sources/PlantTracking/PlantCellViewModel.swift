@@ -10,17 +10,6 @@ import SwiftData
 import UIKit
 import CaloriesFoundation
 
-struct PlantSelection: Hashable {
-    let id = UUID()
-    let name: String
-    let isSelected: Bool
-
-    init(_ name: String, isSelected: Bool = false) {
-        self.name = name
-        self.isSelected = isSelected
-    }
-}
-
 @Observable
 @MainActor
 final class PlantCellViewModel {

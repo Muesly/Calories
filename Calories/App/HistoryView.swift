@@ -5,6 +5,8 @@
 //  Created by Tony Short on 10/02/2023.
 //
 
+import CaloriesFoundation
+import FoodTracking
 import Foundation
 import SwiftUI
 

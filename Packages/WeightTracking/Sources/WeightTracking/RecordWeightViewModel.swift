@@ -29,13 +29,13 @@ struct WeightDataPoint: Identifiable, Equatable {
 
 @Observable
 @MainActor
-class RecordWeightViewModel: ObservableObject {
+public class RecordWeightViewModel: ObservableObject {
     let healthStore: HealthStore
     var weightData: [WeightDataPoint] = []
     var latestWeight: Int = 0
     var originalWeight = 0
 
-    init(healthStore: HealthStore) {
+    public init(healthStore: HealthStore) {
         self.healthStore = healthStore
     }
 

@@ -20,8 +20,12 @@ public extension Font {
         size: UIFont.preferredFont(forTextStyle: .body).pointSize)
 }
 
-struct ButtonText: ViewModifier {
-    func body(content: Content) -> some View {
+public struct ButtonText: ViewModifier {
+    public init() {
+
+    }
+
+    public func body(content: Content) -> some View {
         content
             .padding(10)
             .bold()

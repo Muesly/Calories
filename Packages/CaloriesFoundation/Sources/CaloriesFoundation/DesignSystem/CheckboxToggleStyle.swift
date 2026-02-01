@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct CheckboxToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
+public struct CheckboxToggleStyle: ToggleStyle {
+    public init() {}
+
+    public func makeBody(configuration: Configuration) -> some View {
         HStack {
             RoundedRectangle(cornerRadius: 5)
                 .stroke(Colours.foregroundPrimary, lineWidth: 1)

@@ -10,17 +10,17 @@ import SwiftData
 import SwiftUI
 import CaloriesFoundation
 
-struct MealPlanningView: View {
+public struct MealPlanningView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
     @State var viewModel: MealPlanningViewModel
     @State private var showFoodToUseUp = false
 
-    init(viewModel: MealPlanningViewModel) {
+    public init(viewModel: MealPlanningViewModel) {
         self.viewModel = viewModel
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             VStack {
                 MealPickerView(viewModel: viewModel)

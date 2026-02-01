@@ -5,22 +5,22 @@
 //  Created by Tony Short on 11/02/2023.
 //
 
+import CaloriesFoundation
 import Foundation
 import SwiftData
 import SwiftUI
 import HealthKit
-import CaloriesFoundation
 
 @Observable
 @MainActor
-class AddFoodViewModel: ObservableObject {
+public class AddFoodViewModel: ObservableObject {
     let modelContext: ModelContext
     let healthStore: HealthStore
     private var dateForEntries: Date = Date()
     var suggestions: [Suggestion] = []
     var plants: [Plant] = []
 
-    init(
+    public init(
         healthStore: HealthStore,
         modelContext: ModelContext
     ) {

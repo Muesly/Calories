@@ -5,9 +5,9 @@
 //  Created by Tony Short on 23/12/2025.
 //
 
+import CaloriesFoundation
 import SwiftData
 import SwiftUI
-import CaloriesFoundation
 
 struct CreateRecipeSheet: View {
     @Binding var isPresented: Bool
@@ -43,7 +43,7 @@ struct CreateRecipeSheet: View {
             }
         }
         .task {
-            if AppFlags.showRecipeShortcut {
+            if MealPlanningAppFlags.showRecipeShortcut {
                 extractedRecipeNames = ["Breakfast Muffin", "Next option"]
                 dishPhoto = UIImage(named: "ExampleDish")
                 stepsPhoto = UIImage(named: "ExampleSteps")

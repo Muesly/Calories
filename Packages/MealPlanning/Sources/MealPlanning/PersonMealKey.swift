@@ -8,11 +8,6 @@
 import Foundation
 import CaloriesFoundation
 
-enum Person: String, CaseIterable {
-    case tony = "Tony"
-    case karen = "Karen"
-}
-
 /// Type-safe key for person-specific meal data
 struct PersonMealKey: Hashable {
     let person: Person

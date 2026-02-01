@@ -5,13 +5,14 @@
 //  Created by Tony Short on 06/02/2023.
 //
 
+import CaloriesFoundation
 import HealthKit
 import SwiftData
 import SwiftUI
 
 @Observable
 @MainActor
-class HistoryViewModel {
+public class HistoryViewModel {
     var modelContext: ModelContext?
     private let healthStore: HealthStore
     private static var timeFormatter: DateFormatter = DateFormatter()
@@ -105,7 +106,8 @@ class HistoryViewModel {
             for _ in 0..<365 {
                 let consumedCaloriesForDay = try await healthStore.caloriesConsumed(date: date)
                 if consumedCaloriesForDay == 0 {
-                    date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)  // Move to end of previous dat
+                    // Move to end of previous date
+                    date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)
                     continue
                 }
                 consumedCalories += consumedCaloriesForDay
@@ -114,7 +116,8 @@ class HistoryViewModel {
                 let exercise = try await healthStore.exercise(date: date)
                 burntCalories += bmr + exercise
 
-                date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)  // Move to end of previous dat
+                // Move to end of previous date
+                date = Calendar.current.startOfDay(for: date).addingTimeInterval(-1)
             }
         } catch {
             print("Failed to fetch burnt or consumed data")

@@ -35,12 +35,14 @@ struct WeeklyStat: Identifiable, Equatable {
     }
 }
 
-protocol IDGeneratorType {
+public protocol IDGeneratorType {
     func generate() -> String
 }
 
-struct IDGenerator: IDGeneratorType {
-    func generate() -> String {
+public struct IDGenerator: IDGeneratorType {
+    public init() {}
+
+    public func generate() -> String {
         UUID().uuidString
     }
 }
@@ -59,9 +61,9 @@ struct WeeklyPlantsStat: Identifiable, Equatable {
 
 @Observable
 @MainActor
-class WeeklyChartViewModel {
+public class WeeklyChartViewModel {
     let healthStore: HealthStore
-    var modelContext: ModelContext?
+    public var modelContext: ModelContext?
     let idGenerator: IDGeneratorType
 
     let deficitGoal: Int = -500
@@ -79,7 +81,7 @@ class WeeklyChartViewModel {
     var nextWeekEnabled: Bool = false
     let currentDate: Date
 
-    init(
+    public init(
         healthStore: HealthStore,
         numberOfDays: Int = 7,
         idGenerator: IDGeneratorType = IDGenerator(),
@@ -138,7 +140,7 @@ class WeeklyChartViewModel {
         }
     }
 
-    func fetchData(currentDate: Date) async {
+    public func fetchData(currentDate: Date) async {
         await fetchWeeklyData(currentDate: currentDate)
         fetchWeeklyPlantsData()
     }

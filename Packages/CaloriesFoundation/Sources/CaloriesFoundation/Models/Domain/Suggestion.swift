@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-public struct Suggestion: Hashable {
+public struct Suggestion: Sendable, Hashable {
     public let name: String
     public var uiImage: UIImage?
     public var calories: Int?

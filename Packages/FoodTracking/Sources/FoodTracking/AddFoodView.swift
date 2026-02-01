@@ -10,7 +10,7 @@ import SwiftData
 import SwiftUI
 import CaloriesFoundation
 
-struct AddFoodView: View {
+public struct AddFoodView: View {
     @Environment(\.dismissSearch) private var dismissSearch
     @Environment(\.currentDate) var currentDate
 
@@ -23,7 +23,7 @@ struct AddFoodView: View {
     @Binding var showingAddEntryView: Bool
     @State private var showingAddFoodDetailsView: Bool = false
 
-    init(
+    public init(
         viewModel: AddFoodViewModel,
         showingAddEntryView: Binding<Bool>
     ) {
@@ -32,7 +32,7 @@ struct AddFoodView: View {
         self.mealItemsViewModel = MealItemsViewModel(modelContext: viewModel.modelContext)
     }
 
-    var body: some View {
+    public var body: some View {
         NavigationStack {
             VStack {
                 List {

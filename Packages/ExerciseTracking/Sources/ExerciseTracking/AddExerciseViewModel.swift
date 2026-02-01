@@ -12,13 +12,13 @@ import SwiftUI
 import CaloriesFoundation
 
 @Observable
-final class AddExerciseViewModel {
+final public class AddExerciseViewModel {
     let modelContext: ModelContext
     let healthStore: HealthStore
     var suggestions: [Suggestion] = []
     var timeExercised: Date
 
-    init(
+    public init(
         healthStore: HealthStore,
         modelContext: ModelContext,
         timeExercised: Date

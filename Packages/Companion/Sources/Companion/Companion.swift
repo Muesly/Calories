@@ -10,7 +10,7 @@ import SwiftUI
 import CaloriesFoundation
 
 @MainActor
-struct Companion {
+public struct Companion {
     private let messageDetails: [CompanionMessage]
     let notificationSender: NotificationSenderType
 
@@ -22,19 +22,19 @@ struct Companion {
         self.notificationSender = notificationSender
     }
 
-    static func create() -> Companion {
+    public static func create() -> Companion {
         Companion(
             messageDetails: Self.defaultMessages,
             notificationSender: NotificationSender())
     }
 
-    static func createNull() -> Companion {
+    public static func createNull() -> Companion {
         Companion(
             messageDetails: Self.defaultMessages,
             notificationSender: StubbedNotificationSender())
     }
 
-    func requestNotificationsPermission() {
+    public func requestNotificationsPermission() {
         Task {
             await notificationSender.requestNotificationsPermission()
         }
@@ -137,7 +137,7 @@ struct Companion {
             validScenario: .monthlyWeightLoss),
     ]
 
-    func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
+    public func scheduleTomorrowsMotivationalMessage(context: MotivationalContext) async throws {
         guard await !notificationSender.hasPendingRequests() else {
             return
         }
@@ -162,12 +162,18 @@ struct Companion {
     }
 }
 
-struct MotivationalContext {
+public struct MotivationalContext {
     let date: Date
     let weeklyWeightChange: Int
     let monthlyWeightChange: Int
+
+    public init(date: Date, weeklyWeightChange: Int, monthlyWeightChange: Int) {
+        self.date = date
+        self.weeklyWeightChange = weeklyWeightChange
+        self.monthlyWeightChange = monthlyWeightChange
+    }
 }
 
-enum CompanionError: Error {
+public enum CompanionError: Error {
     case NoValidMessages
 }
