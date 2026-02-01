@@ -122,14 +122,13 @@ struct RecipeSourceView: View {
                 isScanning = true
             }
 
-            let recipeNames = await RecipeTextExtractor.extractRecipeData(
-                from: photo)
+            let result = await RecipeTextExtractor.extractRecipeData(from: photo)
 
-            if !recipeNames.isEmpty {
+            if let result = result, !result.recipeNames.isEmpty {
                 try? await Task.sleep(nanoseconds: 300_000_000)
 
                 await MainActor.run {
-                    extractedRecipeNames = recipeNames
+                    extractedRecipeNames = result.recipeNames
                     isScanning = false
                     currentPage = .details
                 }
